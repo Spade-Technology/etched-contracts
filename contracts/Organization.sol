@@ -40,14 +40,14 @@ contract Organization is AccessControl {
     // Function to set default permissions for a user
     function setDefaultPermission(address account, Permission perm, bytes memory signature, uint256 blockNumber) public {
         bytes memory params = abi.encode(account, perm);
-        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, msg.sig, params), "Unauthorized");
+        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, "setDefaultPermission", params), "Unauthorized");
         defaultPermissions[account] = perm;
     }
 
     // Function to set permissions
     function setPermission(address account, uint256 tokenId, Permission perm, bytes memory signature, uint256 blockNumber) public {
         bytes memory params = abi.encode(account, tokenId, perm);
-        require(verifyRoleOrSignature(ADMIN_ROLE, signature, blockNumber, msg.sig, params), "Unauthorized");
+        require(verifyRoleOrSignature(ADMIN_ROLE, signature, blockNumber, "setPermission", params), "Unauthorized");
         permissions[account][tokenId] = perm;
     }
 
@@ -78,20 +78,20 @@ contract Organization is AccessControl {
     // Function to transfer NFTs
     function transferNFT(IERC1155 nft, address from, address to, uint256 tokenId, uint256 amount, bytes memory signature, uint256 blockNumber) public {
         bytes memory params = abi.encode(nft, from, to, tokenId, amount);
-        require(verifyRoleOrSignature(TRANSFER_ROLE, signature, blockNumber, msg.sig, params), "Unauthorized");
+        require(verifyRoleOrSignature(TRANSFER_ROLE, signature, blockNumber, "transferNFT", params), "Unauthorized");
         nft.safeTransferFrom(from, to, tokenId, amount, "");
     }
 
     // Function to verify role or signature
-    function verifyRoleOrSignature(bytes32 role, bytes memory signature, uint256 blockNumber, bytes4 functionSelector, bytes memory params) private view returns (bool) {
+    function verifyRoleOrSignature(bytes32 role, bytes memory signature, uint256 blockNumber, string memory functionSelector, bytes memory params) private view returns (bool) {
         return hasRole(role, msg.sender) || verifySignature(role, signature, blockNumber, functionSelector, params);
     }
 
     // Function to verify signature for role
-    function verifySignature(bytes32 role, bytes memory signature, uint256 blockNumber, bytes4 functionSelector, bytes memory params) private view returns (bool) {
+    function verifySignature(bytes32 role, bytes memory signature, uint256 blockNumber, string memory functionSelector, bytes memory params) private view returns (bool) {
         require(block.number <= blockNumber, "Signature has expired");
 
-        bytes32 dataHash = keccak256(abi.encodePacked(role, msg.sender, blockNumber, functionSelector, params));
+        bytes32 dataHash = keccak256(abi.encodePacked(address(this), blockNumber, functionSelector, params));
         address signer = ECDSA.recover(dataHash, signature);
         return hasRole(role, signer);
     }
@@ -99,14 +99,14 @@ contract Organization is AccessControl {
     // Override grantRole function
     function grantRole(bytes32 role, address account, bytes memory signature, uint256 blockNumber) public virtual {
         bytes memory params = abi.encode(role, account);
-        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, msg.sig, params), "AccessControl: caller is not an admin");
+        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, "grantRole", params), "AccessControl: caller is not an admin");
         _grantRole(role, account);
     }
 
     // Override revokeRole function
     function revokeRole(bytes32 role, address account, bytes memory signature, uint256 blockNumber) public virtual {
         bytes memory params = abi.encode(role, account);
-        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, msg.sig, params), "AccessControl: caller is not an admin");
+        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, "revokeRole", params), "AccessControl: caller is not an admin");
         _revokeRole(role, account);
     }
 }
