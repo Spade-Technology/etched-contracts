@@ -1,18 +1,20 @@
+// import "@nomiclabs/hardhat-ethers"
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { keccak256, signMessage, arrayify } = require("ethers/lib/utils");
+const { ethers } =  require('hardhat');
+
+// const { keccak256, signMessage, arrayify } = require("ethers/lib/utils");
 
 describe("Organization and OrganizationFactory Contracts", function () {
   let Organization, OrganizationFactory, organization, organizationFactory, admin, user1, user2, other;
   
-//   const ADMIN_ROLE = ethers.utils.soliditySha3("ADMIN_ROLE");
-//   console.log("Admin Role: ", ADMIN_ROLE);
+  const ADMIN_ROLE = "0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775";
+  // console.log("Admin Role: ", ADMIN_ROLE);
   
-//   const TRANSFER_ROLE = ethers.utils.soliditySha3("TRANSFER_ROLE");
-//   console.log("Transfer Role: ", TRANSFER_ROLE);
+  const TRANSFER_ROLE = "0x8502233096d909befbda0999bb8ea2f3a6be3c138b9fbf003752a4c8bce86f6c";
+  // console.log("Transfer Role: ", TRANSFER_ROLE);
 
-//   const DEFAULT_ADMIN_ROLE = ethers.constants.HashZero;
-//   console.log("Default Admin Role: ", DEFAULT_ADMIN_ROLE);
+  const DEFAULT_ADMIN_ROLE = "0x0000000000000000000000000000000000000000000000000000000000000000";
+  // console.log("Default Admin Role: ", DEFAULT_ADMIN_ROLE);
   
   const fakeSignature = "0x";
   let signature;
@@ -28,7 +30,7 @@ describe("Organization and OrganizationFactory Contracts", function () {
 
     const tx = await organizationFactory.createOrganization(admin.address, fakeSignature, 0);
     const receipt = await tx.wait();
-    const organizationAddress = receipt.events[0].args.organization;
+    const organizationAddress = organizationFactory.getOrganization(0);
     organization = await Organization.attach(organizationAddress);
   });
 
@@ -39,31 +41,32 @@ describe("Organization and OrganizationFactory Contracts", function () {
         expect(await organization.defaultPermissions(user1.address)).to.equal(1);
     });
   
-    // it("Should set default permission with signature", async function () {
+    it("Should set default permission with signature", async function () {
 
-    //     const blockNumber = await ethers.provider.getBlockNumber() + 50; // Some block number in the future
-    //     const functionSelector = "setDefaultPermission";
-    //     const params = ethers.utils.defaultAbiCoder.encode(
-    //     ["address", "uint8"],
-    //     [user1.address, 1]
-    //     );
+        const blockNumber = await ethers.provider.getBlockNumber() + 50; // Some block number in the future
+        const functionSelector = "setDefaultPermission";
+        const params = ethers.utils.defaultAbiCoder.encode(
+        ["address", "uint8"],
+        [user1.address, 1]
+        );
 
-    //     const dataHash = ethers.utils.keccak256(
-    //         ethers.utils.solidityPack(
-    //         ["address", "uint256", "string", "bytes"],
-    //         [organization.address, blockNumber, functionSelector, params]
-    //     )
-    //     );
+        const dataHash = ethers.utils.keccak256(
+          ethers.utils.defaultAbiCoder.encode(
+            ["address", "uint256", "string", "bytes"],
+            [await organization.address, blockNumber, functionSelector, params]
+        )
+        );
 
-    //     signature = await admin.signMessage(ethers.utils.arrayify(dataHash));
+        signature = await admin.signMessage(ethers.utils.arrayify(dataHash));
 
 
-    //     await organization.setDefaultPermission(user2.address, 2, signature, blockNumber);
-    //     expect(await organization.defaultPermissions(user2.address)).to.equal(2);
-    // });
+        await organization.setDefaultPermission(user2.address, 2, signature, blockNumber);
+        expect(await organization.defaultPermissions(user2.address)).to.equal(2);
+    });
     
     it("Should revert setting default permission by unauthorized user", async function () {
-      await expect(organization.connect(user2).setDefaultPermission(user1.address, 1, fakeSignature, 0)).to.be.revertedWith("Unauthorized");
+      const blockNumber = await ethers.provider.getBlockNumber() + 50;
+      await expect(organization.connect(user2).setDefaultPermission(user1.address, 1, fakeSignature, blockNumber)).to.be.revertedWith("Unauthorized");
     });
 
     // setPermission Tests
@@ -72,27 +75,27 @@ describe("Organization and OrganizationFactory Contracts", function () {
         expect((await organization.permissions(user1.address, 1001)).toString()).to.equal("2");
     });
   
-    // it("Should set specific permission with signature", async function () {
+    it("Should set specific permission with signature", async function () {
 
-    //     const blockNumber = await ethers.provider.getBlockNumber() + 50; // Some block number in the future
-    //     const functionSelector = organization.interface.getSighash("setPermission");
-    //     const params = ethers.utils.defaultAbiCoder.encode(
-    //     ["address", "uint256", "uint8"],
-    //     [user2.address, 1000, 3]
-    //     );
+        const blockNumber = await ethers.provider.getBlockNumber() + 50; // Some block number in the future
+        const functionSelector = organization.interface.getSighash("setPermission");
+        const params = ethers.utils.defaultAbiCoder.encode(
+        ["address", "uint256", "uint8"],
+        [user2.address, 1000, 3]
+        );
 
-    //     const dataHash = ethers.utils.keccak256(
-    //         ethers.utils.solidityPack(
-    //         ["address", "uint256", "string", "bytes"],
-    //         [organization.address, blockNumber, functionSelector, params]
-    //     )
-    //     );
+        const dataHash = ethers.utils.keccak256(
+            ethers.utils.solidityPack(
+            ["address", "uint256", "string", "bytes"],
+            [await organization.address, blockNumber, functionSelector, params]
+        )
+        );
 
-    //     signature = await admin.signMessage(ethers.utils.arrayify(dataHash));
+        signature = await admin.signMessage(ethers.utils.arrayify(dataHash));
 
-    //     await organization.setPermission(user2.address, 1000, 3, signature, blockNumber);
-    //     expect((await organization.permissions(user2.address, 1000)).toString()).to.equal("3");
-    // });
+        await organization.setPermission(user2.address, 1000, 3, signature, blockNumber);
+        expect((await organization.permissions(user2.address, 1000)).toString()).to.equal("3");
+    });
   
     it("Should revert setting permission by unauthorized user", async function () {
         await expect(organization.connect(user2).setPermission(other.address, 1001, 2, "0x", 0)).to.be.revertedWith("Unauthorized");
