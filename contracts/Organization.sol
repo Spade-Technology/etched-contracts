@@ -1,24 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "./SignatureVerifier.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
 /**
     @title Organization Contract
     @notice This contract manages permissions and roles within an organization.
  */
-contract Organization is AccessControl {
+contract Organization is SignatureVerifier {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
-
-    // Struct to store signature data
-    struct Signature {
-        bytes encodedMessage;
-        bytes32 messageHash;
-        bytes signature;
-    }
 
     struct EncodedMessage {
         address target;
@@ -43,9 +35,6 @@ contract Organization is AccessControl {
         TransferEtch
     }
 
-    // Stores used signatures
-    mapping(bytes => bool) private usedSignatures;
-
     // Mapping from address to token ID to permission level
     mapping(address => mapping(uint256 => Permission)) public permissions;
 
@@ -60,49 +49,6 @@ contract Organization is AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, _admin);
         _setupRole(ADMIN_ROLE, _admin);
         _setupRole(TRANSFER_ROLE, _admin);
-    }
-
-    function getMessageHash(
-        bytes memory _data
-    ) internal pure returns (bytes32) {
-        return keccak256(_data);
-    }
-
-    function getEthSignedMessageHash(
-        bytes32 _messageHash
-    ) internal pure returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked(
-                    "\x19Ethereum Signed Message:\n32",
-                    _messageHash
-                )
-            );
-    }
-
-    modifier verifySignature(bytes32 role, Signature memory _signature) {
-        require(
-            !usedSignatures[_signature.signature],
-            "Signature already used"
-        );
-
-        require(
-            getMessageHash(_signature.encodedMessage) == _signature.messageHash,
-            "The message hash doesn't match the original!"
-        );
-
-        bytes32 ethSignedMessageHash = getEthSignedMessageHash(
-            _signature.messageHash
-        );
-        address signer = ECDSA.recover(
-            ethSignedMessageHash,
-            _signature.signature
-        );
-        require(hasRole(role, signer), "Unauthorized");
-
-        _;
-
-        usedSignatures[_signature.signature] = true;
     }
 
     function checkMessageValidity(
