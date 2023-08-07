@@ -30,10 +30,6 @@ contract SignatureVerifier is AccessControl {
 
     bytes32 public constant SIGNER_ROLE = keccak256("SIGNER_ROLE");
 
-    constructor() {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-    }
-
     function getMessageHash(
         bytes memory _data
     ) internal pure returns (bytes32) {
