@@ -10,8 +10,23 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
     @notice This contract manages permissions and roles within an organization.
  */
 contract Organization is AccessControl {
+
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
+
+    // Struct to store signature data
+    struct Signature{
+        bytes encodedMessage;
+        bytes32 messageHash;
+        bytes signature;
+    }
+
+    struct EncodedMessage{
+        address target;
+        uint256 blockNumber;
+        OPCode opCode;
+        bytes params;
+    }
 
     // Enum to describe the permission levels
     enum Permission {
@@ -20,6 +35,17 @@ contract Organization is AccessControl {
         Write,
         Admin
     }
+
+    enum OPCode {
+        GrantRole,
+        RevokeRole,
+        SetDefaultPermission,
+        SetPermission,
+        TransferEtch
+    }
+
+    // Stores used signatures
+    mapping(bytes => bool) private usedSignatures;
 
     // Mapping from address to token ID to permission level
     mapping(address => mapping(uint256 => Permission)) public permissions;
@@ -37,17 +63,65 @@ contract Organization is AccessControl {
         _setupRole(TRANSFER_ROLE, _admin);
     }
 
+    function getMessageHash(bytes memory _data) internal pure returns (bytes32) {
+        return keccak256(_data);
+    }
+
+    function getEthSignedMessageHash(bytes32 _messageHash) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _messageHash));
+    }
+
+    modifier verifySignature(bytes32 role, Signature memory _signature){
+        require(!usedSignatures[_signature.signature], "Signature already used");
+
+        require(getMessageHash(_signature.encodedMessage) == _signature.messageHash, "The message hash doesn't match the original!");
+        
+        bytes32 ethSignedMessageHash = getEthSignedMessageHash(_signature.messageHash);
+        address signer = ECDSA.recover(ethSignedMessageHash, _signature.signature);
+        require(hasRole(role, signer), "Unauthorized");
+        
+        _;
+
+        usedSignatures[_signature.signature] = true;
+    }
+
+    function checkMessageValidity(OPCode _opCode, EncodedMessage memory _encodedMessage) internal view returns (bool){
+        // (address _target, uint256 _blockNumber, string _functionName, ) = abi.decode(_encodedMessage.params, (address, uint256, string, bytes));
+        require(_encodedMessage.target == address(this), "Target address doesn't match");
+        require(_encodedMessage.blockNumber >= block.number, "Messade is expired");
+        require(_encodedMessage.opCode == _opCode, "Function name doesn't match");
+        return true;
+    }
+
+    // Override grantRole function
+    function grantRole(Signature memory signature) public verifySignature(DEFAULT_ADMIN_ROLE, signature) virtual {
+        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+        checkMessageValidity(OPCode.GrantRole, encodedMessage);
+        (bytes32 role, address account) = abi.decode(encodedMessage.params, (bytes32, address));
+        _grantRole(role, account);
+    }
+
+    // Override revokeRole function
+    function revokeRole(Signature memory signature) public verifySignature(DEFAULT_ADMIN_ROLE, signature) virtual {
+        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+        checkMessageValidity(OPCode.RevokeRole, encodedMessage);
+        (bytes32 role, address account) = abi.decode(encodedMessage.params, (bytes32, address));
+        _revokeRole(role, account);
+    }
+
     // Function to set default permissions for a user
-    function setDefaultPermission(address account, Permission perm, bytes memory signature, uint256 blockNumber) public {
-        bytes memory params = abi.encode(account, perm);
-        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, "setDefaultPermission", params), "Unauthorized");
+    function setDefaultPermission(Signature memory signature) public verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+        checkMessageValidity(OPCode.SetDefaultPermission, encodedMessage);
+        (address account, Permission perm) = abi.decode(encodedMessage.params, (address, Permission));
         defaultPermissions[account] = perm;
     }
 
     // Function to set permissions
-    function setPermission(address account, uint256 tokenId, Permission perm, bytes memory signature, uint256 blockNumber) public {
-        bytes memory params = abi.encode(account, tokenId, perm);
-        require(verifyRoleOrSignature(ADMIN_ROLE, signature, blockNumber, "setPermission", params), "Unauthorized");
+    function setPermission(Signature memory signature) public verifySignature(ADMIN_ROLE, signature) {
+        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+        checkMessageValidity(OPCode.SetPermission, encodedMessage);
+        (address account, uint256 tokenId, Permission perm) = abi.decode(encodedMessage.params, (address, uint256, Permission));
         permissions[account][tokenId] = perm;
     }
 
@@ -76,37 +150,12 @@ contract Organization is AccessControl {
     }
 
     // Function to transfer NFTs
-    function transferNFT(IERC1155 nft, address from, address to, uint256 tokenId, uint256 amount, bytes memory signature, uint256 blockNumber) public {
-        bytes memory params = abi.encode(nft, from, to, tokenId, amount);
-        require(verifyRoleOrSignature(TRANSFER_ROLE, signature, blockNumber, "transferNFT", params), "Unauthorized");
+    function transferEtch(Signature memory signature) verifySignature(TRANSFER_ROLE, signature) public {
+        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+        (IERC1155 nft, address from, address to, uint256 tokenId, uint256 amount) = abi.decode(encodedMessage.params, (IERC1155, address, address, uint256, uint256));
+        checkMessageValidity(OPCode.TransferEtch, encodedMessage);
         nft.safeTransferFrom(from, to, tokenId, amount, "");
     }
 
-    // Function to verify role or signature
-    function verifyRoleOrSignature(bytes32 role, bytes memory signature, uint256 blockNumber, string memory functionSelector, bytes memory params) private view returns (bool) {
-        return hasRole(role, msg.sender) || verifySignature(role, signature, blockNumber, functionSelector, params);
-    }
 
-    // Function to verify signature for role
-    function verifySignature(bytes32 role, bytes memory signature, uint256 blockNumber, string memory functionSelector, bytes memory params) private view returns (bool) {
-        require(block.number <= blockNumber, "Signature has expired");
-
-        bytes32 dataHash = keccak256(abi.encodePacked(address(this), blockNumber, functionSelector, params));
-        address signer = ECDSA.recover(dataHash, signature);
-        return hasRole(role, signer);
-    }
-
-    // Override grantRole function
-    function grantRole(bytes32 role, address account, bytes memory signature, uint256 blockNumber) public virtual {
-        bytes memory params = abi.encode(role, account);
-        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, "grantRole", params), "AccessControl: caller is not an admin");
-        _grantRole(role, account);
-    }
-
-    // Override revokeRole function
-    function revokeRole(bytes32 role, address account, bytes memory signature, uint256 blockNumber) public virtual {
-        bytes memory params = abi.encode(role, account);
-        require(verifyRoleOrSignature(DEFAULT_ADMIN_ROLE, signature, blockNumber, "revokeRole", params), "AccessControl: caller is not an admin");
-        _revokeRole(role, account);
-    }
 }
