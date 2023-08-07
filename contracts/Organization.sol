@@ -10,7 +10,6 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
  */
 contract Organization is SignatureVerifier {
     // Role constants
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
 
     // Enum to describe the permission levels
@@ -19,14 +18,6 @@ contract Organization is SignatureVerifier {
         Read,
         Write,
         Admin
-    }
-
-    enum OPCode {
-        GrantRole,
-        RevokeRole,
-        SetDefaultPermission,
-        SetPermission,
-        TransferEtch
     }
 
     // Mapping from address to token ID to permission level
@@ -39,76 +30,31 @@ contract Organization is SignatureVerifier {
         @notice Initializes the Organization contract with an admin address.
         @param _admin The address of the admin.
      */
-    constructor(address _admin) {
+    constructor(
+        address _paymaster,
+        address _admin
+    ) SignatureVerifier(_paymaster) {
         _setupRole(DEFAULT_ADMIN_ROLE, _admin);
         _setupRole(ADMIN_ROLE, _admin);
         _setupRole(TRANSFER_ROLE, _admin);
     }
 
-    // Override grantRole function
-    function grantRole(
-        Signature memory signature
-    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        checkMessageValidity(uint8(OPCode.GrantRole), encodedMessage);
-        (bytes32 role, address account) = abi.decode(
-            encodedMessage.params,
-            (bytes32, address)
-        );
-        _grantRole(role, account);
-    }
-
-    // Override revokeRole function
-    function revokeRole(
-        Signature memory signature
-    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        checkMessageValidity(uint8(OPCode.RevokeRole), encodedMessage);
-        (bytes32 role, address account) = abi.decode(
-            encodedMessage.params,
-            (bytes32, address)
-        );
-        _revokeRole(role, account);
-    }
-
     // Function to set default permissions for a user
     function setDefaultPermission(
-        Signature memory signature
+        Signature memory signature,
+        address account,
+        Permission perm
     ) public verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        checkMessageValidity(
-            uint8(OPCode.SetDefaultPermission),
-            encodedMessage
-        );
-        (address account, Permission perm) = abi.decode(
-            encodedMessage.params,
-            (address, Permission)
-        );
         defaultPermissions[account] = perm;
     }
 
     // Function to set permissions
     function setPermission(
-        Signature memory signature
+        Signature memory signature,
+        address account,
+        uint256 tokenId,
+        Permission perm
     ) public verifySignature(ADMIN_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        checkMessageValidity(uint8(OPCode.SetPermission), encodedMessage);
-        (address account, uint256 tokenId, Permission perm) = abi.decode(
-            encodedMessage.params,
-            (address, uint256, Permission)
-        );
         permissions[account][tokenId] = perm;
     }
 
@@ -150,23 +96,13 @@ contract Organization is SignatureVerifier {
 
     // Function to transfer NFTs
     function transferEtch(
-        Signature memory signature
+        Signature memory signature,
+        IERC1155 nft,
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 amount
     ) public verifySignature(TRANSFER_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        (
-            IERC1155 nft,
-            address from,
-            address to,
-            uint256 tokenId,
-            uint256 amount
-        ) = abi.decode(
-                encodedMessage.params,
-                (IERC1155, address, address, uint256, uint256)
-            );
-        checkMessageValidity(uint8(OPCode.TransferEtch), encodedMessage);
         nft.safeTransferFrom(from, to, tokenId, amount, "");
     }
 }

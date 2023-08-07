@@ -9,24 +9,28 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
     @notice This contract provides signature verification functionalities.
  */
 abstract contract SignatureVerifier is AccessControl {
+    // Role constants
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+
+    // Address of the paymaster
+    address public PayMaster;
+
+    constructor(address _paymaster) {
+        PayMaster = _paymaster;
+    }
+
     // Struct to store signature data
     struct Signature {
         bytes encodedMessage;
         bytes32 messageHash;
         bytes signature;
         address signer;
-        uint256 nonce;
     }
 
     struct EncodedMessage {
         address target;
         uint256 blockNumber;
-        uint8 opCode;
-        bytes params;
     }
-
-    // Stores used signatures
-    mapping(bytes => bool) internal usedSignatures;
 
     function getMessageHash(
         bytes memory _data
@@ -48,11 +52,6 @@ abstract contract SignatureVerifier is AccessControl {
 
     modifier verifySignature(bytes32 role, Signature memory _signature) {
         require(
-            !usedSignatures[_signature.signature],
-            "Signature already used"
-        );
-
-        require(
             getMessageHash(_signature.encodedMessage) == _signature.messageHash,
             "The message hash doesn't match the original!"
         );
@@ -65,18 +64,24 @@ abstract contract SignatureVerifier is AccessControl {
             _signature.signature
         );
         require(signer == _signature.signer, "Invalid signer");
+        require(
+            msg.sender == signer || msg.sender == PayMaster,
+            "Invalid sender"
+        );
         require(hasRole(role, signer), "Unauthorized");
 
-        _;
+        EncodedMessage memory encodedMessage = abi.decode(
+            _signature.encodedMessage,
+            (EncodedMessage)
+        );
+        checkMessageValidity(encodedMessage);
 
-        usedSignatures[_signature.signature] = true;
+        _;
     }
 
     function checkMessageValidity(
-        uint8 _opCode,
         EncodedMessage memory _encodedMessage
     ) internal view returns (bool) {
-        // (address _target, uint256 _blockNumber, string _functionName, ) = abi.decode(_encodedMessage.params, (address, uint256, string, bytes));
         require(
             _encodedMessage.target == address(this),
             "Target address doesn't match"
@@ -85,10 +90,36 @@ abstract contract SignatureVerifier is AccessControl {
             _encodedMessage.blockNumber >= block.number,
             "Message is expired"
         );
-        require(
-            _encodedMessage.opCode == _opCode,
-            "Function name doesn't match"
-        );
         return true;
+    }
+
+    function setPayMaster(
+        Signature memory signature,
+        address _paymaster
+    ) public verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+        EncodedMessage memory encodedMessage = abi.decode(
+            signature.encodedMessage,
+            (EncodedMessage)
+        );
+        checkMessageValidity(encodedMessage);
+        PayMaster = _paymaster;
+    }
+
+    // Override grantRole function
+    function grantRole(
+        Signature memory signature,
+        bytes32 role,
+        address account
+    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+        _grantRole(role, account);
+    }
+
+    // Override revokeRole function
+    function revokeRole(
+        Signature memory signature,
+        bytes32 role,
+        address account
+    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+        _revokeRole(role, account);
     }
 }

@@ -9,72 +9,29 @@ import "./Organization.sol";
     @notice This contract deploys and manages Organization contracts.
  */
 contract OrganizationFactory is SignatureVerifier {
-    // Role constants
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-
     // Stores deployed Organization contracts
     address[] public organizations;
 
     // Event to log the creation of an Organization contract
-    event OrganizationCreated(address indexed creator, address organization);
-
-    enum OPCode {
-        GrantRole,
-        RevokeRole,
-        CreateOrganization
-    }
+    event OrganizationCreated(
+        address indexed creator,
+        address indexed organization
+    );
 
     /**
        @notice Initializes the Organization Factory contract.
     */
-    constructor() {
+    constructor(address _paymaster) SignatureVerifier(_paymaster) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(ADMIN_ROLE, msg.sender);
     }
 
-    // Override grantRole function
-    function grantRole(
-        Signature memory signature
-    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        checkMessageValidity(uint8(OPCode.GrantRole), encodedMessage);
-        (bytes32 role, address account) = abi.decode(
-            encodedMessage.params,
-            (bytes32, address)
-        );
-        _grantRole(role, account);
-    }
-
-    // Override revokeRole function
-    function revokeRole(
-        Signature memory signature
-    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        checkMessageValidity(uint8(OPCode.RevokeRole), encodedMessage);
-        (bytes32 role, address account) = abi.decode(
-            encodedMessage.params,
-            (bytes32, address)
-        );
-        _revokeRole(role, account);
-    }
-
     // Function to deploy a new Organization contract
     function createOrganization(
-        Signature memory signature
+        Signature memory signature,
+        address _admin
     ) public verifySignature(ADMIN_ROLE, signature) returns (address) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
-        );
-        checkMessageValidity(uint8(OPCode.CreateOrganization), encodedMessage);
-        address _admin = abi.decode(encodedMessage.params, (address));
-        Organization org = new Organization(_admin);
+        Organization org = new Organization(PayMaster, _admin);
         organizations.push(address(org));
         emit OrganizationCreated(msg.sender, address(org));
         return address(org);
