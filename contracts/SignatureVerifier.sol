@@ -15,6 +15,14 @@ contract SignatureVerifier is AccessControl {
         bytes32 messageHash;
         bytes signature;
         address signer;
+        uint256 nonce;
+    }
+
+    struct EncodedMessage {
+        address target;
+        uint256 blockNumber;
+        uint8 opCode;
+        bytes params;
     }
 
     // Stores used signatures
@@ -68,5 +76,25 @@ contract SignatureVerifier is AccessControl {
         _;
 
         usedSignatures[_signature.signature] = true;
+    }
+
+    function checkMessageValidity(
+        uint8 _opCode,
+        EncodedMessage memory _encodedMessage
+    ) internal view returns (bool) {
+        // (address _target, uint256 _blockNumber, string _functionName, ) = abi.decode(_encodedMessage.params, (address, uint256, string, bytes));
+        require(
+            _encodedMessage.target == address(this),
+            "Target address doesn't match"
+        );
+        require(
+            _encodedMessage.blockNumber >= block.number,
+            "Message is expired"
+        );
+        require(
+            _encodedMessage.opCode == _opCode,
+            "Function name doesn't match"
+        );
+        return true;
     }
 }

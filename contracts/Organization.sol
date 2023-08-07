@@ -13,13 +13,6 @@ contract Organization is SignatureVerifier {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
 
-    struct EncodedMessage {
-        address target;
-        uint256 blockNumber;
-        OPCode opCode;
-        bytes params;
-    }
-
     // Enum to describe the permission levels
     enum Permission {
         NoAccess,
@@ -52,26 +45,6 @@ contract Organization is SignatureVerifier {
         _setupRole(TRANSFER_ROLE, _admin);
     }
 
-    function checkMessageValidity(
-        OPCode _opCode,
-        EncodedMessage memory _encodedMessage
-    ) internal view returns (bool) {
-        // (address _target, uint256 _blockNumber, string _functionName, ) = abi.decode(_encodedMessage.params, (address, uint256, string, bytes));
-        require(
-            _encodedMessage.target == address(this),
-            "Target address doesn't match"
-        );
-        require(
-            _encodedMessage.blockNumber >= block.number,
-            "Messade is expired"
-        );
-        require(
-            _encodedMessage.opCode == _opCode,
-            "Function name doesn't match"
-        );
-        return true;
-    }
-
     // Override grantRole function
     function grantRole(
         Signature memory signature
@@ -80,7 +53,7 @@ contract Organization is SignatureVerifier {
             signature.encodedMessage,
             (EncodedMessage)
         );
-        checkMessageValidity(OPCode.GrantRole, encodedMessage);
+        checkMessageValidity(uint8(OPCode.GrantRole), encodedMessage);
         (bytes32 role, address account) = abi.decode(
             encodedMessage.params,
             (bytes32, address)
@@ -96,7 +69,7 @@ contract Organization is SignatureVerifier {
             signature.encodedMessage,
             (EncodedMessage)
         );
-        checkMessageValidity(OPCode.RevokeRole, encodedMessage);
+        checkMessageValidity(uint8(OPCode.RevokeRole), encodedMessage);
         (bytes32 role, address account) = abi.decode(
             encodedMessage.params,
             (bytes32, address)
@@ -112,7 +85,10 @@ contract Organization is SignatureVerifier {
             signature.encodedMessage,
             (EncodedMessage)
         );
-        checkMessageValidity(OPCode.SetDefaultPermission, encodedMessage);
+        checkMessageValidity(
+            uint8(OPCode.SetDefaultPermission),
+            encodedMessage
+        );
         (address account, Permission perm) = abi.decode(
             encodedMessage.params,
             (address, Permission)
@@ -128,7 +104,7 @@ contract Organization is SignatureVerifier {
             signature.encodedMessage,
             (EncodedMessage)
         );
-        checkMessageValidity(OPCode.SetPermission, encodedMessage);
+        checkMessageValidity(uint8(OPCode.SetPermission), encodedMessage);
         (address account, uint256 tokenId, Permission perm) = abi.decode(
             encodedMessage.params,
             (address, uint256, Permission)
@@ -190,7 +166,7 @@ contract Organization is SignatureVerifier {
                 encodedMessage.params,
                 (IERC1155, address, address, uint256, uint256)
             );
-        checkMessageValidity(OPCode.TransferEtch, encodedMessage);
+        checkMessageValidity(uint8(OPCode.TransferEtch), encodedMessage);
         nft.safeTransferFrom(from, to, tokenId, amount, "");
     }
 }

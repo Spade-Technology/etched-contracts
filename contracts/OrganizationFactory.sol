@@ -18,13 +18,6 @@ contract OrganizationFactory is SignatureVerifier {
     // Event to log the creation of an Organization contract
     event OrganizationCreated(address indexed creator, address organization);
 
-    struct EncodedMessage {
-        address target;
-        uint256 blockNumber;
-        OPCode opCode;
-        bytes params;
-    }
-
     enum OPCode {
         GrantRole,
         RevokeRole,
@@ -39,26 +32,6 @@ contract OrganizationFactory is SignatureVerifier {
         _setupRole(ADMIN_ROLE, msg.sender);
     }
 
-    function checkMessageValidity(
-        OPCode _opCode,
-        EncodedMessage memory _encodedMessage
-    ) internal view returns (bool) {
-        // (address _target, uint256 _blockNumber, string _functionName, ) = abi.decode(_encodedMessage.params, (address, uint256, string, bytes));
-        require(
-            _encodedMessage.target == address(this),
-            "Target address doesn't match"
-        );
-        require(
-            _encodedMessage.blockNumber >= block.number,
-            "Messade is expired"
-        );
-        require(
-            _encodedMessage.opCode == _opCode,
-            "Function name doesn't match"
-        );
-        return true;
-    }
-
     // Override grantRole function
     function grantRole(
         Signature memory signature
@@ -67,7 +40,7 @@ contract OrganizationFactory is SignatureVerifier {
             signature.encodedMessage,
             (EncodedMessage)
         );
-        checkMessageValidity(OPCode.GrantRole, encodedMessage);
+        checkMessageValidity(uint8(OPCode.GrantRole), encodedMessage);
         (bytes32 role, address account) = abi.decode(
             encodedMessage.params,
             (bytes32, address)
@@ -83,7 +56,7 @@ contract OrganizationFactory is SignatureVerifier {
             signature.encodedMessage,
             (EncodedMessage)
         );
-        checkMessageValidity(OPCode.RevokeRole, encodedMessage);
+        checkMessageValidity(uint8(OPCode.RevokeRole), encodedMessage);
         (bytes32 role, address account) = abi.decode(
             encodedMessage.params,
             (bytes32, address)
@@ -99,7 +72,7 @@ contract OrganizationFactory is SignatureVerifier {
             signature.encodedMessage,
             (EncodedMessage)
         );
-        checkMessageValidity(OPCode.CreateOrganization, encodedMessage);
+        checkMessageValidity(uint8(OPCode.CreateOrganization), encodedMessage);
         address _admin = abi.decode(encodedMessage.params, (address));
         Organization org = new Organization(_admin);
         organizations.push(address(org));
