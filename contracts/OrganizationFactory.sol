@@ -8,7 +8,8 @@ import "./Organization.sol";
     @title Organization Factory Contract
     @notice This contract deploys and manages Organization contracts.
  */
-contract OrganizationFactory is SignatureVerifier{
+contract OrganizationFactory is SignatureVerifier {
+    // Role constants
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     // Stores deployed Organization contracts
@@ -17,7 +18,7 @@ contract OrganizationFactory is SignatureVerifier{
     // Event to log the creation of an Organization contract
     event OrganizationCreated(address indexed creator, address organization);
 
-    struct EncodedMessage{
+    struct EncodedMessage {
         address target;
         uint256 blockNumber;
         OPCode opCode;
@@ -38,36 +39,68 @@ contract OrganizationFactory is SignatureVerifier{
         _setupRole(ADMIN_ROLE, msg.sender);
     }
 
-
-    function checkMessageValidity(OPCode _opCode, EncodedMessage memory _encodedMessage) internal view returns (bool){
+    function checkMessageValidity(
+        OPCode _opCode,
+        EncodedMessage memory _encodedMessage
+    ) internal view returns (bool) {
         // (address _target, uint256 _blockNumber, string _functionName, ) = abi.decode(_encodedMessage.params, (address, uint256, string, bytes));
-        require(_encodedMessage.target == address(this), "Target address doesn't match");
-        require(_encodedMessage.blockNumber >= block.number, "Messade is expired");
-        require(_encodedMessage.opCode == _opCode, "Function name doesn't match");
+        require(
+            _encodedMessage.target == address(this),
+            "Target address doesn't match"
+        );
+        require(
+            _encodedMessage.blockNumber >= block.number,
+            "Messade is expired"
+        );
+        require(
+            _encodedMessage.opCode == _opCode,
+            "Function name doesn't match"
+        );
         return true;
     }
 
     // Override grantRole function
-    function grantRole(Signature memory signature) public verifySignature(DEFAULT_ADMIN_ROLE, signature) virtual {
-        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+    function grantRole(
+        Signature memory signature
+    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+        EncodedMessage memory encodedMessage = abi.decode(
+            signature.encodedMessage,
+            (EncodedMessage)
+        );
         checkMessageValidity(OPCode.GrantRole, encodedMessage);
-        (bytes32 role, address account) = abi.decode(encodedMessage.params, (bytes32, address));
+        (bytes32 role, address account) = abi.decode(
+            encodedMessage.params,
+            (bytes32, address)
+        );
         _grantRole(role, account);
     }
 
     // Override revokeRole function
-    function revokeRole(Signature memory signature) public verifySignature(DEFAULT_ADMIN_ROLE, signature) virtual {
-        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+    function revokeRole(
+        Signature memory signature
+    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+        EncodedMessage memory encodedMessage = abi.decode(
+            signature.encodedMessage,
+            (EncodedMessage)
+        );
         checkMessageValidity(OPCode.RevokeRole, encodedMessage);
-        (bytes32 role, address account) = abi.decode(encodedMessage.params, (bytes32, address));
+        (bytes32 role, address account) = abi.decode(
+            encodedMessage.params,
+            (bytes32, address)
+        );
         _revokeRole(role, account);
     }
 
     // Function to deploy a new Organization contract
-    function createOrganization(Signature memory signature) public verifySignature(ADMIN_ROLE, signature) returns (address) {
-        EncodedMessage memory encodedMessage = abi.decode(signature.encodedMessage, (EncodedMessage));
+    function createOrganization(
+        Signature memory signature
+    ) public verifySignature(ADMIN_ROLE, signature) returns (address) {
+        EncodedMessage memory encodedMessage = abi.decode(
+            signature.encodedMessage,
+            (EncodedMessage)
+        );
         checkMessageValidity(OPCode.CreateOrganization, encodedMessage);
-        (address _admin) = abi.decode(encodedMessage.params, (address));
+        address _admin = abi.decode(encodedMessage.params, (address));
         Organization org = new Organization(_admin);
         organizations.push(address(org));
         emit OrganizationCreated(msg.sender, address(org));

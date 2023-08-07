@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
     @notice This contract provides signature verification functionalities.
  */
 contract SignatureVerifier is AccessControl {
-    
     // Struct to store signature data
     struct Signature {
         bytes encodedMessage;

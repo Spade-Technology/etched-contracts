@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
     @notice This contract manages permissions and roles within an organization.
  */
 contract Organization is SignatureVerifier {
+    // Role constants
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant TRANSFER_ROLE = keccak256("TRANSFER_ROLE");
 
