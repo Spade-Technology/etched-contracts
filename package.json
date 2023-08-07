@@ -2,5 +2,9 @@
   "name": "hardhat-project",
   "devDependencies": {
     "chai": "^4.3.7"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3",
+    "hardhat": "^2.17.1"
   }
 }
