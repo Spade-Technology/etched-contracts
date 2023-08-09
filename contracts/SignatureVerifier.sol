@@ -2,13 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
     @title Signature Verifier
     @notice This contract provides signature verification functionalities.
  */
-abstract contract SignatureVerifier is AccessControl {
+abstract contract SignatureVerifier is Ownable, AccessControl {
     // Role constants
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
