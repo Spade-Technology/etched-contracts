@@ -49,14 +49,14 @@ describe("Organization and OrganizationFactory Contracts", function () {
 
         it("should allow default admin to add new admin", async () => {
             let signature = await generateSignature(admin, organization.address);
-            await organization.connect(paymaster).grantRole(signature, ADMIN_ROLE, user1.address);
+            await organization.connect(paymaster).grantRolebySignature(signature, ADMIN_ROLE, user1.address);
             const isAdmin = await organization.hasRole(await organization.ADMIN_ROLE(), user1.address);
             expect(isAdmin).to.be.true;
         });
 
         it("should not allow non-admin to add new admin", async () => {
             let signature = await generateSignature(user1, organization.address);
-            await expect(organization.connect(paymaster).grantRole(signature, ADMIN_ROLE, user2.address)).to.be.revertedWith("Unauthorized");
+            await expect(organization.connect(paymaster).grantRolebySignature(signature, ADMIN_ROLE, user2.address)).to.be.revertedWith("Unauthorized");
         });
 
         it("should allow the admin to set default permissions", async () => {
@@ -99,13 +99,13 @@ describe("Organization and OrganizationFactory Contracts", function () {
         it("should not allow non-admin to set specific permissions", async () => {
             const tokenId = new BigNumber.from(1000);
             const perm = new BigNumber.from(2); // Permission.Write
-            let signature = await generateSignature(user1, organization.address);
-            await expect(organization.connect(paymaster).setPermission(signature, user1.address, tokenId, perm)).to.be.revertedWith("Unauthorized");
+            let signature = await generateSignature(user2, organization.address);
+            await expect(organization.connect(paymaster).setPermission(signature, user2.address, tokenId, perm)).to.be.revertedWith("Unauthorized");
         });
 
         it("should allow secondary-admin to set specific permissions", async () => {
             let signature = await generateSignature(admin, organization.address);
-            await organization.connect(paymaster).grantRole(signature, ADMIN_ROLE, user1.address);
+            await organization.connect(paymaster).grantRolebySignature(signature, ADMIN_ROLE, user1.address);
             const isAdmin = await organization.hasRole(await organization.ADMIN_ROLE(), user1.address);
             expect(isAdmin).to.be.true;
 
