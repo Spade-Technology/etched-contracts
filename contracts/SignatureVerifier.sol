@@ -96,7 +96,7 @@ abstract contract SignatureVerifier is AccessControl {
     function setPayMaster(
         Signature memory signature,
         address _paymaster
-    ) public verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+    ) external verifySignature(DEFAULT_ADMIN_ROLE, signature) {
         EncodedMessage memory encodedMessage = abi.decode(
             signature.encodedMessage,
             (EncodedMessage)
@@ -106,20 +106,20 @@ abstract contract SignatureVerifier is AccessControl {
     }
 
     // Override grantRole function
-    function grantRole(
+    function grantRolebySignature(
         Signature memory signature,
         bytes32 role,
         address account
-    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+    ) external virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
         _grantRole(role, account);
     }
 
     // Override revokeRole function
-    function revokeRole(
+    function revokeRolebySignature(
         Signature memory signature,
         bytes32 role,
         address account
-    ) public virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+    ) external virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
         _revokeRole(role, account);
     }
 }

@@ -37,6 +37,7 @@ contract Organization is SignatureVerifier {
         _setupRole(DEFAULT_ADMIN_ROLE, _admin);
         _setupRole(ADMIN_ROLE, _admin);
         _setupRole(TRANSFER_ROLE, _admin);
+        _setRoleAdmin(TRANSFER_ROLE, ADMIN_ROLE);
     }
 
     // Function to set default permissions for a user
@@ -44,7 +45,7 @@ contract Organization is SignatureVerifier {
         Signature memory signature,
         address account,
         Permission perm
-    ) public verifySignature(DEFAULT_ADMIN_ROLE, signature) {
+    ) external verifySignature(DEFAULT_ADMIN_ROLE, signature) {
         defaultPermissions[account] = perm;
     }
 
@@ -54,7 +55,7 @@ contract Organization is SignatureVerifier {
         address account,
         uint256 tokenId,
         Permission perm
-    ) public verifySignature(ADMIN_ROLE, signature) {
+    ) external verifySignature(ADMIN_ROLE, signature) {
         permissions[account][tokenId] = perm;
     }
 
@@ -74,7 +75,7 @@ contract Organization is SignatureVerifier {
     function canRead(
         address account,
         uint256 tokenId
-    ) public view returns (bool) {
+    ) external view returns (bool) {
         return getEffectivePermission(account, tokenId) >= Permission.Read;
     }
 
@@ -82,7 +83,7 @@ contract Organization is SignatureVerifier {
     function canWrite(
         address account,
         uint256 tokenId
-    ) public view returns (bool) {
+    ) external view returns (bool) {
         return getEffectivePermission(account, tokenId) == Permission.Write;
     }
 
@@ -90,7 +91,7 @@ contract Organization is SignatureVerifier {
     function isAdmin(
         address account,
         uint256 tokenId
-    ) public view returns (bool) {
+    ) external view returns (bool) {
         return getEffectivePermission(account, tokenId) == Permission.Admin;
     }
 
@@ -102,7 +103,7 @@ contract Organization is SignatureVerifier {
         address to,
         uint256 tokenId,
         uint256 amount
-    ) public verifySignature(TRANSFER_ROLE, signature) {
+    ) external verifySignature(TRANSFER_ROLE, signature) {
         nft.safeTransferFrom(from, to, tokenId, amount, "");
     }
 }

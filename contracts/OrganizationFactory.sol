@@ -30,7 +30,7 @@ contract OrganizationFactory is SignatureVerifier {
     function createOrganization(
         Signature memory signature,
         address _admin
-    ) public verifySignature(ADMIN_ROLE, signature) returns (address) {
+    ) external verifySignature(ADMIN_ROLE, signature) returns (address) {
         Organization org = new Organization(PayMaster, _admin);
         organizations.push(address(org));
         emit OrganizationCreated(msg.sender, address(org));
@@ -38,12 +38,12 @@ contract OrganizationFactory is SignatureVerifier {
     }
 
     // Function to get the total number of deployed Organization contracts
-    function getOrganizationCount() public view returns (uint256) {
+    function getOrganizationCount() external view returns (uint256) {
         return organizations.length;
     }
 
     // Function to get a specific Organization contract address
-    function getOrganization(uint256 index) public view returns (address) {
+    function getOrganization(uint256 index) external view returns (address) {
         require(index < organizations.length, "Index out of bounds");
         return organizations[index];
     }
