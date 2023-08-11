@@ -4,8 +4,8 @@ const { BigNumber } = ethers;
 
 // const { keccak256, signMessage, arrayify } = require("ethers/lib/utils");
 
-describe("Team and Etch Tests", function () {
-    let Team, Etch, team, admin, paymaster, user1, user2, other;
+describe("Team and Etches Tests", function () {
+    let Team, Etches, team, admin, paymaster, user1, user2, other;
 
     // const ADMIN_ROLE = "0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775";
     // // console.log("Admin Role: ", ADMIN_ROLE);
@@ -28,7 +28,7 @@ describe("Team and Etch Tests", function () {
     before(async function () {
         // Deploy contracts
         Team = await ethers.getContractFactory("Team");
-        Etch = await ethers.getContractFactory("Etch");
+        Etches = await ethers.getContractFactory("Etches");
 
         [admin, paymaster, user1, user2, other] = await ethers.getSigners();
 
@@ -107,20 +107,20 @@ describe("Team and Etch Tests", function () {
 
         it("Deployed etch should have correct initial roles", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const name = (await etch.name()).toString();
             const symbol = (await etch.symbol()).toString();
             const isOwner = (await etch.owner()).toString();
             const isPaymaster = (await etch.PayMaster()).toString();
             expect(isOwner).to.equal(team.address.toString());
             expect(isPaymaster).to.equal(paymaster.address.toString());
-            expect(name).to.equal("Etch");
+            expect(name).to.equal("Etches");
             expect(symbol).to.equal("ETCH");
         });
 
         it("Team admin should be able mint new etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const ipfsId = "ipfs://random";
             let signature = await generateSignature(admin, etch.address);
             await etch.connect(paymaster).mint(signature, ipfsId);
@@ -132,9 +132,9 @@ describe("Team and Etch Tests", function () {
             expect(await etchIPSFId.toString()).to.equal(ipfsId);
         });
 
-        it("Etch contract can read the permisisions set by the team contract", async () => {
+        it("Etches contract can read the permisisions set by the team contract", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const tokenId = new BigNumber.from(0);
             const perm = new BigNumber.from(1); // Permission.Write
             let signature = await generateSignature(admin, team.address);
@@ -149,14 +149,14 @@ describe("Team and Etch Tests", function () {
 
         it("Team non-admin should not be able burn new etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             let signature = await generateSignature(user1, etch.address);
             await expect(etch.connect(paymaster).burn(signature, "0")).to.be.revertedWith("Caller is not the owner");
         });
 
         it("Team admin should be able burn etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             let signature = await generateSignature(admin, etch.address);
             await etch.connect(paymaster).burn(signature, "0");
 
@@ -170,7 +170,7 @@ describe("Team and Etch Tests", function () {
 
         it("Team non-admin should not be able mint new etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const ipfsId = "ipfs://random";
             let signature = await generateSignature(user1, etch.address);
             await expect(etch.connect(paymaster).mint(signature, ipfsId)).to.be.revertedWith("Caller is not the owner");
@@ -179,7 +179,7 @@ describe("Team and Etch Tests", function () {
 
         it("Team admin should be able transfer team's etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const ipfsId = "ipfs://random";
             let signature = await generateSignature(admin, etch.address);
             await etch.connect(paymaster).mint(signature, ipfsId);
@@ -193,7 +193,7 @@ describe("Team and Etch Tests", function () {
 
         it("Team non-admin should not be able transfer team's etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const ipfsId = "ipfs://random";
             let signature = await generateSignature(admin, etch.address);
             await etch.connect(paymaster).mint(signature, ipfsId);
@@ -206,7 +206,7 @@ describe("Team and Etch Tests", function () {
 
         it("Team admin should not be able transfer non-team's etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const ipfsId = "ipfs://random";
             let signature = await generateSignature(admin, etch.address);
 
@@ -217,7 +217,7 @@ describe("Team and Etch Tests", function () {
 
         it("Account with write permission should be able to write to etch for the deployed", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const tokenId = new BigNumber.from(3);
             const perm = new BigNumber.from(2); // Permission.Write
             const ipfsId = "ipfs://random";
@@ -240,7 +240,7 @@ describe("Team and Etch Tests", function () {
 
         it("Account with read permission should be able to write to etch for the deployed", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const tokenId = new BigNumber.from(2);
             const perm = new BigNumber.from(1); // Permission.Write
             let signature = await generateSignature(admin, team.address);
@@ -258,7 +258,7 @@ describe("Team and Etch Tests", function () {
 
         it("Owner of a particular etch should be able to write to etch for the deployed etch", async () => {
             const etchAddress = await team.etch();
-            const etch = await Etch.attach(etchAddress);
+            const etch = await Etches.attach(etchAddress);
             const tokenId = new BigNumber.from(1);
 
             let signature = await generateSignature(user1, etch.address);

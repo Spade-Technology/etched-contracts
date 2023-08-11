@@ -5,7 +5,7 @@ const { BigNumber } = ethers;
 // const { keccak256, signMessage, arrayify } = require("ethers/lib/utils");
 
 describe("Organization and Team Tests", function () {
-    let Organization, Team, Etch, organization, admin, paymaster, user1, user2, other;
+    let Organization, Team, organization, admin, paymaster, user1, user2, other;
 
     // const ADMIN_ROLE = "0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775";
     // // console.log("Admin Role: ", ADMIN_ROLE);
@@ -29,7 +29,6 @@ describe("Organization and Team Tests", function () {
         // Deploy contracts
         Organization = await ethers.getContractFactory("Organization");
         Team = await ethers.getContractFactory("Team");
-        Etch = await ethers.getContractFactory("Etch");
 
         [admin, paymaster, user1, user2, other] = await ethers.getSigners();
 

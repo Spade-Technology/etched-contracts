@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./SignatureVerifier.sol";
 import "./Team.sol";
 
-contract Etch is Ownable, ERC721, SignatureVerifier {
+contract Etches is Ownable, ERC721, SignatureVerifier {
     uint256 public totalEtches;
 
     struct Message {
@@ -25,7 +25,7 @@ contract Etch is Ownable, ERC721, SignatureVerifier {
     constructor(
         address _owner,
         address _paymaster
-    ) ERC721("Etch", "ETCH") SignatureVerifier(_paymaster) {
+    ) ERC721("Etches", "ETCH") SignatureVerifier(_paymaster) {
         transferOwnership(_owner);
     }
 
@@ -118,7 +118,12 @@ contract Etch is Ownable, ERC721, SignatureVerifier {
         address to,
         uint256 tokenId
     ) external verifySignature(signature) {
-        _checkOwner(signature.signer);
-        _transfer(owner(), to, tokenId);
+        if (ownerOf(tokenId) == owner()) {
+            _checkOwner(signature.signer);
+            _transfer(owner(), to, tokenId);
+        }
+        else{
+            _transfer(signature.signer, to, tokenId);
+        }
     }
 }

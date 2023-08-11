@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "./SignatureVerifier.sol";
-import "./Etch.sol";
+import "./Etches.sol";
 import "./Organization.sol";
 
 /**
@@ -20,7 +20,7 @@ contract Team is Ownable, SignatureVerifier, IERC721Receiver {
         Write
     }
 
-    Etch public etch;
+    Etches public etch;
 
     bool public isOrganizationOwned;
 
@@ -36,7 +36,7 @@ contract Team is Ownable, SignatureVerifier, IERC721Receiver {
         bool _isOrganizationOwned
     ) SignatureVerifier(_paymaster) {
         isOrganizationOwned = _isOrganizationOwned;
-        etch = new Etch(address(this), _paymaster);
+        etch = new Etches(address(this), _paymaster);
         defaultPermissions[_owner] = Permission.Write;
         _transferOwnership(_owner);
     }
