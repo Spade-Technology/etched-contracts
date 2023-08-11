@@ -1,17 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
     @title Signature Verifier
     @notice This contract provides signature verification functionalities.
  */
-abstract contract SignatureVerifier is AccessControl {
-    // Role constants
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-
+abstract contract SignatureVerifier {
     // Address of the paymaster
     address public PayMaster;
 
@@ -50,7 +46,7 @@ abstract contract SignatureVerifier is AccessControl {
             );
     }
 
-    modifier verifySignature(bytes32 role, Signature memory _signature) {
+    function _checkSignature(Signature memory _signature) internal view {
         require(
             getMessageHash(_signature.encodedMessage) == _signature.messageHash,
             "The message hash doesn't match the original!"
@@ -68,14 +64,16 @@ abstract contract SignatureVerifier is AccessControl {
             msg.sender == signer || msg.sender == PayMaster,
             "Invalid sender"
         );
-        require(hasRole(role, signer), "Unauthorized");
 
         EncodedMessage memory encodedMessage = abi.decode(
             _signature.encodedMessage,
             (EncodedMessage)
         );
         checkMessageValidity(encodedMessage);
+    }
 
+    modifier verifySignature(Signature memory _signature) {
+        _checkSignature(_signature);
         _;
     }
 
@@ -96,30 +94,11 @@ abstract contract SignatureVerifier is AccessControl {
     function setPayMaster(
         Signature memory signature,
         address _paymaster
-    ) external verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        EncodedMessage memory encodedMessage = abi.decode(
-            signature.encodedMessage,
-            (EncodedMessage)
+    ) external verifySignature(signature) {
+        require(
+            signature.signer == PayMaster,
+            "Can only be called by the paymaster"
         );
-        checkMessageValidity(encodedMessage);
         PayMaster = _paymaster;
-    }
-
-    // Override grantRole function
-    function grantRolebySignature(
-        Signature memory signature,
-        bytes32 role,
-        address account
-    ) external virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        _grantRole(role, account);
-    }
-
-    // Override revokeRole function
-    function revokeRolebySignature(
-        Signature memory signature,
-        bytes32 role,
-        address account
-    ) external virtual verifySignature(DEFAULT_ADMIN_ROLE, signature) {
-        _revokeRole(role, account);
     }
 }
