@@ -20,11 +20,9 @@ contract Organization is Ownable, SignatureVerifier {
        @notice Initializes the Team Factory contract.
     */
     constructor(
-        Signature memory signature,
-        address _paymaster,
-        address _admin
+        address _admin,
+        address _paymaster
     ) SignatureVerifier(_paymaster) {
-        _checkSignature(signature);
         transferOwnership(_admin);
     }
 
@@ -37,11 +35,9 @@ contract Organization is Ownable, SignatureVerifier {
         Signature memory signature
     ) external verifySignature(signature) returns (address) {
         _checkOwner(signature.signer);
-        Team team = new Team(signature, address(this), PayMaster, true);
+        Team team = new Team(address(this), PayMaster, true);
         address teamAddress = address(team);
-
         teams.push(teamAddress);
-
         emit TeamCreated(signature.signer, teamAddress);
         return teamAddress;
     }
