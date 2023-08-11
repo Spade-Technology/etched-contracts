@@ -71,7 +71,17 @@ contract Etches is Ownable, ERC721, SignatureVerifier {
         Signature memory signature,
         uint256 tokenId
     ) external verifySignature(signature) {
-        _checkOwner(signature.signer);
+        _requireMinted(tokenId);
+        address etchOwner = ownerOf(tokenId);
+
+        if (etchOwner == owner()) {
+            _checkOwner(signature.signer);
+        } else {
+            require(
+                etchOwner == signature.signer,
+                "Etch can only be burned by etch owner"
+            );
+        }
         _burn(tokenId);
         delete etches[tokenId];
     }
@@ -121,8 +131,7 @@ contract Etches is Ownable, ERC721, SignatureVerifier {
         if (ownerOf(tokenId) == owner()) {
             _checkOwner(signature.signer);
             _transfer(owner(), to, tokenId);
-        }
-        else{
+        } else {
             _transfer(signature.signer, to, tokenId);
         }
     }
