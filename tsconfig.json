@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
-    "**/*.mjs"
+    "**/*.mjs",
+    "sol2/tsconfig.json"
   ],
   "exclude": ["node_modules"]
 }
