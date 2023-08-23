@@ -26,17 +26,26 @@ import type {
 export interface TeamsInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "_nodes"
+      | "addNode"
       | "approve"
       | "balanceOf"
       | "createTeam"
+      | "delegateCallsToSelf"
       | "getApproved"
       | "getNumberOfTeamsCreated"
+      | "getParent"
       | "hasPermission"
       | "isApprovedForAll"
+      | "isNode"
       | "name"
       | "onERC721Received"
+      | "organisationOf"
+      | "organisations"
+      | "owner"
       | "ownerOf"
       | "permissionsOfTeam"
+      | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
@@ -45,12 +54,23 @@ export interface TeamsInterface extends Interface {
       | "symbol"
       | "tokenURI"
       | "transferFrom"
+      | "transferOwnership"
+      | "transferToOrganisation"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "Approval" | "ApprovalForAll" | "Transfer"
+    nameOrSignatureOrTopic:
+      | "Approval"
+      | "ApprovalForAll"
+      | "OwnershipTransferred"
+      | "Transfer"
   ): EventFragment;
 
+  encodeFunctionData(functionFragment: "_nodes", values: [AddressLike]): string;
+  encodeFunctionData(
+    functionFragment: "addNode",
+    values: [AddressLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
@@ -64,6 +84,10 @@ export interface TeamsInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "delegateCallsToSelf",
+    values: [BytesLike[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
@@ -71,6 +95,7 @@ export interface TeamsInterface extends Interface {
     functionFragment: "getNumberOfTeamsCreated",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "getParent", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "hasPermission",
     values: [BigNumberish, AddressLike, BigNumberish]
@@ -79,11 +104,21 @@ export interface TeamsInterface extends Interface {
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "isNode", values: [AddressLike]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "onERC721Received",
     values: [AddressLike, AddressLike, BigNumberish, BytesLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "organisationOf",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "organisations",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
@@ -91,6 +126,10 @@ export interface TeamsInterface extends Interface {
   encodeFunctionData(
     functionFragment: "permissionsOfTeam",
     values: [BigNumberish, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -121,10 +160,24 @@ export interface TeamsInterface extends Interface {
     functionFragment: "transferFrom",
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferToOrganisation",
+    values: [BigNumberish, BigNumberish]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "_nodes", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "addNode", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "createTeam", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "delegateCallsToSelf",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -133,6 +186,7 @@ export interface TeamsInterface extends Interface {
     functionFragment: "getNumberOfTeamsCreated",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getParent", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "hasPermission",
     data: BytesLike
@@ -141,14 +195,28 @@ export interface TeamsInterface extends Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isNode", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "organisationOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "organisations",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "permissionsOfTeam",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -175,6 +243,14 @@ export interface TeamsInterface extends Interface {
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferToOrganisation",
     data: BytesLike
   ): Result;
 }
@@ -212,6 +288,19 @@ export namespace ApprovalForAllEvent {
     owner: string;
     operator: string;
     approved: boolean;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -280,6 +369,10 @@ export interface Teams extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  _nodes: TypedContractMethod<[node: AddressLike], [boolean], "view">;
+
+  addNode: TypedContractMethod<[node: AddressLike], [void], "nonpayable">;
+
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
@@ -290,9 +383,17 @@ export interface Teams extends BaseContract {
 
   createTeam: TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
 
+  delegateCallsToSelf: TypedContractMethod<
+    [_calldata: BytesLike[]],
+    [void],
+    "nonpayable"
+  >;
+
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
   getNumberOfTeamsCreated: TypedContractMethod<[], [bigint], "view">;
+
+  getParent: TypedContractMethod<[], [string], "view">;
 
   hasPermission: TypedContractMethod<
     [teamId: BigNumberish, user: AddressLike, permission: BigNumberish],
@@ -306,6 +407,8 @@ export interface Teams extends BaseContract {
     "view"
   >;
 
+  isNode: TypedContractMethod<[node: AddressLike], [boolean], "view">;
+
   name: TypedContractMethod<[], [string], "view">;
 
   onERC721Received: TypedContractMethod<
@@ -314,13 +417,21 @@ export interface Teams extends BaseContract {
     "nonpayable"
   >;
 
+  organisationOf: TypedContractMethod<[team: BigNumberish], [bigint], "view">;
+
+  organisations: TypedContractMethod<[], [string], "view">;
+
+  owner: TypedContractMethod<[], [string], "view">;
+
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
   permissionsOfTeam: TypedContractMethod<
-    [arg0: BigNumberish, arg1: AddressLike],
+    [team: BigNumberish, user: AddressLike],
     [bigint],
     "view"
   >;
+
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   "safeTransferFrom(address,address,uint256)": TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
@@ -367,10 +478,28 @@ export interface Teams extends BaseContract {
     "nonpayable"
   >;
 
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  transferToOrganisation: TypedContractMethod<
+    [teamId: BigNumberish, orgId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "_nodes"
+  ): TypedContractMethod<[node: AddressLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "addNode"
+  ): TypedContractMethod<[node: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
@@ -385,11 +514,17 @@ export interface Teams extends BaseContract {
     nameOrSignature: "createTeam"
   ): TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
   getFunction(
+    nameOrSignature: "delegateCallsToSelf"
+  ): TypedContractMethod<[_calldata: BytesLike[]], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "getNumberOfTeamsCreated"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getParent"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "hasPermission"
   ): TypedContractMethod<
@@ -405,6 +540,9 @@ export interface Teams extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "isNode"
+  ): TypedContractMethod<[node: AddressLike], [boolean], "view">;
+  getFunction(
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -415,15 +553,27 @@ export interface Teams extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "organisationOf"
+  ): TypedContractMethod<[team: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "organisations"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "permissionsOfTeam"
   ): TypedContractMethod<
-    [arg0: BigNumberish, arg1: AddressLike],
+    [team: BigNumberish, user: AddressLike],
     [bigint],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "safeTransferFrom(address,address,uint256)"
   ): TypedContractMethod<
@@ -473,6 +623,16 @@ export interface Teams extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "transferToOrganisation"
+  ): TypedContractMethod<
+    [teamId: BigNumberish, orgId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
 
   getEvent(
     key: "Approval"
@@ -487,6 +647,13 @@ export interface Teams extends BaseContract {
     ApprovalForAllEvent.InputTuple,
     ApprovalForAllEvent.OutputTuple,
     ApprovalForAllEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "Transfer"
@@ -517,6 +684,17 @@ export interface Teams extends BaseContract {
       ApprovalForAllEvent.InputTuple,
       ApprovalForAllEvent.OutputTuple,
       ApprovalForAllEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

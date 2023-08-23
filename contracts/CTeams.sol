@@ -4,27 +4,35 @@ pragma solidity ^0.8.19;
 import "./forks/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "./CNodeHandler.sol";
 
-import "./COrganisation.sol";
+import "./IOrganisation.sol";
 import "./ITeams.sol";
 
-contract Teams is ERC721, IERC721Receiver, ITeams {
+contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
     using Counters for Counters.Counter;
 
     // Counter for the total number of teams created
     Counters.Counter private totalSupply;
 
     // Mapping of the organisations contract
-    address organisations;
+    address public organisations;
 
     // Mapping of the permissions of a user for a team
-    mapping(uint256 => mapping(address => EPermissions))
+    mapping(uint256 team => mapping(address user => EPermissions permission))
         public permissionsOfTeam;
+
+    // Mapping of Team ID to Organisation ID
+    mapping(uint256 team => uint256 organisation) public organisationOf;
 
     /**
      *
      */
-    constructor() ERC721("Etch Team", "t-ETCH") {}
+    constructor(
+        address organisationsContract
+    ) ERC721("Etch Team", "t-ETCH") NodeHandler(organisationsContract) {
+        organisations = organisationsContract;
+    }
 
     /**
      * @notice Sets the address of the organisations contract.
@@ -33,7 +41,9 @@ contract Teams is ERC721, IERC721Receiver, ITeams {
      *
      * @return newTeamId The teamId of the EtchUID
      */
-    function createTeam(address to) public returns (uint256 newTeamId) {
+    function createTeam(
+        address to
+    ) external override returns (uint256 newTeamId) {
         totalSupply.increment();
         uint256 teamId = totalSupply.current();
 
@@ -54,7 +64,7 @@ contract Teams is ERC721, IERC721Receiver, ITeams {
         uint256 teamId,
         address user,
         EPermissions permission
-    ) public view override returns (bool _hasPermission) {
+    ) external view override returns (bool _hasPermission) {
         if (ownerOf(teamId) == user) return true;
         else return permissionsOfTeam[teamId][user] >= permission;
     }
@@ -72,12 +82,20 @@ contract Teams is ERC721, IERC721Receiver, ITeams {
         uint256 teamId,
         address user,
         EPermissions permission
-    ) public {
+    ) external override onlyAdmin(teamId) {
+        permissionsOfTeam[teamId][user] = permission;
+    }
+
+    function transferToOrganisation(
+        uint256 teamId,
+        uint256 orgId
+    ) external override {
         require(
             ownerOf(teamId) == msg.sender,
-            "TEAMS: Only Admin can set permissions"
+            "TEAMS: Only Owner can transfer to Organisation"
         );
-        permissionsOfTeam[teamId][user] = permission;
+        _transfer(msg.sender, organisations, teamId);
+        organisationOf[teamId] = orgId;
     }
 
     /**
@@ -86,13 +104,29 @@ contract Teams is ERC721, IERC721Receiver, ITeams {
      * @return totalAmountOfTeams The total number of teams created.
      */
     function getNumberOfTeamsCreated()
-        public
+        external
         view
-        virtual
         override
         returns (uint256 totalAmountOfTeams)
     {
         return totalSupply.current();
+    }
+
+    /**
+     * @notice Override of the ERC721 implementation to allow for the teams contract to be the owner of the Team, through  ownership, or the underlying organisation
+     *
+     * @param teamId The Team's ID to check the owner of
+     *
+     * @return address The owner of the Team
+     */
+    function _ownerOf(
+        uint256 teamId
+    ) internal view virtual override returns (address) {
+        address owner = _owners[teamId];
+
+        if (owner == organisations)
+            return IOrganisation(organisations).ownerOf(organisationOf[teamId]);
+        return owner;
     }
 
     /**
@@ -108,18 +142,16 @@ contract Teams is ERC721, IERC721Receiver, ITeams {
         return this.onERC721Received.selector;
     }
 
-    /**
-     * @notice Override of the ERC721 implementation to allow for the teams contract to be the owner of the Team, through  ownership, or the underlying organisation
-     *
-     * @param tokenId The Team's ID to check the owner of
-     *
-     * @return address The owner of the Team
-     */
-    function _ownerOf(
-        uint256 tokenId
-    ) internal view virtual override returns (address) {
-        address owner = _owners[tokenId];
-        return owner;
+    modifier onlyAdmin(uint256 teamId) {
+        require(
+            ownerOf(teamId) == msg.sender ||
+                IOrganisation(organisations).isAdmin(
+                    organisationOf[teamId],
+                    msg.sender
+                ),
+            "TEAMS: Only the Owner, or an Organisation Admin can set permissions."
+        );
+        _;
     }
 
     // Should we implement a safety check like this ?

@@ -2,8 +2,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as cEtchesSol from "./CEtches.sol";
+export * as cNodeHandlerSol from "./CNodeHandler.sol";
 export * as cOrganisationSol from "./COrganisation.sol";
 export * as cTeamsSol from "./CTeams.sol";
 export * as forks from "./forks";
 export { IEtches__factory } from "./IEtches__factory";
+export { IOrganisation__factory } from "./IOrganisation__factory";
 export { ITeams__factory } from "./ITeams__factory";

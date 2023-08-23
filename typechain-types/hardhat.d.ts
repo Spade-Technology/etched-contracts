@@ -14,6 +14,10 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
+      name: "Ownable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Ownable__factory>;
+    getContractFactory(
       name: "ERC721",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721__factory>;
@@ -42,9 +46,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Etches__factory>;
     getContractFactory(
-      name: "Organisation",
+      name: "NodeHandler",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Organisation__factory>;
+    ): Promise<Contracts.NodeHandler__factory>;
+    getContractFactory(
+      name: "Organisations",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Organisations__factory>;
     getContractFactory(
       name: "Teams",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -58,11 +66,20 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IEtches__factory>;
     getContractFactory(
+      name: "IOrganisation",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IOrganisation__factory>;
+    getContractFactory(
       name: "ITeams",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ITeams__factory>;
 
     getContractAt(
+      name: "Ownable",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Ownable>;
+    getContractAt(
       name: "ERC721",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -98,10 +115,15 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Etches>;
     getContractAt(
-      name: "Organisation",
+      name: "NodeHandler",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.Organisation>;
+    ): Promise<Contracts.NodeHandler>;
+    getContractAt(
+      name: "Organisations",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Organisations>;
     getContractAt(
       name: "Teams",
       address: string | ethers.Addressable,
@@ -117,6 +139,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.IEtches>;
+    getContractAt(
+      name: "IOrganisation",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IOrganisation>;
     getContractAt(
       name: "ITeams",
       address: string | ethers.Addressable,
@@ -124,6 +151,10 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.ITeams>;
 
     deployContract(
+      name: "Ownable",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Ownable>;
+    deployContract(
       name: "ERC721",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ERC721>;
@@ -152,9 +183,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Etches>;
     deployContract(
-      name: "Organisation",
+      name: "NodeHandler",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Organisation>;
+    ): Promise<Contracts.NodeHandler>;
+    deployContract(
+      name: "Organisations",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Organisations>;
     deployContract(
       name: "Teams",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -167,12 +202,21 @@ declare module "hardhat/types/runtime" {
       name: "IEtches",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IEtches>;
+    deployContract(
+      name: "IOrganisation",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IOrganisation>;
     deployContract(
       name: "ITeams",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ITeams>;
 
     deployContract(
+      name: "Ownable",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Ownable>;
+    deployContract(
       name: "ERC721",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -208,10 +252,15 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Etches>;
     deployContract(
-      name: "Organisation",
+      name: "NodeHandler",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Organisation>;
+    ): Promise<Contracts.NodeHandler>;
+    deployContract(
+      name: "Organisations",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Organisations>;
     deployContract(
       name: "Teams",
       args: any[],
@@ -227,6 +276,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IEtches>;
+    deployContract(
+      name: "IOrganisation",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IOrganisation>;
     deployContract(
       name: "ITeams",
       args: any[],

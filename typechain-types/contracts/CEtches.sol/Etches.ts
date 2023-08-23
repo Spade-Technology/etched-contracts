@@ -26,27 +26,37 @@ import type {
 export interface EtchesInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "_nodes"
+      | "addNode"
       | "approve"
       | "balanceOf"
       | "commentOnEtch"
+      | "delegateCallsToSelf"
       | "getApproved"
+      | "getParent"
       | "hasReadPermission"
       | "hasWritePermission"
+      | "individualPermissionsOf"
       | "isApprovedForAll"
+      | "isNode"
       | "metadataOf"
       | "name"
+      | "owner"
       | "ownerOf"
+      | "renounceOwnership"
       | "safeMint"
       | "safeMintForTeam"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setIndividualPermissions"
       | "supportsInterface"
       | "symbol"
       | "teamOf"
       | "teams"
       | "tokenURI"
       | "transferFrom"
+      | "transferOwnership"
       | "transferToTeam"
   ): FunctionFragment;
 
@@ -55,9 +65,15 @@ export interface EtchesInterface extends Interface {
       | "Approval"
       | "ApprovalForAll"
       | "EtchCreated"
+      | "OwnershipTransferred"
       | "Transfer"
   ): EventFragment;
 
+  encodeFunctionData(functionFragment: "_nodes", values: [AddressLike]): string;
+  encodeFunctionData(
+    functionFragment: "addNode",
+    values: [AddressLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
@@ -71,9 +87,14 @@ export interface EtchesInterface extends Interface {
     values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "delegateCallsToSelf",
+    values: [BytesLike[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "getParent", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "hasReadPermission",
     values: [AddressLike, BigNumberish]
@@ -83,17 +104,27 @@ export interface EtchesInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "individualPermissionsOf",
+    values: [BigNumberish, AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "isNode", values: [AddressLike]): string;
   encodeFunctionData(
     functionFragment: "metadataOf",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "safeMint",
@@ -116,6 +147,10 @@ export interface EtchesInterface extends Interface {
     values: [AddressLike, boolean]
   ): string;
   encodeFunctionData(
+    functionFragment: "setIndividualPermissions",
+    values: [BigNumberish, AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
@@ -134,10 +169,16 @@ export interface EtchesInterface extends Interface {
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferToTeam",
     values: [BigNumberish, BigNumberish]
   ): string;
 
+  decodeFunctionResult(functionFragment: "_nodes", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "addNode", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -145,9 +186,14 @@ export interface EtchesInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "delegateCallsToSelf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getParent", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "hasReadPermission",
     data: BytesLike
@@ -157,12 +203,22 @@ export interface EtchesInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "individualPermissionsOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isNode", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "metadataOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "safeMint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeMintForTeam",
@@ -181,6 +237,10 @@ export interface EtchesInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setIndividualPermissions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
@@ -190,6 +250,10 @@ export interface EtchesInterface extends Interface {
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -243,6 +307,19 @@ export namespace EtchCreatedEvent {
   export type OutputTuple = [tokenId: bigint];
   export interface OutputObject {
     tokenId: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -311,6 +388,10 @@ export interface Etches extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  _nodes: TypedContractMethod<[node: AddressLike], [boolean], "view">;
+
+  addNode: TypedContractMethod<[node: AddressLike], [void], "nonpayable">;
+
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
@@ -325,7 +406,15 @@ export interface Etches extends BaseContract {
     "nonpayable"
   >;
 
+  delegateCallsToSelf: TypedContractMethod<
+    [_calldata: BytesLike[]],
+    [void],
+    "nonpayable"
+  >;
+
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+
+  getParent: TypedContractMethod<[], [string], "view">;
 
   hasReadPermission: TypedContractMethod<
     [account: AddressLike, tokenId: BigNumberish],
@@ -339,14 +428,22 @@ export interface Etches extends BaseContract {
     "view"
   >;
 
+  individualPermissionsOf: TypedContractMethod<
+    [etch: BigNumberish, user: AddressLike],
+    [bigint],
+    "view"
+  >;
+
   isApprovedForAll: TypedContractMethod<
     [owner: AddressLike, operator: AddressLike],
     [boolean],
     "view"
   >;
 
+  isNode: TypedContractMethod<[node: AddressLike], [boolean], "view">;
+
   metadataOf: TypedContractMethod<
-    [arg0: BigNumberish],
+    [etch: BigNumberish],
     [
       [string, string, string, bigint, bigint] & {
         creator: string;
@@ -361,7 +458,11 @@ export interface Etches extends BaseContract {
 
   name: TypedContractMethod<[], [string], "view">;
 
+  owner: TypedContractMethod<[], [string], "view">;
+
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   safeMint: TypedContractMethod<
     [to: AddressLike, documentName: string, ipfsCid: string],
@@ -398,6 +499,12 @@ export interface Etches extends BaseContract {
     "nonpayable"
   >;
 
+  setIndividualPermissions: TypedContractMethod<
+    [tokenId: BigNumberish, account: AddressLike, permission: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
     [boolean],
@@ -406,7 +513,7 @@ export interface Etches extends BaseContract {
 
   symbol: TypedContractMethod<[], [string], "view">;
 
-  teamOf: TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
+  teamOf: TypedContractMethod<[etch: BigNumberish], [bigint], "view">;
 
   teams: TypedContractMethod<[], [string], "view">;
 
@@ -414,6 +521,12 @@ export interface Etches extends BaseContract {
 
   transferFrom: TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -428,6 +541,12 @@ export interface Etches extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "_nodes"
+  ): TypedContractMethod<[node: AddressLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "addNode"
+  ): TypedContractMethod<[node: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
@@ -446,8 +565,14 @@ export interface Etches extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "delegateCallsToSelf"
+  ): TypedContractMethod<[_calldata: BytesLike[]], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  getFunction(
+    nameOrSignature: "getParent"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "hasReadPermission"
   ): TypedContractMethod<
@@ -463,6 +588,13 @@ export interface Etches extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "individualPermissionsOf"
+  ): TypedContractMethod<
+    [etch: BigNumberish, user: AddressLike],
+    [bigint],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "isApprovedForAll"
   ): TypedContractMethod<
     [owner: AddressLike, operator: AddressLike],
@@ -470,9 +602,12 @@ export interface Etches extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "isNode"
+  ): TypedContractMethod<[node: AddressLike], [boolean], "view">;
+  getFunction(
     nameOrSignature: "metadataOf"
   ): TypedContractMethod<
-    [arg0: BigNumberish],
+    [etch: BigNumberish],
     [
       [string, string, string, bigint, bigint] & {
         creator: string;
@@ -488,8 +623,14 @@ export interface Etches extends BaseContract {
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "safeMint"
   ): TypedContractMethod<
@@ -531,6 +672,13 @@ export interface Etches extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "setIndividualPermissions"
+  ): TypedContractMethod<
+    [tokenId: BigNumberish, account: AddressLike, permission: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
@@ -538,7 +686,7 @@ export interface Etches extends BaseContract {
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "teamOf"
-  ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
+  ): TypedContractMethod<[etch: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "teams"
   ): TypedContractMethod<[], [string], "view">;
@@ -552,6 +700,9 @@ export interface Etches extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "transferToTeam"
   ): TypedContractMethod<
@@ -580,6 +731,13 @@ export interface Etches extends BaseContract {
     EtchCreatedEvent.InputTuple,
     EtchCreatedEvent.OutputTuple,
     EtchCreatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "Transfer"
@@ -621,6 +779,17 @@ export interface Etches extends BaseContract {
       EtchCreatedEvent.InputTuple,
       EtchCreatedEvent.OutputTuple,
       EtchCreatedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

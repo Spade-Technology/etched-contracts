@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 import "hardhat/console.sol";
 
+import "./ITeams.sol";
+
 abstract contract IEtches is IERC721 {
     struct SComments {
         string commentIpfsCid;
@@ -23,6 +25,12 @@ abstract contract IEtches is IERC721 {
     }
 
     event EtchCreated(uint256 indexed tokenId);
+
+    function setIndividualPermissions(
+        uint256 tokenId,
+        address account,
+        ITeams.EPermissions permission
+    ) external virtual {}
 
     // User Related Functions
     function safeMint(

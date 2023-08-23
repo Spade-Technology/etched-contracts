@@ -121,6 +121,25 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+    ],
+    name: "createTeam",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "newTeamId",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "tokenId",
         type: "uint256",
@@ -294,6 +313,29 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "teamId",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        internalType: "enum ITeams.EPermissions",
+        name: "permission",
+        type: "uint8",
+      },
+    ],
+    name: "setPermission",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bytes4",
         name: "interfaceId",
         type: "bytes4",
@@ -329,6 +371,24 @@ const _abi = [
       },
     ],
     name: "transferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "teamId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "orgId",
+        type: "uint256",
+      },
+    ],
+    name: "transferToOrganisation",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

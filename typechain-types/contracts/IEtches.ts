@@ -39,6 +39,7 @@ export interface IEtchesInterface extends Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setIndividualPermissions"
       | "supportsInterface"
       | "transferFrom"
       | "transferToTeam"
@@ -105,6 +106,10 @@ export interface IEtchesInterface extends Interface {
     values: [AddressLike, boolean]
   ): string;
   encodeFunctionData(
+    functionFragment: "setIndividualPermissions",
+    values: [BigNumberish, AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
@@ -155,6 +160,10 @@ export interface IEtchesInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setIndividualPermissions",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -355,6 +364,12 @@ export interface IEtches extends BaseContract {
     "nonpayable"
   >;
 
+  setIndividualPermissions: TypedContractMethod<
+    [tokenId: BigNumberish, account: AddressLike, permission: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
     [boolean],
@@ -458,6 +473,13 @@ export interface IEtches extends BaseContract {
     nameOrSignature: "setApprovalForAll"
   ): TypedContractMethod<
     [operator: AddressLike, approved: boolean],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "setIndividualPermissions"
+  ): TypedContractMethod<
+    [tokenId: BigNumberish, account: AddressLike, permission: BigNumberish],
     [void],
     "nonpayable"
   >;

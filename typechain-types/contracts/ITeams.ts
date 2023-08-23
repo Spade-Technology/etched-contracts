@@ -28,6 +28,7 @@ export interface ITeamsInterface extends Interface {
     nameOrSignature:
       | "approve"
       | "balanceOf"
+      | "createTeam"
       | "getApproved"
       | "getNumberOfTeamsCreated"
       | "hasPermission"
@@ -36,8 +37,10 @@ export interface ITeamsInterface extends Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setPermission"
       | "supportsInterface"
       | "transferFrom"
+      | "transferToOrganisation"
   ): FunctionFragment;
 
   getEvent(
@@ -50,6 +53,10 @@ export interface ITeamsInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createTeam",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
@@ -85,6 +92,10 @@ export interface ITeamsInterface extends Interface {
     values: [AddressLike, boolean]
   ): string;
   encodeFunctionData(
+    functionFragment: "setPermission",
+    values: [BigNumberish, AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
@@ -92,9 +103,14 @@ export interface ITeamsInterface extends Interface {
     functionFragment: "transferFrom",
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferToOrganisation",
+    values: [BigNumberish, BigNumberish]
+  ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "createTeam", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -125,11 +141,19 @@ export interface ITeamsInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setPermission",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferToOrganisation",
     data: BytesLike
   ): Result;
 }
@@ -243,6 +267,8 @@ export interface ITeams extends BaseContract {
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
+  createTeam: TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
+
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
   getNumberOfTeamsCreated: TypedContractMethod<[], [bigint], "view">;
@@ -284,6 +310,12 @@ export interface ITeams extends BaseContract {
     "nonpayable"
   >;
 
+  setPermission: TypedContractMethod<
+    [teamId: BigNumberish, user: AddressLike, permission: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
     [boolean],
@@ -292,6 +324,12 @@ export interface ITeams extends BaseContract {
 
   transferFrom: TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  transferToOrganisation: TypedContractMethod<
+    [teamId: BigNumberish, orgId: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -310,6 +348,9 @@ export interface ITeams extends BaseContract {
   getFunction(
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "createTeam"
+  ): TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
@@ -360,12 +401,26 @@ export interface ITeams extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "setPermission"
+  ): TypedContractMethod<
+    [teamId: BigNumberish, user: AddressLike, permission: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "transferFrom"
   ): TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "transferToOrganisation"
+  ): TypedContractMethod<
+    [teamId: BigNumberish, orgId: BigNumberish],
     [void],
     "nonpayable"
   >;

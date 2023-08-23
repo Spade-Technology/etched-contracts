@@ -6,10 +6,11 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "./forks/ERC721.sol";
 import "./ITeams.sol";
 import "./IEtches.sol";
+import "./CNodeHandler.sol";
 
 import "hardhat/console.sol";
 
-contract Etches is ERC721, IEtches {
+contract Etches is ERC721, IEtches, NodeHandler {
     using Counters for Counters.Counter;
 
     // The total number of Etches minted
@@ -19,18 +20,24 @@ contract Etches is ERC721, IEtches {
     address public teams;
 
     // Mapping of Etch ID to Team ID
-    mapping(uint256 => uint256) public teamOf;
+    mapping(uint256 etch => uint256 team) public teamOf;
+
+    // External Individual Permissions
+    mapping(uint256 etch => mapping(address user => ITeams.EPermissions permission))
+        public individualPermissionsOf;
 
     // Mapping of Etch Id to the Etch's metadata
-    mapping(uint256 => SEtch) public metadataOf;
-    mapping(uint256 => SComments) commentsOf;
+    mapping(uint256 etch => SEtch metadata) public metadataOf;
+    mapping(uint256 etch => SComments comments) commentsOf;
 
     /**
      * @notice Creates a new Etches contract
      *
      * @param teamsContract The address of the Teams contract
      */
-    constructor(address teamsContract) ERC721("Etches", "ETCH") {
+    constructor(
+        address teamsContract
+    ) ERC721("Etches", "ETCH") NodeHandler(teamsContract) {
         teams = teamsContract;
     }
 
@@ -108,9 +115,9 @@ contract Etches is ERC721, IEtches {
     /**
      * @notice Mints an Etch for the specified team
      *
-     * @param teamId The team to mint the Etch for, will revert if the team does not exist
+     * @param teamId The `team` to mint the Etch for, will revert if the `team` does not exist
      *
-     * @dev This function can only be called by a user with read/write permission for the team
+     * @dev This function can only be called by a user with read/write permission for the `team`
      */
     function safeMintForTeam(
         uint256 teamId,
@@ -135,27 +142,40 @@ contract Etches is ERC721, IEtches {
     }
 
     /**
-     * @notice Checks if the account has read permission for the Etch
+     * @notice Checks if the account has read permission for the `etch`
      *
      * @param account The account to check for read permission
-     * @param tokenId The Etch's ID to check for read permission
+     * @param tokenId The `etch`'s ID to check for read permission
      *
-     * @return bool True if the account has read permission for the Etch
+     * @return bool True if the account has read permission for the `etch`
      */
-
     function hasReadPermission(
         address account,
         uint256 tokenId
     ) public view virtual override returns (bool) {
-        if (account == ownerOf(tokenId)) return true;
-        else
-            return
-                teamOf[tokenId] > 0 &&
+        return
+            account == ownerOf(tokenId) ||
+            individualPermissionsOf[tokenId][account] >=
+            ITeams.EPermissions.Read ||
+            (teamOf[tokenId] > 0 &&
                 ITeams(teams).hasPermission(
                     teamOf[tokenId],
                     account,
                     ITeams.EPermissions.Read
-                );
+                ));
+    }
+
+    function setIndividualPermissions(
+        uint256 tokenId,
+        address account,
+        ITeams.EPermissions permission
+    ) external virtual override {
+        require(
+            ownerOf(tokenId) == msg.sender,
+            "ETCH: Not allowed to set permissions for this Etch"
+        );
+
+        individualPermissionsOf[tokenId][account] = permission;
     }
 
     /**
@@ -170,15 +190,16 @@ contract Etches is ERC721, IEtches {
         address account,
         uint256 tokenId
     ) public view virtual override returns (bool) {
-        if (account == ownerOf(tokenId)) return true;
-        else
-            return
-                teamOf[tokenId] > 0 &&
+        return
+            account == ownerOf(tokenId) ||
+            individualPermissionsOf[tokenId][account] >=
+            ITeams.EPermissions.ReadWrite ||
+            (teamOf[tokenId] > 0 &&
                 ITeams(teams).hasPermission(
                     teamOf[tokenId],
                     account,
                     ITeams.EPermissions.ReadWrite
-                );
+                ));
     }
 
     /**
