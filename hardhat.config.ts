@@ -1,13 +1,16 @@
-require("@nomiclabs/hardhat-etherscan");
-require("@nomiclabs/hardhat-ethers");
-require("@nomiclabs/hardhat-waffle");
-require("@typechain/hardhat");
-require("@primitivefi/hardhat-dodoc");
-require("hardhat-gas-reporter");
-// import Hardhat dependencies and plugins
 import { HardhatUserConfig } from "hardhat/types";
 
 import * as dotenv from "dotenv";
+import "@nomiclabs/hardhat-etherscan";
+import "@nomiclabs/hardhat-waffle";
+import "@nomiclabs/hardhat-ethers";
+import "@typechain/hardhat";
+import "hardhat-gas-reporter";
+import "hardhat-abi-exporter";
+import * as tdly from "@tenderly/hardhat-tenderly";
+tdly.setup();
+
+// import "hardhat-contract-sizer";
 
 dotenv.config();
 
@@ -31,11 +34,6 @@ interface ExtendedHardhatUserConfig extends HardhatUserConfig {
     only?: string[];
     spacing?: number;
     runOnCompile?: boolean;
-  };
-  tenderly?: {
-    project?: string;
-    username?: string;
-    privateVerification?: boolean;
   };
   dodoc: any;
 }
@@ -62,6 +60,12 @@ const config: ExtendedHardhatUserConfig = {
     hardhat: {},
     localhost: {
       url: "http://127.0.0.1:8545",
+    },
+    tenderly: {
+      url: `https://rpc.vnet.tenderly.co/devnet/etched/843c12c7-c0d4-4f8a-a7ec-06e96fa24f1e`,
+      accounts: [
+        ...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || ""),
+      ],
     },
     ethereum: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
@@ -107,7 +111,7 @@ const config: ExtendedHardhatUserConfig = {
 
   // export ABIs to ../web/src/abi/
   abiExporter: {
-    path: "../web/src/abi/",
+    path: "../src/abi/",
     runOnCompile: true,
     clear: true,
     flat: true,

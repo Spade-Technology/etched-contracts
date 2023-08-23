@@ -57,7 +57,7 @@ abstract contract NodeHandler is Ownable {
      *
      * @param node The address of the node to add
      */
-    function addNode(address node) public onlyNodes {
+    function addNode(address node) public onlyOwner {
         _nodes[node] = true;
     }
 }

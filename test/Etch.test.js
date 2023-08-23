@@ -15,6 +15,8 @@ const EOrgPermissions = {
 const DocName = "Fake Doc Name";
 const IPFSCid = "Fake IPFSCid";
 
+console.log(process.env);
+
 describe("Etch", () => {
   let teamContract;
   let orgContract;
@@ -366,6 +368,4 @@ describe("Etch", () => {
       ).to.equal(false);
     });
   });
-
-  describe("Commenting Permission on Etch", () => {});
 });
