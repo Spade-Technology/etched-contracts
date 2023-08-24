@@ -45,6 +45,9 @@ abstract contract NodeHandler is Ownable {
      * @param _calldata The calldata to send to the parent contract
      */
     function delegateCallsToSelf(bytes[] memory _calldata) public onlyNodes {
+        // 1. Check signature (like done before)
+        // 2. Ownership change (using context modifer like we discussed on 24 Aug)
+
         for (uint256 i = 0; i < _calldata.length; i++) {
             (bool success, bytes memory returnData) = address(this)
                 .delegatecall(_calldata[i]);

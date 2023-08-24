@@ -36,6 +36,7 @@ interface ExtendedHardhatUserConfig extends HardhatUserConfig {
     runOnCompile?: boolean;
   };
   dodoc: any;
+  [k: string]: any;
 }
 
 // List all of the files under ./contracts
@@ -111,7 +112,7 @@ const config: ExtendedHardhatUserConfig = {
 
   // export ABIs to ../web/src/abi/
   abiExporter: {
-    path: "../src/abi/",
+    path: "../src/contracts/abi/",
     runOnCompile: true,
     clear: true,
     flat: true,
