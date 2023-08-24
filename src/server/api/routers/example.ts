@@ -3,8 +3,8 @@ import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
-} from "~/server/api/trpc";
-import { lit } from "~/lit";
+} from "@/server/api/trpc";
+import { lit } from "@/lit";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
 export const exampleRouter = createTRPCRouter({
