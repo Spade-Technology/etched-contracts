@@ -5,6 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "graph": "tsx ./graph/start.ts",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"
@@ -41,6 +42,8 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "dotenv": "^16.3.1",
+    "tsx": "^3.12.7",
     "@types/eslint": "^8.37.0",
     "@types/node": "^18.16.0",
     "@types/prettier": "^2.7.2",
