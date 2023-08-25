@@ -58,7 +58,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         _safeMint(to, tokenId, "");
 
         metadataOf[tokenId] = SEtch({
-            creator: msg.sender,
+            creator: _msgSender(),
             documentName: documentName,
             ipfsCid: ipfsCid,
             commentsCount: 0,
@@ -81,7 +81,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         string memory commentIpfsCid
     ) external virtual override {
         require(
-            hasWritePermission(msg.sender, tokenId),
+            hasWritePermission(_msgSender(), tokenId),
             "ETCH: Not allowed to read this Etch"
         );
 
@@ -109,7 +109,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
             ITeams(teams).getNumberOfTeamsCreated() >= teamId,
             "ETCH: Team does not exist"
         );
-        _transfer(msg.sender, teams, tokenId);
+        _transfer(_msgSender(), teams, tokenId);
         teamOf[tokenId] = teamId;
     }
 
@@ -129,7 +129,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         require(
             ITeams(teams).hasPermission(
                 teamId,
-                msg.sender,
+                _msgSender(),
                 ITeams.EPermissions.ReadWrite
             ),
             "ETCH: Not allowed to mint for this team"
@@ -169,7 +169,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         ITeams.EPermissions permission
     ) external virtual override {
         require(
-            ownerOf(tokenId) == msg.sender,
+            ownerOf(tokenId) == _msgSender(),
             "ETCH: Not allowed to set permissions for this Etch"
         );
 
