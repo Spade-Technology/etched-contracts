@@ -91,10 +91,10 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
         uint256 orgId
     ) external override {
         require(
-            ownerOf(teamId) == msg.sender,
+            ownerOf(teamId) == _msgSender(),
             "TEAMS: Only Owner can transfer to Organisation"
         );
-        _transfer(msg.sender, organisations, teamId);
+        _transfer(_msgSender(), organisations, teamId);
         organisationOf[teamId] = orgId;
     }
 
@@ -144,10 +144,10 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
 
     modifier onlyAdmin(uint256 teamId) {
         require(
-            ownerOf(teamId) == msg.sender ||
+            ownerOf(teamId) == _msgSender() ||
                 IOrganisation(organisations).isAdmin(
                     organisationOf[teamId],
-                    msg.sender
+                    _msgSender()
                 ),
             "TEAMS: Only the Owner, or an Organisation Admin can set permissions."
         );

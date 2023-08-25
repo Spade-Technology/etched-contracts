@@ -90,7 +90,7 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
         EPermissions permission
     ) external override {
         require(
-            isAdmin(orgId, msg.sender),
+            isAdmin(orgId, _msgSender()),
             "ORGANISATION: Only an admin of the organisation can set permissions."
         );
         permissionOf[orgId][user] = permission;

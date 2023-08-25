@@ -28,14 +28,14 @@ abstract contract NodeHandler is Ownable {
      */
     function isNode(address node) public view returns (bool) {
         if (parent == address(0)) return NodeHandler(parent).isNode(node);
-        else return _nodes[msg.sender];
+        else return _nodes[_msgSender()];
     }
 
     /**
      * @notice Modifier that only allows nodes to call the function
      */
     modifier onlyNodes() {
-        require(isNode(msg.sender), "NODEHANDLER: PERMISSION_DENIED");
+        require(isNode(_msgSender()), "NODEHANDLER: PERMISSION_DENIED");
         _;
     }
 
