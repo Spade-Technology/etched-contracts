@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ERC721 } from "./ERC721";
+export type { Ownable } from "./Ownable";

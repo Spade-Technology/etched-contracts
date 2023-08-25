@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ERC721__factory } from "./ERC721__factory";
+export { Ownable__factory } from "./Ownable__factory";

@@ -63,6 +63,33 @@ const _abi = [
   {
     inputs: [
       {
+        components: [
+          {
+            internalType: "bytes",
+            name: "encodedMessage",
+            type: "bytes",
+          },
+          {
+            internalType: "bytes32",
+            name: "messageHash",
+            type: "bytes32",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+          {
+            internalType: "address",
+            name: "signer",
+            type: "address",
+          },
+        ],
+        internalType: "struct SignatureVerifier.Signature",
+        name: "signature",
+        type: "tuple",
+      },
+      {
         internalType: "bytes[]",
         name: "_calldata",
         type: "bytes[]",

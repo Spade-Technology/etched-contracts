@@ -8,8 +8,6 @@ export type { contracts };
 export * as factories from "./factories";
 export type { Ownable } from "./@openzeppelin/contracts/access/Ownable";
 export { Ownable__factory } from "./factories/@openzeppelin/contracts/access/Ownable__factory";
-export type { ERC721 } from "./@openzeppelin/contracts/token/ERC721/ERC721";
-export { ERC721__factory } from "./factories/@openzeppelin/contracts/token/ERC721/ERC721__factory";
 export type { IERC721Metadata } from "./@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata";
 export { IERC721Metadata__factory } from "./factories/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata__factory";
 export type { IERC721 } from "./@openzeppelin/contracts/token/ERC721/IERC721";
@@ -28,6 +26,8 @@ export type { Organisations } from "./contracts/COrganisation.sol/Organisations"
 export { Organisations__factory } from "./factories/contracts/COrganisation.sol/Organisations__factory";
 export type { Teams } from "./contracts/CTeams.sol/Teams";
 export { Teams__factory } from "./factories/contracts/CTeams.sol/Teams__factory";
+export type { ERC721 } from "./contracts/forks/ERC721";
+export { ERC721__factory } from "./factories/contracts/forks/ERC721__factory";
 export type { IEtches } from "./contracts/IEtches";
 export { IEtches__factory } from "./factories/contracts/IEtches__factory";
 export type { IOrganisation } from "./contracts/IOrganisation";

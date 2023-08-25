@@ -22,53 +22,13 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
-export declare namespace SignatureVerifier {
-  export type SignatureStruct = {
-    encodedMessage: BytesLike;
-    messageHash: BytesLike;
-    signature: BytesLike;
-    signer: AddressLike;
-  };
-
-  export type SignatureStructOutput = [
-    encodedMessage: string,
-    messageHash: string,
-    signature: string,
-    signer: string
-  ] & {
-    encodedMessage: string;
-    messageHash: string;
-    signature: string;
-    signer: string;
-  };
-}
-
-export interface NodeHandlerInterface extends Interface {
+export interface OwnableInterface extends Interface {
   getFunction(
-    nameOrSignature:
-      | "_nodes"
-      | "addNode"
-      | "delegateCallsToSelf"
-      | "getParent"
-      | "isNode"
-      | "owner"
-      | "renounceOwnership"
-      | "transferOwnership"
+    nameOrSignature: "owner" | "renounceOwnership" | "transferOwnership"
   ): FunctionFragment;
 
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 
-  encodeFunctionData(functionFragment: "_nodes", values: [AddressLike]): string;
-  encodeFunctionData(
-    functionFragment: "addNode",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "delegateCallsToSelf",
-    values: [SignatureVerifier.SignatureStruct, BytesLike[]]
-  ): string;
-  encodeFunctionData(functionFragment: "getParent", values?: undefined): string;
-  encodeFunctionData(functionFragment: "isNode", values: [AddressLike]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -79,14 +39,6 @@ export interface NodeHandlerInterface extends Interface {
     values: [AddressLike]
   ): string;
 
-  decodeFunctionResult(functionFragment: "_nodes", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addNode", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "delegateCallsToSelf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getParent", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isNode", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -111,11 +63,11 @@ export namespace OwnershipTransferredEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export interface NodeHandler extends BaseContract {
-  connect(runner?: ContractRunner | null): NodeHandler;
+export interface Ownable extends BaseContract {
+  connect(runner?: ContractRunner | null): Ownable;
   waitForDeployment(): Promise<this>;
 
-  interface: NodeHandlerInterface;
+  interface: OwnableInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -154,20 +106,6 @@ export interface NodeHandler extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  _nodes: TypedContractMethod<[node: AddressLike], [boolean], "view">;
-
-  addNode: TypedContractMethod<[node: AddressLike], [void], "nonpayable">;
-
-  delegateCallsToSelf: TypedContractMethod<
-    [signature: SignatureVerifier.SignatureStruct, _calldata: BytesLike[]],
-    [void],
-    "nonpayable"
-  >;
-
-  getParent: TypedContractMethod<[], [string], "view">;
-
-  isNode: TypedContractMethod<[node: AddressLike], [boolean], "view">;
-
   owner: TypedContractMethod<[], [string], "view">;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
@@ -182,25 +120,6 @@ export interface NodeHandler extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
-  getFunction(
-    nameOrSignature: "_nodes"
-  ): TypedContractMethod<[node: AddressLike], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "addNode"
-  ): TypedContractMethod<[node: AddressLike], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "delegateCallsToSelf"
-  ): TypedContractMethod<
-    [signature: SignatureVerifier.SignatureStruct, _calldata: BytesLike[]],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "getParent"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "isNode"
-  ): TypedContractMethod<[node: AddressLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;

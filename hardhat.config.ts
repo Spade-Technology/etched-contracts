@@ -16,7 +16,7 @@ dotenv.config();
 
 interface ExtendedHardhatUserConfig extends HardhatUserConfig {
   etherscan?: {
-    apiKey?: string;
+    apiKey?: string | Record<string, string>;
   };
   gasReporter?: {
     currency?: string;
@@ -41,9 +41,7 @@ interface ExtendedHardhatUserConfig extends HardhatUserConfig {
 
 // List all of the files under ./contracts
 const fs = require("fs");
-const contracts = fs
-  .readdirSync("./contracts")
-  .filter((file: string) => file.endsWith(".sol"));
+const contracts = fs.readdirSync("./contracts").filter((file: string) => file.endsWith(".sol"));
 
 // Define the Hardhat configuration
 const config: ExtendedHardhatUserConfig = {
@@ -62,40 +60,34 @@ const config: ExtendedHardhatUserConfig = {
     localhost: {
       url: "http://127.0.0.1:8545",
     },
+
     tenderly: {
-      url: `https://rpc.vnet.tenderly.co/devnet/etched/843c12c7-c0d4-4f8a-a7ec-06e96fa24f1e`,
-      accounts: [
-        ...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || ""),
-      ],
+      url: `https://rpc.vnet.tenderly.co/devnet/etched/${process.env.TENDERLY_KEY}`,
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
     },
+
     ethereum: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: [
-        ...((process.env.ETHEREUM_PRIVATE_KEY?.split(",") as string[]) || ""),
-      ],
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
       chainId: 1,
     },
 
     ropsten: {
       url: `https://rpc.ankr.com/eth_ropsten`,
-      accounts: [
-        ...((process.env.ETHEREUM_PRIVATE_KEY?.split(",") as string[]) || ""),
-      ],
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
       chainId: 3,
     },
 
     sepolia: {
       url: `https://sepolia.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: [
-        ...((process.env.ETHEREUM_PRIVATE_KEY?.split(",") as string[]) || ""),
-      ],
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
       chainId: 11155111,
     },
   },
 
   // Define the etherscan configuration
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.ETHERSCAN_API_KEY || "",
   },
 
   // Define the gasReporter configuration
@@ -106,8 +98,7 @@ const config: ExtendedHardhatUserConfig = {
     // gasPrice: 80,
     outputFile: process.env.CI ? "gas-report.txt" : undefined,
     enabled: true,
-    gasPriceApi:
-      "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice",
+    gasPriceApi: "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice",
   },
 
   // export ABIs to ../web/src/abi/

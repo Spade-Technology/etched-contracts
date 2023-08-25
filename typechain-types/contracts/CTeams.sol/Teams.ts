@@ -23,6 +23,27 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
+export declare namespace SignatureVerifier {
+  export type SignatureStruct = {
+    encodedMessage: BytesLike;
+    messageHash: BytesLike;
+    signature: BytesLike;
+    signer: AddressLike;
+  };
+
+  export type SignatureStructOutput = [
+    encodedMessage: string,
+    messageHash: string,
+    signature: string,
+    signer: string
+  ] & {
+    encodedMessage: string;
+    messageHash: string;
+    signature: string;
+    signer: string;
+  };
+}
+
 export interface TeamsInterface extends Interface {
   getFunction(
     nameOrSignature:
@@ -85,7 +106,7 @@ export interface TeamsInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "delegateCallsToSelf",
-    values: [BytesLike[]]
+    values: [SignatureVerifier.SignatureStruct, BytesLike[]]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -384,7 +405,7 @@ export interface Teams extends BaseContract {
   createTeam: TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
 
   delegateCallsToSelf: TypedContractMethod<
-    [_calldata: BytesLike[]],
+    [signature: SignatureVerifier.SignatureStruct, _calldata: BytesLike[]],
     [void],
     "nonpayable"
   >;
@@ -515,7 +536,11 @@ export interface Teams extends BaseContract {
   ): TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
   getFunction(
     nameOrSignature: "delegateCallsToSelf"
-  ): TypedContractMethod<[_calldata: BytesLike[]], [void], "nonpayable">;
+  ): TypedContractMethod<
+    [signature: SignatureVerifier.SignatureStruct, _calldata: BytesLike[]],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;

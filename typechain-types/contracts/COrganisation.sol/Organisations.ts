@@ -23,6 +23,27 @@ import type {
   TypedContractMethod,
 } from "../../common";
 
+export declare namespace SignatureVerifier {
+  export type SignatureStruct = {
+    encodedMessage: BytesLike;
+    messageHash: BytesLike;
+    signature: BytesLike;
+    signer: AddressLike;
+  };
+
+  export type SignatureStructOutput = [
+    encodedMessage: string,
+    messageHash: string,
+    signature: string,
+    signer: string
+  ] & {
+    encodedMessage: string;
+    messageHash: string;
+    signature: string;
+    signer: string;
+  };
+}
+
 export interface OrganisationsInterface extends Interface {
   getFunction(
     nameOrSignature:
@@ -83,7 +104,7 @@ export interface OrganisationsInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "delegateCallsToSelf",
-    values: [BytesLike[]]
+    values: [SignatureVerifier.SignatureStruct, BytesLike[]]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -367,7 +388,7 @@ export interface Organisations extends BaseContract {
   >;
 
   delegateCallsToSelf: TypedContractMethod<
-    [_calldata: BytesLike[]],
+    [signature: SignatureVerifier.SignatureStruct, _calldata: BytesLike[]],
     [void],
     "nonpayable"
   >;
@@ -494,7 +515,11 @@ export interface Organisations extends BaseContract {
   ): TypedContractMethod<[to: AddressLike], [bigint], "nonpayable">;
   getFunction(
     nameOrSignature: "delegateCallsToSelf"
-  ): TypedContractMethod<[_calldata: BytesLike[]], [void], "nonpayable">;
+  ): TypedContractMethod<
+    [signature: SignatureVerifier.SignatureStruct, _calldata: BytesLike[]],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;

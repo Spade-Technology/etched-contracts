@@ -5,9 +5,13 @@ const path = require("path");
 async function main() {
   const signers = await ethers.getSigners();
 
+  console.log("Deploying contracts with the account:", signers[0].address);
+
   const Org = await ethers.getContractFactory("Organisations");
   const orgContract = await Org.deploy();
   await orgContract.deployed();
+
+  console.log("Org deployed to:", orgContract.address);
 
   tenderly.verify({
     name: "Organisations",
@@ -43,11 +47,7 @@ async function main() {
 
   const network = process.env.HARDHAT_NETWORK || "";
   const exportedContractFile = process.env.EXPORTED_CONTRACT_FILE || "";
-  const exportedContractPath = path.join(
-    __dirname,
-    "..",
-    exportedContractFile + network + ".json"
-  );
+  const exportedContractPath = path.join(__dirname, "..", exportedContractFile + network + ".json");
 
   console.log("exportedContractPath", exportedContractPath);
   const exportedContract = {
