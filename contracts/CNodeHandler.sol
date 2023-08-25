@@ -2,8 +2,10 @@
 pragma solidity ^0.8.19;
 
 import "./forks/Ownable.sol";
+import "./SignatureVerifier.sol";
+import "./forks/Context.sol";
 
-abstract contract NodeHandler is Ownable {
+abstract contract NodeHandler is Ownable, SignatureVerifier {
     address private parent;
 
     mapping(address node => bool isNode) public _nodes;
@@ -39,12 +41,12 @@ abstract contract NodeHandler is Ownable {
         _;
     }
 
-    function delegateCallsToSelf(bytes[] memory _calldata) external onlyNodes {
-        // 1. Check signature (like done before)
-        address newSignature = address(0); // TODO: Get signature from calldata and check validity
+    function delegateCallsToSelf(Signature memory signature, bytes[] memory _calldata) verifySignature(signature) external onlyNodes {
+        
+        require(isNode(msg.sender) || msg.sender == signature.signer , "NODEHANDLER: PERMISSION_DENIED");
 
         // 2. Delegate the call with a new context
-        _delegateCallsToSelf(newSignature, _calldata);
+        _delegateCallsToSelf(signature.signer, _calldata);
     }
 
     /**
