@@ -41,9 +41,9 @@ abstract contract NodeHandler is Ownable {
 
     function delegateCallsToSelf(bytes[] memory _calldata) private onlyNodes {
         // 1. Check signature (like done before)
-
         address newSignature = address(0); // TODO: Get signature from calldata and check validity
 
+        // 2. Delegate the call with a new context
         _delegateCallsToSelf(newSignature, _calldata);
     }
 
