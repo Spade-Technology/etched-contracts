@@ -15,16 +15,12 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
     Counters.Counter private totalSupply;
 
     // Mapping of the permissions of a user for a organisation
-    mapping(uint256 organisation => mapping(address user => EPermissions permission))
-        public permissionOf;
+    mapping(uint256 organisation => mapping(address user => EPermissions permission)) public permissionOf;
 
     /**
      *
      */
-    constructor()
-        ERC721("Etch Organisation", "o-ETCH")
-        NodeHandler(address(0))
-    {}
+    constructor() ERC721("Etch Organisation", "o-ETCH") NodeHandler(address(0)) {}
 
     /**
      * @notice Sets the address of the organisations contract.
@@ -33,13 +29,14 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      *
      * @return newOrgId The orgId of the organisation
      */
-    function createOrganisation(
-        address to
-    ) external override returns (uint256 newOrgId) {
+    function createOrganisation(address to) external override returns (uint256 newOrgId) {
         totalSupply.increment();
         uint256 orgId = totalSupply.current();
 
         _safeMint(to, orgId);
+
+        emit OrganisationCreated(orgId, to);
+
         return orgId;
     }
 
@@ -51,10 +48,7 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      *
      * @return _isAdmin Whether the user is an admin for the organisation.
      */
-    function isAdmin(
-        uint256 orgId,
-        address user
-    ) public view override returns (bool _isAdmin) {
+    function isAdmin(uint256 orgId, address user) public view override returns (bool _isAdmin) {
         if (ownerOf(orgId) == user) return true;
         return permissionOf[orgId][user] == EPermissions.Admin;
     }
@@ -67,10 +61,7 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      *
      * @return _isMember Whether the user is a member for the organisation.
      */
-    function isMember(
-        uint256 orgId,
-        address user
-    ) public view override returns (bool _isMember) {
+    function isMember(uint256 orgId, address user) public view override returns (bool _isMember) {
         if (ownerOf(orgId) == user) return true;
         return permissionOf[orgId][user] >= EPermissions.Member;
     }
@@ -84,16 +75,11 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      *
      * @dev Only an admin of the organisation can set permissions.
      */
-    function setPermission(
-        uint256 orgId,
-        address user,
-        EPermissions permission
-    ) external override {
-        require(
-            isAdmin(orgId, _msgSender()),
-            "ORGANISATION: Only an admin of the organisation can set permissions."
-        );
+    function setPermission(uint256 orgId, address user, EPermissions permission) external override {
+        require(isAdmin(orgId, _msgSender()), "ORGANISATION: Only an admin of the organisation can set permissions.");
         permissionOf[orgId][user] = permission;
+
+        emit PermissionsUpdated(orgId, user, permission);
     }
 
     /**
@@ -101,13 +87,7 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      *
      * @return totalAmountOfOrganisations The total number of organisations created.
      */
-    function getNumberOfOrganisationsCreated()
-        external
-        view
-        virtual
-        override
-        returns (uint256 totalAmountOfOrganisations)
-    {
+    function getNumberOfOrganisationsCreated() external view virtual override returns (uint256 totalAmountOfOrganisations) {
         return totalSupply.current();
     }
 
@@ -118,9 +98,7 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      *
      * @return address The owner of the Organisation
      */
-    function _ownerOf(
-        uint256 orgId
-    ) internal view virtual override returns (address) {
+    function _ownerOf(uint256 orgId) internal view virtual override returns (address) {
         address owner = _owners[orgId];
         return owner;
     }
@@ -129,12 +107,7 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      * @notice Always returns `IERC721Receiver.onERC721Received.selector`.
      * @dev We are not implementing any logic here, but we need to implement this function to be ERC721 compliant.
      */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes memory
-    ) public virtual override returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) public virtual override returns (bytes4) {
         return this.onERC721Received.selector;
     }
 

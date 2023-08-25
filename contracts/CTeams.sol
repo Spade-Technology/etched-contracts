@@ -19,8 +19,7 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
     address public organisations;
 
     // Mapping of the permissions of a user for a team
-    mapping(uint256 team => mapping(address user => EPermissions permission))
-        public permissionsOfTeam;
+    mapping(uint256 team => mapping(address user => EPermissions permission)) public permissionsOfTeam;
 
     // Mapping of Team ID to Organisation ID
     mapping(uint256 team => uint256 organisation) public organisationOf;
@@ -28,9 +27,7 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
     /**
      *
      */
-    constructor(
-        address organisationsContract
-    ) ERC721("Etch Team", "t-ETCH") NodeHandler(organisationsContract) {
+    constructor(address organisationsContract) ERC721("Etch Team", "t-ETCH") NodeHandler(organisationsContract) {
         organisations = organisationsContract;
     }
 
@@ -41,14 +38,38 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
      *
      * @return newTeamId The teamId of the EtchUID
      */
-    function createTeam(
-        address to
-    ) external override returns (uint256 newTeamId) {
+    function createTeam(address to) external override returns (uint256 newTeamId) {
         totalSupply.increment();
         uint256 teamId = totalSupply.current();
 
         _safeMint(to, teamId);
+
+        emit TeamCreated(teamId, to);
+
         return teamId;
+    }
+
+    function transferToOrganisation(uint256 teamId, uint256 orgId) external override {
+        require(ownerOf(teamId) == _msgSender(), "TEAMS: Only Owner can transfer to Organisation");
+        _transfer(_msgSender(), organisations, teamId);
+        organisationOf[teamId] = orgId;
+
+        emit TransferToOrganisation(teamId, orgId);
+    }
+
+    /**
+     * @notice Sets the permission of a user for a team.
+     *
+     * @param teamId Set the permission of a user for a team
+     * @param user The user to set the permission for
+     * @param permission The permission to set, See EPermissions for more details
+     *
+     * @dev Only the owner of the team can set permissions. Let it be an organisation, or a user.
+     */
+    function setPermission(uint256 teamId, address user, EPermissions permission) external override onlyAdmin(teamId) {
+        permissionsOfTeam[teamId][user] = permission;
+
+        emit PermissionsUpdated(teamId, user, permission);
     }
 
     /**
@@ -70,45 +91,11 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
     }
 
     /**
-     * @notice Sets the permission of a user for a team.
-     *
-     * @param teamId Set the permission of a user for a team
-     * @param user The user to set the permission for
-     * @param permission The permission to set, See EPermissions for more details
-     *
-     * @dev Only the owner of the team can set permissions. Let it be an organisation, or a user.
-     */
-    function setPermission(
-        uint256 teamId,
-        address user,
-        EPermissions permission
-    ) external override onlyAdmin(teamId) {
-        permissionsOfTeam[teamId][user] = permission;
-    }
-
-    function transferToOrganisation(
-        uint256 teamId,
-        uint256 orgId
-    ) external override {
-        require(
-            ownerOf(teamId) == _msgSender(),
-            "TEAMS: Only Owner can transfer to Organisation"
-        );
-        _transfer(_msgSender(), organisations, teamId);
-        organisationOf[teamId] = orgId;
-    }
-
-    /**
      * @notice Returns the number of teams created.
      *
      * @return totalAmountOfTeams The total number of teams created.
      */
-    function getNumberOfTeamsCreated()
-        external
-        view
-        override
-        returns (uint256 totalAmountOfTeams)
-    {
+    function getNumberOfTeamsCreated() external view override returns (uint256 totalAmountOfTeams) {
         return totalSupply.current();
     }
 
@@ -119,13 +106,10 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
      *
      * @return address The owner of the Team
      */
-    function _ownerOf(
-        uint256 teamId
-    ) internal view virtual override returns (address) {
+    function _ownerOf(uint256 teamId) internal view virtual override returns (address) {
         address owner = _owners[teamId];
 
-        if (owner == organisations)
-            return IOrganisation(organisations).ownerOf(organisationOf[teamId]);
+        if (owner == organisations) return IOrganisation(organisations).ownerOf(organisationOf[teamId]);
         return owner;
     }
 
@@ -133,22 +117,13 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
      * @notice Always returns `IERC721Receiver.onERC721Received.selector`.
      * @dev We are not implementing any logic here, but we need to implement this function to be ERC721 compliant.
      */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes memory
-    ) public virtual override returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) public virtual override returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
     modifier onlyAdmin(uint256 teamId) {
         require(
-            ownerOf(teamId) == _msgSender() ||
-                IOrganisation(organisations).isAdmin(
-                    organisationOf[teamId],
-                    _msgSender()
-                ),
+            ownerOf(teamId) == _msgSender() || IOrganisation(organisations).isAdmin(organisationOf[teamId], _msgSender()),
             "TEAMS: Only the Owner, or an Organisation Admin can set permissions."
         );
         _;

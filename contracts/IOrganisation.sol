@@ -9,29 +9,16 @@ abstract contract IOrganisation is IERC721 {
         Admin
     }
 
-    function isAdmin(
-        uint256 orgId,
-        address user
-    ) public view virtual returns (bool _isAdmin);
+    event OrganisationCreated(uint256 indexed orgId, address indexed to);
+    event PermissionsUpdated(uint256 indexed orgId, address indexed account, EPermissions newPermission);
 
-    function isMember(
-        uint256 orgId,
-        address user
-    ) public view virtual returns (bool _isMember);
+    function isAdmin(uint256 orgId, address user) public view virtual returns (bool _isAdmin);
 
-    function createOrganisation(
-        address to
-    ) external virtual returns (uint256 newOrgId);
+    function isMember(uint256 orgId, address user) public view virtual returns (bool _isMember);
 
-    function setPermission(
-        uint256 orgId,
-        address user,
-        EPermissions permission
-    ) external virtual;
+    function createOrganisation(address to) external virtual returns (uint256 newOrgId);
 
-    function getNumberOfOrganisationsCreated()
-        external
-        view
-        virtual
-        returns (uint256);
+    function setPermission(uint256 orgId, address user, EPermissions permission) external virtual;
+
+    function getNumberOfOrganisationsCreated() external view virtual returns (uint256);
 }
