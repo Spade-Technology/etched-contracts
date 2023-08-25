@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./forks/Ownable.sol";
 
 abstract contract NodeHandler is Ownable {
     address private parent;
@@ -39,15 +39,23 @@ abstract contract NodeHandler is Ownable {
         _;
     }
 
+    function delegateCallsToSelf(bytes[] memory _calldata) private onlyNodes {
+        // 1. Check signature (like done before)
+
+        address newSignature = address(0); // TODO: Get signature from calldata and check validity
+
+        _delegateCallsToSelf(newSignature, _calldata);
+    }
+
     /**
      * @notice Delegates calls to the parent contract
      *
      * @param _calldata The calldata to send to the parent contract
      */
-    function delegateCallsToSelf(bytes[] memory _calldata) public onlyNodes {
-        // 1. Check signature (like done before)
-        // 2. Ownership change (using context modifer like we discussed on 24 Aug)
-
+    function _delegateCallsToSelf(
+        address context,
+        bytes[] memory _calldata
+    ) private withContext(context) {
         for (uint256 i = 0; i < _calldata.length; i++) {
             (bool success, bytes memory returnData) = address(this)
                 .delegatecall(_calldata[i]);
