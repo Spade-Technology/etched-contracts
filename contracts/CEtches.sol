@@ -51,7 +51,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         address to,
         string calldata documentName,
         string calldata ipfsCid
-    ) external virtual override {
+    ) public virtual override {
         totalSupply.increment();
         uint256 tokenId = totalSupply.current();
 
@@ -125,9 +125,6 @@ contract Etches is ERC721, IEtches, NodeHandler {
         string calldata documentName,
         string calldata ipfsCid
     ) external virtual override {
-        totalSupply.increment();
-        uint256 tokenId = totalSupply.current();
-
         // TODO: Change to write permission on team
         require(
             ITeams(teams).hasPermission(
@@ -138,8 +135,8 @@ contract Etches is ERC721, IEtches, NodeHandler {
             "ETCH: Not allowed to mint for this team"
         );
 
-        teamOf[tokenId] = teamId;
-        _safeMint(teams, tokenId, "");
+        safeMint(teams, documentName, ipfsCid);
+        teamOf[totalSupply.current()] = teamId;
     }
 
     /**
