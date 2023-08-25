@@ -1,4 +1,4 @@
-import { ethers, tenderly } from "hardhat";
+import { ethers, tenderly, run } from "hardhat";
 const fs = require("fs");
 const path = require("path");
 
@@ -13,32 +13,17 @@ async function main() {
 
   console.log("Org deployed to:", orgContract.address);
 
-  tenderly.verify({
-    name: "Organisations",
-    address: orgContract.address,
-  });
-
   console.log("Organisations deployed to:", orgContract.address);
 
   const Team = await ethers.getContractFactory("Teams");
   const teamContract = await Team.deploy(orgContract.address);
   await teamContract.deployed();
 
-  tenderly.verify({
-    name: "Teams",
-    address: teamContract.address,
-  });
-
   console.log("Teams deployed to:", teamContract.address);
 
   const Etch = await ethers.getContractFactory("Etches");
   const etchContract = await Etch.deploy(teamContract.address);
   await etchContract.deployed();
-
-  tenderly.verify({
-    name: "Etches",
-    address: etchContract.address,
-  });
 
   console.log("Etches deployed to:", etchContract.address);
 
@@ -57,6 +42,38 @@ async function main() {
   };
 
   fs.writeFileSync(exportedContractPath, JSON.stringify(exportedContract));
+
+  console.log("exportedContract", exportedContract);
+
+  tenderly.verify({
+    name: "Organisations",
+    address: orgContract.address,
+  });
+
+  tenderly.verify({
+    name: "Teams",
+    address: teamContract.address,
+  });
+
+  tenderly.verify({
+    name: "Etches",
+    address: etchContract.address,
+  });
+
+  run("verify:verify", {
+    address: orgContract.address,
+    constructorArguments: [],
+  });
+
+  run("verify:verify", {
+    address: teamContract.address,
+    constructorArguments: [orgContract.address],
+  });
+
+  run("verify:verify", {
+    address: etchContract.address,
+    constructorArguments: [teamContract.address],
+  });
 }
 
 // We recommend this pattern to be able to use async/await everywhere
