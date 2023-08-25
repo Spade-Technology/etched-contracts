@@ -1,0 +1,118 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Etch
+    network: sepolia
+    source:
+      address: "0x2dA129D55d763c133C9a555Be6aF751B17Fd3e5B"
+      abi: Etch
+      startBlock: 4159426
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - CommentAdded
+        - EtchCreated
+        - EtchTransferedToTeam
+        - InvididualPermissionsUpdated
+        - OwnershipTransferred
+        - Transfer
+      abis:
+        - name: Etch
+          file: ./abis/Etch.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256))
+          handler: handleCommentAdded
+        - event: EtchCreated(indexed uint256,indexed address)
+          handler: handleEtchCreated
+        - event: EtchTransferedToTeam(indexed uint256,indexed address,indexed uint256)
+          handler: handleEtchTransferedToTeam
+        - event: InvididualPermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handleInvididualPermissionsUpdated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/etch.ts
+  - kind: ethereum
+    name: Team
+    network: sepolia
+    source:
+      address: "0x45124FF7f71a9138a48096086679B49d2EeaA67a"
+      abi: Team
+      startBlock: 4159426
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TeamApproval
+        - TeamApprovalForAll
+        - TeamOwnershipTransferred
+        - PermissionsUpdated
+        - TeamCreated
+        - TeamTransfer
+        - TransferToOrganisation
+      abis:
+        - name: Team
+          file: ./abis/Team.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handlePermissionsUpdated
+        - event: TeamCreated(indexed uint256,indexed address)
+          handler: handleTeamCreated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TransferToOrganisation(indexed uint256,indexed uint256)
+          handler: handleTransferToOrganisation
+      file: ./src/team.ts
+  - kind: ethereum
+    name: Organisation
+    network: sepolia
+    source:
+      address: "0xc67a000417BbcC01352FF50D6Da4E1a739a19a33"
+      abi: Organisation
+      startBlock: 4159426
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OrganisationApproval
+        - OrganisationApprovalForAll
+        - OrganisationCreated
+        - OrganisationOwnershipTransferred
+        - OrganisationPermissionsUpdated
+        - OrganisationTransfer
+      abis:
+        - name: Organisation
+          file: ./abis/Organisation.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OrganisationCreated(indexed uint256,indexed address)
+          handler: handleOrganisationCreated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handlePermissionsUpdated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/organisation.ts
