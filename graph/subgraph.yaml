@@ -1,0 +1,94 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Etch
+    network: sepolia
+    source:
+      address: "0x5FE7b102491Bd8B148B03d5FA152617C1eD86c17"
+      abi: Etch
+      startBlock: 4159126
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - EtchCreated
+        - OwnershipTransferred
+        - Transfer
+      abis:
+        - name: Etch
+          file: ./abis/Etch.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: EtchCreated(indexed uint256)
+          handler: handleEtchCreated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/etch.ts
+  - kind: ethereum
+    name: Team
+    network: sepolia
+    source:
+      address: "0x2033F819Be8070F829F0BC4CBf1a93B02c2e9970"
+      abi: Team
+      startBlock: 4159126
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TeamApproval
+        - TeamApprovalForAll
+        - TeamOwnershipTransferred
+        - TeamTransfer
+      abis:
+        - name: Team
+          file: ./abis/Team.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/team.ts
+  - kind: ethereum
+    name: Organisation
+    network: sepolia
+    source:
+      address: "0x3B1Bd67E9dB09bb106DBaC0a598429B23C3E8487"
+      abi: Organisation
+      startBlock: 4159126
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OrganisationApproval
+        - OrganisationApprovalForAll
+        - OrganisationOwnershipTransferred
+        - OrganisationTransfer
+      abis:
+        - name: Organisation
+          file: ./abis/Organisation.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/organisation.ts
