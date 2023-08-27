@@ -45,32 +45,32 @@ async function main() {
 
   console.log("exportedContract", exportedContract);
 
-  tenderly.verify({
+  await tenderly.verify({
     name: "Organisations",
     address: orgContract.address,
   });
 
-  tenderly.verify({
+  await tenderly.verify({
     name: "Teams",
     address: teamContract.address,
   });
 
-  tenderly.verify({
+  await tenderly.verify({
     name: "Etches",
     address: etchContract.address,
   });
 
-  run("verify:verify", {
+  await run("verify:verify", {
     address: orgContract.address,
     constructorArguments: [],
   });
 
-  run("verify:verify", {
+  await run("verify:verify", {
     address: teamContract.address,
     constructorArguments: [orgContract.address],
   });
 
-  run("verify:verify", {
+  await run("verify:verify", {
     address: etchContract.address,
     constructorArguments: [teamContract.address],
   });

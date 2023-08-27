@@ -24,7 +24,7 @@ abstract contract IEtches is IERC721 {
         uint256 timestamp;
     }
 
-    event EtchCreated(uint256 indexed tokenId, address indexed to);
+    event EtchCreated(uint256 indexed tokenId, address indexed to, string ipfsCid, string documentName);
     event EtchTransferedToTeam(uint256 indexed tokenId, address indexed from, uint256 indexed to);
     event InvididualPermissionsUpdated(uint256 indexed tokenId, address indexed account, ITeams.EPermissions newPermission);
     event CommentAdded(uint256 indexed tokenId, uint256 indexed commentId, SComments comment);
@@ -44,4 +44,6 @@ abstract contract IEtches is IERC721 {
     function hasReadPermission(address account, uint256 tokenId) public view virtual returns (bool) {}
 
     function hasWritePermission(address account, uint256 tokenId) public view virtual returns (bool) {}
+
+    function getTotalSupply() external view virtual returns (uint256) {}
 }

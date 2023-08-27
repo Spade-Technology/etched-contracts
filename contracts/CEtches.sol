@@ -58,7 +58,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
             timestamp: block.timestamp
         });
 
-        emit EtchCreated(tokenId, to);
+        emit EtchCreated(tokenId, to, ipfsCid, documentName);
     }
 
     /**
@@ -112,7 +112,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         safeMint(teams, documentName, ipfsCid);
         teamOf[totalSupply.current()] = teamId;
 
-        emit EtchCreated(totalSupply.current(), _msgSender()); // Create the Etch
+        emit EtchCreated(totalSupply.current(), _msgSender(), ipfsCid, documentName);
         emit EtchTransferedToTeam(totalSupply.current(), _msgSender(), teamId); // Transfer the Etch to the team
     }
 
@@ -155,6 +155,15 @@ contract Etches is ERC721, IEtches, NodeHandler {
             account == ownerOf(tokenId) ||
             individualPermissionsOf[tokenId][account] >= ITeams.EPermissions.ReadWrite ||
             (teamOf[tokenId] > 0 && ITeams(teams).hasPermission(teamOf[tokenId], account, ITeams.EPermissions.ReadWrite));
+    }
+
+    /**
+     * @notice Get the total number of Etches minted
+     *
+     * @return uint256 The total number of Etches minted
+     */
+    function getTotalSupply() external view override returns (uint256) {
+        return totalSupply.current();
     }
 
     /**
