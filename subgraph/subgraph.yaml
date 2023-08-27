@@ -6,9 +6,9 @@ dataSources:
     name: Etch
     network: sepolia
     source:
-      address: "0x2dA129D55d763c133C9a555Be6aF751B17Fd3e5B"
+      address: "0x88c34ED120c7F9E5a1FD78502C1b59ECAE45fBbf"
       abi: Etch
-      startBlock: 4159426
+      startBlock: 4172442 
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -32,7 +32,7 @@ dataSources:
           handler: handleApprovalForAll
         - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256))
           handler: handleCommentAdded
-        - event: EtchCreated(indexed uint256,indexed address)
+        - event: EtchCreated(indexed uint256,indexed address,string,string)
           handler: handleEtchCreated
         - event: EtchTransferedToTeam(indexed uint256,indexed address,indexed uint256)
           handler: handleEtchTransferedToTeam
@@ -47,9 +47,9 @@ dataSources:
     name: Team
     network: sepolia
     source:
-      address: "0x45124FF7f71a9138a48096086679B49d2EeaA67a"
+      address: "0xb8460aa794Bb3585ebf2A5823c8d838547F514eB"
       abi: Team
-      startBlock: 4159426
+      startBlock: 4172442
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -85,9 +85,9 @@ dataSources:
     name: Organisation
     network: sepolia
     source:
-      address: "0xc67a000417BbcC01352FF50D6Da4E1a739a19a33"
+      address: "0x7b84A4100689E73ec2488E272FB132aD02aE51ee"
       abi: Organisation
-      startBlock: 4159426
+      startBlock: 4172442
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

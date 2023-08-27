@@ -1,4 +1,101 @@
-type Approval @entity(immutable: true) {
+## WALLET ENTITY ##
+
+type Wallet @entity {
+  id: Bytes!
+  ownedEtches: [EtchOwnership!] @derivedFrom(field: "owner")
+  ownedTeams: [TeamOwnership!] @derivedFrom(field: "owner")
+  ownedorganisations: [OrganisationOwnership!] @derivedFrom(field: "owner")
+  teamApprovals: [TeamApproval!] @derivedFrom(field: "wallet")
+  OrganisationApprovals: [OrganisationApproval!] @derivedFrom(field: "wallet")
+  etchPermissions: [EtchPermission!] @derivedFrom(field: "wallet")
+  teamPermissions: [TeamPermission!] @derivedFrom(field: "wallet")
+  OrganisationPermissions: [OrganisationPermission!] @derivedFrom(field: "wallet")
+}
+
+## ETCH, TEAM, organisation ENTITIES ##
+
+type Etch @entity {
+  id: ID!
+  tokenId: BigInt!
+  ownership: EtchOwnership!
+  permissions: [EtchPermission!] @derivedFrom(field: "etch")
+  comments: [EtchCommentAdded!] @derivedFrom(field: "etch")
+  transfers: [EtchTransfer!] @derivedFrom(field: "etch")
+  approvals: [EtchApproval!] @derivedFrom(field: "etch")
+
+  ipfsCid: String!
+  documentName: String!
+}
+
+type Team @entity {
+  id: ID!
+  teamId: BigInt!
+  ownership: TeamOwnership!
+  permissions: [TeamPermission!] @derivedFrom(field: "team")
+  managedEtches: [EtchOwnership!] @derivedFrom(field: "team")
+  transfers: [TeamTransfer!] @derivedFrom(field: "team")
+  approvals: [TeamApproval!] @derivedFrom(field: "team")
+}
+
+type Organisation @entity {
+  id: ID!
+  orgId: BigInt!
+  ownership: OrganisationOwnership!
+  permissions: [OrganisationPermission!] @derivedFrom(field: "organisation")
+  managedTeams: [TeamOwnership!] @derivedFrom(field: "organisation")
+  transfers: [OrganisationTransfer!] @derivedFrom(field: "organisation")
+  approvals: [OrganisationApproval!] @derivedFrom(field: "organisation")
+}
+
+## OWNERSHIP CHAIN ENTITIES ##
+
+type EtchOwnership @entity {
+  id: ID!
+  etch: Etch! @derivedFrom(field: "ownership")
+  owner: Wallet!
+  team: Team
+  permissionLevel: Int!
+}
+
+type TeamOwnership @entity {
+  id: ID!
+  team: Team!
+  owner: Wallet!
+  organisation: Organisation
+}
+
+type OrganisationOwnership @entity {
+  id: ID!
+  organisation: Organisation!
+  owner: Wallet!
+}
+
+## PERMISSION CHAIN ENTITIES ##
+
+type EtchPermission @entity {
+  id: ID!
+  etch: Etch!
+  wallet: Wallet!
+  permissionLevel: Int! # uint8, possibly Enum
+}
+
+type TeamPermission @entity {
+  id: ID!
+  team: Team!
+  wallet: Wallet!
+  permissionLevel: Int! # uint8, possibly Enum
+}
+
+type OrganisationPermission @entity {
+  id: ID!
+  organisation: Organisation!
+  wallet: Wallet!
+  permissionLevel: Int! # uint8, possibly Enum
+}
+
+## ETCH EVENTS ##
+
+type EtchApproval @entity(immutable: true) {
   id: Bytes!
   owner: Bytes! # address
   approved: Bytes! # address
@@ -6,9 +103,11 @@ type Approval @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  etch: Etch!
 }
 
-type ApprovalForAll @entity(immutable: true) {
+type EtchApprovalForAll @entity(immutable: true) {
   id: Bytes!
   owner: Bytes! # address
   operator: Bytes! # address
@@ -16,9 +115,11 @@ type ApprovalForAll @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  etch: Etch!
 }
 
-type CommentAdded @entity(immutable: true) {
+type EtchCommentAdded @entity(immutable: true) {
   id: Bytes!
   tokenId: BigInt! # uint256
   commentId: BigInt! # uint256
@@ -27,6 +128,8 @@ type CommentAdded @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  etch: Etch!
 }
 
 type EtchCreated @entity(immutable: true) {
@@ -48,7 +151,7 @@ type EtchTransferedToTeam @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type InvididualPermissionsUpdated @entity(immutable: true) {
+type EtchPermissionsUpdated @entity(immutable: true) {
   id: Bytes!
   tokenId: BigInt! # uint256
   account: Bytes! # address
@@ -58,7 +161,7 @@ type InvididualPermissionsUpdated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type OwnershipTransferred @entity(immutable: true) {
+type EtchOwnershipTransferred @entity(immutable: true) {
   id: Bytes!
   previousOwner: Bytes! # address
   newOwner: Bytes! # address
@@ -67,7 +170,7 @@ type OwnershipTransferred @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type Transfer @entity(immutable: true) {
+type EtchTransfer @entity(immutable: true) {
   id: Bytes!
   from: Bytes! # address
   to: Bytes! # address
@@ -75,7 +178,12 @@ type Transfer @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  etch: Etch!
 }
+
+## TEAM EVENTS ##
+
 type TeamApproval @entity(immutable: true) {
   id: Bytes!
   owner: Bytes! # address
@@ -84,6 +192,9 @@ type TeamApproval @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  team: Team!
+  wallet: Wallet!
 }
 
 type TeamApprovalForAll @entity(immutable: true) {
@@ -94,6 +205,8 @@ type TeamApprovalForAll @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  team: Team!
 }
 
 type TeamOwnershipTransferred @entity(immutable: true) {
@@ -103,9 +216,11 @@ type TeamOwnershipTransferred @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  team: Team!
 }
 
-type PermissionsUpdated @entity(immutable: true) {
+type TeamPermissionsUpdated @entity(immutable: true) {
   id: Bytes!
   teamId: BigInt! # uint256
   account: Bytes! # address
@@ -113,6 +228,8 @@ type PermissionsUpdated @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  team: Team!
 }
 
 type TeamCreated @entity(immutable: true) {
@@ -122,6 +239,8 @@ type TeamCreated @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  team: Team!
 }
 
 type TeamTransfer @entity(immutable: true) {
@@ -132,16 +251,24 @@ type TeamTransfer @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  team: Team!
 }
 
-type TransferToOrganisation @entity(immutable: true) {
+type TeamTransferToOrganisation @entity(immutable: true) {
   id: Bytes!
   teamId: BigInt! # uint256
   orgId: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  team: Team!
+  organisation: Organisation!
 }
+
+## ORGANISATION EVENTS ##
+
 type OrganisationApproval @entity(immutable: true) {
   id: Bytes!
   owner: Bytes! # address
@@ -150,6 +277,9 @@ type OrganisationApproval @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  organisation: Organisation!
+  wallet: Wallet!
 }
 
 type OrganisationApprovalForAll @entity(immutable: true) {
@@ -160,6 +290,8 @@ type OrganisationApprovalForAll @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  organisation: Organisation!
 }
 
 type OrganisationCreated @entity(immutable: true) {
@@ -169,9 +301,11 @@ type OrganisationCreated @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  organisation: Organisation!
 }
 
-type OrganisationOwnershipTransferred @entity(immutable: true) {
+type OrganisationContractOwnershipTransferred @entity(immutable: true) {
   id: Bytes!
   previousOwner: Bytes! # address
   newOwner: Bytes! # address
@@ -188,6 +322,8 @@ type OrganisationPermissionsUpdated @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
+  organisation: Organisation!
 }
 
 type OrganisationTransfer @entity(immutable: true) {
@@ -198,16 +334,6 @@ type OrganisationTransfer @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-}
 
-type User @entity {
-  id: Bytes! # address
-  address: Bytes! # address
-}
-
-type Organisation @entity {
-  id: BigInt! # uint256
-  tokenId: BigInt! # uint256
-  owner: Bytes! # address
-  members: [Team!]! # address[]
+  organisation: Organisation!
 }

@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Approval extends Entity {
+export class Wallet extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -19,24 +19,967 @@ export class Approval extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Approval entity without an ID");
+    assert(id != null, "Cannot save Wallet entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type Approval must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Wallet must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Approval", id.toBytes().toHexString(), this);
+      store.set("Wallet", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Approval | null {
-    return changetype<Approval | null>(
-      store.get_in_block("Approval", id.toHexString())
+  static loadInBlock(id: Bytes): Wallet | null {
+    return changetype<Wallet | null>(
+      store.get_in_block("Wallet", id.toHexString())
     );
   }
 
-  static load(id: Bytes): Approval | null {
-    return changetype<Approval | null>(store.get("Approval", id.toHexString()));
+  static load(id: Bytes): Wallet | null {
+    return changetype<Wallet | null>(store.get("Wallet", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get ownedEtches(): EtchOwnershipLoader {
+    return new EtchOwnershipLoader(
+      "Wallet",
+      this.get("id")!.toString(),
+      "ownedEtches"
+    );
+  }
+
+  get ownedTeams(): TeamOwnershipLoader {
+    return new TeamOwnershipLoader(
+      "Wallet",
+      this.get("id")!.toString(),
+      "ownedTeams"
+    );
+  }
+
+  get ownedorganisations(): OrganisationOwnershipLoader {
+    return new OrganisationOwnershipLoader(
+      "Wallet",
+      this.get("id")!.toString(),
+      "ownedorganisations"
+    );
+  }
+
+  get teamApprovals(): TeamApprovalLoader {
+    return new TeamApprovalLoader(
+      "Wallet",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "teamApprovals"
+    );
+  }
+
+  get OrganisationApprovals(): OrganisationApprovalLoader {
+    return new OrganisationApprovalLoader(
+      "Wallet",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "OrganisationApprovals"
+    );
+  }
+
+  get etchPermissions(): EtchPermissionLoader {
+    return new EtchPermissionLoader(
+      "Wallet",
+      this.get("id")!.toString(),
+      "etchPermissions"
+    );
+  }
+
+  get teamPermissions(): TeamPermissionLoader {
+    return new TeamPermissionLoader(
+      "Wallet",
+      this.get("id")!.toString(),
+      "teamPermissions"
+    );
+  }
+
+  get OrganisationPermissions(): OrganisationPermissionLoader {
+    return new OrganisationPermissionLoader(
+      "Wallet",
+      this.get("id")!.toString(),
+      "OrganisationPermissions"
+    );
+  }
+}
+
+export class Etch extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Etch entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Etch must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Etch", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Etch | null {
+    return changetype<Etch | null>(store.get_in_block("Etch", id));
+  }
+
+  static load(id: string): Etch | null {
+    return changetype<Etch | null>(store.get("Etch", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get tokenId(): BigInt {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set tokenId(value: BigInt) {
+    this.set("tokenId", Value.fromBigInt(value));
+  }
+
+  get ownership(): string {
+    let value = this.get("ownership");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ownership(value: string) {
+    this.set("ownership", Value.fromString(value));
+  }
+
+  get permissions(): EtchPermissionLoader {
+    return new EtchPermissionLoader(
+      "Etch",
+      this.get("id")!.toString(),
+      "permissions"
+    );
+  }
+
+  get comments(): EtchCommentAddedLoader {
+    return new EtchCommentAddedLoader(
+      "Etch",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "comments"
+    );
+  }
+
+  get transfers(): EtchTransferLoader {
+    return new EtchTransferLoader(
+      "Etch",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "transfers"
+    );
+  }
+
+  get approvals(): EtchApprovalLoader {
+    return new EtchApprovalLoader(
+      "Etch",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "approvals"
+    );
+  }
+
+  get ipfsCid(): string {
+    let value = this.get("ipfsCid");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ipfsCid(value: string) {
+    this.set("ipfsCid", Value.fromString(value));
+  }
+
+  get documentName(): string {
+    let value = this.get("documentName");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set documentName(value: string) {
+    this.set("documentName", Value.fromString(value));
+  }
+}
+
+export class Team extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Team entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Team must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Team", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Team | null {
+    return changetype<Team | null>(store.get_in_block("Team", id));
+  }
+
+  static load(id: string): Team | null {
+    return changetype<Team | null>(store.get("Team", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get teamId(): BigInt {
+    let value = this.get("teamId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set teamId(value: BigInt) {
+    this.set("teamId", Value.fromBigInt(value));
+  }
+
+  get ownership(): string {
+    let value = this.get("ownership");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ownership(value: string) {
+    this.set("ownership", Value.fromString(value));
+  }
+
+  get permissions(): TeamPermissionLoader {
+    return new TeamPermissionLoader(
+      "Team",
+      this.get("id")!.toString(),
+      "permissions"
+    );
+  }
+
+  get managedEtches(): EtchOwnershipLoader {
+    return new EtchOwnershipLoader(
+      "Team",
+      this.get("id")!.toString(),
+      "managedEtches"
+    );
+  }
+
+  get transfers(): TeamTransferLoader {
+    return new TeamTransferLoader(
+      "Team",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "transfers"
+    );
+  }
+
+  get approvals(): TeamApprovalLoader {
+    return new TeamApprovalLoader(
+      "Team",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "approvals"
+    );
+  }
+}
+
+export class Organisation extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Organisation entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Organisation must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Organisation", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Organisation | null {
+    return changetype<Organisation | null>(
+      store.get_in_block("Organisation", id)
+    );
+  }
+
+  static load(id: string): Organisation | null {
+    return changetype<Organisation | null>(store.get("Organisation", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get orgId(): BigInt {
+    let value = this.get("orgId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set orgId(value: BigInt) {
+    this.set("orgId", Value.fromBigInt(value));
+  }
+
+  get ownership(): string {
+    let value = this.get("ownership");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ownership(value: string) {
+    this.set("ownership", Value.fromString(value));
+  }
+
+  get permissions(): OrganisationPermissionLoader {
+    return new OrganisationPermissionLoader(
+      "Organisation",
+      this.get("id")!.toString(),
+      "permissions"
+    );
+  }
+
+  get managedTeams(): TeamOwnershipLoader {
+    return new TeamOwnershipLoader(
+      "Organisation",
+      this.get("id")!.toString(),
+      "managedTeams"
+    );
+  }
+
+  get transfers(): OrganisationTransferLoader {
+    return new OrganisationTransferLoader(
+      "Organisation",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "transfers"
+    );
+  }
+
+  get approvals(): OrganisationApprovalLoader {
+    return new OrganisationApprovalLoader(
+      "Organisation",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "approvals"
+    );
+  }
+}
+
+export class EtchOwnership extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save EtchOwnership entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type EtchOwnership must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("EtchOwnership", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): EtchOwnership | null {
+    return changetype<EtchOwnership | null>(
+      store.get_in_block("EtchOwnership", id)
+    );
+  }
+
+  static load(id: string): EtchOwnership | null {
+    return changetype<EtchOwnership | null>(store.get("EtchOwnership", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get etch(): EtchLoader {
+    return new EtchLoader("EtchOwnership", this.get("id")!.toString(), "etch");
+  }
+
+  get owner(): Bytes {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set owner(value: Bytes) {
+    this.set("owner", Value.fromBytes(value));
+  }
+
+  get team(): string | null {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string | null) {
+    if (!value) {
+      this.unset("team");
+    } else {
+      this.set("team", Value.fromString(<string>value));
+    }
+  }
+
+  get permissionLevel(): i32 {
+    let value = this.get("permissionLevel");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set permissionLevel(value: i32) {
+    this.set("permissionLevel", Value.fromI32(value));
+  }
+}
+
+export class TeamOwnership extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save TeamOwnership entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type TeamOwnership must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("TeamOwnership", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): TeamOwnership | null {
+    return changetype<TeamOwnership | null>(
+      store.get_in_block("TeamOwnership", id)
+    );
+  }
+
+  static load(id: string): TeamOwnership | null {
+    return changetype<TeamOwnership | null>(store.get("TeamOwnership", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
+  }
+
+  get owner(): Bytes {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set owner(value: Bytes) {
+    this.set("owner", Value.fromBytes(value));
+  }
+
+  get organisation(): string | null {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string | null) {
+    if (!value) {
+      this.unset("organisation");
+    } else {
+      this.set("organisation", Value.fromString(<string>value));
+    }
+  }
+}
+
+export class OrganisationOwnership extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save OrganisationOwnership entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type OrganisationOwnership must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("OrganisationOwnership", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): OrganisationOwnership | null {
+    return changetype<OrganisationOwnership | null>(
+      store.get_in_block("OrganisationOwnership", id)
+    );
+  }
+
+  static load(id: string): OrganisationOwnership | null {
+    return changetype<OrganisationOwnership | null>(
+      store.get("OrganisationOwnership", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
+  }
+
+  get owner(): Bytes {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set owner(value: Bytes) {
+    this.set("owner", Value.fromBytes(value));
+  }
+}
+
+export class EtchPermission extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save EtchPermission entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type EtchPermission must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("EtchPermission", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): EtchPermission | null {
+    return changetype<EtchPermission | null>(
+      store.get_in_block("EtchPermission", id)
+    );
+  }
+
+  static load(id: string): EtchPermission | null {
+    return changetype<EtchPermission | null>(store.get("EtchPermission", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get etch(): string {
+    let value = this.get("etch");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set etch(value: string) {
+    this.set("etch", Value.fromString(value));
+  }
+
+  get wallet(): Bytes {
+    let value = this.get("wallet");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set wallet(value: Bytes) {
+    this.set("wallet", Value.fromBytes(value));
+  }
+
+  get permissionLevel(): i32 {
+    let value = this.get("permissionLevel");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set permissionLevel(value: i32) {
+    this.set("permissionLevel", Value.fromI32(value));
+  }
+}
+
+export class TeamPermission extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save TeamPermission entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type TeamPermission must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("TeamPermission", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): TeamPermission | null {
+    return changetype<TeamPermission | null>(
+      store.get_in_block("TeamPermission", id)
+    );
+  }
+
+  static load(id: string): TeamPermission | null {
+    return changetype<TeamPermission | null>(store.get("TeamPermission", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
+  }
+
+  get wallet(): Bytes {
+    let value = this.get("wallet");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set wallet(value: Bytes) {
+    this.set("wallet", Value.fromBytes(value));
+  }
+
+  get permissionLevel(): i32 {
+    let value = this.get("permissionLevel");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set permissionLevel(value: i32) {
+    this.set("permissionLevel", Value.fromI32(value));
+  }
+}
+
+export class OrganisationPermission extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save OrganisationPermission entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type OrganisationPermission must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("OrganisationPermission", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): OrganisationPermission | null {
+    return changetype<OrganisationPermission | null>(
+      store.get_in_block("OrganisationPermission", id)
+    );
+  }
+
+  static load(id: string): OrganisationPermission | null {
+    return changetype<OrganisationPermission | null>(
+      store.get("OrganisationPermission", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
+  }
+
+  get wallet(): Bytes {
+    let value = this.get("wallet");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set wallet(value: Bytes) {
+    this.set("wallet", Value.fromBytes(value));
+  }
+
+  get permissionLevel(): i32 {
+    let value = this.get("permissionLevel");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set permissionLevel(value: i32) {
+    this.set("permissionLevel", Value.fromI32(value));
+  }
+}
+
+export class EtchApproval extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save EtchApproval entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type EtchApproval must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("EtchApproval", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): EtchApproval | null {
+    return changetype<EtchApproval | null>(
+      store.get_in_block("EtchApproval", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): EtchApproval | null {
+    return changetype<EtchApproval | null>(
+      store.get("EtchApproval", id.toHexString())
+    );
   }
 
   get id(): Bytes {
@@ -129,9 +1072,22 @@ export class Approval extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get etch(): string {
+    let value = this.get("etch");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set etch(value: string) {
+    this.set("etch", Value.fromString(value));
+  }
 }
 
-export class ApprovalForAll extends Entity {
+export class EtchApprovalForAll extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -139,25 +1095,25 @@ export class ApprovalForAll extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ApprovalForAll entity without an ID");
+    assert(id != null, "Cannot save EtchApprovalForAll entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type ApprovalForAll must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type EtchApprovalForAll must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ApprovalForAll", id.toBytes().toHexString(), this);
+      store.set("EtchApprovalForAll", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): ApprovalForAll | null {
-    return changetype<ApprovalForAll | null>(
-      store.get_in_block("ApprovalForAll", id.toHexString())
+  static loadInBlock(id: Bytes): EtchApprovalForAll | null {
+    return changetype<EtchApprovalForAll | null>(
+      store.get_in_block("EtchApprovalForAll", id.toHexString())
     );
   }
 
-  static load(id: Bytes): ApprovalForAll | null {
-    return changetype<ApprovalForAll | null>(
-      store.get("ApprovalForAll", id.toHexString())
+  static load(id: Bytes): EtchApprovalForAll | null {
+    return changetype<EtchApprovalForAll | null>(
+      store.get("EtchApprovalForAll", id.toHexString())
     );
   }
 
@@ -251,9 +1207,22 @@ export class ApprovalForAll extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get etch(): string {
+    let value = this.get("etch");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set etch(value: string) {
+    this.set("etch", Value.fromString(value));
+  }
 }
 
-export class CommentAdded extends Entity {
+export class EtchCommentAdded extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -261,25 +1230,25 @@ export class CommentAdded extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save CommentAdded entity without an ID");
+    assert(id != null, "Cannot save EtchCommentAdded entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type CommentAdded must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type EtchCommentAdded must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("CommentAdded", id.toBytes().toHexString(), this);
+      store.set("EtchCommentAdded", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): CommentAdded | null {
-    return changetype<CommentAdded | null>(
-      store.get_in_block("CommentAdded", id.toHexString())
+  static loadInBlock(id: Bytes): EtchCommentAdded | null {
+    return changetype<EtchCommentAdded | null>(
+      store.get_in_block("EtchCommentAdded", id.toHexString())
     );
   }
 
-  static load(id: Bytes): CommentAdded | null {
-    return changetype<CommentAdded | null>(
-      store.get("CommentAdded", id.toHexString())
+  static load(id: Bytes): EtchCommentAdded | null {
+    return changetype<EtchCommentAdded | null>(
+      store.get("EtchCommentAdded", id.toHexString())
     );
   }
 
@@ -385,6 +1354,19 @@ export class CommentAdded extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get etch(): string {
+    let value = this.get("etch");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set etch(value: string) {
+    this.set("etch", Value.fromString(value));
   }
 }
 
@@ -619,7 +1601,7 @@ export class EtchTransferedToTeam extends Entity {
   }
 }
 
-export class InvididualPermissionsUpdated extends Entity {
+export class EtchPermissionsUpdated extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -629,30 +1611,26 @@ export class InvididualPermissionsUpdated extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save InvididualPermissionsUpdated entity without an ID"
+      "Cannot save EtchPermissionsUpdated entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type InvididualPermissionsUpdated must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type EtchPermissionsUpdated must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set(
-        "InvididualPermissionsUpdated",
-        id.toBytes().toHexString(),
-        this
-      );
+      store.set("EtchPermissionsUpdated", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): InvididualPermissionsUpdated | null {
-    return changetype<InvididualPermissionsUpdated | null>(
-      store.get_in_block("InvididualPermissionsUpdated", id.toHexString())
+  static loadInBlock(id: Bytes): EtchPermissionsUpdated | null {
+    return changetype<EtchPermissionsUpdated | null>(
+      store.get_in_block("EtchPermissionsUpdated", id.toHexString())
     );
   }
 
-  static load(id: Bytes): InvididualPermissionsUpdated | null {
-    return changetype<InvididualPermissionsUpdated | null>(
-      store.get("InvididualPermissionsUpdated", id.toHexString())
+  static load(id: Bytes): EtchPermissionsUpdated | null {
+    return changetype<EtchPermissionsUpdated | null>(
+      store.get("EtchPermissionsUpdated", id.toHexString())
     );
   }
 
@@ -748,7 +1726,7 @@ export class InvididualPermissionsUpdated extends Entity {
   }
 }
 
-export class OwnershipTransferred extends Entity {
+export class EtchOwnershipTransferred extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -756,25 +1734,28 @@ export class OwnershipTransferred extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save OwnershipTransferred entity without an ID");
+    assert(
+      id != null,
+      "Cannot save EtchOwnershipTransferred entity without an ID"
+    );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type OwnershipTransferred must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type EtchOwnershipTransferred must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("OwnershipTransferred", id.toBytes().toHexString(), this);
+      store.set("EtchOwnershipTransferred", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): OwnershipTransferred | null {
-    return changetype<OwnershipTransferred | null>(
-      store.get_in_block("OwnershipTransferred", id.toHexString())
+  static loadInBlock(id: Bytes): EtchOwnershipTransferred | null {
+    return changetype<EtchOwnershipTransferred | null>(
+      store.get_in_block("EtchOwnershipTransferred", id.toHexString())
     );
   }
 
-  static load(id: Bytes): OwnershipTransferred | null {
-    return changetype<OwnershipTransferred | null>(
-      store.get("OwnershipTransferred", id.toHexString())
+  static load(id: Bytes): EtchOwnershipTransferred | null {
+    return changetype<EtchOwnershipTransferred | null>(
+      store.get("EtchOwnershipTransferred", id.toHexString())
     );
   }
 
@@ -857,7 +1838,7 @@ export class OwnershipTransferred extends Entity {
   }
 }
 
-export class Transfer extends Entity {
+export class EtchTransfer extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -865,24 +1846,26 @@ export class Transfer extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Transfer entity without an ID");
+    assert(id != null, "Cannot save EtchTransfer entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type Transfer must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type EtchTransfer must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Transfer", id.toBytes().toHexString(), this);
+      store.set("EtchTransfer", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): Transfer | null {
-    return changetype<Transfer | null>(
-      store.get_in_block("Transfer", id.toHexString())
+  static loadInBlock(id: Bytes): EtchTransfer | null {
+    return changetype<EtchTransfer | null>(
+      store.get_in_block("EtchTransfer", id.toHexString())
     );
   }
 
-  static load(id: Bytes): Transfer | null {
-    return changetype<Transfer | null>(store.get("Transfer", id.toHexString()));
+  static load(id: Bytes): EtchTransfer | null {
+    return changetype<EtchTransfer | null>(
+      store.get("EtchTransfer", id.toHexString())
+    );
   }
 
   get id(): Bytes {
@@ -974,6 +1957,19 @@ export class Transfer extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get etch(): string {
+    let value = this.get("etch");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set etch(value: string) {
+    this.set("etch", Value.fromString(value));
   }
 }
 
@@ -1097,6 +2093,32 @@ export class TeamApproval extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
+  }
+
+  get wallet(): Bytes {
+    let value = this.get("wallet");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set wallet(value: Bytes) {
+    this.set("wallet", Value.fromBytes(value));
+  }
 }
 
 export class TeamApprovalForAll extends Entity {
@@ -1219,6 +2241,19 @@ export class TeamApprovalForAll extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
+  }
 }
 
 export class TeamOwnershipTransferred extends Entity {
@@ -1331,9 +2366,22 @@ export class TeamOwnershipTransferred extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
+  }
 }
 
-export class PermissionsUpdated extends Entity {
+export class TeamPermissionsUpdated extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -1341,25 +2389,28 @@ export class PermissionsUpdated extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save PermissionsUpdated entity without an ID");
+    assert(
+      id != null,
+      "Cannot save TeamPermissionsUpdated entity without an ID"
+    );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type PermissionsUpdated must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type TeamPermissionsUpdated must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("PermissionsUpdated", id.toBytes().toHexString(), this);
+      store.set("TeamPermissionsUpdated", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): PermissionsUpdated | null {
-    return changetype<PermissionsUpdated | null>(
-      store.get_in_block("PermissionsUpdated", id.toHexString())
+  static loadInBlock(id: Bytes): TeamPermissionsUpdated | null {
+    return changetype<TeamPermissionsUpdated | null>(
+      store.get_in_block("TeamPermissionsUpdated", id.toHexString())
     );
   }
 
-  static load(id: Bytes): PermissionsUpdated | null {
-    return changetype<PermissionsUpdated | null>(
-      store.get("PermissionsUpdated", id.toHexString())
+  static load(id: Bytes): TeamPermissionsUpdated | null {
+    return changetype<TeamPermissionsUpdated | null>(
+      store.get("TeamPermissionsUpdated", id.toHexString())
     );
   }
 
@@ -1452,6 +2503,19 @@ export class PermissionsUpdated extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
   }
 }
 
@@ -1561,6 +2625,19 @@ export class TeamCreated extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
   }
 }
 
@@ -1684,9 +2761,22 @@ export class TeamTransfer extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
+  }
 }
 
-export class TransferToOrganisation extends Entity {
+export class TeamTransferToOrganisation extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -1696,26 +2786,26 @@ export class TransferToOrganisation extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save TransferToOrganisation entity without an ID"
+      "Cannot save TeamTransferToOrganisation entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type TransferToOrganisation must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type TeamTransferToOrganisation must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("TransferToOrganisation", id.toBytes().toHexString(), this);
+      store.set("TeamTransferToOrganisation", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): TransferToOrganisation | null {
-    return changetype<TransferToOrganisation | null>(
-      store.get_in_block("TransferToOrganisation", id.toHexString())
+  static loadInBlock(id: Bytes): TeamTransferToOrganisation | null {
+    return changetype<TeamTransferToOrganisation | null>(
+      store.get_in_block("TeamTransferToOrganisation", id.toHexString())
     );
   }
 
-  static load(id: Bytes): TransferToOrganisation | null {
-    return changetype<TransferToOrganisation | null>(
-      store.get("TransferToOrganisation", id.toHexString())
+  static load(id: Bytes): TeamTransferToOrganisation | null {
+    return changetype<TeamTransferToOrganisation | null>(
+      store.get("TeamTransferToOrganisation", id.toHexString())
     );
   }
 
@@ -1795,6 +2885,32 @@ export class TransferToOrganisation extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get team(): string {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string) {
+    this.set("team", Value.fromString(value));
+  }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
   }
 }
 
@@ -1917,6 +3033,32 @@ export class OrganisationApproval extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
+  }
+
+  get wallet(): Bytes {
+    let value = this.get("wallet");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set wallet(value: Bytes) {
+    this.set("wallet", Value.fromBytes(value));
   }
 }
 
@@ -2043,6 +3185,19 @@ export class OrganisationApprovalForAll extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
+  }
 }
 
 export class OrganisationCreated extends Entity {
@@ -2152,9 +3307,22 @@ export class OrganisationCreated extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
+  }
 }
 
-export class OrganisationOwnershipTransferred extends Entity {
+export class OrganisationContractOwnershipTransferred extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -2164,30 +3332,35 @@ export class OrganisationOwnershipTransferred extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save OrganisationOwnershipTransferred entity without an ID"
+      "Cannot save OrganisationContractOwnershipTransferred entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type OrganisationOwnershipTransferred must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type OrganisationContractOwnershipTransferred must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
       store.set(
-        "OrganisationOwnershipTransferred",
+        "OrganisationContractOwnershipTransferred",
         id.toBytes().toHexString(),
         this
       );
     }
   }
 
-  static loadInBlock(id: Bytes): OrganisationOwnershipTransferred | null {
-    return changetype<OrganisationOwnershipTransferred | null>(
-      store.get_in_block("OrganisationOwnershipTransferred", id.toHexString())
+  static loadInBlock(
+    id: Bytes
+  ): OrganisationContractOwnershipTransferred | null {
+    return changetype<OrganisationContractOwnershipTransferred | null>(
+      store.get_in_block(
+        "OrganisationContractOwnershipTransferred",
+        id.toHexString()
+      )
     );
   }
 
-  static load(id: Bytes): OrganisationOwnershipTransferred | null {
-    return changetype<OrganisationOwnershipTransferred | null>(
-      store.get("OrganisationOwnershipTransferred", id.toHexString())
+  static load(id: Bytes): OrganisationContractOwnershipTransferred | null {
+    return changetype<OrganisationContractOwnershipTransferred | null>(
+      store.get("OrganisationContractOwnershipTransferred", id.toHexString())
     );
   }
 
@@ -2397,6 +3570,19 @@ export class OrganisationPermissionsUpdated extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
+  }
 }
 
 export class OrganisationTransfer extends Entity {
@@ -2518,5 +3704,270 @@ export class OrganisationTransfer extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get organisation(): string {
+    let value = this.get("organisation");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set organisation(value: string) {
+    this.set("organisation", Value.fromString(value));
+  }
+}
+
+export class EtchOwnershipLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): EtchOwnership[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<EtchOwnership[]>(value);
+  }
+}
+
+export class TeamOwnershipLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): TeamOwnership[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<TeamOwnership[]>(value);
+  }
+}
+
+export class OrganisationOwnershipLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): OrganisationOwnership[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<OrganisationOwnership[]>(value);
+  }
+}
+
+export class TeamApprovalLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): TeamApproval[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<TeamApproval[]>(value);
+  }
+}
+
+export class OrganisationApprovalLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): OrganisationApproval[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<OrganisationApproval[]>(value);
+  }
+}
+
+export class EtchPermissionLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): EtchPermission[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<EtchPermission[]>(value);
+  }
+}
+
+export class TeamPermissionLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): TeamPermission[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<TeamPermission[]>(value);
+  }
+}
+
+export class OrganisationPermissionLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): OrganisationPermission[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<OrganisationPermission[]>(value);
+  }
+}
+
+export class EtchCommentAddedLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): EtchCommentAdded[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<EtchCommentAdded[]>(value);
+  }
+}
+
+export class EtchTransferLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): EtchTransfer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<EtchTransfer[]>(value);
+  }
+}
+
+export class EtchApprovalLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): EtchApproval[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<EtchApproval[]>(value);
+  }
+}
+
+export class TeamTransferLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): TeamTransfer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<TeamTransfer[]>(value);
+  }
+}
+
+export class OrganisationTransferLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): OrganisationTransfer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<OrganisationTransfer[]>(value);
+  }
+}
+
+export class EtchLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Etch[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Etch[]>(value);
   }
 }

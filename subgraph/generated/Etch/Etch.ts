@@ -120,6 +120,14 @@ export class EtchCreated__Params {
   get to(): Address {
     return this._event.parameters[1].value.toAddress();
   }
+
+  get ipfsCid(): string {
+    return this._event.parameters[2].value.toString();
+  }
+
+  get documentName(): string {
+    return this._event.parameters[3].value.toString();
+  }
 }
 
 export class EtchTransferedToTeam extends ethereum.Event {
