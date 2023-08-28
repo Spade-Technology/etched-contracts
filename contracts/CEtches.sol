@@ -52,7 +52,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         address to,
         string calldata documentName,
         string calldata ipfsCid
-    ) external virtual override {
+    ) public virtual override {
         totalSupply.increment();
         uint256 tokenId = totalSupply.current();
 
@@ -100,10 +100,10 @@ contract Etches is ERC721, IEtches, NodeHandler {
         _transfer(_msgSender(), teams, tokenId);
 
         if (teamOf[tokenId] > 0){
-            teamPermissionsOf[tokenId][teamOf[tokenId]] = ITeams.EPermissions.None;
+            setTeamPermissions(tokenId, teamOf[tokenId], ITeams.EPermissions.None);
         }
         teamOf[tokenId] = teamId;
-        teamPermissionsOf[tokenId][teamId] = ITeams.EPermissions.ReadWrite;
+        setTeamPermissions(tokenId, teamId, ITeams.EPermissions.ReadWrite);
 
         emit EtchTransferedToTeam(tokenId, _msgSender(), teamId); // Transfer the Etch to the team
     }
@@ -122,22 +122,12 @@ contract Etches is ERC721, IEtches, NodeHandler {
             "ETCH: Not allowed to mint for this team"
         );
 
-        totalSupply.increment();
+        safeMint(teams, documentName, ipfsCid);
         uint256 tokenId = totalSupply.current();
 
-        _safeMint(to, tokenId, "");
-
-        metadataOf[tokenId] = SEtch({
-            creator: _msgSender(),
-            documentName: documentName,
-            ipfsCid: ipfsCid,
-            commentsCount: 0,
-            timestamp: block.timestamp
-        });
         teamOf[tokenId] = teamId;
-        teamPermissionsOf[tokenId][teamId] = ITeams.EPermissions.ReadWrite;
-
-        emit EtchCreated(tokenId, to, ipfsCid, documentName);
+        setTeamPermissions(tokenId, teamId, ITeams.EPermissions.ReadWrite);
+        emit EtchTransferedToTeam(tokenId, _msgSender(), teamId); // Transfer the Etch to the team
     }
 
     /**
@@ -189,13 +179,14 @@ contract Etches is ERC721, IEtches, NodeHandler {
         uint256 tokenId,
         uint256 teamId,
         ITeams.EPermissions permission
-    ) external {
+    ) public virtual override {
         require(
             ownerOf(tokenId) == _msgSender(),
             "ETCH: Not allowed to set permissions for this Etch"
         );
 
         teamPermissionsOf[tokenId][teamId] = permission;
+        emit TeamPermissionsUpdated(tokenId, teamId, permission);
     }
 
     /**
@@ -209,6 +200,15 @@ contract Etches is ERC721, IEtches, NodeHandler {
     function hasWritePermission(address account, uint256 tokenId) public view virtual override returns (bool) {
         return
             _checkPermssion(account, tokenId, 0, ITeams.EPermissions.ReadWrite);
+    }
+
+    /**
+     * @notice Get the total number of Etches minted
+     *
+     * @return uint256 The total number of Etches minted
+     */
+    function getTotalSupply() external view override returns (uint256) {
+        return totalSupply.current();
     }
 
     /**

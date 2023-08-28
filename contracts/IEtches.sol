@@ -27,9 +27,12 @@ abstract contract IEtches is IERC721 {
     event EtchCreated(uint256 indexed tokenId, address indexed to, string ipfsCid, string documentName);
     event EtchTransferedToTeam(uint256 indexed tokenId, address indexed from, uint256 indexed to);
     event InvididualPermissionsUpdated(uint256 indexed tokenId, address indexed account, ITeams.EPermissions newPermission);
+    event TeamPermissionsUpdated(uint256 indexed tokenId, uint256 indexed teamId, ITeams.EPermissions newPermission);
     event CommentAdded(uint256 indexed tokenId, uint256 indexed commentId, SComments comment);
 
     function setIndividualPermissions(uint256 tokenId, address account, ITeams.EPermissions permission) external virtual {}
+
+    function setTeamPermissions(uint256 tokenId, uint256 teamId, ITeams.EPermissions permission) public virtual {}
 
     // User Related Functions
     function safeMint(address to, string calldata documentName, string calldata ipfsCid) external virtual {}
