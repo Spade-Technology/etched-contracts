@@ -15,7 +15,11 @@ import {
   TeamCreated,
   TeamTransfer,
   TeamTransferToOrganisation,
+  TeamOwnership,
+  EtchOwnership,
+  Team,
 } from "../generated/schema";
+import { getOrCreateWallet } from "./wallet";
 
 export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
   const entity = new TeamPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
@@ -44,6 +48,27 @@ export function handleTeamCreated(event: TeamCreatedEvent): void {
   entity.team = event.params.teamId.toString();
 
   entity.save();
+
+  const wallet = getOrCreateWallet(event.params.to);
+
+  const teamId = event.params.teamId.toString() + "-Team";
+  const teamOwnershipId = event.params.teamId.toString() + "-Team-Ownership";
+
+  // create the team ownership
+  const teamOwnership = new TeamOwnership(teamOwnershipId);
+
+  teamOwnership.team = teamId;
+  teamOwnership.owner = event.params.to;
+  teamOwnership.organisation = null;
+
+  teamOwnership.save();
+
+  // create the team
+  const team = new Team(teamId);
+
+  team.teamId = event.params.teamId;
+
+  team.save();
 }
 
 export function handleTransfer(event: TransferEvent): void {

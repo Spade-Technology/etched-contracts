@@ -13,7 +13,10 @@ import {
   OrganisationPermissionsUpdated,
   OrganisationTransfer,
   OrganisationContractOwnershipTransferred,
+  OrganisationOwnership,
+  Organisation,
 } from "../generated/schema";
+import { getOrCreateWallet } from "./wallet";
 
 export function handleApproval(event: ApprovalEvent): void {
   const entity = new OrganisationApproval(event.transaction.hash.concatI32(event.logIndex.toI32()));
@@ -53,6 +56,26 @@ export function handleOrganisationCreated(event: OrganisationCreatedEvent): void
   entity.organisation = event.params.orgId.toString();
 
   entity.save();
+
+  const wallet = getOrCreateWallet(event.params.to);
+
+  const orgId = event.params.orgId.toString() + "-Organisation";
+  const orgOwnershipId = event.params.orgId.toString() + "-Organisation-Ownership";
+
+  // create the team ownership
+  const organisationOwnership = new OrganisationOwnership(orgOwnershipId);
+
+  organisationOwnership.organisation = orgId;
+  organisationOwnership.owner = event.params.to;
+
+  organisationOwnership.save();
+
+  // create the team
+  const org = new Organisation(orgId);
+
+  org.orgId = event.params.orgId;
+
+  org.save();
 }
 
 export function handleOwnershipTransferred(event: OwnershipTransferredEvent): void {

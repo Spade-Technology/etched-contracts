@@ -173,17 +173,12 @@ export class Etch extends Entity {
     this.set("tokenId", Value.fromBigInt(value));
   }
 
-  get ownership(): string {
-    let value = this.get("ownership");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set ownership(value: string) {
-    this.set("ownership", Value.fromString(value));
+  get ownership(): EtchOwnershipLoader {
+    return new EtchOwnershipLoader(
+      "Etch",
+      this.get("id")!.toString(),
+      "ownership"
+    );
   }
 
   get permissions(): EtchPermissionLoader {
@@ -303,17 +298,12 @@ export class Team extends Entity {
     this.set("teamId", Value.fromBigInt(value));
   }
 
-  get ownership(): string {
-    let value = this.get("ownership");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set ownership(value: string) {
-    this.set("ownership", Value.fromString(value));
+  get ownership(): TeamOwnershipLoader {
+    return new TeamOwnershipLoader(
+      "Team",
+      this.get("id")!.toString(),
+      "ownership"
+    );
   }
 
   get permissions(): TeamPermissionLoader {
@@ -407,17 +397,12 @@ export class Organisation extends Entity {
     this.set("orgId", Value.fromBigInt(value));
   }
 
-  get ownership(): string {
-    let value = this.get("ownership");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set ownership(value: string) {
-    this.set("ownership", Value.fromString(value));
+  get ownership(): OrganisationOwnershipLoader {
+    return new OrganisationOwnershipLoader(
+      "Organisation",
+      this.get("id")!.toString(),
+      "ownership"
+    );
   }
 
   get permissions(): OrganisationPermissionLoader {
@@ -498,21 +483,34 @@ export class EtchOwnership extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get etch(): EtchLoader {
-    return new EtchLoader("EtchOwnership", this.get("id")!.toString(), "etch");
-  }
-
-  get owner(): Bytes {
-    let value = this.get("owner");
+  get etch(): string {
+    let value = this.get("etch");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set etch(value: string) {
+    this.set("etch", Value.fromString(value));
+  }
+
+  get owner(): Bytes | null {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set owner(value: Bytes) {
-    this.set("owner", Value.fromBytes(value));
+  set owner(value: Bytes | null) {
+    if (!value) {
+      this.unset("owner");
+    } else {
+      this.set("owner", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get team(): string | null {
@@ -530,19 +528,6 @@ export class EtchOwnership extends Entity {
     } else {
       this.set("team", Value.fromString(<string>value));
     }
-  }
-
-  get permissionLevel(): i32 {
-    let value = this.get("permissionLevel");
-    if (!value || value.kind == ValueKind.NULL) {
-      return 0;
-    } else {
-      return value.toI32();
-    }
-  }
-
-  set permissionLevel(value: i32) {
-    this.set("permissionLevel", Value.fromI32(value));
   }
 }
 
@@ -600,17 +585,21 @@ export class TeamOwnership extends Entity {
     this.set("team", Value.fromString(value));
   }
 
-  get owner(): Bytes {
+  get owner(): Bytes | null {
     let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set owner(value: Bytes) {
-    this.set("owner", Value.fromBytes(value));
+  set owner(value: Bytes | null) {
+    if (!value) {
+      this.unset("owner");
+    } else {
+      this.set("owner", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get organisation(): string | null {
@@ -690,17 +679,21 @@ export class OrganisationOwnership extends Entity {
     this.set("organisation", Value.fromString(value));
   }
 
-  get owner(): Bytes {
+  get owner(): Bytes | null {
     let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set owner(value: Bytes) {
-    this.set("owner", Value.fromBytes(value));
+  set owner(value: Bytes | null) {
+    if (!value) {
+      this.unset("owner");
+    } else {
+      this.set("owner", Value.fromBytes(<Bytes>value));
+    }
   }
 }
 
@@ -3951,23 +3944,5 @@ export class OrganisationTransferLoader extends Entity {
   load(): OrganisationTransfer[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<OrganisationTransfer[]>(value);
-  }
-}
-
-export class EtchLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
-    super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
-  }
-
-  load(): Etch[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<Etch[]>(value);
   }
 }
