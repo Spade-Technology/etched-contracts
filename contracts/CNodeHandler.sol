@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "./forks/Ownable.sol";
-import "./SignatureVerifier.sol";
+import "./CSignatureVerifier.sol";
 import "./forks/Context.sol";
 
 abstract contract NodeHandler is Ownable, SignatureVerifier {
@@ -41,13 +41,22 @@ abstract contract NodeHandler is Ownable, SignatureVerifier {
         _;
     }
 
-    function delegateCallsToSelf(
-        Signature memory signature,
-        bytes[] memory _calldata
-    ) external verifySignature(signature) onlyNodes {
+    /**
+     * @notice Function that allows nodes to delegate calls to the parent contract with a new context
+     *
+     * @param signature The signature of the message
+     * @param _calldata The calldata to send to the parent contract
+     */
+    function delegateCallsToSelf(Signature memory signature, bytes[] memory _calldata) external onlyNodes {
+        EncodedMessage memory message = _checkSignature(signature);
+
+        // Authorized Node only (0x00 if any node can execute the call)
+        require(message.nodeAddress == msg.sender || message.nodeAddress == address(0), "NODEHANDLER: PERMISSION_DENIED");
+
+        // Only the signer or the node can execute the call
         require(isNode(msg.sender) || msg.sender == signature.signer, "NODEHANDLER: PERMISSION_DENIED");
 
-        // 2. Delegate the call with a new context
+        // Delegate the call with a new context
         _delegateCallsToSelf(signature.signer, _calldata);
     }
 

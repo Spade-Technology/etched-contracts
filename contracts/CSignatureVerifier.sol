@@ -19,6 +19,7 @@ abstract contract SignatureVerifier {
     struct EncodedMessage {
         address target;
         uint256 blockNumber;
+        address nodeAddress; // Which node should execute the call ? address(0) if any
     }
 
     function getMessageHash(bytes memory _data) internal pure returns (bytes32) {
@@ -29,7 +30,7 @@ abstract contract SignatureVerifier {
         return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _messageHash));
     }
 
-    function _checkSignature(Signature memory _signature) internal view {
+    function _checkSignature(Signature memory _signature) internal view returns (EncodedMessage memory) {
         require(
             getMessageHash(_signature.encodedMessage) == _signature.messageHash,
             "The message hash doesn't match the original!"
@@ -41,6 +42,8 @@ abstract contract SignatureVerifier {
 
         EncodedMessage memory encodedMessage = abi.decode(_signature.encodedMessage, (EncodedMessage));
         checkMessageValidity(encodedMessage);
+
+        return encodedMessage;
     }
 
     modifier verifySignature(Signature memory _signature) {
