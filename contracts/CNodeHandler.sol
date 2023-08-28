@@ -41,9 +41,11 @@ abstract contract NodeHandler is Ownable, SignatureVerifier {
         _;
     }
 
-    function delegateCallsToSelf(Signature memory signature, bytes[] memory _calldata) verifySignature(signature) external onlyNodes {
-        
-        require(isNode(msg.sender) || msg.sender == signature.signer , "NODEHANDLER: PERMISSION_DENIED");
+    function delegateCallsToSelf(
+        Signature memory signature,
+        bytes[] memory _calldata
+    ) external verifySignature(signature) onlyNodes {
+        require(isNode(msg.sender) || msg.sender == signature.signer, "NODEHANDLER: PERMISSION_DENIED");
 
         // 2. Delegate the call with a new context
         _delegateCallsToSelf(signature.signer, _calldata);
@@ -54,13 +56,9 @@ abstract contract NodeHandler is Ownable, SignatureVerifier {
      *
      * @param _calldata The calldata to send to the parent contract
      */
-    function _delegateCallsToSelf(
-        address context,
-        bytes[] memory _calldata
-    ) private withContext(context) {
+    function _delegateCallsToSelf(address context, bytes[] memory _calldata) private withContext(context) {
         for (uint256 i = 0; i < _calldata.length; i++) {
-            (bool success, bytes memory returnData) = address(this)
-                .delegatecall(_calldata[i]);
+            (bool success, bytes memory returnData) = address(this).delegatecall(_calldata[i]);
             require(success, string(returnData));
         }
     }
