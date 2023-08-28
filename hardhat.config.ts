@@ -8,6 +8,7 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "hardhat-abi-exporter";
 import * as tdly from "@tenderly/hardhat-tenderly";
+
 tdly.setup();
 
 // import "hardhat-contract-sizer";
@@ -56,7 +57,13 @@ const config: ExtendedHardhatUserConfig = {
   },
   defaultNetwork: "hardhat",
   networks: {
-    hardhat: {},
+    hardhat: {
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
+        privateKey: el,
+        balance: (100n * 10n ** 18n).toString(),
+      })),
+    },
+
     localhost: {
       url: "http://127.0.0.1:8545",
     },
