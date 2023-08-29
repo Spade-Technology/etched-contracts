@@ -904,19 +904,19 @@ function shouldBehaveLikeERC721Metadata(name, symbol, owner) {
 
         it("base URI can be set", async function () {
           await this.token.setBaseURI(baseURI);
-          expect(await this.token.baseURI()).to.equal(baseURI);
+          await expect(await this.token.baseURI()).to.equal(baseURI);
         });
 
         it("base URI is added as a prefix to the token URI", async function () {
           await this.token.setBaseURI(baseURI);
-          expect(await this.token.tokenURI(firstTokenId)).to.be.equal(baseURI + firstTokenId.toString());
+          await expect(await this.token.tokenURI(firstTokenId)).to.be.equal(baseURI + firstTokenId.toString());
         });
 
         it("token URI can be changed by changing the base URI", async function () {
           await this.token.setBaseURI(baseURI);
           const newBaseURI = "https://api.example.com/v2/";
           await this.token.setBaseURI(newBaseURI);
-          expect(await this.token.tokenURI(firstTokenId)).to.be.equal(newBaseURI + firstTokenId.toString());
+          await expect(await this.token.tokenURI(firstTokenId)).to.be.equal(newBaseURI + firstTokenId.toString());
         });
       });
     });
