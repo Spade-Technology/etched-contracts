@@ -6,8 +6,8 @@ const { shouldSupportInterfaces } = require("../../utils/introspection/SupportsI
 const { expectRevertCustomError } = require("../../helpers/customError");
 const { Enum } = require("../../helpers/enums");
 
-const ERC721ReceiverMock = artifacts.require("Etches");
-const NonERC721ReceiverMock = artifacts.require("NodeHandler");
+const ERC721ReceiverMock = artifacts.require("$ERC721ReceiverMock");
+const NonERC721ReceiverMock = artifacts.require("$CallReceiverMock");
 
 const RevertType = Enum("None", "RevertWithoutMessage", "RevertWithMessage", "RevertWithCustomError", "Panic");
 

@@ -5,3 +5,4 @@ artifacts
 deployments
 typechain-types/
 coverage
+contracts-exposed

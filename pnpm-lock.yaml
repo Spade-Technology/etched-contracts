@@ -73,6 +73,9 @@ devDependencies:
   hardhat-docgen:
     specifier: ^1.3.0
     version: 1.3.0(hardhat@2.17.1)
+  hardhat-exposed:
+    specifier: ^0.3.11
+    version: 0.3.11(hardhat@2.17.1)
   hardhat-gas-reporter:
     specifier: ^1.0.9
     version: 1.0.9(hardhat@2.17.1)
@@ -2213,6 +2216,17 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /array.prototype.findlast@1.2.2:
+    resolution: {integrity: sha512-p1YDNPNqA+P6cPX9ATsxg7DKir7gOmJ+jh5dEP3LlumMNYVC1F2Jgnyh6oI3n/qD9FeIkqR2jXfd73G68ImYUQ==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      define-properties: 1.2.0
+      es-abstract: 1.22.1
+      es-shim-unscopables: 1.0.0
+      get-intrinsic: 1.2.1
+    dev: true
+
   /array.prototype.reduce@1.0.5:
     resolution: {integrity: sha512-kDdugMl7id9COE8R7MHF5jWk7Dqt/fs4Pv+JXoICnYwqpjjjbUurz6w5fT5IG6brLdJhv6/VoHB0H7oyIBXd+Q==}
     engines: {node: '>= 0.4'}
@@ -3783,6 +3797,12 @@ packages:
       has-tostringtag: 1.0.0
     dev: true
 
+  /es-shim-unscopables@1.0.0:
+    resolution: {integrity: sha512-Jm6GPcCdC30eMLbZ2x8z2WuRwAws3zTBBKuusffYVUrNj/GVSUAZ+xKMaUpfNDR5IbyNA5LJbaecoUVbmUcB1w==}
+    dependencies:
+      has: 1.0.3
+    dev: true
+
   /es-to-primitive@1.2.1:
     resolution: {integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==}
     engines: {node: '>= 0.4'}
@@ -4920,6 +4940,16 @@ packages:
       - walrus
       - webpack-cli
       - whiskers
+    dev: true
+
+  /hardhat-exposed@0.3.11(hardhat@2.17.1):
+    resolution: {integrity: sha512-2Gwdfx1YpSWUX80kuq0zM1tNqDJoTBCd5Q5oXKPxz6STSy1TiDyDb1miUr4Dwc/Dp2lzWzM+fZjpUrMe5O08Hw==}
+    peerDependencies:
+      hardhat: ^2.3.0
+    dependencies:
+      hardhat: 2.17.1(ts-node@10.9.1)(typescript@5.1.6)
+      micromatch: 4.0.5
+      solidity-ast: 0.4.52
     dev: true
 
   /hardhat-gas-reporter@1.0.9(hardhat@2.17.1):
@@ -7592,6 +7622,12 @@ packages:
       tmp: 0.0.33
     transitivePeerDependencies:
       - debug
+    dev: true
+
+  /solidity-ast@0.4.52:
+    resolution: {integrity: sha512-iOya9BSiB9jhM8Vf40n8lGELGzwrUc57rl5BhfNtJ5cvAaMvRcNlHeAMNvqJJyjoUnczqRbHqdivEqK89du3Cw==}
+    dependencies:
+      array.prototype.findlast: 1.2.2
     dev: true
 
   /solidity-coverage@0.8.4(hardhat@2.17.1):

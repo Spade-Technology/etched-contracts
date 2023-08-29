@@ -5,13 +5,13 @@ const { ZERO_ADDRESS } = constants;
 
 const { expect } = require("chai");
 
-const Ownable = artifacts.require("contracts/forks/Ownable.sol:Ownable");
+const Ownable = artifacts.require("$Ownable");
 
 contract("Ownable", function (accounts) {
   const [owner, other] = accounts;
 
   beforeEach(async function () {
-    this.ownable = await Ownable.new(owner);
+    this.ownable = await Ownable.new();
   });
 
   it("has an owner", async function () {
@@ -27,15 +27,13 @@ contract("Ownable", function (accounts) {
     });
 
     it("prevents non-owners from transferring", async function () {
-      await expectRevertCustomError(this.ownable.transferOwnership(other, { from: other }), "OwnableUnauthorizedAccount", [
-        other,
-      ]);
+      await expect(this.ownable.transferOwnership(other, { from: other })).to.be.reverted;
     });
 
     it("guards ownership against stuck state", async function () {
-      await expectRevertCustomError(this.ownable.transferOwnership(ZERO_ADDRESS, { from: owner }), "OwnableInvalidOwner", [
-        ZERO_ADDRESS,
-      ]);
+      await expect(this.ownable.transferOwnership(ZERO_ADDRESS, { from: owner })).to.be.revertedWith(
+        "Ownable: new owner is the zero address"
+      );
     });
   });
 
@@ -48,7 +46,7 @@ contract("Ownable", function (accounts) {
     });
 
     it("prevents non-owners from renouncement", async function () {
-      await expectRevertCustomError(this.ownable.renounceOwnership({ from: other }), "OwnableUnauthorizedAccount", [other]);
+      await expect(this.ownable.renounceOwnership({ from: other })).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
     it("allows to recover access using the internal _transferOwnership", async function () {

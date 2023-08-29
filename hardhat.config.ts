@@ -10,6 +10,7 @@ import "hardhat-abi-exporter";
 import "solidity-coverage";
 import "@nomiclabs/hardhat-web3";
 import "@nomiclabs/hardhat-truffle5";
+import "hardhat-exposed";
 import * as tdly from "@tenderly/hardhat-tenderly";
 
 tdly.setup();
@@ -50,7 +51,7 @@ const contracts = fs.readdirSync("./contracts").filter((file: string) => file.en
 // Define the Hardhat configuration
 const config: ExtendedHardhatUserConfig = {
   solidity: {
-    version: "0.8.19",
+    version: "0.8.20",
     settings: {
       optimizer: {
         enabled: true,

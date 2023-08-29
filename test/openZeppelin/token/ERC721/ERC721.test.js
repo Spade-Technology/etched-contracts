@@ -1,6 +1,6 @@
 const { shouldBehaveLikeERC721, shouldBehaveLikeERC721Metadata } = require("./ERC721.behavior");
 
-const ERC721 = artifacts.require("ERC721");
+const ERC721 = artifacts.require("$ERC721");
 
 contract("ERC721", function (accounts) {
   const name = "Non Fungible Token";
