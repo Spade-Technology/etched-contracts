@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up environment
-        working-directory: ./sol/
+      - working-directory: ./sol/
       - run: npm run coverage
       - uses: codecov/codecov-action@v3
         with:
