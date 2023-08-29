@@ -1,5 +1,5 @@
 name: Setup
-onment for the project
+description: Setup the environment for the project
 
 runs:
   using: composite
@@ -15,7 +15,7 @@ runs:
     - uses: pnpm/action-setup@v2
       name: Install pnpm
       with:
-        version: 7
+        version: 8
         run_install: false
 
     - name: Get pnpm store directory
@@ -30,6 +30,7 @@ runs:
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pnpm-store-
+
     - name: Install dependencies
       shell: bash
-      run: pnpm install --no-frozen-lockfile
+      run: pnpm install
