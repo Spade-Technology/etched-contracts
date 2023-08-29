@@ -1,5 +1,5 @@
 name: Setup
-description: Setup the environment for the project
+onment for the project
 
 runs:
   using: composite
@@ -32,4 +32,4 @@ runs:
           ${{ runner.os }}-pnpm-store-
     - name: Install dependencies
       shell: bash
-      run: pnpm install
+      run: pnpm install --no-frozen-lockfile
