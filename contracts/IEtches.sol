@@ -10,6 +10,11 @@ import "hardhat/console.sol";
 import "./ITeams.sol";
 
 abstract contract IEtches is IERC721 {
+    struct ExternalTeamPermission {
+        uint256 teamId;
+        ITeams.EPermissions permission;
+    }
+
     struct SComments {
         string commentIpfsCid;
         uint256 timestamp;

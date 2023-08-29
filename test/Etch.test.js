@@ -20,8 +20,6 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
   let totalSupplyTeam = 0;
   let totalSupplyOrg = 0;
 
-  console.log(signers.map((el) => el.address));
-
   it("Get the amount of Etches minted", async () => {
     totalSupply = await etchContract.getTotalSupply();
 
@@ -94,7 +92,6 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
       const ownerOfTeam = await teamContract.ownerOf(2 + totalSupplyTeam); // teamId = 2
       await expect(ownerOfEtch).to.equal(signers[1].address);
       await expect(ownerOfTeam).to.equal(signers[1].address);
-
       // State: Team 2 is Owner by Signer 1, so Etch 2 is owned by Signer 2
     });
 

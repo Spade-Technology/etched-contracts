@@ -27,8 +27,8 @@ contract Etches is ERC721, IEtches, NodeHandler {
     mapping(uint256 etch => mapping(address user => ITeams.EPermissions permission)) public individualPermissionsOf;
 
     // External Team Permissions
-    mapping(uint256 etch => mapping(uint256 team => ITeams.EPermissions permission))
-        public teamPermissionsOf;
+    mapping(uint256 etch => ExternalTeamPermission[]) public teamPermissionsOf;
+    mapping(uint256 etch => mapping(uint256 team => uint256 index)) public indexOfTeamPermissionsOf; // Index for Mapping like array structure
 
     // Mapping of Etch Id to the Etch's metadata
     mapping(uint256 etch => SEtch metadata) public metadataOf;
@@ -48,11 +48,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
      *
      * @param to The address to mint the Etch to
      */
-    function safeMint(
-        address to,
-        string calldata documentName,
-        string calldata ipfsCid
-    ) public virtual override {
+    function safeMint(address to, string calldata documentName, string calldata ipfsCid) public virtual override {
         totalSupply.increment();
         uint256 tokenId = totalSupply.current();
 
@@ -99,11 +95,9 @@ contract Etches is ERC721, IEtches, NodeHandler {
         require(ITeams(teams).getNumberOfTeamsCreated() >= teamId, "ETCH: Team does not exist");
         _transfer(_msgSender(), teams, tokenId);
 
-        if (teamOf[tokenId] > 0){
-            setTeamPermissions(tokenId, teamOf[tokenId], ITeams.EPermissions.None);
-        }
+        if (teamOf[tokenId] > 0) _setTeamPermissions(tokenId, teamOf[tokenId], ITeams.EPermissions.None);
         teamOf[tokenId] = teamId;
-        setTeamPermissions(tokenId, teamId, ITeams.EPermissions.ReadWrite);
+        _setTeamPermissions(tokenId, teamId, ITeams.EPermissions.ReadWrite);
 
         emit EtchTransferedToTeam(tokenId, _msgSender(), teamId); // Transfer the Etch to the team
     }
@@ -126,7 +120,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
         uint256 tokenId = totalSupply.current();
 
         teamOf[tokenId] = teamId;
-        setTeamPermissions(tokenId, teamId, ITeams.EPermissions.ReadWrite);
+        _setTeamPermissions(tokenId, teamId, ITeams.EPermissions.ReadWrite);
         emit EtchTransferedToTeam(tokenId, _msgSender(), teamId); // Transfer the Etch to the team
     }
 
@@ -138,12 +132,8 @@ contract Etches is ERC721, IEtches, NodeHandler {
      *
      * @return bool True if the account has read permission for the `etch`
      */
-    function hasReadPermission(
-        address account,
-        uint256 tokenId
-    ) public view virtual override returns (bool) {
-        return
-            _checkPermssion(account, tokenId, 0, ITeams.EPermissions.Read);
+    function hasReadPermission(address account, uint256 tokenId) public view virtual override returns (bool) {
+        return _checkPermssion(account, tokenId, ITeams.EPermissions.Read);
     }
 
     /**
@@ -161,7 +151,17 @@ contract Etches is ERC721, IEtches, NodeHandler {
         ITeams.EPermissions permission
     ) external virtual override {
         require(ownerOf(tokenId) == _msgSender(), "ETCH: Not allowed to set permissions for this Etch");
+        _setIndividualPermissions(tokenId, account, permission);
+    }
 
+    /**
+     * @notice Sets the individual permissions for the Etch (Private, does not check for ownership)
+     *
+     * @param tokenId The Etch's ID to set the permissions for
+     * @param account The account to set the permissions for
+     * @param permission The permission to set, See EPermissions for more details
+     */
+    function _setIndividualPermissions(uint256 tokenId, address account, ITeams.EPermissions permission) private {
         individualPermissionsOf[tokenId][account] = permission;
         emit InvididualPermissionsUpdated(tokenId, account, permission);
     }
@@ -175,17 +175,26 @@ contract Etches is ERC721, IEtches, NodeHandler {
      *
      * @dev This function can only be called by the owner of the Etch
      */
-    function setTeamPermissions(
-        uint256 tokenId,
-        uint256 teamId,
-        ITeams.EPermissions permission
-    ) public virtual override {
-        require(
-            ownerOf(tokenId) == _msgSender(),
-            "ETCH: Not allowed to set permissions for this Etch"
-        );
+    function setTeamPermissions(uint256 tokenId, uint256 teamId, ITeams.EPermissions permission) public virtual override {
+        require(ownerOf(tokenId) == _msgSender(), "ETCH: Not allowed to set permissions for this Etch");
+        _setTeamPermissions(tokenId, teamId, permission);
+    }
 
-        teamPermissionsOf[tokenId][teamId] = permission;
+    /**
+     * @notice Sets the team permissions for the Etch (Private, does not check for ownership)
+     *
+     * @param tokenId The Etch's ID to set the permissions for
+     * @param teamId The team to set the permissions for
+     * @param permission The permission to set, See EPermissions for more details
+     */
+    function _setTeamPermissions(uint256 tokenId, uint256 teamId, ITeams.EPermissions permission) private {
+        if (indexOfTeamPermissionsOf[tokenId][teamId] > 0)
+            teamPermissionsOf[tokenId][indexOfTeamPermissionsOf[tokenId][teamId] - 1].permission = permission;
+        else {
+            require(teamPermissionsOf[tokenId].length < 32, "ETCH: Too many teams");
+            teamPermissionsOf[tokenId].push(ExternalTeamPermission({teamId: teamId, permission: permission}));
+            indexOfTeamPermissionsOf[tokenId][teamId] = teamPermissionsOf[tokenId].length;
+        }
         emit TeamPermissionsUpdated(tokenId, teamId, permission);
     }
 
@@ -198,8 +207,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
      * @return bool True if the account has write permission for the Etch
      */
     function hasWritePermission(address account, uint256 tokenId) public view virtual override returns (bool) {
-        return
-            _checkPermssion(account, tokenId, 0, ITeams.EPermissions.ReadWrite);
+        return _checkPermssion(account, tokenId, ITeams.EPermissions.ReadWrite);
     }
 
     /**
@@ -227,20 +235,35 @@ contract Etches is ERC721, IEtches, NodeHandler {
         else return owner;
     }
 
+    /**
+     * @notice Checks if the account has the specified permission for the Etch
+     *
+     * @param account The account to check for the permission
+     * @param tokenId  The Etch's ID to check for the permission
+     * @param permission The permission to check for
+     *
+     * @return bool True if the account has the specified permission for the Etch
+     */
     function _checkPermssion(
         address account,
         uint256 tokenId,
-        uint256 teamId,
         ITeams.EPermissions permission
     ) internal view virtual returns (bool) {
-        if (teamId > 0) {
-            return (teamPermissionsOf[tokenId][teamId] >= permission &&
-                ITeams(teams).hasPermission(teamId, account, permission));
-        } else {
-            return
-                account == ownerOf(tokenId) ||
-                individualPermissionsOf[tokenId][account] >= permission;
-        }
+        if (
+            account == ownerOf(tokenId) ||
+            individualPermissionsOf[tokenId][account] >= permission ||
+            (teamOf[tokenId] > 0 && ITeams(teams).hasPermission(teamOf[tokenId], account, permission))
+        ) return true;
+
+        // Check if the account has the permission through a team (Has to loop through all teams)
+        uint256 len = teamPermissionsOf[tokenId].length;
+        for (uint256 i = 0; i < len; i++)
+            if (
+                teamPermissionsOf[tokenId][i].permission >= permission &&
+                ITeams(teams).hasPermission(teamPermissionsOf[tokenId][i].teamId, account, permission)
+            ) return true;
+
+        return false;
     }
 
     // Should we implement a safety check like this ?
