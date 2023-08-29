@@ -8,6 +8,8 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "hardhat-abi-exporter";
 import "solidity-coverage";
+import "@nomiclabs/hardhat-web3";
+import "@nomiclabs/hardhat-truffle5";
 import * as tdly from "@tenderly/hardhat-tenderly";
 
 tdly.setup();
