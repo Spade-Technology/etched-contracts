@@ -3,7 +3,7 @@ name: checks
 on:
   push:
     branches:
-      - master
+      - main
       - next-v*
       - release-v*
   pull_request: {}

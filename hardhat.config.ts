@@ -45,6 +45,19 @@ interface ExtendedHardhatUserConfig extends HardhatUserConfig {
 const fs = require("fs");
 const contracts = fs.readdirSync("./contracts").filter((file: string) => file.endsWith(".sol"));
 
+console.log({
+  ETHEREUM_PRIVATE_KEYS: process.env.ETHEREUM_PRIVATE_KEYS,
+  ...(!!process.env.ETHEREUM_PRIVATE_KEYS
+    ? {
+        hardhat: {
+          accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
+            privateKey: el,
+            balance: (100n * 10n ** 18n).toString(),
+          })),
+        },
+      }
+    : {}),
+});
 // Define the Hardhat configuration
 const config: ExtendedHardhatUserConfig = {
   solidity: {
@@ -58,12 +71,16 @@ const config: ExtendedHardhatUserConfig = {
   },
   defaultNetwork: "hardhat",
   networks: {
-    hardhat: {
-      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
-        privateKey: el,
-        balance: (100n * 10n ** 18n).toString(),
-      })),
-    },
+    ...(!!process.env.ETHEREUM_PRIVATE_KEYS
+      ? {
+          hardhat: {
+            accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
+              privateKey: el,
+              balance: (100n * 10n ** 18n).toString(),
+            })),
+          },
+        }
+      : {}),
 
     localhost: {
       url: "http://127.0.0.1:8545",
