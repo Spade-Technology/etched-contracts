@@ -127,6 +127,7 @@ export function handleApprovalForAll(event: ApprovalForAllEvent): void {
 
   entity.save();
 }
+
 export function handleOwnershipTransferred(event: OwnershipTransferredEvent): void {
   const entity = new TeamOwnershipTransferred(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.previousOwner = event.params.previousOwner;

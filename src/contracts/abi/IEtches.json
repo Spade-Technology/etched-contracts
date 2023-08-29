@@ -172,6 +172,31 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ITeams.EPermissions",
+        "name": "newPermission",
+        "type": "uint8"
+      }
+    ],
+    "name": "TeamPermissionsUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -504,6 +529,29 @@
       }
     ],
     "name": "setIndividualPermissions",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum ITeams.EPermissions",
+        "name": "permission",
+        "type": "uint8"
+      }
+    ],
+    "name": "setTeamPermissions",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
