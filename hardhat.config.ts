@@ -7,6 +7,7 @@ import "@nomiclabs/hardhat-ethers";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "hardhat-abi-exporter";
+import "solidity-coverage";
 import * as tdly from "@tenderly/hardhat-tenderly";
 
 tdly.setup();
