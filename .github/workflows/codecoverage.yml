@@ -19,8 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up environment
-      - working-directory: ./sol/
-      - run: npm run coverage
+        uses: ./.github/actions/setup
+      - run: npx harhdat coverage
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
