@@ -322,6 +322,14 @@ export class Team extends Entity {
     );
   }
 
+  get externalEtches(): EtchPermissionLoader {
+    return new EtchPermissionLoader(
+      "Team",
+      this.get("id")!.toString(),
+      "externalEtches"
+    );
+  }
+
   get transfers(): TeamTransferLoader {
     return new TeamTransferLoader(
       "Team",
@@ -751,17 +759,38 @@ export class EtchPermission extends Entity {
     this.set("etch", Value.fromString(value));
   }
 
-  get wallet(): Bytes {
+  get wallet(): Bytes | null {
     let value = this.get("wallet");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set wallet(value: Bytes) {
-    this.set("wallet", Value.fromBytes(value));
+  set wallet(value: Bytes | null) {
+    if (!value) {
+      this.unset("wallet");
+    } else {
+      this.set("wallet", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get team(): string | null {
+    let value = this.get("team");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set team(value: string | null) {
+    if (!value) {
+      this.unset("team");
+    } else {
+      this.set("team", Value.fromString(<string>value));
+    }
   }
 
   get permissionLevel(): i32 {
@@ -1552,6 +1581,131 @@ export class EtchTransferedToTeam extends Entity {
 
   set to(value: BigInt) {
     this.set("to", Value.fromBigInt(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+}
+
+export class EtchTeamPermissionsUpdated extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save EtchTeamPermissionsUpdated entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type EtchTeamPermissionsUpdated must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("EtchTeamPermissionsUpdated", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): EtchTeamPermissionsUpdated | null {
+    return changetype<EtchTeamPermissionsUpdated | null>(
+      store.get_in_block("EtchTeamPermissionsUpdated", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): EtchTeamPermissionsUpdated | null {
+    return changetype<EtchTeamPermissionsUpdated | null>(
+      store.get("EtchTeamPermissionsUpdated", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get tokenId(): BigInt {
+    let value = this.get("tokenId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set tokenId(value: BigInt) {
+    this.set("tokenId", Value.fromBigInt(value));
+  }
+
+  get teamId(): BigInt {
+    let value = this.get("teamId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set teamId(value: BigInt) {
+    this.set("teamId", Value.fromBigInt(value));
+  }
+
+  get newPermission(): i32 {
+    let value = this.get("newPermission");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set newPermission(value: i32) {
+    this.set("newPermission", Value.fromI32(value));
   }
 
   get blockNumber(): BigInt {

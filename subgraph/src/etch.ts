@@ -7,6 +7,7 @@ import {
   EtchTransferedToTeam as EtchTransferedToTeamEvent,
   InvididualPermissionsUpdated as InvididualPermissionsUpdatedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
+  TeamPermissionsUpdated,
   Transfer as TransferEvent,
 } from "../generated/Etch/Etch";
 
@@ -22,13 +23,37 @@ import {
   Etch,
   EtchOwnership,
   EtchPermission,
+  EtchTeamPermissionsUpdated,
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
+import { BigInt } from "@graphprotocol/graph-ts";
+import { ETID, getTeamId } from "./team";
 
 enum EtchPermissionLevel {
   None = 0,
   Read = 1,
   Write = 2,
+}
+
+enum EID {
+  Etch,
+  Ownership,
+  Permission,
+}
+
+export function getEtchId({
+  type,
+  tokenId,
+  walletOrTeamId,
+}: {
+  type: EID;
+  tokenId: BigInt;
+  walletOrTeamId?: string | BigInt;
+}): string {
+  if (type == EID.Etch) return tokenId.toString() + "-Etch";
+  else if (type == EID.Ownership) return tokenId.toString() + "-Etch-Ownership";
+  else if (type == EID.Permission) return tokenId.toString() + "-" + walletOrTeamId + "-Etch-Permission";
+  else return "";
 }
 
 export function handleCommentAdded(event: CommentAddedEvent): void {
@@ -62,8 +87,8 @@ export function handleEtchCreated(event: EtchCreatedEvent): void {
   // Setup the Metadata
   const wallet = getOrCreateWallet(event.params.to);
 
-  const newEtchId = event.params.tokenId.toString() + "-Etch";
-  const newEtchOwnershipId = event.params.tokenId.toString() + "-Etch-Ownership";
+  const newEtchId = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
+  const newEtchOwnershipId = getEtchId({ type: EID.Ownership, tokenId: event.params.tokenId });
 
   // Create the Etch Ownership Entity
   const ownership = new EtchOwnership(newEtchOwnershipId);
@@ -85,6 +110,37 @@ export function handleEtchCreated(event: EtchCreatedEvent): void {
   etch.save();
 }
 
+export function handleTeamPermissionsUpdated(event: TeamPermissionsUpdated): void {
+  const entity = new EtchTeamPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
+  entity.tokenId = event.params.tokenId;
+  entity.teamId = event.params.teamId;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  entity.save();
+
+  const wallet = getOrCreateWallet(event.transaction.from);
+
+  // Update the Etch Permissions
+  // PermissionID is the combination of the Etch ID and the Wallet ID
+  const permissionId = getEtchId({
+    type: EID.Permission,
+    tokenId: event.params.tokenId,
+    walletOrTeamId: event.params.teamId.toString(),
+  });
+  let etchPermission = EtchPermission.load(permissionId);
+  if (etchPermission == null) etchPermission = new EtchPermission(permissionId);
+
+  etchPermission.etch = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
+  etchPermission.wallet = null;
+  etchPermission.team = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
+  etchPermission.permissionLevel = entity.newPermission;
+
+  etchPermission.save();
+}
+
 export function handleEtchTransferedToTeam(event: EtchTransferedToTeamEvent): void {
   const entity = new EtchTransferedToTeam(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.tokenId = event.params.tokenId;
@@ -97,12 +153,14 @@ export function handleEtchTransferedToTeam(event: EtchTransferedToTeamEvent): vo
 
   entity.save();
 
-  // Update the Etch Ownership
-  let etchOwnership = EtchOwnership.load(entity.tokenId.toString() + "-Etch-Ownership");
-  if (etchOwnership == null) etchOwnership = new EtchOwnership(entity.tokenId.toString() + "-Etch-Ownership");
+  const ownershipId = getEtchId({ type: EID.Ownership, tokenId: event.params.tokenId });
 
-  etchOwnership.etch = entity.tokenId.toString() + "-Etch";
-  etchOwnership.team = entity.to.toString() + "-Team";
+  // Update the Etch Ownership
+  let etchOwnership = EtchOwnership.load(ownershipId);
+  if (etchOwnership == null) etchOwnership = new EtchOwnership(ownershipId);
+
+  etchOwnership.etch = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
+  etchOwnership.team = getTeamId({ type: ETID.Team, teamId: event.params.to });
   etchOwnership.owner = null;
 
   etchOwnership.save();
@@ -124,14 +182,17 @@ export function handleInvididualPermissionsUpdated(event: InvididualPermissionsU
 
   // Update the Etch Permissions
   // PermissionID is the combination of the Etch ID and the Wallet ID
-  let etchPermission = EtchPermission.load(
-    entity.tokenId.toString() + "-" + event.params.account.toString() + "-Etch-Permission"
-  );
-  if (etchPermission == null)
-    etchPermission = new EtchPermission(entity.tokenId.toString() + "-" + event.params.account.toString() + "-Etch-Permission");
+  const permissionId = getEtchId({
+    type: EID.Permission,
+    tokenId: event.params.tokenId,
+    walletOrTeamId: event.params.account.toString(),
+  });
+  let etchPermission = EtchPermission.load(permissionId);
+  if (etchPermission == null) etchPermission = new EtchPermission(permissionId);
 
-  etchPermission.etch = entity.tokenId.toString() + "-Etch";
+  etchPermission.etch = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
   etchPermission.wallet = entity.account;
+  etchPermission.team = null;
   etchPermission.permissionLevel = entity.newPermission;
 
   etchPermission.save();
@@ -150,9 +211,11 @@ export function handleTransfer(event: TransferEvent): void {
 
   entity.save();
 
+  const ownershipId = getEtchId({ type: EID.Ownership, tokenId: event.params.tokenId });
+
   // Update the Etch Ownership
-  let etchOwnership = EtchOwnership.load(entity.etch + "-Etch-Ownership");
-  if (etchOwnership == null) etchOwnership = new EtchOwnership(entity.etch + "-Etch-Ownership");
+  let etchOwnership = EtchOwnership.load(ownershipId);
+  if (etchOwnership == null) etchOwnership = new EtchOwnership(ownershipId);
 
   etchOwnership.unset("team");
   etchOwnership.owner = event.params.to;
@@ -160,6 +223,8 @@ export function handleTransfer(event: TransferEvent): void {
 
   etchOwnership.save();
 }
+
+// No need to handle this events, but parsing them for completeness
 
 export function handleApproval(event: ApprovalEvent): void {
   const entity = new EtchApproval(event.transaction.hash.concatI32(event.logIndex.toI32()));

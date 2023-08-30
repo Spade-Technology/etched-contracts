@@ -33,6 +33,7 @@ type Team @entity {
   ownership: TeamOwnership! @derivedFrom(field: "team")
   permissions: [TeamPermission!] @derivedFrom(field: "team")
   managedEtches: [EtchOwnership!] @derivedFrom(field: "team")
+  externalEtches: [EtchPermission!] @derivedFrom(field: "team")
   transfers: [TeamTransfer!] @derivedFrom(field: "team")
   approvals: [TeamApproval!] @derivedFrom(field: "team")
 }
@@ -77,7 +78,8 @@ type OrganisationOwnership @entity {
 type EtchPermission @entity {
   id: ID!
   etch: Etch!
-  wallet: Wallet!
+  wallet: Wallet
+  team: Team
   permissionLevel: Int! # uint8, possibly Enum
 }
 
@@ -148,6 +150,16 @@ type EtchTransferedToTeam @entity(immutable: true) {
   tokenId: BigInt! # uint256
   from: Bytes! # address
   to: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtchTeamPermissionsUpdated @entity(immutable: true) {
+  id: Bytes!
+  tokenId: BigInt! # uint256
+  teamId: BigInt! # uint256
+  newPermission: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

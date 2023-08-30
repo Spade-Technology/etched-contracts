@@ -1,3 +1,4 @@
+import { BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
@@ -18,8 +19,24 @@ import {
   TeamOwnership,
   EtchOwnership,
   Team,
+  TeamPermission,
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
+import { EOID, getOrgId } from "./organisation";
+import { upsertTeam, upsertTeamOwnership, upsertTeamPermission } from "./utils";
+
+export enum ETID {
+  Team,
+  Ownership,
+  Permission,
+}
+
+export function getTeamId({ type, teamId, wallet }: { type: ETID; teamId: BigInt; wallet?: string }): string {
+  if (type == ETID.Team) return teamId.toString() + "-Team";
+  else if (type == ETID.Ownership) return teamId.toString() + "-Team-Ownership";
+  else if (type == ETID.Permission) return teamId.toString() + "-" + wallet + "-Team-Permission";
+  else return "";
+}
 
 export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
   const entity = new TeamPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
@@ -34,6 +51,20 @@ export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
   entity.team = event.params.teamId.toString();
 
   entity.save();
+
+  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
+  const teamPermissionId = getTeamId({
+    type: ETID.Permission,
+    teamId: event.params.teamId,
+    wallet: event.params.account.toString(),
+  });
+
+  upsertTeamPermission({
+    dbTeamId: teamId,
+    dbOwnershipId: teamPermissionId,
+    wallet: event.params.account,
+    permissionLevel: event.params.newPermission,
+  });
 }
 
 export function handleTeamCreated(event: TeamCreatedEvent): void {
@@ -51,24 +82,14 @@ export function handleTeamCreated(event: TeamCreatedEvent): void {
 
   const wallet = getOrCreateWallet(event.params.to);
 
-  const teamId = event.params.teamId.toString() + "-Team";
-  const teamOwnershipId = event.params.teamId.toString() + "-Team-Ownership";
+  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
+  const teamOwnershipId = getTeamId({ type: ETID.Ownership, teamId: event.params.teamId });
 
   // create the team ownership
-  const teamOwnership = new TeamOwnership(teamOwnershipId);
-
-  teamOwnership.team = teamId;
-  teamOwnership.owner = event.params.to;
-  teamOwnership.organisation = null;
-
-  teamOwnership.save();
+  upsertTeamOwnership({ dbOwnershipId: teamOwnershipId, dbTeamId: teamId, owner: event.params.to });
 
   // create the team
-  const team = new Team(teamId);
-
-  team.teamId = event.params.teamId;
-
-  team.save();
+  upsertTeam({ dbTeamId: teamId, teamId: event.params.teamId });
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -84,6 +105,12 @@ export function handleTransfer(event: TransferEvent): void {
   entity.team = event.params.tokenId.toString();
 
   entity.save();
+
+  const ownershipId = getTeamId({ type: ETID.Ownership, teamId: event.params.tokenId });
+  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.tokenId });
+
+  // Update the Etch Ownership
+  upsertTeamOwnership({ dbOwnershipId: ownershipId, dbTeamId: teamId, owner: event.params.to });
 }
 
 export function handleTransferToOrganisation(event: TransferToOrganisationEvent): void {
@@ -98,7 +125,16 @@ export function handleTransferToOrganisation(event: TransferToOrganisationEvent)
   entity.team = event.params.teamId.toString();
 
   entity.save();
+
+  const ownershipId = getTeamId({ type: ETID.Ownership, teamId: event.params.teamId });
+  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
+  const organisationId = getOrgId({ type: EOID.Org, orgId: event.params.orgId });
+
+  // Update the Etch Ownership
+  upsertTeamOwnership({ dbOwnershipId: ownershipId, dbTeamId: teamId, organisation: organisationId });
 }
+
+// No need to handle this events, but parsing them for completeness
 
 export function handleApproval(event: ApprovalEvent): void {
   const entity = new TeamApproval(event.transaction.hash.concatI32(event.logIndex.toI32()));

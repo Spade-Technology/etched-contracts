@@ -204,6 +204,32 @@ export class OwnershipTransferred__Params {
   }
 }
 
+export class TeamPermissionsUpdated extends ethereum.Event {
+  get params(): TeamPermissionsUpdated__Params {
+    return new TeamPermissionsUpdated__Params(this);
+  }
+}
+
+export class TeamPermissionsUpdated__Params {
+  _event: TeamPermissionsUpdated;
+
+  constructor(event: TeamPermissionsUpdated) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get teamId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get newPermission(): i32 {
+    return this._event.parameters[2].value.toI32();
+  }
+}
+
 export class Transfer extends ethereum.Event {
   get params(): Transfer__Params {
     return new Transfer__Params(this);
@@ -279,6 +305,34 @@ export class Etch__metadataOfResult {
 
   getTimestamp(): BigInt {
     return this.value4;
+  }
+}
+
+export class Etch__teamPermissionsOfResult {
+  value0: BigInt;
+  value1: i32;
+
+  constructor(value0: BigInt, value1: i32) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set(
+      "value1",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1))
+    );
+    return map;
+  }
+
+  getTeamId(): BigInt {
+    return this.value0;
+  }
+
+  getPermission(): i32 {
+    return this.value1;
   }
 }
 
@@ -361,6 +415,25 @@ export class Etch extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  getTotalSupply(): BigInt {
+    let result = super.call("getTotalSupply", "getTotalSupply():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_getTotalSupply(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getTotalSupply",
+      "getTotalSupply():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   hasReadPermission(account: Address, tokenId: BigInt): boolean {
     let result = super.call(
       "hasReadPermission",
@@ -423,6 +496,38 @@ export class Etch extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  indexOfTeamPermissionsOf(etch: BigInt, team: BigInt): BigInt {
+    let result = super.call(
+      "indexOfTeamPermissionsOf",
+      "indexOfTeamPermissionsOf(uint256,uint256):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(etch),
+        ethereum.Value.fromUnsignedBigInt(team)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_indexOfTeamPermissionsOf(
+    etch: BigInt,
+    team: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "indexOfTeamPermissionsOf",
+      "indexOfTeamPermissionsOf(uint256,uint256):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(etch),
+        ethereum.Value.fromUnsignedBigInt(team)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   individualPermissionsOf(etch: BigInt, user: Address): i32 {
@@ -643,6 +748,46 @@ export class Etch extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  teamPermissionsOf(
+    etch: BigInt,
+    param1: BigInt
+  ): Etch__teamPermissionsOfResult {
+    let result = super.call(
+      "teamPermissionsOf",
+      "teamPermissionsOf(uint256,uint256):(uint256,uint8)",
+      [
+        ethereum.Value.fromUnsignedBigInt(etch),
+        ethereum.Value.fromUnsignedBigInt(param1)
+      ]
+    );
+
+    return new Etch__teamPermissionsOfResult(
+      result[0].toBigInt(),
+      result[1].toI32()
+    );
+  }
+
+  try_teamPermissionsOf(
+    etch: BigInt,
+    param1: BigInt
+  ): ethereum.CallResult<Etch__teamPermissionsOfResult> {
+    let result = super.tryCall(
+      "teamPermissionsOf",
+      "teamPermissionsOf(uint256,uint256):(uint256,uint8)",
+      [
+        ethereum.Value.fromUnsignedBigInt(etch),
+        ethereum.Value.fromUnsignedBigInt(param1)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Etch__teamPermissionsOfResult(value[0].toBigInt(), value[1].toI32())
+    );
   }
 
   teams(): Address {
@@ -1112,6 +1257,44 @@ export class SetIndividualPermissionsCall__Outputs {
   _call: SetIndividualPermissionsCall;
 
   constructor(call: SetIndividualPermissionsCall) {
+    this._call = call;
+  }
+}
+
+export class SetTeamPermissionsCall extends ethereum.Call {
+  get inputs(): SetTeamPermissionsCall__Inputs {
+    return new SetTeamPermissionsCall__Inputs(this);
+  }
+
+  get outputs(): SetTeamPermissionsCall__Outputs {
+    return new SetTeamPermissionsCall__Outputs(this);
+  }
+}
+
+export class SetTeamPermissionsCall__Inputs {
+  _call: SetTeamPermissionsCall;
+
+  constructor(call: SetTeamPermissionsCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get teamId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get permission(): i32 {
+    return this._call.inputValues[2].value.toI32();
+  }
+}
+
+export class SetTeamPermissionsCall__Outputs {
+  _call: SetTeamPermissionsCall;
+
+  constructor(call: SetTeamPermissionsCall) {
     this._call = call;
   }
 }
