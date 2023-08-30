@@ -19,20 +19,7 @@ import {
   OrganisationPermission,
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
-import { upsertOrg, upsertOrgOwnership, upsertOrgPermission } from "./utils";
-
-export enum EOID {
-  Org,
-  Ownership,
-  Permission,
-}
-
-export function getOrgId({ type, orgId, wallet }: { type: EOID; orgId: BigInt; wallet?: string }): string {
-  if (type == EOID.Org) return orgId.toString() + "-Organisation";
-  else if (type == EOID.Ownership) return orgId.toString() + "-Organisation-Ownership";
-  else if (type == EOID.Permission) return orgId.toString() + "-" + wallet + "-Organisation-Permission";
-  else return "";
-}
+import { EOID, getOrgId, upsertOrg, upsertOrgOwnership, upsertOrgPermission } from "./utils";
 
 export function handleOrganisationCreated(event: OrganisationCreatedEvent): void {
   const entity = new OrganisationCreated(event.transaction.hash.concatI32(event.logIndex.toI32()));
@@ -49,14 +36,14 @@ export function handleOrganisationCreated(event: OrganisationCreatedEvent): void
 
   const wallet = getOrCreateWallet(event.params.to);
 
-  const orgId = event.params.orgId.toString() + "-Organisation";
-  const orgOwnershipId = event.params.orgId.toString() + "-Organisation-Ownership";
+  const orgId = getOrgId(EOID.Org, event.params.orgId);
+  const orgOwnershipId = getOrgId(EOID.Ownership, event.params.orgId);
 
   // create the organisation
-  upsertOrg({ dbOrgId: orgId, orgId: event.params.orgId });
+  upsertOrg(orgId, event.params.orgId);
 
   // create the organisation ownership record
-  upsertOrgOwnership({ dbOwnershipId: orgOwnershipId, owner: event.params.to, dbOrgId: orgId });
+  upsertOrgOwnership(orgOwnershipId, orgId, event.params.to);
 }
 
 export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
@@ -73,20 +60,11 @@ export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
 
   entity.save();
 
-  const orgId = getOrgId({ type: EOID.Org, orgId: event.params.orgId });
-  const orgPermissionId = getOrgId({
-    type: EOID.Permission,
-    orgId: event.params.orgId,
-    wallet: event.params.account.toString(),
-  });
+  const orgId = getOrgId(EOID.Org, event.params.orgId);
+  const orgPermissionId = getOrgId(EOID.Permission, event.params.orgId, event.params.account.toString());
 
   // create or update the organisation permission record
-  upsertOrgPermission({
-    dbPermissionId: orgPermissionId,
-    orgId: event.params.orgId,
-    wallet: event.params.account,
-    permissionLevel: entity.newPermission,
-  });
+  upsertOrgPermission(orgPermissionId, orgId, event.params.account, entity.newPermission);
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -103,13 +81,12 @@ export function handleTransfer(event: TransferEvent): void {
 
   entity.save();
 
-  const ownershipId = getOrgId({ type: EOID.Ownership, orgId: event.params.tokenId });
-  const orgId = getOrgId({ type: EOID.Org, orgId: event.params.tokenId });
+  const ownershipId = getOrgId(EOID.Ownership, event.params.tokenId);
+  const orgId = getOrgId(EOID.Org, event.params.tokenId);
 
   // Update the Etch Ownership
-  upsertOrgOwnership({ dbOwnershipId: ownershipId, owner: event.params.to, dbOrgId: orgId });
+  upsertOrgOwnership(ownershipId, orgId, event.params.to);
 }
-
 // No need to handle this events, but parsing them for completeness
 
 export function handleApproval(event: ApprovalEvent): void {

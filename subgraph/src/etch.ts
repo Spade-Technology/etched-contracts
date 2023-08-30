@@ -27,33 +27,13 @@ import {
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { ETID, getTeamId } from "./team";
+
+import { EID, ETID, getEtchId, getTeamId } from "./utils";
 
 enum EtchPermissionLevel {
   None = 0,
   Read = 1,
   Write = 2,
-}
-
-enum EID {
-  Etch,
-  Ownership,
-  Permission,
-}
-
-export function getEtchId({
-  type,
-  tokenId,
-  walletOrTeamId,
-}: {
-  type: EID;
-  tokenId: BigInt;
-  walletOrTeamId?: string | BigInt;
-}): string {
-  if (type == EID.Etch) return tokenId.toString() + "-Etch";
-  else if (type == EID.Ownership) return tokenId.toString() + "-Etch-Ownership";
-  else if (type == EID.Permission) return tokenId.toString() + "-" + walletOrTeamId + "-Etch-Permission";
-  else return "";
 }
 
 export function handleCommentAdded(event: CommentAddedEvent): void {
@@ -87,8 +67,8 @@ export function handleEtchCreated(event: EtchCreatedEvent): void {
   // Setup the Metadata
   const wallet = getOrCreateWallet(event.params.to);
 
-  const newEtchId = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
-  const newEtchOwnershipId = getEtchId({ type: EID.Ownership, tokenId: event.params.tokenId });
+  const newEtchId = getEtchId(EID.Etch, event.params.tokenId);
+  const newEtchOwnershipId = getEtchId(EID.Ownership, event.params.tokenId);
 
   // Create the Etch Ownership Entity
   const ownership = new EtchOwnership(newEtchOwnershipId);
@@ -125,17 +105,13 @@ export function handleTeamPermissionsUpdated(event: TeamPermissionsUpdated): voi
 
   // Update the Etch Permissions
   // PermissionID is the combination of the Etch ID and the Wallet ID
-  const permissionId = getEtchId({
-    type: EID.Permission,
-    tokenId: event.params.tokenId,
-    walletOrTeamId: event.params.teamId.toString(),
-  });
+  const permissionId = getEtchId(EID.Permission, event.params.tokenId, event.params.teamId.toString());
   let etchPermission = EtchPermission.load(permissionId);
   if (etchPermission == null) etchPermission = new EtchPermission(permissionId);
 
-  etchPermission.etch = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
+  etchPermission.etch = getEtchId(EID.Etch, event.params.tokenId);
   etchPermission.wallet = null;
-  etchPermission.team = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
+  etchPermission.team = getTeamId(ETID.Team, event.params.teamId);
   etchPermission.permissionLevel = entity.newPermission;
 
   etchPermission.save();
@@ -153,14 +129,14 @@ export function handleEtchTransferedToTeam(event: EtchTransferedToTeamEvent): vo
 
   entity.save();
 
-  const ownershipId = getEtchId({ type: EID.Ownership, tokenId: event.params.tokenId });
+  const ownershipId = getEtchId(EID.Ownership, event.params.tokenId);
 
   // Update the Etch Ownership
   let etchOwnership = EtchOwnership.load(ownershipId);
   if (etchOwnership == null) etchOwnership = new EtchOwnership(ownershipId);
 
-  etchOwnership.etch = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
-  etchOwnership.team = getTeamId({ type: ETID.Team, teamId: event.params.to });
+  etchOwnership.etch = getEtchId(EID.Etch, event.params.tokenId);
+  etchOwnership.team = getTeamId(ETID.Team, event.params.to);
   etchOwnership.owner = null;
 
   etchOwnership.save();
@@ -182,15 +158,11 @@ export function handleInvididualPermissionsUpdated(event: InvididualPermissionsU
 
   // Update the Etch Permissions
   // PermissionID is the combination of the Etch ID and the Wallet ID
-  const permissionId = getEtchId({
-    type: EID.Permission,
-    tokenId: event.params.tokenId,
-    walletOrTeamId: event.params.account.toString(),
-  });
+  const permissionId = getEtchId(EID.Permission, event.params.tokenId, event.params.account.toString());
   let etchPermission = EtchPermission.load(permissionId);
   if (etchPermission == null) etchPermission = new EtchPermission(permissionId);
 
-  etchPermission.etch = getEtchId({ type: EID.Etch, tokenId: event.params.tokenId });
+  etchPermission.etch = getEtchId(EID.Etch, event.params.tokenId);
   etchPermission.wallet = entity.account;
   etchPermission.team = null;
   etchPermission.permissionLevel = entity.newPermission;
@@ -211,7 +183,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   entity.save();
 
-  const ownershipId = getEtchId({ type: EID.Ownership, tokenId: event.params.tokenId });
+  const ownershipId = getEtchId(EID.Ownership, event.params.tokenId);
 
   // Update the Etch Ownership
   let etchOwnership = EtchOwnership.load(ownershipId);

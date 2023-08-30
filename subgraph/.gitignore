@@ -5,3 +5,5 @@ artifacts
 deployments
 typechain-types/
 generated
+build
+tests/.bin/

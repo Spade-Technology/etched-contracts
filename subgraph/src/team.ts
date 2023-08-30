@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, log } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
@@ -22,21 +22,8 @@ import {
   TeamPermission,
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
-import { EOID, getOrgId } from "./organisation";
-import { upsertTeam, upsertTeamOwnership, upsertTeamPermission } from "./utils";
 
-export enum ETID {
-  Team,
-  Ownership,
-  Permission,
-}
-
-export function getTeamId({ type, teamId, wallet }: { type: ETID; teamId: BigInt; wallet?: string }): string {
-  if (type == ETID.Team) return teamId.toString() + "-Team";
-  else if (type == ETID.Ownership) return teamId.toString() + "-Team-Ownership";
-  else if (type == ETID.Permission) return teamId.toString() + "-" + wallet + "-Team-Permission";
-  else return "";
-}
+import { EOID, ETID, getOrgId, getTeamId, upsertTeam, upsertTeamOwnership, upsertTeamPermission } from "./utils";
 
 export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
   const entity = new TeamPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
@@ -52,19 +39,10 @@ export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
 
   entity.save();
 
-  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
-  const teamPermissionId = getTeamId({
-    type: ETID.Permission,
-    teamId: event.params.teamId,
-    wallet: event.params.account.toString(),
-  });
+  const teamId = getTeamId(ETID.Team, event.params.teamId);
+  const teamPermissionId = getTeamId(ETID.Permission, event.params.teamId, event.params.account.toString());
 
-  upsertTeamPermission({
-    dbTeamId: teamId,
-    dbOwnershipId: teamPermissionId,
-    wallet: event.params.account,
-    permissionLevel: event.params.newPermission,
-  });
+  upsertTeamPermission(teamId, teamPermissionId, event.params.account, event.params.newPermission);
 }
 
 export function handleTeamCreated(event: TeamCreatedEvent): void {
@@ -82,14 +60,14 @@ export function handleTeamCreated(event: TeamCreatedEvent): void {
 
   const wallet = getOrCreateWallet(event.params.to);
 
-  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
-  const teamOwnershipId = getTeamId({ type: ETID.Ownership, teamId: event.params.teamId });
+  const teamId = getTeamId(ETID.Team, event.params.teamId);
+  const teamOwnershipId = getTeamId(ETID.Ownership, event.params.teamId);
 
   // create the team ownership
-  upsertTeamOwnership({ dbOwnershipId: teamOwnershipId, dbTeamId: teamId, owner: event.params.to });
+  upsertTeamOwnership(teamOwnershipId, teamId, event.params.to);
 
   // create the team
-  upsertTeam({ dbTeamId: teamId, teamId: event.params.teamId });
+  upsertTeam(teamId, event.params.teamId);
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -106,14 +84,18 @@ export function handleTransfer(event: TransferEvent): void {
 
   entity.save();
 
-  const ownershipId = getTeamId({ type: ETID.Ownership, teamId: event.params.tokenId });
-  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.tokenId });
+  const ownershipId = getTeamId(ETID.Ownership, event.params.tokenId);
+  const teamId = getTeamId(ETID.Team, event.params.tokenId);
 
   // Update the Etch Ownership
-  upsertTeamOwnership({ dbOwnershipId: ownershipId, dbTeamId: teamId, owner: event.params.to });
+  upsertTeamOwnership(ownershipId, teamId, event.params.to);
 }
 
 export function handleTransferToOrganisation(event: TransferToOrganisationEvent): void {
+  const ownershipId = getTeamId(ETID.Ownership, event.params.teamId);
+  const teamId = getTeamId(ETID.Team, event.params.teamId);
+  const organisationId = getOrgId(EOID.Org, event.params.orgId);
+
   const entity = new TeamTransferToOrganisation(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.teamId = event.params.teamId;
   entity.orgId = event.params.orgId;
@@ -122,16 +104,13 @@ export function handleTransferToOrganisation(event: TransferToOrganisationEvent)
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
 
-  entity.team = event.params.teamId.toString();
+  entity.team = teamId;
+  entity.organisation = organisationId;
 
   entity.save();
 
-  const ownershipId = getTeamId({ type: ETID.Ownership, teamId: event.params.teamId });
-  const teamId = getTeamId({ type: ETID.Team, teamId: event.params.teamId });
-  const organisationId = getOrgId({ type: EOID.Org, orgId: event.params.orgId });
-
   // Update the Etch Ownership
-  upsertTeamOwnership({ dbOwnershipId: ownershipId, dbTeamId: teamId, organisation: organisationId });
+  upsertTeamOwnership(ownershipId, teamId, null, organisationId);
 }
 
 // No need to handle this events, but parsing them for completeness

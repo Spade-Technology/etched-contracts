@@ -1,48 +1,40 @@
-import { assert, describe, test, clearStore, beforeAll, afterAll } from "matchstick-as";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { Approval } from "../generated/schema";
-import { Approval as ApprovalEvent } from "../generated/Etch/Etch";
-import { handleApproval } from "../src/etch";
-import { createApprovalEvent } from "./etch-utils";
+import { afterAll, clearStore, describe, test } from "matchstick-as";
+
+import { handleEtchCreated, handleEtchTransferedToTeam } from "../src/etch";
+import { handleOrganisationCreated } from "../src/organisation";
+import { handleTeamCreated, handleTransferToOrganisation } from "../src/team";
+import { createEtchCreatedEvent, createEtchTransferedToTeamEvent } from "./etch-utils";
+import { createOrganisationCreatedEvent } from "./organisation-utils";
+import { createTeamCreatedEvent, createTransferToOrganisationEvent } from "./team-utils";
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
 describe("Describe entity assertions", () => {
-  beforeAll(() => {
-    let owner = Address.fromString("0x0000000000000000000000000000000000000001");
-    let approved = Address.fromString("0x0000000000000000000000000000000000000001");
-    let tokenId = BigInt.fromI32(234);
-    let newApprovalEvent = createApprovalEvent(owner, approved, tokenId);
-    handleApproval(newApprovalEvent);
-  });
-
   afterAll(() => {
     clearStore();
   });
 
-  // For more test scenarios, see:
-  // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
+  test("Create Team and Create Organisation for the etch", () => {
+    let owner = Address.fromString("0x0000000000000000000000000000000000000001");
+    let tokenId = BigInt.fromI32(1);
+    let teamId = BigInt.fromI32(1);
+    let orgId = BigInt.fromI32(1);
 
-  test("Approval created and stored", () => {
-    assert.entityCount("Approval", 1);
+    let etchCreatedEvent = createEtchCreatedEvent(tokenId, owner);
+    handleEtchCreated(etchCreatedEvent);
 
-    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-    assert.fieldEquals(
-      "Approval",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "owner",
-      "0x0000000000000000000000000000000000000001"
-    );
-    assert.fieldEquals(
-      "Approval",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "approved",
-      "0x0000000000000000000000000000000000000001"
-    );
-    assert.fieldEquals("Approval", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1", "tokenId", "234");
+    let teamCreatedEvent = createTeamCreatedEvent(teamId, owner);
+    handleTeamCreated(teamCreatedEvent);
 
-    // More assert options:
-    // https://thegraph.com/docs/en/developer/matchstick/#asserts
+    let etchTransferedToTeam = createEtchTransferedToTeamEvent(tokenId, owner, teamId);
+    handleEtchTransferedToTeam(etchTransferedToTeam);
+
+    let orgCreatedEvent = createOrganisationCreatedEvent(orgId, owner);
+    handleOrganisationCreated(orgCreatedEvent);
+
+    let transferToOrgEvent = createTransferToOrganisationEvent(teamId, orgId);
+    handleTransferToOrganisation(transferToOrgEvent);
   });
 });
