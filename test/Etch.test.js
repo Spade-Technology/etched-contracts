@@ -358,7 +358,42 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
         await expect(access).to.equal(false);
       });
 
-    });    
+    });
+    
+  describe("Comments on Etch Tests", () => {
+    it("Wallet 1 should be able to add a comment to Etch 1 via Team 3", async () => {
+      const comment = "This is a comment";
+
+      await etchContract.connect(signers[1]).commentOnEtch(1 + totalSupply, comment);
+
+      const etchComment = await etchContract.commentsOf(1 + totalSupply);
+        
+      await expect(etchComment.commentIpfsCid).to.equal(comment);
+    });
+
+    it("Wallet 2 should not be able to add a comment to Etch 1 via Team 3", async () => {
+      const comment = "This is a comment";
+
+      await expect(etchContract.connect(signers[2]).commentOnEtch(1 + totalSupply, comment)).to.be.reverted;
+    });
+
+    it("Wallet 1 should be able to add a comment to Etch 4 via Team 3", async () => {
+      const comment = "This is a comment";
+
+      await etchContract.connect(signers[1]).commentOnEtch(4 + totalSupply, comment);
+
+      const etchComment = await etchContract.commentsOf(4 + totalSupply);
+
+      await expect(etchComment.commentIpfsCid).to.equal(comment);
+    });
+
+    it("Wallet 2 should not be able to add a comment to Etch 4 via Team 3", async () => {
+      const comment = "This is a comment";
+
+      await expect(etchContract.connect(signers[2]).commentOnEtch(4 + totalSupply, comment)).to.be.reverted;
+    });
+
+  });
 
   });
 
