@@ -32,7 +32,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
 
     // Mapping of Etch Id to the Etch's metadata
     mapping(uint256 etch => SEtch metadata) public metadataOf;
-    mapping(uint256 etch => SComments comments) commentsOf;
+    mapping(uint256 etch => SComments comments) public commentsOf;
 
     /**
      * @notice Creates a new Etches contract
