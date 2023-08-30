@@ -263,6 +263,105 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
       );
     });
   });
+
+  describe("Etch Permissions test", () => {
+
+    describe("Individual Etch Permissions", () => {
+      it("Wallet 0 should be able to set read permission for Wallet 5 on Etch 4", async () => {
+        await etchContract.connect(signers[0]).setIndividualPermissions(4 + totalSupply, signers[5].address, ETeamPermissions.READ);
+
+        const access = await etchContract.hasReadPermission(signers[5].address, 4 + totalSupply);
+
+        await expect(access).to.equal(true);
+      });
+
+      it("Wallet 1 should not be able to set read permission for Wallet 5 on Etch 4", async () => {
+        await expect(
+          etchContract.connect(signers[1]).setIndividualPermissions(4 + totalSupply, signers[5].address, ETeamPermissions.READ)
+        ).to.be.reverted;
+      });
+
+      it("Wallet 0 should be able to set write permission for Wallet 5 on Etch 4", async () => {
+        await etchContract.connect(signers[0]).setIndividualPermissions(4 + totalSupply, signers[5].address, ETeamPermissions.READWRITE);
+
+        const access = await etchContract.hasWritePermission(signers[5].address, 4 + totalSupply);
+
+        await expect(access).to.equal(true);
+      });
+
+      it("Wallet 1 should not be able to set write permission for Wallet 5 on Etch 4", async () => {
+        await expect(
+          etchContract.connect(signers[1]).setIndividualPermissions(4 + totalSupply, signers[5].address, ETeamPermissions.READWRITE)
+        ).to.be.reverted;
+      });
+
+      it("Wallet 0 should be able to set read permission for Wallet 5 on Etch 1", async () => {
+        await etchContract.connect(signers[0]).setIndividualPermissions(1 + totalSupply, signers[5].address, ETeamPermissions.READ);
+
+        const access = await etchContract.hasReadPermission(signers[5].address, 1 + totalSupply);
+
+        await expect(access).to.equal(true);
+      });
+
+      it("Wallet 1 should not be able to set read permission for Wallet 5 on Etch 1", async () => {
+        await expect(
+          etchContract.connect(signers[1]).setIndividualPermissions(1 + totalSupply, signers[5].address, ETeamPermissions.READ)
+        ).to.be.reverted;
+      });
+
+      it("Wallet 0 should be able to set write permission for Wallet 5 on Etch 1", async () => {
+        await etchContract.connect(signers[0]).setIndividualPermissions(1 + totalSupply, signers[5].address, ETeamPermissions.READWRITE);
+
+        const access = await etchContract.hasWritePermission(signers[5].address, 1 + totalSupply);
+
+        await expect(access).to.equal(true);
+      });
+
+      it("Wallet 1 should not be able to set write permission for Wallet 5 on Etch 1", async () => {
+        await expect(
+          etchContract.connect(signers[1]).setIndividualPermissions(1 + totalSupply, signers[5].address, ETeamPermissions.READWRITE)
+        ).to.be.reverted;
+      });
+
+    });
+
+    describe("Team Etch Permissions", () => {
+      it("Wallet 0 should be able to set read permission for Team 3 on Etch 4 and Wallet 1 and Wallet 2 should be able to read it", async () => {
+        await etchContract.connect(signers[0]).setTeamPermissions(4 + totalSupply, 4 + totalSupplyTeam, ETeamPermissions.READ);
+
+        const access = await etchContract.hasReadPermission(signers[1].address, 4 + totalSupply);
+
+        await expect(access).to.equal(true);
+
+        const access2 = await etchContract.hasReadPermission(signers[2].address, 4 + totalSupply);
+
+        await expect(access2).to.equal(true);
+      });
+
+      it("Wallet 3 should not be able to read Etch 4 via Team 3", async () => {
+        const access = await etchContract.hasReadPermission(signers[3].address, 4 + totalSupply);
+
+        await expect(access).to.equal(false);
+      });
+
+      it("Wallet 0 should be able to set write permission for Team 3 on Etch 1 and Wallet 1 should be able to write it", async () => {
+        await etchContract.connect(signers[0]).setTeamPermissions(1 + totalSupply, 4 + totalSupplyTeam, ETeamPermissions.READWRITE);
+
+        const access = await etchContract.hasWritePermission(signers[1].address, 1 + totalSupply);
+
+        await expect(access).to.equal(true);
+      });
+
+      it("Wallet 2 should not be able to write Etch 1 via Team 3", async () => {
+        const access = await etchContract.hasWritePermission(signers[2].address, 1 + totalSupply);
+
+        await expect(access).to.equal(false);
+      });
+
+    });    
+
+  });
+
 }
 
 module.exports = {
