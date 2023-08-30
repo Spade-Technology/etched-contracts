@@ -79,7 +79,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
 
       await teamContract
         .connect(signers[1])
-        ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyTeam);
+      ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyTeam);
 
       await expect(await etchContract.ownerOf(2)).to.equal(signers[0].address); // etchId = 2
       await expect(await teamContract.ownerOf(1)).to.equal(signers[0].address); // teamId = 1
@@ -211,7 +211,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
 
       await orgContract
         .connect(signers[1])
-        ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyOrg);
+      ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyOrg);
 
       await expect(await etchContract.ownerOf(4 + totalSupply)).to.equal(signers[0].address);
       await expect(await teamContract.ownerOf(4 + totalSupplyTeam)).to.equal(signers[0].address);
@@ -359,41 +359,41 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
       });
 
     });
-    
-  describe("Comments on Etch Tests", () => {
-    it("Wallet 1 should be able to add a comment to Etch 1 via Team 3", async () => {
-      const comment = "This is a comment";
 
-      await etchContract.connect(signers[1]).commentOnEtch(1 + totalSupply, comment);
+    describe("Comments on Etch Tests", () => {
+      it("Wallet 1 should be able to add a comment to Etch 1 via Team 3", async () => {
+        const comment = "This is a comment";
 
-      const etchComment = await etchContract.commentsOf(1 + totalSupply);
-        
-      await expect(etchComment.commentIpfsCid).to.equal(comment);
+        await etchContract.connect(signers[1]).commentOnEtch(1 + totalSupply, comment);
+
+        const etchComment = await etchContract.commentsOf(1 + totalSupply);
+
+        await expect(etchComment.commentIpfsCid).to.equal(comment);
+      });
+
+      it("Wallet 2 should not be able to add a comment to Etch 1 via Team 3", async () => {
+        const comment = "This is a comment";
+
+        await expect(etchContract.connect(signers[2]).commentOnEtch(1 + totalSupply, comment)).to.be.reverted;
+      });
+
+      it("Wallet 1 should be able to add a comment to Etch 4 via Team 3", async () => {
+        const comment = "This is a comment";
+
+        await etchContract.connect(signers[1]).commentOnEtch(4 + totalSupply, comment);
+
+        const etchComment = await etchContract.commentsOf(4 + totalSupply);
+
+        await expect(etchComment.commentIpfsCid).to.equal(comment);
+      });
+
+      it("Wallet 2 should not be able to add a comment to Etch 4 via Team 3", async () => {
+        const comment = "This is a comment";
+
+        await expect(etchContract.connect(signers[2]).commentOnEtch(4 + totalSupply, comment)).to.be.reverted;
+      });
+
     });
-
-    it("Wallet 2 should not be able to add a comment to Etch 1 via Team 3", async () => {
-      const comment = "This is a comment";
-
-      await expect(etchContract.connect(signers[2]).commentOnEtch(1 + totalSupply, comment)).to.be.reverted;
-    });
-
-    it("Wallet 1 should be able to add a comment to Etch 4 via Team 3", async () => {
-      const comment = "This is a comment";
-
-      await etchContract.connect(signers[1]).commentOnEtch(4 + totalSupply, comment);
-
-      const etchComment = await etchContract.commentsOf(4 + totalSupply);
-
-      await expect(etchComment.commentIpfsCid).to.equal(comment);
-    });
-
-    it("Wallet 2 should not be able to add a comment to Etch 4 via Team 3", async () => {
-      const comment = "This is a comment";
-
-      await expect(etchContract.connect(signers[2]).commentOnEtch(4 + totalSupply, comment)).to.be.reverted;
-    });
-
-  });
 
   });
 
