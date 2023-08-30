@@ -68,7 +68,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
       await teamContract["safeTransferFrom(address,address,uint256)"](
         signers[0].address,
         signers[1].address,
-        1 + totalSupplyTeam
+        1 + totalSupplyTeam // teamId = 1
       );
 
       const ownerOfEtch = await etchContract.ownerOf(2 + totalSupply); // etchId = 2
@@ -81,8 +81,8 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
         .connect(signers[1])
         ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyTeam);
 
-      await expect(await etchContract.ownerOf(2)).to.equal(signers[0].address);
-      await expect(await teamContract.ownerOf(1)).to.equal(signers[0].address);
+      await expect(await etchContract.ownerOf(2)).to.equal(signers[0].address); // etchId = 2
+      await expect(await teamContract.ownerOf(1)).to.equal(signers[0].address); // teamId = 1
       // State: Team 1 is Owner by Signer 0, so Etch 2 is owned by Signer 0
     });
 
@@ -92,7 +92,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
       const ownerOfTeam = await teamContract.ownerOf(2 + totalSupplyTeam); // teamId = 2
       await expect(ownerOfEtch).to.equal(signers[1].address);
       await expect(ownerOfTeam).to.equal(signers[1].address);
-      // State: Team 2 is Owner by Signer 1, so Etch 2 is owned by Signer 2
+      // State: Team 2 is Owner by Signer 1, so Etch 2 is owned by Signer 1
     });
 
     it("Should not be able to transfer the etch to another team if it is not the owner of the etch.", async () => {
