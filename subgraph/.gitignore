@@ -1,9 +1,0 @@
-node_modules
-cache
-artifacts
-.env
-deployments
-typechain-types/
-generated
-build
-tests/.bin/
