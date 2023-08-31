@@ -1,0 +1,16 @@
+{
+  "sepolia": {
+    "Etch": {
+      "address": "0x14B43675DB5F202fE6E7eaEfcfD9c62445Edbf31",
+      "startBlock": 4174716
+    },
+    "Team": {
+      "address": "0xa2695497726Ab1Eb044106D697DCdDf3a17e5f9F",
+      "startBlock": 4174716
+    },
+    "Organisation": {
+      "address": "0xa7a1E8Fb3E1C06de648311aDd30BF36EcF09C286",
+      "startBlock": 4174716
+    }
+  }
+}
