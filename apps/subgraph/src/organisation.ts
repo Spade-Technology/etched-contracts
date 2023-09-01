@@ -40,7 +40,7 @@ export function handleOrganisationCreated(event: OrganisationCreatedEvent): void
   const orgOwnershipId = getOrgId(EOID.Ownership, event.params.orgId);
 
   // create the organisation
-  upsertOrg(orgId, event.params.orgId);
+  upsertOrg(orgId, event.params.orgId, event.block);
 
   // create the organisation ownership record
   upsertOrgOwnership(orgOwnershipId, orgId, event.params.to);

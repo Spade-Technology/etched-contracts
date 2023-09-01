@@ -17,6 +17,7 @@
       ]
     },
     "lint": {},
+    "graphql:gqty": {},
     "compile": {},
     "db:push": {},
     "dev": {

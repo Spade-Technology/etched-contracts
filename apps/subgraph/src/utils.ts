@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, Entity, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, Entity, ethereum, log } from "@graphprotocol/graph-ts";
 import {
   Organisation,
   OrganisationOwnership,
@@ -18,12 +18,10 @@ export const upsertOrgOwnership = (dbOwnershipId: string, dbOrgId: string, owner
   organisationOwnership.save();
 };
 
-export const upsertOrg = (dbOrgId: string, orgId: BigInt): void => {
+export const upsertOrg = (dbOrgId: string, orgId: BigInt, block: ethereum.Block): void => {
   let org = Organisation.load(dbOrgId);
   if (org == null) org = new Organisation(dbOrgId);
-
-  log.info("upsertOrg: {}", [dbOrgId]);
-
+  org.createdAt =  block.timestamp;
   org.orgId = orgId;
   org.save();
 };
@@ -64,9 +62,10 @@ export const upsertTeamOwnership = (
   teamOwnership.save();
 };
 
-export const upsertTeam = (dbTeamId: string, teamId: BigInt): void => {
+export const upsertTeam = (dbTeamId: string, teamId: BigInt, block: ethereum.Block): void => {
   const team = new Team(dbTeamId);
   team.teamId = teamId;
+  team.createdAt = block.timestamp;
   team.save();
 };
 

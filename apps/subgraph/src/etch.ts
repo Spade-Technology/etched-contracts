@@ -86,6 +86,7 @@ export function handleEtchCreated(event: EtchCreatedEvent): void {
   etch.tokenId = event.params.tokenId;
   etch.ipfsCid = event.params.ipfsCid;
   etch.documentName = event.params.documentName;
+  etch.createdAt = event.block.timestamp;
 
   etch.save();
 }

@@ -26,8 +26,8 @@ export const SideBar = () => {
   const { data } = useSession();
 
   return (
-    <aside id="sidebar" className="fixed left-0 top-0 z-40 h-screen w-64 transition-transform" aria-label="Sidebar">
-      <div className="flex h-full flex-col overflow-y-auto border-r border-slate-200 bg-white px-3 py-4 dark:border-slate-700 dark:bg-slate-900">
+    <aside id="sidebar" className="left-0 top-0 z-40 h-screen w-64 transition-transform" aria-label="Sidebar">
+      <div className="flex h-full flex-col overflow-y-auto px-3 py-4 dark:border-slate-700 dark:bg-slate-900">
         <div className="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white">
           <LogoAnimated className="mx-auto" />
         </div>

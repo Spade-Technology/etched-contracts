@@ -25,6 +25,8 @@ type Etch @entity {
 
   ipfsCid: String!
   documentName: String!
+
+  createdAt: BigInt! 
 }
 
 type Team @entity {
@@ -36,6 +38,8 @@ type Team @entity {
   externalEtches: [EtchPermission!] @derivedFrom(field: "team")
   transfers: [TeamTransfer!] @derivedFrom(field: "team")
   approvals: [TeamApproval!] @derivedFrom(field: "team")
+
+  createdAt: BigInt! 
 }
 
 type Organisation @entity {
@@ -46,6 +50,8 @@ type Organisation @entity {
   managedTeams: [TeamOwnership!] @derivedFrom(field: "organisation")
   transfers: [OrganisationTransfer!] @derivedFrom(field: "organisation")
   approvals: [OrganisationApproval!] @derivedFrom(field: "organisation")
+
+  createdAt: BigInt! 
 }
 
 ## OWNERSHIP CHAIN ENTITIES ##

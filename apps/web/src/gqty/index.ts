@@ -3,12 +3,15 @@
  */
 
 import { createReactClient } from "@gqty/react";
+import { createClient as createSubscriptionsClient } from "graphql-ws";
 import { Cache, GQtyError, createClient, type QueryFetcher } from "gqty";
 import { generatedSchema, scalarsEnumsHash, type GeneratedSchema } from "./schema.generated";
 
 const queryFetcher: QueryFetcher = async function ({ query, variables, operationName }, fetchOptions) {
+  if (!process.env.NEXT_PUBLIC_THEGRAPH_URL) throw new Error("Missing env variable NEXT_PUBLIC_THEGRAPH_URL");
+
   // Modify "/api/graphql" if needed
-  const response = await fetch("/api/graphql", {
+  const response = await fetch(process.env.NEXT_PUBLIC_THEGRAPH_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -35,6 +38,19 @@ const queryFetcher: QueryFetcher = async function ({ query, variables, operation
   }
 };
 
+const subscriptionsClient =
+  typeof window !== "undefined"
+    ? createSubscriptionsClient({
+        lazy: true,
+        url: () => {
+          // Modify if needed
+          const url = new URL("/api/graphql", window.location.href);
+          url.protocol = url.protocol.replace("http", "ws");
+          return url.href;
+        },
+      })
+    : undefined;
+
 const cache = new Cache(
   undefined,
   /**
@@ -54,6 +70,7 @@ export const client = createClient<GeneratedSchema>({
   cache,
   fetchOptions: {
     fetcher: queryFetcher,
+    subscriber: subscriptionsClient,
   },
 });
 
@@ -75,6 +92,7 @@ export const {
   prepareReactRender,
   useHydrateCache,
   prepareQuery,
+  useSubscription,
 } = createReactClient<GeneratedSchema>(client, {
   defaults: {
     // Enable Suspense, you can override this option for each hook.

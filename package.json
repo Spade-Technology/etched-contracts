@@ -6,7 +6,8 @@
     "compile": "dotenv -- turbo run compile",
     "db:push": "dotenv -- turbo run db:push",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "graphql:gqty": "dotenv -- turbo run graphql:gqty"
   },
   "devDependencies": {
     "dotenv-cli": "^7.3.0",

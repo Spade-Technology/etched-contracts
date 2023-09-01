@@ -67,7 +67,7 @@ export function handleTeamCreated(event: TeamCreatedEvent): void {
   upsertTeamOwnership(teamOwnershipId, teamId, event.params.to);
 
   // create the team
-  upsertTeam(teamId, event.params.teamId);
+  upsertTeam(teamId, event.params.teamId, event.block);
 }
 
 export function handleTransfer(event: TransferEvent): void {
