@@ -5,6 +5,7 @@ describe("Etch", () => {
   let teamContract;
   let orgContract;
   let etchContract;
+  let ensContract;
   let signers;
 
   describe("Deployment", () => {
@@ -16,7 +17,15 @@ describe("Etch", () => {
       const Org = await ethers.getContractFactory("Organisations");
       orgContract = await Org.deploy();
       await orgContract.deployed();
+      await orgContract.addNode(signers[0].address);
     });
+
+    it("Should deploy ENS contract", async () => {
+      const EtchENS = await ethers.getContractFactory("EtchENS");
+      ensContract = await EtchENS.deploy(orgContract.address);
+      await ensContract.deployed();
+    });
+
 
     it("Should deploy Team contract", async () => {
       const Team = await ethers.getContractFactory("Teams");
@@ -38,6 +47,7 @@ describe("Etch", () => {
         orgContract,
         teamContract,
         etchContract,
+        ensContract
       });
     });
   });

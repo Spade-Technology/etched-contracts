@@ -5,6 +5,8 @@ import "./forks/Ownable.sol";
 import "./CSignatureVerifier.sol";
 import "./forks/Context.sol";
 
+import "hardhat/console.sol";
+
 abstract contract NodeHandler is Ownable, SignatureVerifier {
     address private parent;
 
@@ -29,8 +31,8 @@ abstract contract NodeHandler is Ownable, SignatureVerifier {
      * @return Whether the address is a node
      */
     function isNode(address node) public view returns (bool) {
-        if (parent == address(0)) return NodeHandler(parent).isNode(node);
-        else return _nodes[_msgSender()];
+        if (parent == address(0)) return _nodes[node];
+        else return NodeHandler(parent).isNode(node);
     }
 
     /**
@@ -47,14 +49,24 @@ abstract contract NodeHandler is Ownable, SignatureVerifier {
      * @param signature The signature of the message
      * @param _calldata The calldata to send to the parent contract
      */
-    function delegateCallsToSelf(Signature memory signature, bytes[] memory _calldata) external onlyNodes {
+    function delegateCallsToSelf(
+        Signature memory signature,
+        bytes[] memory _calldata
+    ) external onlyNodes {
         EncodedMessage memory message = _checkSignature(signature);
 
         // Authorized Node only (0x00 if any node can execute the call)
-        require(message.nodeAddress == msg.sender || message.nodeAddress == address(0), "NODEHANDLER: PERMISSION_DENIED");
+        require(
+            message.nodeAddress == msg.sender ||
+                message.nodeAddress == address(0),
+            "NODEHANDLER: PERMISSION_DENIED"
+        );
 
         // Only the signer or the node can execute the call
-        require(isNode(msg.sender) || msg.sender == signature.signer, "NODEHANDLER: PERMISSION_DENIED");
+        require(
+            isNode(msg.sender) || msg.sender == signature.signer,
+            "NODEHANDLER: PERMISSION_DENIED"
+        );
 
         // Delegate the call with a new context
         _delegateCallsToSelf(signature.signer, _calldata);
@@ -65,9 +77,13 @@ abstract contract NodeHandler is Ownable, SignatureVerifier {
      *
      * @param _calldata The calldata to send to the parent contract
      */
-    function _delegateCallsToSelf(address context, bytes[] memory _calldata) private withContext(context) {
+    function _delegateCallsToSelf(
+        address context,
+        bytes[] memory _calldata
+    ) private withContext(context) {
         for (uint256 i = 0; i < _calldata.length; i++) {
-            (bool success, bytes memory returnData) = address(this).delegatecall(_calldata[i]);
+            (bool success, bytes memory returnData) = address(this)
+                .delegatecall(_calldata[i]);
             require(success, string(returnData));
         }
     }

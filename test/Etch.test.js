@@ -15,7 +15,7 @@ const EOrgPermissions = {
 const DocName = "Fake Doc Name";
 const IPFSCid = "Fake IPFSCid";
 
-async function etchMainTests({ teamContract, orgContract, etchContract, signers }) {
+async function etchMainTests({ teamContract, orgContract, etchContract, signers, ensContract }) {
   let totalSupply = 0;
   let totalSupplyTeam = 0;
   let totalSupplyOrg = 0;
@@ -26,7 +26,30 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers 
     totalSupplyTeam = await teamContract.getNumberOfTeamsCreated();
 
     totalSupplyOrg = await orgContract.getNumberOfOrganisationsCreated();
+
+    totalSupplyENS = await ensContract.getTotalSupply();
   });
+
+  describe("Should be able to mint a new ENS", async () => {
+    it("Should be able to mint a new ENS", async () => {
+      await ensContract.connect(signers[0]).safeMint(signers[0].address, "test.etched");
+
+      // The ens should be alphanumeric / _ (underscore) and must finish with ".etched". These are expected to fail
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test.etched.")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test.etched-")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test.etched!")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test.etched?")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test.etched ")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test .etched")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test. etched")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "-est.etched")).to.be.reverted;
+      await expect(ensContract.connect(signers[0]).safeMint(signers[0].address, "test-.etched")).to.be.reverted;
+      console.log("Minted ENS: test.etched");
+
+      await ensContract.connect(signers[0]).safeMint(signers[0].address, "test_test.etched")
+      await expect((await ensContract.getENS(signers[0].address)).length).to.be.equal(2);
+    });
+  })
 
   describe("User Owner Etch tests", () => {
     it("Should be able to safeMint a new etch", async () => {

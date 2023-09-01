@@ -1,9 +1,10 @@
 import { HardhatUserConfig } from "hardhat/types";
 
 import * as dotenv from "dotenv";
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
+// import "@nomiclabs/hardhat-etherscan";
+// import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
+import "@nomicfoundation/hardhat-toolbox";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "hardhat-abi-exporter";
@@ -18,6 +19,8 @@ tdly.setup();
 // import "hardhat-contract-sizer";
 
 dotenv.config();
+
+
 
 interface ExtendedHardhatUserConfig extends HardhatUserConfig {
   etherscan?: {
@@ -80,6 +83,7 @@ const config: ExtendedHardhatUserConfig = {
     tenderly: {
       url: `https://rpc.vnet.tenderly.co/devnet/etched/${process.env.TENDERLY_KEY}`,
       accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
+      
     },
 
     ethereum: {
@@ -129,8 +133,8 @@ const config: ExtendedHardhatUserConfig = {
     runOnCompile: true,
     clear: true,
 
-    only: [":Organisations", ":Teams", ":Etches"],
-    rename: (sourceName, contractName) => ((contractName.at(-1) === "s") && (contractName.at(-2) === "e")) ? contractName.slice(0, -2) : contractName.slice(0, -1),
+    only: [":Organisations", ":Teams", ":Etches",  ":EtchENS"],
+    rename: (sourceName, contractName) => contractName == "EtchENS" ? "EtchENS" : ((contractName.at(-1) === "s") && (contractName.at(-2) === "e")) ? contractName.slice(0, -2) : contractName.slice(0, -1),
   },
 ],
 

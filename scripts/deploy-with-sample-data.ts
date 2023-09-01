@@ -23,10 +23,21 @@ async function main() {
   console.log("Deploying contracts with the account:", signers[0].address);
 
   const Org = await ethers.getContractFactory("Organisations");
-  const orgContract = await Org.deploy();
+  const orgContract = await Org.deploy()
   await orgContract.deployed();
-
   console.log("Org deployed to:", orgContract.address);
+  console.log("Adding node to ENS");
+  await orgContract.addNode(signers[0].address)
+
+
+  console.log("Deploying ENS with the account:", signers[0].address);
+  const ENS = await ethers.getContractFactory("EtchENS");
+  const ensContract = await ENS.deploy(orgContract.address)
+  await ensContract.deployed();  
+  await ensContract.connect(signers[0]).safeMint(signers[0].address, "admin.etched")
+  
+
+  console.log("ENS deployed to:", ensContract.address);
 
   console.log("Organisations deployed to:", orgContract.address);
 
@@ -46,16 +57,25 @@ async function main() {
 
   const network = process.env.HARDHAT_NETWORK || "";
   const exportedContractFile = process.env.EXPORTED_CONTRACT_FILE || "";
-  const exportedContractPath = path.join(__dirname, "..", exportedContractFile + network + ".json");
+  const exportedContractPath = path.join(__dirname, "../../web", exportedContractFile + network + ".json");
 
   console.log("exportedContractPath", exportedContractPath);
   const exportedContract = {
     Org: orgContract.address,
     Team: teamContract.address,
     Etch: etchContract.address,
+    ENS: ensContract.address,
   };
 
   fs.writeFileSync(exportedContractPath, JSON.stringify(exportedContract));
+
+
+  if (network != "hardhat" && network != "") {
+  //   await tenderly.verify({
+  //     name: "EtchENS",
+  //     address: orgContract.address,
+  //   });
+  
 
   // await tenderly.verify({
   //   name: "Organisations",
@@ -72,20 +92,26 @@ async function main() {
   //   address: etchContract.address,
   // });
 
-  // await run("verify:verify", {
-  //   address: orgContract.address,
-  //   constructorArguments: [],
-  // });
+  await run("verify:verify", {
+    address: ensContract.address,
+    constructorArguments: [orgContract.address],
+  });
 
-  // await run("verify:verify", {
-  //   address: teamContract.address,
-  //   constructorArguments: [orgContract.address],
-  // });
+  await run("verify:verify", {
+    address: orgContract.address,
+    constructorArguments: [],
+  });
 
-  // await run("verify:verify", {
-  //   address: etchContract.address,
-  //   constructorArguments: [teamContract.address],
-  // });
+  await run("verify:verify", {
+    address: teamContract.address,
+    constructorArguments: [orgContract.address],
+  });
+
+  await run("verify:verify", {
+    address: etchContract.address,
+    constructorArguments: [teamContract.address],
+  });
+}
 
   const totalSupply = Number(await etchContract.getTotalSupply());
   const totalSupplyTeam = Number(await teamContract.getNumberOfTeamsCreated());
