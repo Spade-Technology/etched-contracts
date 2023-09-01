@@ -39,7 +39,8 @@ interface ExtendedHardhatUserConfig extends HardhatUserConfig {
     only?: string[];
     spacing?: number;
     runOnCompile?: boolean;
-  };
+    rename?: (sourceName: string, contractName: string) => string;
+  }[];
   dodoc: any;
   [k: string]: any;
 }
@@ -116,13 +117,22 @@ const config: ExtendedHardhatUserConfig = {
     gasPriceApi: "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice",
   },
 
-  // export ABIs to ../web/src/abi/
-  abiExporter: {
-    path: "../src/contracts/abi/",
+  // export ABIs to ../web/src/contracts/abi
+  abiExporter: [{
+    path: "../web/src/contracts/abi/",
     runOnCompile: true,
     clear: true,
     flat: true,
   },
+  {
+    path: "../subgraph/abis",
+    runOnCompile: true,
+    clear: true,
+
+    only: [":Organisations", ":Teams", ":Etches"],
+    rename: (sourceName, contractName) => ((contractName.at(-1) === "s") && (contractName.at(-2) === "e")) ? contractName.slice(0, -2) : contractName.slice(0, -1),
+  },
+],
 
   tenderly: {
     // Replace with project slug in Tenderly
