@@ -1,4 +1,5 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
+import { SideBar } from "@/components/sidebar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  return <>{/* <DocsSidebarNav items={[]}></DocsSidebarNav> */}</>;
+  return (
+    <div className="h-screen w-screen bg-slate-900">
+      <SideBar />
+    </div>
+  );
 }

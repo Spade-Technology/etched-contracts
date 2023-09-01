@@ -8,10 +8,7 @@ import { WagmiConfig, configureChains, createConfig } from "wagmi";
 import { polygonMumbai } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygonMumbai],
-  [publicProvider()]
-);
+const { chains, publicClient, webSocketPublicClient } = configureChains([polygonMumbai], [publicProvider()]);
 
 const config = createConfig({
   autoConnect: true,
@@ -19,10 +16,7 @@ const config = createConfig({
   webSocketPublicClient,
 });
 
-const MyApp: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <WagmiConfig config={config}>
       <SessionProvider session={session}>

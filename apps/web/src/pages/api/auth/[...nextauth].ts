@@ -5,7 +5,6 @@ import { getAuthOptions } from "@/server/auth";
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const authOptions = getAuthOptions(req);
 
-  console.error(authOptions);
   // if authOptions is of string, return it as an error
   if (typeof authOptions === "string") {
     res.status(500).send(authOptions);

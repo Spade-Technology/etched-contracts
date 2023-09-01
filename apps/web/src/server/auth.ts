@@ -36,15 +36,15 @@ export async function verifySiweMessage(credentials: Record<"message" | "signatu
   else if (!nextAuthUrl) return null;
   else nextAuthHost = new URL(nextAuthUrl).host;
 
-  // Make sure the nonce, domain, and signature are valid
-  if (
-    siwe.domain !== nextAuthHost ||
-    siwe.nonce !== (await getCsrfToken({ req })) ||
-    !(await siwe.validate(credentials?.signature || ""))
-  )
-    return null;
+  const verified = await siwe.verify({
+    signature: credentials?.signature || "",
+    domain: nextAuthHost,
+    nonce: await getCsrfToken({ req }),
+  });
 
-  return siwe;
+  if (verified.success) return siwe;
+
+  return null;
 }
 
 export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
@@ -52,6 +52,7 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
     CredentialsProvider({
       async authorize(credentials) {
         try {
+          console.log(credentials);
           // Verify the message
           const siwe = await verifySiweMessage(credentials, req);
 
@@ -59,20 +60,13 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           if (!siwe) return null;
 
           // Fetch user by address
-          let user = await prisma.user.findUnique({
-            where: { address: siwe.address },
-          });
+          let user = await prisma.user.findUnique({ where: { address: siwe.address } });
 
-          // If user doesn't exist, bad request
-          if (!user) return null;
+          // If user doesn't exist, create it
+          if (!user) user = await prisma.user.create({ data: { address: siwe.address } });
 
           // Return the user info
-          return {
-            id: user.address,
-            name: user.name,
-            description: user.description,
-            picture: user.picture,
-          };
+          return { id: user.address };
         } catch (e) {
           return null;
         }
@@ -101,13 +95,15 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
         });
 
         session.address = token.sub;
-        session.user = {
-          name: user?.name,
-          description: user?.description,
-          picture: user?.picture,
-        };
         return session;
       },
+    },
+    pages: {
+      signIn: "/",
+      signOut: "/",
+      error: "/",
+      verifyRequest: "/",
+      newUser: "/",
     },
     // https://next-auth.js.org/configuration/providers/oauth
     providers,

@@ -18,6 +18,7 @@
     },
     "lint": {},
     "compile": {},
+    "db:push": {},
     "dev": {
       "cache": false,
       "persistent": true,

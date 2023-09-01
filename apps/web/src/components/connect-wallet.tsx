@@ -12,10 +12,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { useConnect } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import Image from "next/image";
+import { useSignIn } from "@/utils/hooks/useSignIn";
+import { useIsConnected } from "@/utils/hooks/useIsConnected";
+import { shortenAddress } from "@/utils/hooks/address";
 
 interface ConnectWallet extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -25,13 +26,20 @@ const connectorLogo: Record<string, string> = {
 
 export function ConnectWalletModalButtonWrapper({ className, ...props }: ConnectWallet) {
   const [open, setOpen] = React.useState(false);
-  const { connect, connectors, error, isLoading, pendingConnector } = useConnect({
-    onSuccess() {
-      setOpen(false);
-    },
-  });
+  const { connect, connectors, isLoading: isWalletLoading, pendingConnector } = useConnect({ onSuccess: () => setOpen(false) });
+  const isConnected = useIsConnected();
+  const { address } = useAccount();
+  const { logIn, isLoading: isLoginLoading } = useSignIn();
 
-  return (
+  const isLoading = isWalletLoading || isLoginLoading;
+
+  return isConnected && address ? (
+    <>
+      <Button type="button" onClick={logIn}>
+        Sign in using {shortenAddress({ address })}
+      </Button>
+    </>
+  ) : (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{props.children || <Button>Sign In with Wallet</Button>}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
