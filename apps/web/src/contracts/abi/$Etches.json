@@ -787,37 +787,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "arg0",
-        "type": "uint256"
-      }
-    ],
-    "name": "$commentsOf",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "commentIpfsCid",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IEtches.SComments",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bytes32",
         "name": "_messageHash",
         "type": "bytes32"
@@ -951,6 +920,30 @@
     "name": "commentOnEtch",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "etch",
+        "type": "uint256"
+      }
+    ],
+    "name": "commentsOf",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "commentIpfsCid",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

@@ -337,6 +337,30 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "etch",
+        "type": "uint256"
+      }
+    ],
+    "name": "commentsOf",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "commentIpfsCid",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes",
