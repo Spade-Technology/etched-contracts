@@ -1,16 +1,19 @@
 {
   "sepolia": {
     "Etch": {
-      "address": "0x14B43675DB5F202fE6E7eaEfcfD9c62445Edbf31",
+      "address": "0x3545E7608031aF7113F88C2894441b8E18e40574",
       "startBlock": 4174716
     },
     "Team": {
-      "address": "0xa2695497726Ab1Eb044106D697DCdDf3a17e5f9F",
+      "address": "0xc22B5264F3D48823FA6a1715b52b0b130Dae0933",
       "startBlock": 4174716
     },
     "Organisation": {
-      "address": "0xa7a1E8Fb3E1C06de648311aDd30BF36EcF09C286",
+      "address": "0xb5Af88B7ffE96233811adF8FA9d6d26A91A80602",
       "startBlock": 4174716
+    },
+    "EtchENS": {
+      "address": "0x29ab3bf087a0EBF38296513B9f760DCCc8D35882"
     }
   }
 }

@@ -99,6 +99,8 @@ export function handleTeamPermissionsUpdated(event: TeamPermissionsUpdated): voi
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
+  entity.teamId = event.params.teamId;
+  entity.newPermission = event.params.newPermission;
 
   entity.save();
 

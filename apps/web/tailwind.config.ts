@@ -54,6 +54,7 @@ module.exports = {
       boxShadow: {
         "3xl": "0 35px 60px -15px rgba(0, 0, 0, 0.3)",
         "etched-1": "rgba(17, 17, 26, 0.1) 0px 0px 16px",
+        "etched-2": "rgba(17, 17, 26, 0.1) 0px 0px 32px",
       },
       keyframes: {
         shake: {

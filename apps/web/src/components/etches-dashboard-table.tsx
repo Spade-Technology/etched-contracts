@@ -30,12 +30,16 @@ import { Etch, EtchOwnership, Team, Wallet } from "@/gqty";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { shortenAddress } from "@/utils/hooks/address";
+import { CreateEtchButton } from "./create-etch-button";
 
 dayjs.extend(relativeTime);
 
-export const columns: ColumnDef<Etch>[] = [
+type EtchColumnDef = { headerName?: string } & ColumnDef<Etch>;
+
+export const columns: EtchColumnDef[] = [
   {
     id: "select",
+    headerName: "Selector",
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
@@ -52,10 +56,12 @@ export const columns: ColumnDef<Etch>[] = [
   {
     accessorKey: "tokenId",
     header: "ID",
+    headerName: "ID",
     cell: ({ row }) => <div className="capitalize">{row.getValue("tokenId")}</div>,
   },
   {
     accessorKey: "documentName",
+    headerName: "Document Name",
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -68,13 +74,15 @@ export const columns: ColumnDef<Etch>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: () => <div className="text-right">CreatedAt</div>,
+    headerName: "Created At",
+    header: () => <div className="text-right">Created At</div>,
     cell: ({ row }) => {
       return <div className="text-right font-medium">{dayjs().to(dayjs(Number(row.getValue("createdAt")) * 1000))}</div>;
     },
   },
   {
     accessorKey: "ownership",
+    headerName: "Owner",
     header: () => <div className="text-right">Owner</div>,
     cell: ({ row }) => {
       const ownership: EtchOwnership = row.getValue("ownership");
@@ -121,8 +129,6 @@ export function DataTableDemo({ data = [] }: { data: Etch[] }) {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  console.log(data[0]?.ownership);
-
   const table = useReactTable({
     data,
     columns,
@@ -144,16 +150,10 @@ export function DataTableDemo({ data = [] }: { data: Etch[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter etches..."
-          value={(table.getColumn("documentName")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("documentName")?.setFilterValue(event.target.value)}
-          className="max-w-sm rounded-none"
-        />
+      <div className="flex items-center gap-5 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="ghost" className="shadow-etched-2">
               Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -169,14 +169,32 @@ export function DataTableDemo({ data = [] }: { data: Etch[] }) {
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >
-                    {column.id}
+                    {(column?.columnDef as EtchColumnDef).headerName || column?.id}
                   </DropdownMenuCheckboxItem>
                 );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="shadow-etched-2">
+              Filter <ChevronDownIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="capitalize">No Options</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Input
+          placeholder="Filter etches..."
+          value={(table.getColumn("documentName")?.getFilterValue() as string) ?? ""}
+          onChange={(event) => table.getColumn("documentName")?.setFilterValue(event.target.value)}
+          className="ml-auto max-w-sm rounded-none border-none shadow-etched-2"
+        />
+
+        <CreateEtchButton className="shadow-etched-2" />
       </div>
-      <div className="shadow-etched-1 ">
+      <div className="shadow-etched-1">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

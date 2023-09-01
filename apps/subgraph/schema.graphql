@@ -10,6 +10,8 @@ type Wallet @entity {
   etchPermissions: [EtchPermission!] @derivedFrom(field: "wallet")
   teamPermissions: [TeamPermission!] @derivedFrom(field: "wallet")
   OrganisationPermissions: [OrganisationPermission!] @derivedFrom(field: "wallet")
+
+  etchENS: [EtchENS!]! @derivedFrom(field: "owner")
 }
 
 ## ETCH, TEAM, organisation ENTITIES ##
@@ -52,6 +54,14 @@ type Organisation @entity {
   approvals: [OrganisationApproval!] @derivedFrom(field: "organisation")
 
   createdAt: BigInt! 
+}
+
+type EtchENS @entity {
+  id: ID!
+
+  tokenId: BigInt!
+  name: String!
+  owner: Wallet!
 }
 
 ## OWNERSHIP CHAIN ENTITIES ##
@@ -236,8 +246,6 @@ type TeamOwnershipTransferred @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-
-  team: Team!
 }
 
 type TeamPermissionsUpdated @entity(immutable: true) {
@@ -356,4 +364,24 @@ type OrganisationTransfer @entity(immutable: true) {
   transactionHash: Bytes!
 
   organisation: Organisation!
+}
+
+type EtchENSCreated @entity(immutable: true) {
+  id: Bytes!
+  tokenId: BigInt! # uint256
+  to: Bytes! # address
+  name: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtchENSTransfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
