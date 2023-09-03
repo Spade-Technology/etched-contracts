@@ -3,7 +3,6 @@ import {
   ApprovalForAll as ApprovalForAllEvent,
 
   EtchENSCreated as EtchENSCreatedEvent,
-  EtchTransferred as EtchTransferredEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   Transfer as TransferEvent
 } from "../generated/EtchENS/EtchENS"
@@ -20,7 +19,7 @@ export function handleEtchENSCreated(event: EtchENSCreatedEvent): void {
   )
   entity.tokenId = event.params.tokenId
   entity.to = event.params.to
-  entity.name = event.params.name.toString()
+  entity.name = event.params.name
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

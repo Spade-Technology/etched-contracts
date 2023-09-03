@@ -36,10 +36,15 @@ export const env = createEnv({
     // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
     NEXT_PUBLIC_INFURA_ID: z.string(),
     INFURA_API_SECRET: z.string(),
+    INFURA_KEY: z.string(),
 
     // Etched Configuration
-    DEPLOYMENT_BLOCK: z.number().int().positive(),
+    DEPLOYMENT_BLOCK: z.string(),
     NETWORK: z.string(),
+    NETWORK_ID: z.number(),
+
+    // Etched Node
+    ETCHED_NODE_PRIVATE_KEY: z.string(),
 
     // Etched Configuration
     NEXT_PUBLIC_THEGRAPH_URL: z.string().url(),
@@ -81,10 +86,15 @@ export const env = createEnv({
     // RPC URLs
     NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
     INFURA_API_SECRET: process.env.INFURA_API_SECRET,
+    INFURA_KEY: process.env.INFURA_KEY,
 
     // Etched Configuration
     DEPLOYMENT_BLOCK: process.env.DEPLOYMENT_BLOCK,
     NETWORK: process.env.NETWORK,
+    NETWORK_ID: Number(process.env.NETWORK_ID),
+
+    // Etched Node
+    ETCHED_NODE_PRIVATE_KEY: process.env.ETCHED_NODE_PRIVATE_KEY,
 
     // Etched Configuration
     NEXT_PUBLIC_THEGRAPH_URL: process.env.NEXT_PUBLIC_THEGRAPH_URL,

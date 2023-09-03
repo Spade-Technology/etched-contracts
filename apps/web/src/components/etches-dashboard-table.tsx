@@ -192,7 +192,7 @@ export function DataTableDemo({ data = [] }: { data: Etch[] }) {
           className="ml-auto max-w-sm rounded-none border-none shadow-etched-2"
         />
 
-        <CreateEtchButton className="shadow-etched-2" />
+        {/* <CreateEtchButton className="shadow-etched-2" /> */}
       </div>
       <div className="shadow-etched-1">
         <Table>

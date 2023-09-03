@@ -1,11 +1,13 @@
 import { env } from "@/env.mjs";
+import { Address } from "wagmi";
 
 type Contracts = {
-  Org: string;
-  Team: string;
-  Etch: string;
-  ENS: string;
+  Org: Address;
+  Team: Address;
+  Etch: Address;
+  ENS: Address;
 };
 
 export const currentNetwork = env.NETWORK;
-export const contracts = import(`@/contracts/${currentNetwork}.json`);
+export const currentNetworkId = env.NETWORK_ID;
+export const contracts = require(`@/contracts/${currentNetwork}.json`) as Contracts;

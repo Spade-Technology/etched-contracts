@@ -625,6 +625,280 @@ enum EtchCreated_orderBy {
   transactionHash
 }
 
+type EtchENS {
+  id: ID!
+  tokenId: BigInt!
+  name: String!
+  owner: Wallet!
+}
+
+input EtchENS_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  tokenId: BigInt
+  tokenId_not: BigInt
+  tokenId_gt: BigInt
+  tokenId_lt: BigInt
+  tokenId_gte: BigInt
+  tokenId_lte: BigInt
+  tokenId_in: [BigInt!]
+  tokenId_not_in: [BigInt!]
+  name: String
+  name_not: String
+  name_gt: String
+  name_lt: String
+  name_gte: String
+  name_lte: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_contains: String
+  name_contains_nocase: String
+  name_not_contains: String
+  name_not_contains_nocase: String
+  name_starts_with: String
+  name_starts_with_nocase: String
+  name_not_starts_with: String
+  name_not_starts_with_nocase: String
+  name_ends_with: String
+  name_ends_with_nocase: String
+  name_not_ends_with: String
+  name_not_ends_with_nocase: String
+  owner: String
+  owner_not: String
+  owner_gt: String
+  owner_lt: String
+  owner_gte: String
+  owner_lte: String
+  owner_in: [String!]
+  owner_not_in: [String!]
+  owner_contains: String
+  owner_contains_nocase: String
+  owner_not_contains: String
+  owner_not_contains_nocase: String
+  owner_starts_with: String
+  owner_starts_with_nocase: String
+  owner_not_starts_with: String
+  owner_not_starts_with_nocase: String
+  owner_ends_with: String
+  owner_ends_with_nocase: String
+  owner_not_ends_with: String
+  owner_not_ends_with_nocase: String
+  owner_: Wallet_filter
+
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+  and: [EtchENS_filter]
+  or: [EtchENS_filter]
+}
+
+enum EtchENS_orderBy {
+  id
+  tokenId
+  name
+  owner
+  owner__id
+}
+
+type EtchENSCreated {
+  id: Bytes!
+  tokenId: BigInt!
+  to: Bytes!
+  name: String!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+input EtchENSCreated_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  tokenId: BigInt
+  tokenId_not: BigInt
+  tokenId_gt: BigInt
+  tokenId_lt: BigInt
+  tokenId_gte: BigInt
+  tokenId_lte: BigInt
+  tokenId_in: [BigInt!]
+  tokenId_not_in: [BigInt!]
+  to: Bytes
+  to_not: Bytes
+  to_gt: Bytes
+  to_lt: Bytes
+  to_gte: Bytes
+  to_lte: Bytes
+  to_in: [Bytes!]
+  to_not_in: [Bytes!]
+  to_contains: Bytes
+  to_not_contains: Bytes
+  name: String
+  name_not: String
+  name_gt: String
+  name_lt: String
+  name_gte: String
+  name_lte: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_contains: String
+  name_contains_nocase: String
+  name_not_contains: String
+  name_not_contains_nocase: String
+  name_starts_with: String
+  name_starts_with_nocase: String
+  name_not_starts_with: String
+  name_not_starts_with_nocase: String
+  name_ends_with: String
+  name_ends_with_nocase: String
+  name_not_ends_with: String
+  name_not_ends_with_nocase: String
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_lt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_not_in: [BigInt!]
+  transactionHash: Bytes
+  transactionHash_not: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_lt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_not_in: [Bytes!]
+  transactionHash_contains: Bytes
+  transactionHash_not_contains: Bytes
+
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+  and: [EtchENSCreated_filter]
+  or: [EtchENSCreated_filter]
+}
+
+enum EtchENSCreated_orderBy {
+  id
+  tokenId
+  to
+  name
+  blockNumber
+  blockTimestamp
+  transactionHash
+}
+
+type EtchENSTransfer {
+  id: Bytes!
+  from: Bytes!
+  to: Bytes!
+  tokenId: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+input EtchENSTransfer_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  from: Bytes
+  from_not: Bytes
+  from_gt: Bytes
+  from_lt: Bytes
+  from_gte: Bytes
+  from_lte: Bytes
+  from_in: [Bytes!]
+  from_not_in: [Bytes!]
+  from_contains: Bytes
+  from_not_contains: Bytes
+  to: Bytes
+  to_not: Bytes
+  to_gt: Bytes
+  to_lt: Bytes
+  to_gte: Bytes
+  to_lte: Bytes
+  to_in: [Bytes!]
+  to_not_in: [Bytes!]
+  to_contains: Bytes
+  to_not_contains: Bytes
+  tokenId: BigInt
+  tokenId_not: BigInt
+  tokenId_gt: BigInt
+  tokenId_lt: BigInt
+  tokenId_gte: BigInt
+  tokenId_lte: BigInt
+  tokenId_in: [BigInt!]
+  tokenId_not_in: [BigInt!]
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  blockTimestamp: BigInt
+  blockTimestamp_not: BigInt
+  blockTimestamp_gt: BigInt
+  blockTimestamp_lt: BigInt
+  blockTimestamp_gte: BigInt
+  blockTimestamp_lte: BigInt
+  blockTimestamp_in: [BigInt!]
+  blockTimestamp_not_in: [BigInt!]
+  transactionHash: Bytes
+  transactionHash_not: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_lt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_not_in: [Bytes!]
+  transactionHash_contains: Bytes
+  transactionHash_not_contains: Bytes
+
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+  and: [EtchENSTransfer_filter]
+  or: [EtchENSTransfer_filter]
+}
+
+enum EtchENSTransfer_orderBy {
+  id
+  from
+  to
+  tokenId
+  blockNumber
+  blockTimestamp
+  transactionHash
+}
+
 type EtchOwnership {
   id: ID!
   etch: Etch!
@@ -2378,6 +2652,46 @@ type Query {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [Organisation!]!
+  etchENS(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): EtchENS
+  etchENSs(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: EtchENS_orderBy
+    orderDirection: OrderDirection
+    where: EtchENS_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [EtchENS!]!
   etchOwnership(
     id: ID!
 
@@ -3498,6 +3812,86 @@ type Query {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [OrganisationTransfer!]!
+  etchENSCreated(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): EtchENSCreated
+  etchENSCreateds(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: EtchENSCreated_orderBy
+    orderDirection: OrderDirection
+    where: EtchENSCreated_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [EtchENSCreated!]!
+  etchENSTransfer(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): EtchENSTransfer
+  etchENSTransfers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: EtchENSTransfer_orderBy
+    orderDirection: OrderDirection
+    where: EtchENSTransfer_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [EtchENSTransfer!]!
 
   """Access to subgraph metadata"""
   _meta(block: Block_height): _Meta_
@@ -3664,6 +4058,46 @@ type Subscription {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [Organisation!]!
+  etchENS(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): EtchENS
+  etchENSs(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: EtchENS_orderBy
+    orderDirection: OrderDirection
+    where: EtchENS_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [EtchENS!]!
   etchOwnership(
     id: ID!
 
@@ -4784,6 +5218,86 @@ type Subscription {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [OrganisationTransfer!]!
+  etchENSCreated(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): EtchENSCreated
+  etchENSCreateds(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: EtchENSCreated_orderBy
+    orderDirection: OrderDirection
+    where: EtchENSCreated_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [EtchENSCreated!]!
+  etchENSTransfer(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): EtchENSTransfer
+  etchENSTransfers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: EtchENSTransfer_orderBy
+    orderDirection: OrderDirection
+    where: EtchENSTransfer_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [EtchENSTransfer!]!
 
   """Access to subgraph metadata"""
   _meta(block: Block_height): _Meta_
@@ -5321,7 +5835,6 @@ type TeamOwnershipTransferred {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-  team: Team!
 }
 
 input TeamOwnershipTransferred_filter {
@@ -5381,27 +5894,6 @@ input TeamOwnershipTransferred_filter {
   transactionHash_not_in: [Bytes!]
   transactionHash_contains: Bytes
   transactionHash_not_contains: Bytes
-  team: String
-  team_not: String
-  team_gt: String
-  team_lt: String
-  team_gte: String
-  team_lte: String
-  team_in: [String!]
-  team_not_in: [String!]
-  team_contains: String
-  team_contains_nocase: String
-  team_not_contains: String
-  team_not_contains_nocase: String
-  team_starts_with: String
-  team_starts_with_nocase: String
-  team_not_starts_with: String
-  team_not_starts_with_nocase: String
-  team_ends_with: String
-  team_ends_with_nocase: String
-  team_not_ends_with: String
-  team_not_ends_with_nocase: String
-  team_: Team_filter
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
@@ -5416,10 +5908,6 @@ enum TeamOwnershipTransferred_orderBy {
   blockNumber
   blockTimestamp
   transactionHash
-  team
-  team__id
-  team__teamId
-  team__createdAt
 }
 
 type TeamPermission {
@@ -5880,6 +6368,7 @@ type Wallet {
   etchPermissions(skip: Int = 0, first: Int = 100, orderBy: EtchPermission_orderBy, orderDirection: OrderDirection, where: EtchPermission_filter): [EtchPermission!]
   teamPermissions(skip: Int = 0, first: Int = 100, orderBy: TeamPermission_orderBy, orderDirection: OrderDirection, where: TeamPermission_filter): [TeamPermission!]
   OrganisationPermissions(skip: Int = 0, first: Int = 100, orderBy: OrganisationPermission_orderBy, orderDirection: OrderDirection, where: OrganisationPermission_filter): [OrganisationPermission!]
+  etchENS(skip: Int = 0, first: Int = 100, orderBy: EtchENS_orderBy, orderDirection: OrderDirection, where: EtchENS_filter): [EtchENS!]!
 }
 
 input Wallet_filter {
@@ -5901,6 +6390,7 @@ input Wallet_filter {
   etchPermissions_: EtchPermission_filter
   teamPermissions_: TeamPermission_filter
   OrganisationPermissions_: OrganisationPermission_filter
+  etchENS_: EtchENS_filter
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
@@ -5918,5 +6408,6 @@ enum Wallet_orderBy {
   etchPermissions
   teamPermissions
   OrganisationPermissions
+  etchENS
 }
 

@@ -438,6 +438,250 @@ export enum EtchCreated_orderBy {
   transactionHash = "transactionHash",
 }
 
+export interface EtchENSCreated_filter {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<EtchENSCreated_filter>>>;
+  blockNumber?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockNumber_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  id?: InputMaybe<Scalars["Bytes"]>;
+  id_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_gt?: InputMaybe<Scalars["Bytes"]>;
+  id_gte?: InputMaybe<Scalars["Bytes"]>;
+  id_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  id_lt?: InputMaybe<Scalars["Bytes"]>;
+  id_lte?: InputMaybe<Scalars["Bytes"]>;
+  id_not?: InputMaybe<Scalars["Bytes"]>;
+  id_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  name?: InputMaybe<Scalars["String"]>;
+  name_contains?: InputMaybe<Scalars["String"]>;
+  name_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_ends_with?: InputMaybe<Scalars["String"]>;
+  name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_gt?: InputMaybe<Scalars["String"]>;
+  name_gte?: InputMaybe<Scalars["String"]>;
+  name_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_lt?: InputMaybe<Scalars["String"]>;
+  name_lte?: InputMaybe<Scalars["String"]>;
+  name_not?: InputMaybe<Scalars["String"]>;
+  name_not_contains?: InputMaybe<Scalars["String"]>;
+  name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_not_starts_with?: InputMaybe<Scalars["String"]>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_starts_with?: InputMaybe<Scalars["String"]>;
+  name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  or?: InputMaybe<Array<InputMaybe<EtchENSCreated_filter>>>;
+  to?: InputMaybe<Scalars["Bytes"]>;
+  to_contains?: InputMaybe<Scalars["Bytes"]>;
+  to_gt?: InputMaybe<Scalars["Bytes"]>;
+  to_gte?: InputMaybe<Scalars["Bytes"]>;
+  to_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  to_lt?: InputMaybe<Scalars["Bytes"]>;
+  to_lte?: InputMaybe<Scalars["Bytes"]>;
+  to_not?: InputMaybe<Scalars["Bytes"]>;
+  to_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  to_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  tokenId?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_gt?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_gte?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  tokenId_lt?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_lte?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_not?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  transactionHash?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  transactionHash_lt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_lte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+}
+
+export enum EtchENSCreated_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  name = "name",
+  to = "to",
+  tokenId = "tokenId",
+  transactionHash = "transactionHash",
+}
+
+export interface EtchENSTransfer_filter {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<EtchENSTransfer_filter>>>;
+  blockNumber?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockNumber_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  from?: InputMaybe<Scalars["Bytes"]>;
+  from_contains?: InputMaybe<Scalars["Bytes"]>;
+  from_gt?: InputMaybe<Scalars["Bytes"]>;
+  from_gte?: InputMaybe<Scalars["Bytes"]>;
+  from_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  from_lt?: InputMaybe<Scalars["Bytes"]>;
+  from_lte?: InputMaybe<Scalars["Bytes"]>;
+  from_not?: InputMaybe<Scalars["Bytes"]>;
+  from_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  from_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  id?: InputMaybe<Scalars["Bytes"]>;
+  id_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_gt?: InputMaybe<Scalars["Bytes"]>;
+  id_gte?: InputMaybe<Scalars["Bytes"]>;
+  id_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  id_lt?: InputMaybe<Scalars["Bytes"]>;
+  id_lte?: InputMaybe<Scalars["Bytes"]>;
+  id_not?: InputMaybe<Scalars["Bytes"]>;
+  id_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  or?: InputMaybe<Array<InputMaybe<EtchENSTransfer_filter>>>;
+  to?: InputMaybe<Scalars["Bytes"]>;
+  to_contains?: InputMaybe<Scalars["Bytes"]>;
+  to_gt?: InputMaybe<Scalars["Bytes"]>;
+  to_gte?: InputMaybe<Scalars["Bytes"]>;
+  to_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  to_lt?: InputMaybe<Scalars["Bytes"]>;
+  to_lte?: InputMaybe<Scalars["Bytes"]>;
+  to_not?: InputMaybe<Scalars["Bytes"]>;
+  to_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  to_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  tokenId?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_gt?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_gte?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  tokenId_lt?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_lte?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_not?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  transactionHash?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  transactionHash_lt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_lte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+}
+
+export enum EtchENSTransfer_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  from = "from",
+  id = "id",
+  to = "to",
+  tokenId = "tokenId",
+  transactionHash = "transactionHash",
+}
+
+export interface EtchENS_filter {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<EtchENS_filter>>>;
+  id?: InputMaybe<Scalars["ID"]>;
+  id_gt?: InputMaybe<Scalars["ID"]>;
+  id_gte?: InputMaybe<Scalars["ID"]>;
+  id_in?: InputMaybe<Array<Scalars["ID"]>>;
+  id_lt?: InputMaybe<Scalars["ID"]>;
+  id_lte?: InputMaybe<Scalars["ID"]>;
+  id_not?: InputMaybe<Scalars["ID"]>;
+  id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
+  name?: InputMaybe<Scalars["String"]>;
+  name_contains?: InputMaybe<Scalars["String"]>;
+  name_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_ends_with?: InputMaybe<Scalars["String"]>;
+  name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_gt?: InputMaybe<Scalars["String"]>;
+  name_gte?: InputMaybe<Scalars["String"]>;
+  name_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_lt?: InputMaybe<Scalars["String"]>;
+  name_lte?: InputMaybe<Scalars["String"]>;
+  name_not?: InputMaybe<Scalars["String"]>;
+  name_not_contains?: InputMaybe<Scalars["String"]>;
+  name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_not_starts_with?: InputMaybe<Scalars["String"]>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_starts_with?: InputMaybe<Scalars["String"]>;
+  name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  or?: InputMaybe<Array<InputMaybe<EtchENS_filter>>>;
+  owner?: InputMaybe<Scalars["String"]>;
+  owner_?: InputMaybe<Wallet_filter>;
+  owner_contains?: InputMaybe<Scalars["String"]>;
+  owner_contains_nocase?: InputMaybe<Scalars["String"]>;
+  owner_ends_with?: InputMaybe<Scalars["String"]>;
+  owner_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  owner_gt?: InputMaybe<Scalars["String"]>;
+  owner_gte?: InputMaybe<Scalars["String"]>;
+  owner_in?: InputMaybe<Array<Scalars["String"]>>;
+  owner_lt?: InputMaybe<Scalars["String"]>;
+  owner_lte?: InputMaybe<Scalars["String"]>;
+  owner_not?: InputMaybe<Scalars["String"]>;
+  owner_not_contains?: InputMaybe<Scalars["String"]>;
+  owner_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  owner_not_ends_with?: InputMaybe<Scalars["String"]>;
+  owner_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  owner_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  owner_not_starts_with?: InputMaybe<Scalars["String"]>;
+  owner_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  owner_starts_with?: InputMaybe<Scalars["String"]>;
+  owner_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  tokenId?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_gt?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_gte?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  tokenId_lt?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_lte?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_not?: InputMaybe<Scalars["BigInt"]>;
+  tokenId_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+}
+
+export enum EtchENS_orderBy {
+  id = "id",
+  name = "name",
+  owner = "owner",
+  owner__id = "owner__id",
+  tokenId = "tokenId",
+}
+
 export interface EtchOwnershipTransferred_filter {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
@@ -2322,27 +2566,6 @@ export interface TeamOwnershipTransferred_filter {
   previousOwner_not?: InputMaybe<Scalars["Bytes"]>;
   previousOwner_not_contains?: InputMaybe<Scalars["Bytes"]>;
   previousOwner_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
-  team?: InputMaybe<Scalars["String"]>;
-  team_?: InputMaybe<Team_filter>;
-  team_contains?: InputMaybe<Scalars["String"]>;
-  team_contains_nocase?: InputMaybe<Scalars["String"]>;
-  team_ends_with?: InputMaybe<Scalars["String"]>;
-  team_ends_with_nocase?: InputMaybe<Scalars["String"]>;
-  team_gt?: InputMaybe<Scalars["String"]>;
-  team_gte?: InputMaybe<Scalars["String"]>;
-  team_in?: InputMaybe<Array<Scalars["String"]>>;
-  team_lt?: InputMaybe<Scalars["String"]>;
-  team_lte?: InputMaybe<Scalars["String"]>;
-  team_not?: InputMaybe<Scalars["String"]>;
-  team_not_contains?: InputMaybe<Scalars["String"]>;
-  team_not_contains_nocase?: InputMaybe<Scalars["String"]>;
-  team_not_ends_with?: InputMaybe<Scalars["String"]>;
-  team_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
-  team_not_in?: InputMaybe<Array<Scalars["String"]>>;
-  team_not_starts_with?: InputMaybe<Scalars["String"]>;
-  team_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
-  team_starts_with?: InputMaybe<Scalars["String"]>;
-  team_starts_with_nocase?: InputMaybe<Scalars["String"]>;
   transactionHash?: InputMaybe<Scalars["Bytes"]>;
   transactionHash_contains?: InputMaybe<Scalars["Bytes"]>;
   transactionHash_gt?: InputMaybe<Scalars["Bytes"]>;
@@ -2361,10 +2584,6 @@ export enum TeamOwnershipTransferred_orderBy {
   id = "id",
   newOwner = "newOwner",
   previousOwner = "previousOwner",
-  team = "team",
-  team__createdAt = "team__createdAt",
-  team__id = "team__id",
-  team__teamId = "team__teamId",
   transactionHash = "transactionHash",
 }
 
@@ -2920,6 +3139,7 @@ export interface Wallet_filter {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   and?: InputMaybe<Array<InputMaybe<Wallet_filter>>>;
+  etchENS_?: InputMaybe<EtchENS_filter>;
   etchPermissions_?: InputMaybe<EtchPermission_filter>;
   id?: InputMaybe<Scalars["Bytes"]>;
   id_contains?: InputMaybe<Scalars["Bytes"]>;
@@ -2942,6 +3162,7 @@ export interface Wallet_filter {
 export enum Wallet_orderBy {
   OrganisationApprovals = "OrganisationApprovals",
   OrganisationPermissions = "OrganisationPermissions",
+  etchENS = "etchENS",
   etchPermissions = "etchPermissions",
   id = "id",
   ownedEtches = "ownedEtches",
@@ -2967,6 +3188,9 @@ export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
   EtchApproval_orderBy: true,
   EtchCommentAdded_orderBy: true,
   EtchCreated_orderBy: true,
+  EtchENSCreated_orderBy: true,
+  EtchENSTransfer_orderBy: true,
+  EtchENS_orderBy: true,
   EtchOwnershipTransferred_orderBy: true,
   EtchOwnership_orderBy: true,
   EtchPermission_orderBy: true,
@@ -3437,6 +3661,243 @@ export const generatedSchema = {
     transactionHash_not: { __type: "Bytes" },
     transactionHash_not_contains: { __type: "Bytes" },
     transactionHash_not_in: { __type: "[Bytes!]" },
+  },
+  EtchENS: {
+    __typename: { __type: "String!" },
+    id: { __type: "ID!" },
+    name: { __type: "String!" },
+    owner: { __type: "Wallet!" },
+    tokenId: { __type: "BigInt!" },
+  },
+  EtchENSCreated: {
+    __typename: { __type: "String!" },
+    blockNumber: { __type: "BigInt!" },
+    blockTimestamp: { __type: "BigInt!" },
+    id: { __type: "Bytes!" },
+    name: { __type: "String!" },
+    to: { __type: "Bytes!" },
+    tokenId: { __type: "BigInt!" },
+    transactionHash: { __type: "Bytes!" },
+  },
+  EtchENSCreated_filter: {
+    _change_block: { __type: "BlockChangedFilter" },
+    and: { __type: "[EtchENSCreated_filter]" },
+    blockNumber: { __type: "BigInt" },
+    blockNumber_gt: { __type: "BigInt" },
+    blockNumber_gte: { __type: "BigInt" },
+    blockNumber_in: { __type: "[BigInt!]" },
+    blockNumber_lt: { __type: "BigInt" },
+    blockNumber_lte: { __type: "BigInt" },
+    blockNumber_not: { __type: "BigInt" },
+    blockNumber_not_in: { __type: "[BigInt!]" },
+    blockTimestamp: { __type: "BigInt" },
+    blockTimestamp_gt: { __type: "BigInt" },
+    blockTimestamp_gte: { __type: "BigInt" },
+    blockTimestamp_in: { __type: "[BigInt!]" },
+    blockTimestamp_lt: { __type: "BigInt" },
+    blockTimestamp_lte: { __type: "BigInt" },
+    blockTimestamp_not: { __type: "BigInt" },
+    blockTimestamp_not_in: { __type: "[BigInt!]" },
+    id: { __type: "Bytes" },
+    id_contains: { __type: "Bytes" },
+    id_gt: { __type: "Bytes" },
+    id_gte: { __type: "Bytes" },
+    id_in: { __type: "[Bytes!]" },
+    id_lt: { __type: "Bytes" },
+    id_lte: { __type: "Bytes" },
+    id_not: { __type: "Bytes" },
+    id_not_contains: { __type: "Bytes" },
+    id_not_in: { __type: "[Bytes!]" },
+    name: { __type: "String" },
+    name_contains: { __type: "String" },
+    name_contains_nocase: { __type: "String" },
+    name_ends_with: { __type: "String" },
+    name_ends_with_nocase: { __type: "String" },
+    name_gt: { __type: "String" },
+    name_gte: { __type: "String" },
+    name_in: { __type: "[String!]" },
+    name_lt: { __type: "String" },
+    name_lte: { __type: "String" },
+    name_not: { __type: "String" },
+    name_not_contains: { __type: "String" },
+    name_not_contains_nocase: { __type: "String" },
+    name_not_ends_with: { __type: "String" },
+    name_not_ends_with_nocase: { __type: "String" },
+    name_not_in: { __type: "[String!]" },
+    name_not_starts_with: { __type: "String" },
+    name_not_starts_with_nocase: { __type: "String" },
+    name_starts_with: { __type: "String" },
+    name_starts_with_nocase: { __type: "String" },
+    or: { __type: "[EtchENSCreated_filter]" },
+    to: { __type: "Bytes" },
+    to_contains: { __type: "Bytes" },
+    to_gt: { __type: "Bytes" },
+    to_gte: { __type: "Bytes" },
+    to_in: { __type: "[Bytes!]" },
+    to_lt: { __type: "Bytes" },
+    to_lte: { __type: "Bytes" },
+    to_not: { __type: "Bytes" },
+    to_not_contains: { __type: "Bytes" },
+    to_not_in: { __type: "[Bytes!]" },
+    tokenId: { __type: "BigInt" },
+    tokenId_gt: { __type: "BigInt" },
+    tokenId_gte: { __type: "BigInt" },
+    tokenId_in: { __type: "[BigInt!]" },
+    tokenId_lt: { __type: "BigInt" },
+    tokenId_lte: { __type: "BigInt" },
+    tokenId_not: { __type: "BigInt" },
+    tokenId_not_in: { __type: "[BigInt!]" },
+    transactionHash: { __type: "Bytes" },
+    transactionHash_contains: { __type: "Bytes" },
+    transactionHash_gt: { __type: "Bytes" },
+    transactionHash_gte: { __type: "Bytes" },
+    transactionHash_in: { __type: "[Bytes!]" },
+    transactionHash_lt: { __type: "Bytes" },
+    transactionHash_lte: { __type: "Bytes" },
+    transactionHash_not: { __type: "Bytes" },
+    transactionHash_not_contains: { __type: "Bytes" },
+    transactionHash_not_in: { __type: "[Bytes!]" },
+  },
+  EtchENSTransfer: {
+    __typename: { __type: "String!" },
+    blockNumber: { __type: "BigInt!" },
+    blockTimestamp: { __type: "BigInt!" },
+    from: { __type: "Bytes!" },
+    id: { __type: "Bytes!" },
+    to: { __type: "Bytes!" },
+    tokenId: { __type: "BigInt!" },
+    transactionHash: { __type: "Bytes!" },
+  },
+  EtchENSTransfer_filter: {
+    _change_block: { __type: "BlockChangedFilter" },
+    and: { __type: "[EtchENSTransfer_filter]" },
+    blockNumber: { __type: "BigInt" },
+    blockNumber_gt: { __type: "BigInt" },
+    blockNumber_gte: { __type: "BigInt" },
+    blockNumber_in: { __type: "[BigInt!]" },
+    blockNumber_lt: { __type: "BigInt" },
+    blockNumber_lte: { __type: "BigInt" },
+    blockNumber_not: { __type: "BigInt" },
+    blockNumber_not_in: { __type: "[BigInt!]" },
+    blockTimestamp: { __type: "BigInt" },
+    blockTimestamp_gt: { __type: "BigInt" },
+    blockTimestamp_gte: { __type: "BigInt" },
+    blockTimestamp_in: { __type: "[BigInt!]" },
+    blockTimestamp_lt: { __type: "BigInt" },
+    blockTimestamp_lte: { __type: "BigInt" },
+    blockTimestamp_not: { __type: "BigInt" },
+    blockTimestamp_not_in: { __type: "[BigInt!]" },
+    from: { __type: "Bytes" },
+    from_contains: { __type: "Bytes" },
+    from_gt: { __type: "Bytes" },
+    from_gte: { __type: "Bytes" },
+    from_in: { __type: "[Bytes!]" },
+    from_lt: { __type: "Bytes" },
+    from_lte: { __type: "Bytes" },
+    from_not: { __type: "Bytes" },
+    from_not_contains: { __type: "Bytes" },
+    from_not_in: { __type: "[Bytes!]" },
+    id: { __type: "Bytes" },
+    id_contains: { __type: "Bytes" },
+    id_gt: { __type: "Bytes" },
+    id_gte: { __type: "Bytes" },
+    id_in: { __type: "[Bytes!]" },
+    id_lt: { __type: "Bytes" },
+    id_lte: { __type: "Bytes" },
+    id_not: { __type: "Bytes" },
+    id_not_contains: { __type: "Bytes" },
+    id_not_in: { __type: "[Bytes!]" },
+    or: { __type: "[EtchENSTransfer_filter]" },
+    to: { __type: "Bytes" },
+    to_contains: { __type: "Bytes" },
+    to_gt: { __type: "Bytes" },
+    to_gte: { __type: "Bytes" },
+    to_in: { __type: "[Bytes!]" },
+    to_lt: { __type: "Bytes" },
+    to_lte: { __type: "Bytes" },
+    to_not: { __type: "Bytes" },
+    to_not_contains: { __type: "Bytes" },
+    to_not_in: { __type: "[Bytes!]" },
+    tokenId: { __type: "BigInt" },
+    tokenId_gt: { __type: "BigInt" },
+    tokenId_gte: { __type: "BigInt" },
+    tokenId_in: { __type: "[BigInt!]" },
+    tokenId_lt: { __type: "BigInt" },
+    tokenId_lte: { __type: "BigInt" },
+    tokenId_not: { __type: "BigInt" },
+    tokenId_not_in: { __type: "[BigInt!]" },
+    transactionHash: { __type: "Bytes" },
+    transactionHash_contains: { __type: "Bytes" },
+    transactionHash_gt: { __type: "Bytes" },
+    transactionHash_gte: { __type: "Bytes" },
+    transactionHash_in: { __type: "[Bytes!]" },
+    transactionHash_lt: { __type: "Bytes" },
+    transactionHash_lte: { __type: "Bytes" },
+    transactionHash_not: { __type: "Bytes" },
+    transactionHash_not_contains: { __type: "Bytes" },
+    transactionHash_not_in: { __type: "[Bytes!]" },
+  },
+  EtchENS_filter: {
+    _change_block: { __type: "BlockChangedFilter" },
+    and: { __type: "[EtchENS_filter]" },
+    id: { __type: "ID" },
+    id_gt: { __type: "ID" },
+    id_gte: { __type: "ID" },
+    id_in: { __type: "[ID!]" },
+    id_lt: { __type: "ID" },
+    id_lte: { __type: "ID" },
+    id_not: { __type: "ID" },
+    id_not_in: { __type: "[ID!]" },
+    name: { __type: "String" },
+    name_contains: { __type: "String" },
+    name_contains_nocase: { __type: "String" },
+    name_ends_with: { __type: "String" },
+    name_ends_with_nocase: { __type: "String" },
+    name_gt: { __type: "String" },
+    name_gte: { __type: "String" },
+    name_in: { __type: "[String!]" },
+    name_lt: { __type: "String" },
+    name_lte: { __type: "String" },
+    name_not: { __type: "String" },
+    name_not_contains: { __type: "String" },
+    name_not_contains_nocase: { __type: "String" },
+    name_not_ends_with: { __type: "String" },
+    name_not_ends_with_nocase: { __type: "String" },
+    name_not_in: { __type: "[String!]" },
+    name_not_starts_with: { __type: "String" },
+    name_not_starts_with_nocase: { __type: "String" },
+    name_starts_with: { __type: "String" },
+    name_starts_with_nocase: { __type: "String" },
+    or: { __type: "[EtchENS_filter]" },
+    owner: { __type: "String" },
+    owner_: { __type: "Wallet_filter" },
+    owner_contains: { __type: "String" },
+    owner_contains_nocase: { __type: "String" },
+    owner_ends_with: { __type: "String" },
+    owner_ends_with_nocase: { __type: "String" },
+    owner_gt: { __type: "String" },
+    owner_gte: { __type: "String" },
+    owner_in: { __type: "[String!]" },
+    owner_lt: { __type: "String" },
+    owner_lte: { __type: "String" },
+    owner_not: { __type: "String" },
+    owner_not_contains: { __type: "String" },
+    owner_not_contains_nocase: { __type: "String" },
+    owner_not_ends_with: { __type: "String" },
+    owner_not_ends_with_nocase: { __type: "String" },
+    owner_not_in: { __type: "[String!]" },
+    owner_not_starts_with: { __type: "String" },
+    owner_not_starts_with_nocase: { __type: "String" },
+    owner_starts_with: { __type: "String" },
+    owner_starts_with_nocase: { __type: "String" },
+    tokenId: { __type: "BigInt" },
+    tokenId_gt: { __type: "BigInt" },
+    tokenId_gte: { __type: "BigInt" },
+    tokenId_in: { __type: "[BigInt!]" },
+    tokenId_lt: { __type: "BigInt" },
+    tokenId_lte: { __type: "BigInt" },
+    tokenId_not: { __type: "BigInt" },
+    tokenId_not_in: { __type: "[BigInt!]" },
   },
   EtchOwnership: {
     __typename: { __type: "String!" },
@@ -5260,7 +5721,6 @@ export const generatedSchema = {
     id: { __type: "Bytes!" },
     newOwner: { __type: "Bytes!" },
     previousOwner: { __type: "Bytes!" },
-    team: { __type: "Team!" },
     transactionHash: { __type: "Bytes!" },
   },
   TeamOwnershipTransferred_filter: {
@@ -5313,27 +5773,6 @@ export const generatedSchema = {
     previousOwner_not: { __type: "Bytes" },
     previousOwner_not_contains: { __type: "Bytes" },
     previousOwner_not_in: { __type: "[Bytes!]" },
-    team: { __type: "String" },
-    team_: { __type: "Team_filter" },
-    team_contains: { __type: "String" },
-    team_contains_nocase: { __type: "String" },
-    team_ends_with: { __type: "String" },
-    team_ends_with_nocase: { __type: "String" },
-    team_gt: { __type: "String" },
-    team_gte: { __type: "String" },
-    team_in: { __type: "[String!]" },
-    team_lt: { __type: "String" },
-    team_lte: { __type: "String" },
-    team_not: { __type: "String" },
-    team_not_contains: { __type: "String" },
-    team_not_contains_nocase: { __type: "String" },
-    team_not_ends_with: { __type: "String" },
-    team_not_ends_with_nocase: { __type: "String" },
-    team_not_in: { __type: "[String!]" },
-    team_not_starts_with: { __type: "String" },
-    team_not_starts_with_nocase: { __type: "String" },
-    team_starts_with: { __type: "String" },
-    team_starts_with_nocase: { __type: "String" },
     transactionHash: { __type: "Bytes" },
     transactionHash_contains: { __type: "Bytes" },
     transactionHash_gt: { __type: "Bytes" },
@@ -5858,6 +6297,16 @@ export const generatedSchema = {
         where: "OrganisationPermission_filter",
       },
     },
+    etchENS: {
+      __type: "[EtchENS!]!",
+      __args: {
+        first: "Int",
+        orderBy: "EtchENS_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        where: "EtchENS_filter",
+      },
+    },
     etchPermissions: {
       __type: "[EtchPermission!]",
       __args: {
@@ -5925,6 +6374,7 @@ export const generatedSchema = {
     OrganisationPermissions_: { __type: "OrganisationPermission_filter" },
     _change_block: { __type: "BlockChangedFilter" },
     and: { __type: "[Wallet_filter]" },
+    etchENS_: { __type: "EtchENS_filter" },
     etchPermissions_: { __type: "EtchPermission_filter" },
     id: { __type: "Bytes" },
     id_contains: { __type: "Bytes" },
@@ -6019,6 +6469,51 @@ export const generatedSchema = {
         skip: "Int",
         subgraphError: "_SubgraphErrorPolicy_!",
         where: "EtchCreated_filter",
+      },
+    },
+    etchENS: { __type: "EtchENS", __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" } },
+    etchENSCreated: {
+      __type: "EtchENSCreated",
+      __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
+    },
+    etchENSCreateds: {
+      __type: "[EtchENSCreated!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "EtchENSCreated_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "EtchENSCreated_filter",
+      },
+    },
+    etchENSTransfer: {
+      __type: "EtchENSTransfer",
+      __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
+    },
+    etchENSTransfers: {
+      __type: "[EtchENSTransfer!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "EtchENSTransfer_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "EtchENSTransfer_filter",
+      },
+    },
+    etchENSs: {
+      __type: "[EtchENS!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "EtchENS_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "EtchENS_filter",
       },
     },
     etchOwnership: {
@@ -6520,6 +7015,51 @@ export const generatedSchema = {
         skip: "Int",
         subgraphError: "_SubgraphErrorPolicy_!",
         where: "EtchCreated_filter",
+      },
+    },
+    etchENS: { __type: "EtchENS", __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" } },
+    etchENSCreated: {
+      __type: "EtchENSCreated",
+      __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
+    },
+    etchENSCreateds: {
+      __type: "[EtchENSCreated!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "EtchENSCreated_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "EtchENSCreated_filter",
+      },
+    },
+    etchENSTransfer: {
+      __type: "EtchENSTransfer",
+      __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
+    },
+    etchENSTransfers: {
+      __type: "[EtchENSTransfer!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "EtchENSTransfer_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "EtchENSTransfer_filter",
+      },
+    },
+    etchENSs: {
+      __type: "[EtchENS!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "EtchENS_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "EtchENS_filter",
       },
     },
     etchOwnership: {
@@ -7069,6 +7609,36 @@ export interface EtchCreated {
   transactionHash: ScalarsEnums["Bytes"];
 }
 
+export interface EtchENS {
+  __typename?: "EtchENS";
+  id: ScalarsEnums["ID"];
+  name: ScalarsEnums["String"];
+  owner: Wallet;
+  tokenId: ScalarsEnums["BigInt"];
+}
+
+export interface EtchENSCreated {
+  __typename?: "EtchENSCreated";
+  blockNumber: ScalarsEnums["BigInt"];
+  blockTimestamp: ScalarsEnums["BigInt"];
+  id: ScalarsEnums["Bytes"];
+  name: ScalarsEnums["String"];
+  to: ScalarsEnums["Bytes"];
+  tokenId: ScalarsEnums["BigInt"];
+  transactionHash: ScalarsEnums["Bytes"];
+}
+
+export interface EtchENSTransfer {
+  __typename?: "EtchENSTransfer";
+  blockNumber: ScalarsEnums["BigInt"];
+  blockTimestamp: ScalarsEnums["BigInt"];
+  from: ScalarsEnums["Bytes"];
+  id: ScalarsEnums["Bytes"];
+  to: ScalarsEnums["Bytes"];
+  tokenId: ScalarsEnums["BigInt"];
+  transactionHash: ScalarsEnums["Bytes"];
+}
+
 export interface EtchOwnership {
   __typename?: "EtchOwnership";
   etch: Etch;
@@ -7410,7 +7980,6 @@ export interface TeamOwnershipTransferred {
   id: ScalarsEnums["Bytes"];
   newOwner: ScalarsEnums["Bytes"];
   previousOwner: ScalarsEnums["Bytes"];
-  team: Team;
   transactionHash: ScalarsEnums["Bytes"];
 }
 
@@ -7486,6 +8055,19 @@ export interface Wallet {
     skip?: Maybe<Scalars["Int"]>;
     where?: Maybe<OrganisationPermission_filter>;
   }) => Maybe<Array<OrganisationPermission>>;
+  etchENS: (args?: {
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<EtchENS_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    where?: Maybe<EtchENS_filter>;
+  }) => Array<EtchENS>;
   etchPermissions: (args?: {
     /**
      * @defaultValue `100`
@@ -7808,6 +8390,138 @@ export interface Query {
     subgraphError?: Maybe<_SubgraphErrorPolicy_>;
     where?: Maybe<EtchCreated_filter>;
   }) => Array<EtchCreated>;
+  etchENS: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<EtchENS>;
+  etchENSCreated: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<EtchENSCreated>;
+  etchENSCreateds: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<EtchENSCreated_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<EtchENSCreated_filter>;
+  }) => Array<EtchENSCreated>;
+  etchENSTransfer: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<EtchENSTransfer>;
+  etchENSTransfers: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<EtchENSTransfer_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<EtchENSTransfer_filter>;
+  }) => Array<EtchENSTransfer>;
+  etchENSs: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<EtchENS_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<EtchENS_filter>;
+  }) => Array<EtchENS>;
   etchOwnership: (args: {
     /**
      * The block at which the query should be executed. Can either be a `{ hash:
@@ -9224,6 +9938,138 @@ export interface Subscription {
     subgraphError?: Maybe<_SubgraphErrorPolicy_>;
     where?: Maybe<EtchCreated_filter>;
   }) => Array<EtchCreated>;
+  etchENS: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<EtchENS>;
+  etchENSCreated: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<EtchENSCreated>;
+  etchENSCreateds: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<EtchENSCreated_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<EtchENSCreated_filter>;
+  }) => Array<EtchENSCreated>;
+  etchENSTransfer: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<EtchENSTransfer>;
+  etchENSTransfers: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<EtchENSTransfer_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<EtchENSTransfer_filter>;
+  }) => Array<EtchENSTransfer>;
+  etchENSs: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<EtchENS_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<EtchENS_filter>;
+  }) => Array<EtchENS>;
   etchOwnership: (args: {
     /**
      * The block at which the query should be executed. Can either be a `{ hash:
@@ -10456,6 +11302,9 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   EtchApproval_orderBy: EtchApproval_orderBy | undefined;
   EtchCommentAdded_orderBy: EtchCommentAdded_orderBy | undefined;
   EtchCreated_orderBy: EtchCreated_orderBy | undefined;
+  EtchENSCreated_orderBy: EtchENSCreated_orderBy | undefined;
+  EtchENSTransfer_orderBy: EtchENSTransfer_orderBy | undefined;
+  EtchENS_orderBy: EtchENS_orderBy | undefined;
   EtchOwnershipTransferred_orderBy: EtchOwnershipTransferred_orderBy | undefined;
   EtchOwnership_orderBy: EtchOwnership_orderBy | undefined;
   EtchPermission_orderBy: EtchPermission_orderBy | undefined;

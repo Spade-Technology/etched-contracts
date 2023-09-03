@@ -1,4 +1,5 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
+import { DashboardHeader } from "@/components/dashboard-header";
 import { DataTableDemo } from "@/components/etches-dashboard-table";
 import { SideBar } from "@/components/sidebar";
 import { Etch, usePaginatedQuery, useQuery } from "@/gqty";
@@ -21,10 +22,9 @@ export default function DashboardPage() {
   return (
     <div className="flex h-screen w-screen bg-white">
       <SideBar />
-      <div className="w-full pl-2 pr-8">
+      <div className="w-full pl-2 pr-3 pt-3">
+        <DashboardHeader />
         <div className="flex flex-col items-center justify-center">
-          <div className="text-3xl font-bold text-white">Dashboard</div>
-          <div className="text-3xl font-bold text-white">Etches</div>
           <DataTableDemo
             data={query.$state.isLoading || query.$state.error || etches[0]?.__typename === undefined ? [] : etches}
           />
