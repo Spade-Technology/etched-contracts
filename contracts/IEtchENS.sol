@@ -26,6 +26,6 @@ abstract contract IEtchENS is IERC721 {
     event EtchENSCreated(
         uint256 indexed tokenId,
         address indexed to,
-        string indexed name
+        string name
     );
 }

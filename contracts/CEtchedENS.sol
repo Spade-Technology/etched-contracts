@@ -16,7 +16,7 @@ contract EtchENS is ERC721, IEtchENS, NodeHandler {
     Counters.Counter private totalSupply;
 
     // Mapping of ENS to its owner
-    mapping(string ens => address wallet) public ensOf;
+    mapping(string ens => address wallet) public walletOf;
 
     // Mapping of ENS to the metadata
     mapping(string ens => SEtchENS metadata) public metadataOf;
@@ -33,7 +33,7 @@ contract EtchENS is ERC721, IEtchENS, NodeHandler {
      */
     constructor(
         address organisationContract
-    ) ERC721("Etches", "ETCH") NodeHandler(organisationContract) {}
+    ) ERC721(".etches", "ens-ETCH") NodeHandler(organisationContract) {}
 
     /**
      * @notice Creates a new Etch ENS, mints it to the specified address
@@ -45,7 +45,7 @@ contract EtchENS is ERC721, IEtchENS, NodeHandler {
         address to,
         string memory name
     ) public virtual override onlyNodes {
-        require(ensOf[name] == address(0), "Etches: ENS already exists");
+        require(walletOf[name] == address(0), "Etches: ENS already exists");
 
         checkENSValidity(name);
 
@@ -54,6 +54,7 @@ contract EtchENS is ERC721, IEtchENS, NodeHandler {
 
         _safeMint(to, tokenId);
 
+        walletOf[name] = to;
         ensOfWallet[to].push(name);
         metadataOf[name] = SEtchENS({
             creator: _msgSender(),

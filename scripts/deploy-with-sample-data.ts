@@ -92,25 +92,25 @@ async function main() {
   //   address: etchContract.address,
   // });
 
-  await run("verify:verify", {
-    address: ensContract.address,
-    constructorArguments: [orgContract.address],
-  });
+  // await run("verify:verify", {
+  //   address: ensContract.address,
+  //   constructorArguments: [orgContract.address],
+  // });
 
-  await run("verify:verify", {
-    address: orgContract.address,
-    constructorArguments: [],
-  });
+  // await run("verify:verify", {
+  //   address: orgContract.address,
+  //   constructorArguments: [],
+  // });
 
-  await run("verify:verify", {
-    address: teamContract.address,
-    constructorArguments: [orgContract.address],
-  });
+  // await run("verify:verify", {
+  //   address: teamContract.address,
+  //   constructorArguments: [orgContract.address],
+  // });
 
-  await run("verify:verify", {
-    address: etchContract.address,
-    constructorArguments: [teamContract.address],
-  });
+  // await run("verify:verify", {
+  //   address: etchContract.address,
+  //   constructorArguments: [teamContract.address],
+  // });
 }
 
   const totalSupply = Number(await etchContract.getTotalSupply());
