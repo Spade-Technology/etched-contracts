@@ -5,8 +5,6 @@ import "./forks/Ownable.sol";
 import "./CSignatureVerifier.sol";
 import "./forks/Context.sol";
 
-import "hardhat/console.sol";
-
 abstract contract NodeHandler is Ownable, SignatureVerifier {
     address private parent;
 
@@ -53,7 +51,7 @@ abstract contract NodeHandler is Ownable, SignatureVerifier {
         Signature memory signature,
         bytes[] memory _calldata
     ) external onlyNodes {
-        EncodedMessage memory message = _checkSignature(signature);
+        EncodedMessage memory message = checkSignature(signature);
 
         // Authorized Node only (0x00 if any node can execute the call)
         require(

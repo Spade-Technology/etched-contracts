@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { etchMainTests } = require("./Etch.test");
+const { etchSigTests } = require("./Signature.local.test");
 
 describe("Etch", () => {
   let teamContract;
@@ -41,14 +42,25 @@ describe("Etch", () => {
       await expect(await etchContract.teams()).to.equal(teamContract.address);
     });
 
-    it("Running external tests on deployed contracts", async () => {
-      etchMainTests({
+    // it("Running external tests on deployed contracts", async () => {
+    //   etchMainTests({
+    //     signers,
+    //     orgContract,
+    //     teamContract,
+    //     etchContract,
+    //     ensContract
+    //   });
+    // });
+
+    it("Running external signature tests on deployed contracts", async () => {
+      etchSigTests({
         signers,
         orgContract,
         teamContract,
         etchContract,
         ensContract
       });
-    });
+      
+    })
   });
 });

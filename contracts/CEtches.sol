@@ -56,11 +56,50 @@ contract Etches is ERC721, IEtches, NodeHandler {
         address to,
         string calldata documentName,
         string calldata ipfsCid
-    ) public virtual override {
+    ) public virtual override returns (uint256) {
         totalSupply.increment();
         uint256 tokenId = totalSupply.current();
 
         _safeMint(to, tokenId, "");
+
+        if (bytes(ipfsCid).length > 0) {
+            metadataOf[tokenId] = (
+                SEtch({
+                    creator: _msgSender(),
+                    documentName: documentName,
+                    ipfsCid: ipfsCid,
+                    commentsCount: 0,
+                    timestamp: block.timestamp
+                })
+            );
+            emit EtchCreated(tokenId, to, ipfsCid, documentName);
+        }
+
+        return tokenId;
+    }
+
+    /**
+     * @notice Set the metadata for an unitialized Etch
+     *
+     * @param tokenId The Etch's ID to set the metadata for
+     * @param documentName The name of the document
+     *
+     * @dev This function can only be called if the user has write permission for the Etch, and the Etch has not been initialized.
+     * @dev This is useful because you may need to get the Etch ID with certainty before uploading the encrypting the rules using lit.
+     */
+    function setMetadata(
+        uint256 tokenId,
+        string calldata documentName,
+        string calldata ipfsCid
+    ) external virtual override {
+        require(
+            hasWritePermission(_msgSender(), tokenId) || isNode(_msgSender()),
+            "ETCH: Not allowed to write this Etch"
+        );
+        require(
+            bytes(metadataOf[tokenId].ipfsCid).length == 0,
+            "ETCH: Metadata already initialized"
+        );
 
         metadataOf[tokenId] = SEtch({
             creator: _msgSender(),
@@ -70,7 +109,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
             timestamp: block.timestamp
         });
 
-        emit EtchCreated(tokenId, to, ipfsCid, documentName);
+        emit EtchCreated(tokenId, _msgSender(), ipfsCid, documentName);
     }
 
     /**

@@ -57,7 +57,7 @@ async function main() {
 
   const network = process.env.HARDHAT_NETWORK || "";
   const exportedContractFile = process.env.EXPORTED_CONTRACT_FILE || "";
-  const exportedContractPath = path.join(__dirname, "../../web", exportedContractFile + network + ".json");
+  const exportedContractPath = path.join(__dirname, "../../web/src/contracts/", exportedContractFile + network + ".json");
 
   console.log("exportedContractPath", exportedContractPath);
   const exportedContract = {
@@ -71,26 +71,26 @@ async function main() {
 
 
   if (network != "hardhat" && network != "") {
-  //   await tenderly.verify({
-  //     name: "EtchENS",
-  //     address: orgContract.address,
-  //   });
+    await tenderly.verify({
+      name: "EtchENS",
+      address: orgContract.address,
+    });
   
 
-  // await tenderly.verify({
-  //   name: "Organisations",
-  //   address: orgContract.address,
-  // });
+  await tenderly.verify({
+    name: "Organisations",
+    address: orgContract.address,
+  });
 
-  // await tenderly.verify({
-  //   name: "Teams",
-  //   address: teamContract.address,
-  // });
+  await tenderly.verify({
+    name: "Teams",
+    address: teamContract.address,
+  });
 
-  // await tenderly.verify({
-  //   name: "Etches",
-  //   address: etchContract.address,
-  // });
+  await tenderly.verify({
+    name: "Etches",
+    address: etchContract.address,
+  });
 
   // await run("verify:verify", {
   //   address: ensContract.address,

@@ -38,10 +38,6 @@ abstract contract Context {
             newContext != address(0),
             "Context: newContext is zero address"
         );
-        require(
-            newContext != _msgSender(),
-            "Context: newContext is current context"
-        );
 
         _setContext(newContext);
         _;

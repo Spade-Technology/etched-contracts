@@ -13,7 +13,7 @@ const EOrgPermissions = {
 };
 
 const DocName = "Fake Doc Name";
-const IPFSCid = "Fake IPFSCid";
+const IPFSCid = "";
 
 async function etchMainTests({ teamContract, orgContract, etchContract, signers, ensContract }) {
   let totalSupply = 0;
