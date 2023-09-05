@@ -1,4 +1,4 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { lit } from "@/lit";
 import { api } from "@/utils/api";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { UploadButton } from "@/utils/uploadthing";
+import { signOut } from "@/utils/hooks/useSignIn";
 
 const chain = "polygon";
 const accessControlConditions = [
@@ -27,11 +28,7 @@ export default function Home() {
   const [file, setFile] = useState({});
   const [anotherFile, setAnotherFile] = useState(true);
 
-  const {
-    mutate,
-    data: ipfsCid,
-    isLoading,
-  } = api.example.postLitDocument.useMutation();
+  const { mutate, data: ipfsCid, isLoading } = api.example.postLitDocument.useMutation();
 
   const sentToLit = async () => {
     await lit.connect();
@@ -60,8 +57,7 @@ export default function Home() {
       ipfsCid: ipfsCid, // This is returned from the above encryption
       litNodeClient: lit.client as any,
     }).catch((e) => {
-      if (e.errorKind == "Validation")
-        alert("You are not authorized to view this document");
+      if (e.errorKind == "Validation") alert("You are not authorized to view this document");
       else alert("Something went wrong");
     });
 
@@ -110,9 +106,7 @@ export default function Home() {
                 >
                   + Change File
                 </button>
-                <p className="text-md mt-5 text-center text-white">
-                  current: {(file as any)?.fileKey?.slice(37)}
-                </p>
+                <p className="text-md mt-5 text-center text-white">current: {(file as any)?.fileKey?.slice(37)}</p>
               </>
             )}
           </div>
@@ -137,8 +131,7 @@ export default function Home() {
           Decrypt
         </button>
         <p className="text-md mt-5 text-center text-white">
-          Current decryption rules: 10 Wei MATIC (0.0₁₇10) in the connected
-          wallet
+          Current decryption rules: 10 Wei MATIC (0.0₁₇10) in the connected wallet
         </p>
       </main>
     </>

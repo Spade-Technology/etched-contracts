@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "apps/web"
+		},
+		{
+			"path": "apps/sol"
+		},
+		{
+			"path": "apps/subgraph"
+		},
+		{
+			"path": "packages"
+		}
+	],
+	"settings": {}
+}

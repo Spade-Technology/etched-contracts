@@ -1,5 +1,5 @@
 import { shortenAddress } from "@/utils/hooks/address";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import LogoLong from "public/icons/etched-long.svg";
 import { Button } from "@/components/ui/button";
@@ -18,22 +18,48 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogoAnimated } from "./icons/logo-long-animated";
+import { signOut } from "@/utils/hooks/useSignIn";
+import { useRouter } from "next/router";
 
 const sideBarElementCn =
   "flex flex-col items-center justify-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700 h-24";
 
+const activeClassName =
+  sideBarElementCn +
+  " !bg-primary-foreground !text-primary before:absolute before:left-0 before:h-24 before:w-8 before:-translate-x-1/2 before:rounded-full before:bg-primary";
+
+enum activePage {
+  HOME,
+  CUSTOMERS,
+  PRODUCTS,
+  SETTINGS,
+}
+
 export const SideBar = () => {
   const { data } = useSession();
+  const router = useRouter();
+
+  const path = router.asPath;
+  const active = path.startsWith("/dashboard")
+    ? path.includes("/settings")
+      ? activePage.SETTINGS
+      : path.includes("/customers")
+      ? activePage.CUSTOMERS
+      : path.includes("/products")
+      ? activePage.PRODUCTS
+      : activePage.HOME
+    : activePage.HOME;
 
   return (
     <aside id="sidebar" className="left-0 top-0 z-40 h-screen w-64 transition-transform" aria-label="Sidebar">
-      <div className="flex h-full flex-col overflow-y-auto px-3 py-4 dark:border-slate-700 dark:bg-slate-900">
+      <div className="flex h-full flex-col overflow-y-auto  py-4 dark:border-slate-700 dark:bg-slate-900">
         <div className="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white">
           <LogoAnimated className="mx-auto" />
         </div>
+
         <ul className="space-y-2 text-sm font-medium">
           <li>
-            <a className={sideBarElementCn}>
+            <a className={active === activePage.HOME ? activeClassName : sideBarElementCn}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="mb-2 h-6 w-6"
@@ -54,7 +80,7 @@ export const SideBar = () => {
             </a>
           </li>
           <li>
-            <a className={sideBarElementCn}>
+            <a className={active === activePage.CUSTOMERS ? activeClassName : sideBarElementCn}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="mb-2 h-6 w-6"
@@ -78,7 +104,7 @@ export const SideBar = () => {
             </a>
           </li>
           <li>
-            <a className={sideBarElementCn}>
+            <a className={active === activePage.PRODUCTS ? activeClassName : sideBarElementCn}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="mb-2 h-6 w-6"
@@ -102,7 +128,7 @@ export const SideBar = () => {
             </a>
           </li>
           <li>
-            <a className={sideBarElementCn}>
+            <a className={active === activePage.SETTINGS ? activeClassName : sideBarElementCn}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="mb-2 h-6 w-6"

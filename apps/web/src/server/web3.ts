@@ -1,7 +1,12 @@
 import { env } from "@/env.mjs";
-import { Address, createWalletClient, http } from "viem";
+import { Address, createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
+
+export const publicClient = createPublicClient({
+  chain: sepolia,
+  transport: http("https://sepolia.infura.io/v3/" + env.INFURA_KEY),
+});
 
 export const walletClient = createWalletClient({
   chain: sepolia,

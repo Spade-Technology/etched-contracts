@@ -52,9 +52,21 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
     CredentialsProvider({
       async authorize(credentials) {
         try {
-          console.log(credentials);
+          if (!credentials) return null;
+
+          console.log({
+            message: credentials.message,
+            signature: credentials.signature,
+          });
+
           // Verify the message
-          const siwe = await verifySiweMessage(credentials, req);
+          const siwe = await verifySiweMessage(
+            {
+              message: credentials.message,
+              signature: credentials.signature,
+            },
+            req
+          );
 
           // If the message is invalid, bad request
           if (!siwe) return null;
@@ -79,6 +91,21 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
         },
         signature: {
           label: "Signature",
+          placeholder: "0x0",
+          type: "text",
+        },
+        blockchainMessage: {
+          label: "BlockchainMessage",
+          placeholder: "0x0",
+          type: "text",
+        },
+        blockchainSignature: {
+          label: "BlockchainSignature",
+          placeholder: "0x0",
+          type: "text",
+        },
+        litAuthSig: {
+          label: "LitSignature",
           placeholder: "0x0",
           type: "text",
         },

@@ -404,64 +404,6 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "encodedMessage",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "messageHash",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bytes",
-            "name": "signature",
-            "type": "bytes"
-          },
-          {
-            "internalType": "address",
-            "name": "signer",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct SignatureVerifier.Signature",
-        "name": "_signature",
-        "type": "tuple"
-      }
-    ],
-    "name": "$_checkSignature",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "blockNumber",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "nodeAddress",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct SignatureVerifier.EncodedMessage",
-        "name": "ret0",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -753,11 +695,6 @@
       {
         "components": [
           {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
             "internalType": "uint256",
             "name": "blockNumber",
             "type": "uint256"
@@ -899,6 +836,59 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "encodedMessage",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "messageHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
+          },
+          {
+            "internalType": "address",
+            "name": "signer",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct SignatureVerifier.Signature",
+        "name": "_signature",
+        "type": "tuple"
+      }
+    ],
+    "name": "checkSignature",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "blockNumber",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "nodeAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct SignatureVerifier.EncodedMessage",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -1280,7 +1270,13 @@
       }
     ],
     "name": "safeMint",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -1395,6 +1391,29 @@
       }
     ],
     "name": "setIndividualPermissions",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "documentName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "ipfsCid",
+        "type": "string"
+      }
+    ],
+    "name": "setMetadata",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

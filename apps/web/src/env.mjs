@@ -39,12 +39,13 @@ export const env = createEnv({
     INFURA_KEY: z.string(),
 
     // Etched Configuration
-    DEPLOYMENT_BLOCK: z.string(),
-    NETWORK: z.string(),
-    NETWORK_ID: z.number(),
+    NEXT_PUBLIC_DEPLOYMENT_BLOCK: z.string(),
+    NEXT_PUBLIC_NETWORK: z.string(),
+    NEXT_PUBLIC_NETWORK_ID: z.number(),
 
     // Etched Node
     ETCHED_NODE_PRIVATE_KEY: z.string(),
+    NEXT_PUBLIC_ETCHED_NODE_ADDRESS: z.string(),
 
     // Etched Configuration
     NEXT_PUBLIC_THEGRAPH_URL: z.string().url(),
@@ -89,12 +90,13 @@ export const env = createEnv({
     INFURA_KEY: process.env.INFURA_KEY,
 
     // Etched Configuration
-    DEPLOYMENT_BLOCK: process.env.DEPLOYMENT_BLOCK,
-    NETWORK: process.env.NETWORK,
-    NETWORK_ID: Number(process.env.NETWORK_ID),
+    NEXT_PUBLIC_DEPLOYMENT_BLOCK: process.env.NEXT_PUBLIC_DEPLOYMENT_BLOCK,
+    NEXT_PUBLIC_NETWORK: process.env.NEXT_PUBLIC_NETWORK,
+    NEXT_PUBLIC_NETWORK_ID: Number(process.env.NEXT_PUBLIC_NETWORK_ID),
 
     // Etched Node
     ETCHED_NODE_PRIVATE_KEY: process.env.ETCHED_NODE_PRIVATE_KEY,
+    NEXT_PUBLIC_ETCHED_NODE_ADDRESS: process.env.NEXT_PUBLIC_ETCHED_NODE_ADDRESS,
 
     // Etched Configuration
     NEXT_PUBLIC_THEGRAPH_URL: process.env.NEXT_PUBLIC_THEGRAPH_URL,

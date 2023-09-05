@@ -2,15 +2,12 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "@/server/api/trpc";
 
 import { TRPCError } from "@trpc/server";
-import { readContract } from "@wagmi/core";
+import { readContract, waitForTransaction } from "@wagmi/core";
 import { contracts, currentNetwork, currentNetworkId } from "@/contracts";
 import ENSAbi from "@/contracts/abi/EtchENS.json";
-import { config, publicClient } from "@/utils/wagmi";
 
-import { Address, createClient, writeContract } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { env } from "@/env.mjs";
 import { walletClient } from "@/server/web3";
+import { formatError } from "../nodeErrorFormatter";
 
 export const ensRouter = createTRPCRouter({
   requestEtchedENS: protectedProcedure.input(z.object({ ens: z.string() })).mutation(
@@ -30,19 +27,25 @@ export const ensRouter = createTRPCRouter({
         args: [address],
       });
 
-      if (!namesOfUser || namesOfUser.length > 0)
-        throw new TRPCError({ code: "FORBIDDEN", message: "You already have an ENS name" });
+      // if (!namesOfUser || namesOfUser.length > 0)
+      //   throw new TRPCError({ code: "FORBIDDEN", message: "You already have an ENS name" });
 
-      console.log("AUTHORIZE ENS", ens, address, ".. sending transaction");
+      const tx = await walletClient
+        .writeContract({
+          address: contracts.ENS,
+          abi: ENSAbi,
+          functionName: "safeMint",
+          args: [address, ens],
+        })
+        .catch(formatError);
 
-      const tx = await walletClient.writeContract({
-        address: contracts.ENS,
-        abi: ENSAbi,
-        functionName: "safeMint",
-        args: [address, ens],
+      if (typeof tx === "object" && "error" in tx) throw new TRPCError({ code: "BAD_REQUEST", message: tx.message });
+
+      await waitForTransaction({
+        hash: tx,
       });
 
-      console.log(tx);
+      return tx;
     }
   ),
 });

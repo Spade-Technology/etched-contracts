@@ -28,17 +28,6 @@ export default function DashboardPage() {
           <DataTableDemo
             data={query.$state.isLoading || query.$state.error || etches[0]?.__typename === undefined ? [] : etches}
           />
-          {/* <div className="flex-grid flex">
-              {query
-                .etches({
-                  first: 10,
-                })
-                .map((etch) => (
-                  <div className="flex flex-col items-center justify-center" key={etch.id}>
-                    {etch.id}
-                  </div>
-                ))}
-            </div> */}
         </div>
       </div>
     </div>

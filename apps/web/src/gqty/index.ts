@@ -97,6 +97,7 @@ export const {
   defaults: {
     // Enable Suspense, you can override this option for each hook.
     suspense: true,
+    staleWhileRevalidate: true,
   },
 });
 
