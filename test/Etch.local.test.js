@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { etchMainTests } = require("./Etch.test");
-const { etchSigTests } = require("./Signature.local.test");
+const { etchSigTests } = require("./Signature.test");
 
 describe("Etch", () => {
   let teamContract;

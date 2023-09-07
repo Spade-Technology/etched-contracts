@@ -19,6 +19,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers,
   let totalSupply = 0;
   let totalSupplyTeam = 0;
   let totalSupplyOrg = 0;
+  let totalSupplyENS = 0;
 
   it("Get the amount of Etches minted", async () => {
     totalSupply = await etchContract.getTotalSupply();
