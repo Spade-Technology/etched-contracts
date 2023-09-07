@@ -12,8 +12,6 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 import "./Context.sol";
 
-import "hardhat/console.sol";
-
 /**
  * NOTE: the only differences are listed below:
  * - `_ownerOf` is internal instead of private, this is so that it is reachable from the "Etches" contract

@@ -7,8 +7,6 @@ import "./forks/ERC721.sol";
 import "./CNodeHandler.sol";
 import "./IEtchENS.sol";
 
-import "hardhat/console.sol";
-
 contract EtchENS is ERC721, IEtchENS, NodeHandler {
     using Counters for Counters.Counter;
 

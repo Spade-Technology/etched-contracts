@@ -6,10 +6,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "./forks/ERC721.sol";
 import "./ITeams.sol";
 import "./IEtches.sol";
-
 import "./CNodeHandler.sol";
-
-import "hardhat/console.sol";
 
 contract Etches is ERC721, IEtches, NodeHandler {
     using Counters for Counters.Counter;
