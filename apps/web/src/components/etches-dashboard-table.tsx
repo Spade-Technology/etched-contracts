@@ -31,6 +31,9 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { shortenAddress } from "@/utils/hooks/address";
 import { CreateEtchButton } from "./create-etch-button";
+import { Loader, Loader2 } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -57,7 +60,9 @@ export const columns: EtchColumnDef[] = [
     accessorKey: "tokenId",
     header: "ID",
     headerName: "ID",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("tokenId")}</div>,
+    cell: ({ row }) => {
+      return <div className="capitalize">{row.getValue("tokenId") ?? <Skeleton className="h-3 w-3" />}</div>;
+    },
   },
   {
     accessorKey: "documentName",
@@ -70,14 +75,27 @@ export const columns: EtchColumnDef[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("documentName")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}</div>,
   },
   {
     accessorKey: "createdAt",
     headerName: "Created At",
-    header: () => <div className="text-right">Created At</div>,
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        Created At
+        <CaretSortIcon className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
-      return <div className="text-right font-medium">{dayjs().to(dayjs(Number(row.getValue("createdAt")) * 1000))}</div>;
+      return (
+        <div className="text-left font-medium">
+          {row.getValue("createdAt") ? (
+            dayjs().to(dayjs(Number(row.getValue("createdAt")) * 1000))
+          ) : (
+            <Skeleton className="h-3 w-6" />
+          )}
+        </div>
+      );
     },
   },
   {
@@ -87,10 +105,23 @@ export const columns: EtchColumnDef[] = [
     cell: ({ row }) => {
       const ownership: EtchOwnership = row.getValue("ownership");
 
-      if (ownership.team) return <div className="text-right font-medium">team {ownership.team.teamId}</div>;
+      if (ownership?.team)
+        return (
+          <Link href={`/dashboard/teams/${ownership?.team?.teamId}`}>
+            <div className="cursor-pointer text-right font-medium hover:underline">team {ownership?.team?.teamId}</div>
+          </Link>
+        );
       else
         return (
-          <div className="text-right font-medium">{ownership.owner?.id && shortenAddress({ address: ownership.owner?.id })}</div>
+          <Link href={`/dashboard/users/${ownership?.owner?.id}`}>
+            <div className="cursor-pointer text-right font-medium hover:underline">
+              {ownership?.owner?.id ? (
+                ownership?.owner?.etchENS({ first: 1 })[0]?.name ?? shortenAddress({ address: ownership?.owner?.id })
+              ) : (
+                <Skeleton className="ml-auto h-3 w-12" />
+              )}
+            </div>
+          </Link>
         );
     },
   },
@@ -112,9 +143,6 @@ export const columns: EtchColumnDef[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)}>Copy Etch ID</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View Etch</DropdownMenuItem>
-              <DropdownMenuItem>View Etcher</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -123,7 +151,7 @@ export const columns: EtchColumnDef[] = [
   },
 ];
 
-export function DataTableDemo({ data = [] }: { data: Etch[] }) {
+export function DataTableDemo({ data = [], isLoading }: { data: Etch[]; isLoading?: boolean }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -210,9 +238,17 @@ export function DataTableDemo({ data = [] }: { data: Etch[] }) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <div className="flex items-center justify-center">
+                    <Loader2 className="animate-spin text-primary" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow className="hover:bg-slate-50" key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}

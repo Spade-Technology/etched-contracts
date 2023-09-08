@@ -2,9 +2,6 @@ import Benefits from "@/components/pages/home/benefits";
 import HomeInfo from "@/components/pages/home/homeInfo";
 import Footer from "@/components/pages/shared/footer";
 import Header from "@/components/pages/shared/header";
-import { Icons } from "@/components/ui/icons";
-import Image from "next/image";
-import ForwardArrow from "public/icons/forward-arrow.svg";
 
 const Home = () => {
   return (

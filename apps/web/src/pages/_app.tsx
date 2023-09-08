@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "@/styles/globals.css";
 import { api } from "@/utils/api";
 import { config } from "@/utils/wagmi";
+import { ClerkProvider } from "@clerk/nextjs";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
@@ -12,8 +13,10 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   return (
     <WagmiConfig config={config}>
       <SessionProvider session={session}>
-        <Component {...pageProps} />
-        <Toaster />
+        <ClerkProvider {...pageProps}>
+          <Component {...pageProps} />
+          <Toaster />
+        </ClerkProvider>
       </SessionProvider>
     </WagmiConfig>
   );
