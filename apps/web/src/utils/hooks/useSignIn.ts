@@ -9,11 +9,14 @@ import { getWalletClient, signMessage } from "@wagmi/core";
 import { parseAbi } from "abitype";
 import { lit } from "@/lit";
 import { walletClientToProviderAndSigner } from "../wagmi";
+<<<<<<< HEAD
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import { useAuth, useSession } from "@clerk/nextjs";
 import { KERNEL_ACCOUNT_SUFFIX } from "@/contracts/patchwallet/seaport copy";
 import { formUserIdAndSuffix, getBaseAccountAddress } from "../patchWalletHelper";
+=======
+>>>>>>> dc3c870 (followup)
 
 export function signOut() {
   localStorage.clear();
@@ -76,6 +79,7 @@ export const useSignIn = () => {
     setIsLoading(false);
   };
 
+<<<<<<< HEAD
   const generateSignatureUsingPatch = async (data: string) => {
     const token = await getToken();
 
@@ -95,6 +99,24 @@ export const useSignIn = () => {
       isPatchWallet,
     }: { addressOverride?: string; chainIdOverride?: number; isPatchWallet?: boolean } = {}
   ) => {
+=======
+  const logInUsingClerk = async (userId: string, userToken: string, data: string) => {
+    const response = await fetch("https://paymagicapi.com/v1/kernel/tx", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer {{access_token}}",
+      },
+      body: JSON.stringify({
+        userId: userId + ":" + (await getToken()),
+        chain: "matic",
+        data,
+      }),
+    });
+  };
+
+  const regenerateAuthSig = async (_expiration?: string) => {
+>>>>>>> dc3c870 (followup)
     const expiration_time = 60 * 60 * 24 * 7; // 7 days
     const expiration_date = new Date(Date.now() + expiration_time * 1000);
     const expiration = _expiration ?? expiration_date.toISOString();
@@ -110,6 +132,7 @@ export const useSignIn = () => {
 
     if (signature && new Date(expirationDateString) > new Date()) return signature;
 
+<<<<<<< HEAD
     // -- 1. prepare 'sign-in with ethereum' message
     const preparedMessage = {
       domain: globalThis.location.host,
@@ -153,9 +176,25 @@ export const useSignIn = () => {
           secretKey: naclUtil.encodeBase64(commsKeyPair.secretKey),
         })
       );
+=======
+    const walletClient = await getWalletClient({ chainId: chain!.id });
+
+    const authSig = await LitJsSdk.ethConnect.signAndSaveAuthMessage({
+      web3: walletClientToProviderAndSigner(walletClient!, chain!).provider,
+      account: address!.toLowerCase(),
+      chainId: chain!.id,
+      uri: window.location.origin,
+      expiration,
+      resources: undefined,
+    });
+>>>>>>> dc3c870 (followup)
 
     return authSig;
   };
 
+<<<<<<< HEAD
   return { isLoading, logIn, regenerateAuthSig, LoginUsingPatch };
+=======
+  return { isLoading, logIn, regenerateAuthSig };
+>>>>>>> dc3c870 (followup)
 };
