@@ -26,7 +26,8 @@ declare module "next-auth" {
 }
 
 export async function verifySiweMessage(credentials: Record<"message" | "signature", string> | undefined, req: IncomingMessage) {
-  const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
+  const siwe = new SiweMessage(credentials!.message);
+  console.log(siwe);
 
   // Make sure the domain matches
   let nextAuthHost = "";
@@ -53,11 +54,6 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
       async authorize(credentials) {
         try {
           if (!credentials) return null;
-
-          console.log({
-            message: credentials.message,
-            signature: credentials.signature,
-          });
 
           // Verify the message
           const siwe = await verifySiweMessage(
@@ -101,11 +97,6 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
         },
         blockchainSignature: {
           label: "BlockchainSignature",
-          placeholder: "0x0",
-          type: "text",
-        },
-        litAuthSig: {
-          label: "LitSignature",
           placeholder: "0x0",
           type: "text",
         },

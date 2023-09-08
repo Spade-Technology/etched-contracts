@@ -16,10 +16,7 @@ import {
   TeamCreated,
   TeamTransfer,
   TeamTransferToOrganisation,
-  TeamOwnership,
-  EtchOwnership,
-  Team,
-  TeamPermission,
+
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
 

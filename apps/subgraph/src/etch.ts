@@ -4,6 +4,7 @@ import {
   ApprovalForAll as ApprovalForAllEvent,
   CommentAdded as CommentAddedEvent,
   EtchCreated as EtchCreatedEvent,
+  EtchMetadataUpdated,
   EtchTransferedToTeam as EtchTransferedToTeamEvent,
   InvididualPermissionsUpdated as InvididualPermissionsUpdatedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
@@ -18,6 +19,7 @@ import {
   EtchCreated,
   EtchTransferedToTeam,
   EtchPermissionsUpdated,
+
   EtchOwnershipTransferred,
   EtchTransfer,
   Etch,
@@ -173,6 +175,19 @@ export function handleInvididualPermissionsUpdated(event: InvididualPermissionsU
   etchPermission.save();
 }
 
+export function handleEtchMetadataUpdated(event: EtchMetadataUpdated): void {
+  const etchId = getEtchId(EID.Etch, event.params.tokenId);
+
+  // Update the Etch Entity
+  let etch = Etch.load(etchId);
+  if (etch == null) etch = new Etch(etchId);
+
+  etch.ipfsCid = event.params.ipfsCid;
+  etch.documentName = event.params.documentName;
+
+  etch.save();
+}
+
 export function handleTransfer(event: TransferEvent): void {
   const entity = new EtchTransfer(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.from = event.params.from;
@@ -194,7 +209,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   etchOwnership.unset("team");
   etchOwnership.owner = event.params.to;
-  etchOwnership.etch = entity.etch;
+  etchOwnership.etch = getEtchId(EID.Etch, event.params.tokenId);
 
   etchOwnership.save();
 }

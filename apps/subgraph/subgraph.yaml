@@ -6,9 +6,9 @@ dataSources:
     name: Etch
     network: sepolia
     source:
-      address: "0x6CeE6437F532c046245AEF6Fd8CA3e89D9F42409"
+      address: "0x37175B27226A2635915222185dc438b2c271F15A"
       abi: Etch
-      startBlock: 4220392
+      startBlock: 4229480
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -22,6 +22,7 @@ dataSources:
         - InvididualPermissionsUpdated
         - OwnershipTransferred
         - Transfer
+        - EtchMetadataUpdated
       abis:
         - name: Etch
           file: ./abis/Etch.json
@@ -44,14 +45,16 @@ dataSources:
           handler: handleTransfer
         - event: TeamPermissionsUpdated(indexed uint256,indexed uint256,uint8)
           handler: handleTeamPermissionsUpdated
+        - event: EtchMetadataUpdated(indexed uint256,string,string)
+          handler: handleEtchMetadataUpdated
       file: ./src/etch.ts
   - kind: ethereum
     name: Team
     network: sepolia
     source:
-      address: "0x5B355D7cCEe63089954a90d07f913173AC1D9d38"
+      address: "0x5C3D0d3d8AFEd1337f05C402CfB51902f236F678"
       abi: Team
-      startBlock: 4220392
+      startBlock: 4229480
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -87,9 +90,9 @@ dataSources:
     name: Organisation
     network: sepolia
     source:
-      address: "0xB48e186586741103203929AfD67A55574a392b20"
+      address: "0xaB3E270A929d86A4871BB1b639dB1E7DdCDDD479"
       abi: Organisation
-      startBlock: 4220392
+      startBlock: 4229480
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -122,9 +125,9 @@ dataSources:
     name: EtchENS
     network: sepolia
     source:
-      address: "0x333C42E010bBE84bA09F8134B723111e3bbDc459"
+      address: "0x303A17451071ECe56E301920EbAF2259Ec5e5C00"
       abi: EtchENS
-      startBlock: 4220392
+      startBlock: 4229480
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

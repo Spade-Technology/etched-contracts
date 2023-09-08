@@ -24,6 +24,9 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { useUploadThing } from "@/utils/uploadthing";
 import { useAccount } from "wagmi";
 import { toast } from "./ui/use-toast";
+import auth from "@/pages/api/auth/[...nextauth]";
+import { useSignIn } from "@/utils/hooks/useSignIn";
+import { useQuery } from "@/gqty";
 
 const formSchema = z.object({
   etchTitle: z.string(),
@@ -41,12 +44,17 @@ export const CreateEtchButton = () => {
   const { mutateAsync: mintAsync, isLoading: mintLoading } = api.etch.mintEtch.useMutation();
   const { mutateAsync: encryptAsync, isLoading: encryptLoading } = api.etch.uploadAndEncrypt.useMutation();
   const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.setMetadata.useMutation();
-  const { address } = useAccount();
-  const { startUpload, isUploading } = useUploadThing("EtchUpload");
+  const { regenerateAuthSig } = useSignIn();
+  const [state, setStatus] = React.useState("");
+  const { startUpload, isUploading } = useUploadThing("EtchUpload", {
+    onUploadProgress: (progress) => setStatus(`Uploading file... (${progress}%)`),
+  });
+  const { $refetch, etches } = useQuery({});
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
+
     defaultValues: {
       etchTitle: "",
       etchDescription: "",
@@ -56,38 +64,65 @@ export const CreateEtchButton = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain: currentNetwork });
+    try {
+      setStatus("generating signatures...");
+      const authSig = await regenerateAuthSig();
 
-    const etchId = await mintAsync({
-      fileName: data.etchTitle,
-      fileDescription: data.etchDescription,
+      setStatus("minting etch...");
+      const etchId = await mintAsync({
+        fileName: data.etchTitle,
+        fileDescription: data.etchDescription,
 
-      // If the IpfsCid is empty, it can be set later.
-      ipfsCid: "",
-    });
+        // If the IpfsCid is empty, it can be set later.
+        ipfsCid: "",
+      });
 
-    const uploaded = await startUpload([data.etchFile]);
+      setStatus("Uploading file... (0%)");
+      const uploaded = await startUpload([data.etchFile]);
 
-    if (!uploaded || !uploaded[0])
-      return toast({
-        title: "Upload failed",
+      if (!uploaded || !uploaded[0])
+        return toast({
+          title: "Upload failed",
+          description: "Please try again",
+          variant: "destructive",
+        });
+
+      setStatus("encrypting & uploading file to IPFS...");
+      const { ipfsCid } = await encryptAsync({
+        etchId: etchId.toString(),
+        fileUrl: uploaded[0].fileUrl,
+        authSig,
+      });
+
+      setStatus("updating metadata...");
+      await updateAsync({
+        etchId: etchId.toString(),
+        fileName: data.etchTitle,
+        ipfsCid,
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+      });
+
+      setStatus("refreshing etches...");
+
+      await $refetch(true);
+
+      toast({
+        title: "Etch created",
+        description: "Your etch has been created",
+        variant: "success",
+      });
+
+      setStatus("");
+    } catch (e) {
+      console.log(e);
+      toast({
+        title: "Something went wrong",
         description: "Please try again",
         variant: "destructive",
       });
-
-    const { ipfsCid } = await encryptAsync({
-      etchId: etchId.toString(),
-      fileUrl: uploaded[0].fileUrl,
-      authSig,
-    });
-
-    await updateAsync({
-      etchId: etchId.toString(),
-      fileName: data.etchTitle,
-      ipfsCid,
-      blockchainSignature: localStorage.getItem("blockchainSignature")!,
-      blockchainMessage: localStorage.getItem("blockchainMessage")!,
-    });
+      setStatus("");
+    }
   };
 
   useEffect(() => {
@@ -96,6 +131,8 @@ export const CreateEtchButton = () => {
         iframeRef.current?.contentWindow?.document?.body &&
         (iframeRef.current.contentWindow.document.body.style.backgroundColor = "transparent");
   }, [fileBlobUrl]);
+
+  const isLoading = mintLoading || updateLoading || encryptLoading || isUploading;
 
   return (
     <AlertDialog>
@@ -119,7 +156,7 @@ export const CreateEtchButton = () => {
                       <FormItem>
                         <FormLabel>Public Etch Title</FormLabel>
                         <FormControl>
-                          <Input id="etchTitle" placeholder="Enter etch title" {...field} />
+                          <Input disabled={isLoading} id="etchTitle" placeholder="Enter etch title" {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -131,7 +168,7 @@ export const CreateEtchButton = () => {
                       <FormItem>
                         <FormLabel>Public Etch Description (currently not in use)</FormLabel>
                         <FormControl>
-                          <Input id="etchDescription" placeholder="Enter etch description" {...field} />
+                          <Input disabled={isLoading} id="etchDescription" placeholder="Enter etch description" {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -147,6 +184,7 @@ export const CreateEtchButton = () => {
                             type="file"
                             id="etchFile"
                             multiple={false}
+                            disabled={isLoading}
                             onChange={(event) => {
                               if (event.target.files?.[0]) {
                                 field.onChange(event.target.files?.[0]);
@@ -174,7 +212,7 @@ export const CreateEtchButton = () => {
                           <FormDescription>Choose whether your etch is public or private.</FormDescription>
                         </div>
                         <FormControl>
-                          <Switch checked={field.value} onCheckedChange={field.onChange} />
+                          <Switch disabled={isLoading} checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -188,9 +226,9 @@ export const CreateEtchButton = () => {
                 )}
               </div>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <Button isLoading={mintLoading || updateLoading || encryptLoading || isUploading} type="submit">
-                  Create
+                <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+                <Button isLoading={isLoading} type="submit">
+                  {state === "" ? "Create Etch" : state}
                 </Button>
               </AlertDialogFooter>
             </form>
