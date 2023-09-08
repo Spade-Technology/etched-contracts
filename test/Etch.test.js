@@ -21,14 +21,17 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers,
   let totalSupplyOrg = 0;
   let totalSupplyENS = 0;
 
-  it("Get the amount of Etches minted", async () => {
-    totalSupply = await etchContract.getTotalSupply();
+  describe("Initating", async () => {
 
-    totalSupplyTeam = await teamContract.getNumberOfTeamsCreated();
+    it("Get the amount of Etches minted", async () => {
+      totalSupply = parseInt(await etchContract.getTotalSupply());
 
-    totalSupplyOrg = await orgContract.getNumberOfOrganisationsCreated();
+      totalSupplyTeam = parseInt(await teamContract.getNumberOfTeamsCreated());
 
-    totalSupplyENS = await ensContract.getTotalSupply();
+      totalSupplyOrg = parseInt(await orgContract.getNumberOfOrganisationsCreated());
+
+      totalSupplyENS = parseInt(await ensContract.getTotalSupply());
+    });
   });
 
   describe("Should be able to mint a new ENS", async () => {

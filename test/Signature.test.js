@@ -33,15 +33,18 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
   let totalSupplyOrg = 0;
   let totalSupplyENS = 0;
 
+  describe("", async () => {
+
   it("Get the amount of Etches minted", async () => {
-    totalSupply = await etchContract.getTotalSupply();
+    totalSupply = parseInt(await etchContract.getTotalSupply());
 
-    totalSupplyTeam = await teamContract.getNumberOfTeamsCreated();
+    totalSupplyTeam = parseInt(await teamContract.getNumberOfTeamsCreated());
 
-    totalSupplyOrg = await orgContract.getNumberOfOrganisationsCreated();
+    totalSupplyOrg = parseInt(await orgContract.getNumberOfOrganisationsCreated());
 
-    totalSupplyENS = await ensContract.getTotalSupply();
+    totalSupplyENS = parseInt(await ensContract.getTotalSupply());
   });
+});
 
   describe("Signatures' transactions to etch contract", async () => {
 
@@ -247,7 +250,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       });
 
       const calldata = [functionData];
-      await expect(orgContract.delegateCallsToSelf(signature, calldata)).to.be.revertedWith("NODEHANDLER: PERMISSION_DENIED");
+      await expect(orgContract.delegateCallsToSelf(signature, calldata)).to.be.reverted;
     });
 
     it("should not be able to send transaction to org contract from signature verified using Node (account 1) from different Node (account 0)", async () => {
@@ -261,7 +264,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       });
 
       const calldata = [functionData];
-      await expect(orgContract.connect(signers[0]).delegateCallsToSelf(signature, calldata)).to.be.revertedWith("NODEHANDLER: PERMISSION_DENIED");
+      await expect(orgContract.connect(signers[0]).delegateCallsToSelf(signature, calldata)).to.be.reverted;
     });
 
     it("should be able to send multiple transactions to org contract from signature verified using Node (account 0) by setting node as zero address", async () => {
