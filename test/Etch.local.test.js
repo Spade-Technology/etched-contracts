@@ -42,15 +42,15 @@ describe("Etch", () => {
       await expect(await etchContract.teams()).to.equal(teamContract.address);
     });
 
-    // it("Running external tests on deployed contracts", async () => {
-    //   etchMainTests({
-    //     signers,
-    //     orgContract,
-    //     teamContract,
-    //     etchContract,
-    //     ensContract
-    //   });
-    // });
+    it("Running external tests on deployed contracts", async () => {
+      etchMainTests({
+        signers,
+        orgContract,
+        teamContract,
+        etchContract,
+        ensContract
+      });
+    });
 
     it("Running external signature tests on deployed contracts", async () => {
       etchSigTests({

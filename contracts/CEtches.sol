@@ -59,7 +59,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
 
         _safeMint(to, tokenId, "");
 
-        if (bytes(ipfsCid).length > 0) {
+        if (bytes(ipfsCid).length > 0)
             metadataOf[tokenId] = (
                 SEtch({
                     creator: _msgSender(),
@@ -69,8 +69,8 @@ contract Etches is ERC721, IEtches, NodeHandler {
                     timestamp: block.timestamp
                 })
             );
-            emit EtchCreated(tokenId, to, ipfsCid, documentName);
-        }
+
+        emit EtchCreated(tokenId, to, ipfsCid, documentName);
 
         return tokenId;
     }
@@ -106,7 +106,7 @@ contract Etches is ERC721, IEtches, NodeHandler {
             timestamp: block.timestamp
         });
 
-        emit EtchCreated(tokenId, _msgSender(), ipfsCid, documentName);
+        emit EtchMetadataUpdated(tokenId, ipfsCid, documentName);
     }
 
     /**

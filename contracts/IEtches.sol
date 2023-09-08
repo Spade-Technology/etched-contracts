@@ -32,6 +32,11 @@ abstract contract IEtches is IERC721 {
         string ipfsCid,
         string documentName
     );
+    event EtchMetadataUpdated(
+        uint256 indexed tokenId,
+        string ipfsCid,
+        string documentName
+    );
     event EtchTransferedToTeam(
         uint256 indexed tokenId,
         address indexed from,

@@ -70,47 +70,53 @@ async function main() {
   fs.writeFileSync(exportedContractPath, JSON.stringify(exportedContract));
 
 
+
+
   if (network != "hardhat" && network != "") {
-    await tenderly.verify({
-      name: "EtchENS",
-      address: orgContract.address,
-    });
+  //   await tenderly.verify({
+  //     name: "EtchENS",
+  //     address: orgContract.address,
+  //   });
   
 
-  await tenderly.verify({
-    name: "Organisations",
-    address: orgContract.address,
-  });
-
-  await tenderly.verify({
-    name: "Teams",
-    address: teamContract.address,
-  });
-
-  await tenderly.verify({
-    name: "Etches",
-    address: etchContract.address,
-  });
-
-  // await run("verify:verify", {
-  //   address: ensContract.address,
-  //   constructorArguments: [orgContract.address],
-  // });
-
-  // await run("verify:verify", {
+  // await tenderly.verify({
+  //   name: "Organisations",
   //   address: orgContract.address,
-  //   constructorArguments: [],
   // });
 
-  // await run("verify:verify", {
+  // await tenderly.verify({
+  //   name: "Teams",
   //   address: teamContract.address,
-  //   constructorArguments: [orgContract.address],
   // });
 
-  // await run("verify:verify", {
+  // await tenderly.verify({
+  //   name: "Etches",
   //   address: etchContract.address,
-  //   constructorArguments: [teamContract.address],
   // });
+
+  const  sleep = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  sleep(1000);
+
+  await run("verify:verify", {
+    address: ensContract.address,
+    constructorArguments: [orgContract.address],
+  });
+
+  await run("verify:verify", {
+    address: orgContract.address,
+    constructorArguments: [],
+  });
+
+  await run("verify:verify", {
+    address: teamContract.address,
+    constructorArguments: [orgContract.address],
+  });
+
+  await run("verify:verify", {
+    address: etchContract.address,
+    constructorArguments: [teamContract.address],
+  });
 }
 
   const totalSupply = Number(await etchContract.getTotalSupply());
