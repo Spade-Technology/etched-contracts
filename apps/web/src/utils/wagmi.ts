@@ -1,11 +1,12 @@
 import { currentNetwork, currentNetworkId } from "@/contracts";
 import { providers } from "ethers";
 import { HttpTransport, PublicClient } from "viem";
-import { Chain, WalletClient, configureChains, createConfig, sepolia } from "wagmi";
+import { Chain, WalletClient, configureChains, createConfig } from "wagmi";
+import { arbitrumGoerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
-export const currentChainClient = sepolia;
-export const { chains, publicClient, webSocketPublicClient } = configureChains([currentChainClient], [publicProvider()]);
+export const currentChain = arbitrumGoerli;
+export const { chains, publicClient, webSocketPublicClient } = configureChains([currentChain], [publicProvider()]);
 
 export const config = createConfig({
   autoConnect: true,

@@ -9,6 +9,11 @@ import { getWalletClient, signMessage } from "@wagmi/core";
 import { parseAbi } from "abitype";
 import { lit } from "@/lit";
 import { walletClientToProviderAndSigner } from "../wagmi";
+import nacl from "tweetnacl";
+import naclUtil from "tweetnacl-util";
+import { useAuth, useSession } from "@clerk/nextjs";
+import { KERNEL_ACCOUNT_SUFFIX } from "@/contracts/patchwallet/seaport copy";
+import { formUserIdAndSuffix, getBaseAccountAddress } from "../patchWalletHelper";
 
 export function signOut() {
   localStorage.clear();
@@ -21,8 +26,23 @@ export const useSignIn = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
+  const { getToken, isLoaded, userId, actor } = useAuth();
+  const { session } = useSession();
+  const LoginUsingPatch = async () => {
+    if (!blockNumber) return;
 
-  const logIn = async () => {
+    setIsLoading(true);
+
+    const address = await getBaseAccountAddress("email", session?.user.primaryEmailAddress?.emailAddress!);
+
+    console.log(address);
+
+    // const authSig = await generateSignatureUsingPatch(address);
+
+    // console.log(authSig);
+  };
+
+  const logIn = async ({}) => {
     try {
       if (!blockNumber) return;
 
@@ -56,22 +76,25 @@ export const useSignIn = () => {
     setIsLoading(false);
   };
 
-  const logInUsingClerk = async (userId: string, userToken: string, data: string) => {
-    const response = await fetch("https://paymagicapi.com/v1/kernel/tx", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer {{access_token}}",
-      },
-      body: JSON.stringify({
-        userId: userId + ":" + (await getToken()),
-        chain: "matic",
-        data,
-      }),
-    });
+  const generateSignatureUsingPatch = async (data: string) => {
+    const token = await getToken();
+
+    if (!token) throw new Error("No token");
+    if (!userId) throw new Error("No user id");
+
+    const json = await response.json();
+
+    console.log(json);
   };
 
-  const regenerateAuthSig = async (_expiration?: string) => {
+  const regenerateAuthSig = async (
+    _expiration?: string,
+    {
+      addressOverride,
+      chainIdOverride,
+      isPatchWallet,
+    }: { addressOverride?: string; chainIdOverride?: number; isPatchWallet?: boolean } = {}
+  ) => {
     const expiration_time = 60 * 60 * 24 * 7; // 7 days
     const expiration_date = new Date(Date.now() + expiration_time * 1000);
     const expiration = _expiration ?? expiration_date.toISOString();
@@ -87,19 +110,52 @@ export const useSignIn = () => {
 
     if (signature && new Date(expirationDateString) > new Date()) return signature;
 
-    const walletClient = await getWalletClient({ chainId: chain!.id });
+    // -- 1. prepare 'sign-in with ethereum' message
+    const preparedMessage = {
+      domain: globalThis.location.host,
+      address: addressOverride ?? address,
+      version: "1",
+      chainId: chainIdOverride ?? chain!.id,
+      expirationTime: expiration,
+      uri: globalThis.location.href,
+    };
 
-    const authSig = await LitJsSdk.ethConnect.signAndSaveAuthMessage({
-      web3: walletClientToProviderAndSigner(walletClient!, chain!).provider,
-      account: address!.toLowerCase(),
-      chainId: chain!.id,
-      uri: window.location.origin,
-      expiration,
-      resources: undefined,
-    });
+    const message = new SiweMessage(preparedMessage);
+    const body = message.prepareMessage();
+
+    // -- 2. sign the message
+    let signedResult: string | undefined;
+    if (isPatchWallet) {
+      // Sign with PatchWallet
+      generateSignatureUsingPatch(body);
+    } else {
+      signedResult = await signMessageAsync({ message: body });
+    }
+
+    if (!signedResult) throw new Error("Unable to sign message");
+
+    // -- 3. prepare auth message
+    let authSig = {
+      sig: signedResult,
+      derivedVia: "web3.eth.personal.sign",
+      signedMessage: body,
+      address: addressOverride ?? address,
+    };
+
+    if (authSig) localStorage.setItem("lit-auth-signature", JSON.stringify(authSig));
+
+    const commsKeyPair = nacl.box.keyPair();
+    if (commsKeyPair)
+      localStorage.setItem(
+        "lit-comms-keypair",
+        JSON.stringify({
+          publicKey: naclUtil.encodeBase64(commsKeyPair.publicKey),
+          secretKey: naclUtil.encodeBase64(commsKeyPair.secretKey),
+        })
+      );
 
     return authSig;
   };
 
-  return { isLoading, logIn, regenerateAuthSig };
+  return { isLoading, logIn, regenerateAuthSig, LoginUsingPatch };
 };

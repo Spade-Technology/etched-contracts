@@ -12,6 +12,7 @@ import { shortenAddress } from "@/utils/hooks/address";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useAuth, useSignIn } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Authentication",
@@ -22,7 +23,7 @@ export default function AuthenticationPage() {
   const router = useRouter();
   const isConnected = useIsConnected();
   const { address } = useAccount();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
   return (
     <>
@@ -66,9 +67,9 @@ export default function AuthenticationPage() {
               </h1>
               <p className="text-sm text-muted-foreground">Welcome to Etched!</p>
             </div>
-            {status === "authenticated" && address ? (
+            {status === "authenticated" && session ? (
               <div className="flex w-full flex-col items-center justify-center">
-                <Label> Logged in as {shortenAddress({ address })}</Label>
+                <Label> Logged in {session.address && "as " + shortenAddress({ address: session.address })}</Label>
                 <Button variant="outline" className="mt-4" onClick={() => router.push("/dashboard")}>
                   Continue to Dashboard
                 </Button>

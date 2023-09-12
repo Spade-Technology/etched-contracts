@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Etch
-    network: sepolia
+    network: arbitrum-goerli
     source:
-      address: "0x37175B27226A2635915222185dc438b2c271F15A"
+      address: "0xa3ADCF594048C918Cb04c189f0B04C28bb407BA1"
       abi: Etch
-      startBlock: 4229480
+      startBlock: 40681186
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -50,11 +50,11 @@ dataSources:
       file: ./src/etch.ts
   - kind: ethereum
     name: Team
-    network: sepolia
+    network: arbitrum-goerli
     source:
-      address: "0x5C3D0d3d8AFEd1337f05C402CfB51902f236F678"
+      address: "0xE6F34aD54B23ecDE8a5103f16Fb78428a142F69a"
       abi: Team
-      startBlock: 4229480
+      startBlock: 40681186
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -88,11 +88,11 @@ dataSources:
       file: ./src/team.ts
   - kind: ethereum
     name: Organisation
-    network: sepolia
+    network: arbitrum-goerli
     source:
-      address: "0xaB3E270A929d86A4871BB1b639dB1E7DdCDDD479"
+      address: "0x88c34ED120c7F9E5a1FD78502C1b59ECAE45fBbf"
       abi: Organisation
-      startBlock: 4229480
+      startBlock: 40681186
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -123,11 +123,11 @@ dataSources:
       file: ./src/organisation.ts
   - kind: ethereum
     name: EtchENS
-    network: sepolia
+    network: arbitrum-goerli
     source:
-      address: "0x303A17451071ECe56E301920EbAF2259Ec5e5C00"
+      address: "0x97b7B7F96343348D0e4058fA8e77d6c978dF493A"
       abi: EtchENS
-      startBlock: 4229480
+      startBlock: 40681186
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

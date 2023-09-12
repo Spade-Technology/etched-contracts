@@ -14,14 +14,14 @@ import { useSignIn } from "@/utils/hooks/useSignIn";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
-  const { signInUsingClerk } = useSignIn();
+  const { isLoaded, userId, sessionId, getToken, isSignedIn } = useAuth();
+  const { LoginUsingPatch } = useSignIn();
 
   React.useEffect(() => {
-    if (sessionId && userId && isLoaded) {
-      getToken();
+    if (sessionId && userId && isLoaded && isSignedIn) {
+      LoginUsingPatch();
     }
-  }, [userId, sessionId]);
+  }, [userId, sessionId, isSignedIn]);
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
@@ -39,10 +39,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         </div>
       </div>
       <SignIn />
-      {/* <Button variant="outline" type="button">
-        <Icons.gitHub className="mr-2 h-4 w-4" />
-        Github
-      </Button> */}
     </div>
   );
 }

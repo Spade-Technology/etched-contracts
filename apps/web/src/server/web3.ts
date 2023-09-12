@@ -1,15 +1,15 @@
 import { env } from "@/env.mjs";
+import { currentChain } from "@/utils/wagmi";
 import { Address, createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { sepolia } from "viem/chains";
 
 export const publicClient = createPublicClient({
-  chain: sepolia,
-  transport: http("https://sepolia.infura.io/v3/" + env.INFURA_KEY),
+  chain: currentChain,
+  transport: http(env.NEXT_PUBLIC_INFURA_RPC + env.INFURA_KEY),
 });
 
 export const walletClient = createWalletClient({
-  chain: sepolia,
-  transport: http("https://sepolia.infura.io/v3/" + env.INFURA_KEY),
+  chain: currentChain,
+  transport: http(env.NEXT_PUBLIC_INFURA_RPC + env.INFURA_KEY),
   account: privateKeyToAccount(env.ETCHED_NODE_PRIVATE_KEY as Address),
 });
