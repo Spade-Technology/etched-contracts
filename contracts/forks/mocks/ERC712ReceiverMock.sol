@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
@@ -16,7 +16,13 @@ contract ERC721ReceiverMock is IERC721Receiver {
     bytes4 private immutable _retval;
     RevertType private immutable _error;
 
-    event Received(address operator, address from, uint256 tokenId, bytes data, uint256 gas);
+    event Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes data,
+        uint256 gas
+    );
     error CustomError(bytes4);
 
     constructor(bytes4 retval, RevertType error) {
@@ -24,7 +30,12 @@ contract ERC721ReceiverMock is IERC721Receiver {
         _error = error;
     }
 
-    function onERC721Received(address operator, address from, uint256 tokenId, bytes memory data) public returns (bytes4) {
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes memory data
+    ) public returns (bytes4) {
         if (_error == RevertType.RevertWithoutMessage) {
             revert();
         } else if (_error == RevertType.RevertWithMessage) {

@@ -48,6 +48,7 @@ interface ExtendedHardhatUserConfig extends HardhatUserConfig {
   [k: string]: any;
 }
 
+
 // List all of the files under ./contracts
 const fs = require("fs");
 const contracts = fs.readdirSync("./contracts").filter((file: string) => file.endsWith(".sol"));
@@ -55,7 +56,7 @@ const contracts = fs.readdirSync("./contracts").filter((file: string) => file.en
 // Define the Hardhat configuration
 const config: ExtendedHardhatUserConfig = {
   solidity: {
-    version: "0.8.20",
+    version: "0.8.19",
     settings: {
       optimizer: {
         enabled: true,
@@ -103,11 +104,20 @@ const config: ExtendedHardhatUserConfig = {
       accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
       chainId: 11155111,
     },
+
+    tarb: {
+      url: "https://arbitrum-goerli.publicnode.com",
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
+      chainId: 421613,
+    },
   },
 
   // Define the etherscan configuration
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY || "",
+    apiKey: {
+      sepolia: process.env.ETHERSCAN_API_KEY || "",
+      arbitrumGoerli: process.env.ETHERSCAN_API_KEY_ARB || "",
+    }
   },
 
   // Define the gasReporter configuration

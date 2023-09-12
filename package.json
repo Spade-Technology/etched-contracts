@@ -6,7 +6,7 @@
     "coverage": "hardhat coverage",
     "test": "hardhat test",
     "compile": "hardhat compile",
-    "deploy-with-sample-data": "dotenv -e ../../.env -- hardhat run --network sepolia scripts/deploy-with-sample-data.ts"
+    "deploy-with-sample-data": "dotenv -e ../../.env -- hardhat run --network tarb scripts/deploy-with-sample-data.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
