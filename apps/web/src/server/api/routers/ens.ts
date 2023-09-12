@@ -27,8 +27,8 @@ export const ensRouter = createTRPCRouter({
         args: [address],
       });
 
-      // if (!namesOfUser || namesOfUser.length > 0)
-      //   throw new TRPCError({ code: "FORBIDDEN", message: "You already have an ENS name" });
+      if (!namesOfUser || namesOfUser.length > 0)
+        throw new TRPCError({ code: "FORBIDDEN", message: "You already have an ENS name" });
 
       const tx = await walletClient
         .writeContract({

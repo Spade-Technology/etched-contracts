@@ -34,6 +34,7 @@ export const env = createEnv({
 
     // RPC URLs
     // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
+    NEXT_PUBLIC_INFURA_RPC: z.string(),
     NEXT_PUBLIC_INFURA_ID: z.string(),
     INFURA_API_SECRET: z.string(),
     INFURA_KEY: z.string(),
@@ -89,6 +90,7 @@ export const env = createEnv({
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
 
     // RPC URLs
+    NEXT_PUBLIC_INFURA_RPC: process.env.NEXT_PUBLIC_INFURA_RPC,
     NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
     INFURA_API_SECRET: process.env.INFURA_API_SECRET,
     INFURA_KEY: process.env.INFURA_KEY,
