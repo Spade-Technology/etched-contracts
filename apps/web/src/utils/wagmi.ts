@@ -1,12 +1,8 @@
 import { currentNetwork, currentNetworkId } from "@/contracts";
 import { providers } from "ethers";
 import { HttpTransport, PublicClient } from "viem";
-<<<<<<< HEAD
 import { Chain, WalletClient, configureChains, createConfig } from "wagmi";
 import { arbitrumGoerli } from "wagmi/chains";
-=======
-import { Chain, WalletClient, configureChains, createConfig, sepolia } from "wagmi";
->>>>>>> dc3c870 (followup)
 import { publicProvider } from "wagmi/providers/public";
 
 export const currentChain = arbitrumGoerli;
