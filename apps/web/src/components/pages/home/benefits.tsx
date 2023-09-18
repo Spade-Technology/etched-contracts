@@ -13,8 +13,8 @@ const Benefits = () => {
   return (
     <div className="pt-16 text-center md:pt-28 ">
       <div className="text-[28px] font-semibold text-black md:text-[42px] ">Some benefits</div>
-      <div className="flex flex-col items-center gap-5 py-5 text-left md:flex-row md:justify-evenly">
-        <div className="max-w-[273px]">
+      <div className="flex flex-col  gap-5 py-5 text-left md:flex-row md:justify-evenly">
+        <div className="max-w-[273px] mx-auto">
           <div className="rounded-2xl bg-[#ECFDF5] px-14 py-4">
             <div className="text-center font-bold text-[#047857]">File Easily</div>
             <Image src={File_SS} alt="File_SS" width={162} height={111} className="pt-5" />
@@ -28,7 +28,7 @@ const Benefits = () => {
           </div>
         </div>
 
-        <div className="max-w-[273px]">
+        <div className="max-w-[273px] mx-auto">
           <div className="rounded-2xl bg-[#FFF8E5] px-14 py-4">
             <div className="text-center font-bold text-[#DDA200]">Storage</div>
             <Image src={Storage_SS} alt="File_SS" width={162} height={110} className="mx-auto pt-5" />
@@ -42,7 +42,7 @@ const Benefits = () => {
           </div>
         </div>
 
-        <div className="max-w-[273px]">
+        <div className="max-w-[273px] mx-auto">
           <div className="rounded-2xl bg-[#F0F9FF] px-14 py-4">
             <div className="text-center font-bold text-[#0369A1]">Etch Library</div>
             <Image src={Library_SS} alt="File_SS" width={162} height={111} className="mx-auto pt-5" />
@@ -56,10 +56,10 @@ const Benefits = () => {
           </div>
         </div>
 
-        <div className="max-w-[273px]">
+        <div className="max-w-[273px] mx-auto">
           <div className="rounded-2xl bg-[#EEF2FF] px-14 py-4">
             <div className="text-center font-bold text-[#4338CA]">Dashboard</div>
-            <Image src={File_SS} alt="File_SS" width={162} height={110} className="mx-auto pt-5" />
+            <Image src={Dashboard_SS} alt="Dashboard_SS" width={162} height={110} className="mx-auto pt-5" />
           </div>
 
           <div className="py-6 text-2xl font-semibold">Manage everything from one screen</div>
@@ -89,7 +89,7 @@ const Benefits = () => {
 
           <div>
             <Image
-              src={BenefitsImage}
+              src={Library_SS}
               height={180}
               width={325}
               alt="File_SS"
