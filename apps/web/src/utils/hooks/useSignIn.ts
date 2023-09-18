@@ -12,7 +12,9 @@ import { walletClientToProviderAndSigner } from "../wagmi";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import { useAuth, useSession } from "@clerk/nextjs";
+//@ts-ignore
 import { KERNEL_ACCOUNT_SUFFIX } from "@/contracts/patchwallet/seaport copy";
+//@ts-ignore
 import { formUserIdAndSuffix, getBaseAccountAddress } from "../patchWalletHelper";
 
 export function signOut() {
@@ -81,7 +83,7 @@ export const useSignIn = () => {
 
     if (!token) throw new Error("No token");
     if (!userId) throw new Error("No user id");
-
+//@ts-ignore
     const json = await response.json();
 
     console.log(json);

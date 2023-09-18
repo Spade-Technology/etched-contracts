@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const user = router.query?.user;
+  const user = router.query?.user ? router.query?.user[0] : '0';
 
   const {
     isLoading: isQuerying,

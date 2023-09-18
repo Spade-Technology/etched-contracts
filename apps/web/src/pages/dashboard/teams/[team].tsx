@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const teamId = router.query?.team;
+  const teamId = router.query?.team ? router.query?.team[0] :'0';
 
   const { $state, isLoading, team, etchToDisplay } = useGetEtchesFromTeam(teamId);
 

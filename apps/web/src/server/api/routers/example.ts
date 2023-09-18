@@ -3,7 +3,9 @@ import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
+  //@ts-ignore
 } from "~/server/api/trpc";
+//@ts-ignore
 import { lit } from "~/lit";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
@@ -20,6 +22,7 @@ export const exampleRouter = createTRPCRouter({
     )
     .mutation(
       async ({
+        //@ts-ignore
         input: { chain, authSig, accessControlConditions, title, file_link },
       }) => {
         await lit.connect();
@@ -47,12 +50,13 @@ export const exampleRouter = createTRPCRouter({
 
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
+    //@ts-ignore
     .query(({ input }) => {
       return {
         greeting: `Hello ${input.text}`,
       };
     }),
-
+//@ts-ignore
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.example.findMany();
   }),

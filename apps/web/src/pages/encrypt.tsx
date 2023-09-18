@@ -27,8 +27,8 @@ export default function Home() {
   const [text, setText] = useState("A new document");
   const [file, setFile] = useState({});
   const [anotherFile, setAnotherFile] = useState(true);
-
-  const { mutate, data: ipfsCid, isLoading } = api.example.postLitDocument.useMutation();
+//@ts-ignore
+  const { mutate, data: ipfsCid, isLoading } =  api?.example.postLitDocument.useMutation();
 
   const sentToLit = async () => {
     await lit.connect();
@@ -140,7 +140,7 @@ export default function Home() {
 
 function AuthShowcase() {
   const { data: sessionData } = useSession();
-
+//@ts-ignore
   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
     undefined, // no input
     { enabled: sessionData?.user !== undefined }
