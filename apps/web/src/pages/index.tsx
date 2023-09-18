@@ -5,10 +5,10 @@ import Header from "@/components/pages/shared/header";
 
 const Home = () => {
   return (
-    <div className="mx-5  md:mx-24 my-8">
+    <div className="mx-5  my-8 md:mx-24">
       <Header />
 
-      <div className="mx-auto pt-10 md:pt-24 text-center align-middle">
+      <div className="mx-auto pt-10 text-center align-middle md:pt-24">
         <HomeInfo />
         <Benefits />
       </div>
