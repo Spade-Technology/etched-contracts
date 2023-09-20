@@ -35,7 +35,7 @@ export function ConnectWalletModalButtonWrapper({ className, ...props }: Connect
 
   return isConnected && address ? (
     <>
-      <Button type="button" onClick={logIn} isLoading={isLoading}>
+      <Button type="button" onClick={() => logIn({ isPatchWallet: false })} isLoading={isLoading}>
         Sign in using {shortenAddress({ address })}
       </Button>
       <Accordion type="single" collapsible>

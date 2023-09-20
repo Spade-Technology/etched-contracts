@@ -69,7 +69,7 @@ export default function AuthenticationPage() {
             </div>
             {status === "authenticated" && session && false ? (
               <div className="flex w-full flex-col items-center justify-center">
-                <Label> Logged in {session.address && "as " + shortenAddress({ address: session.address })}</Label>
+                <Label> Logged in {session?.address && "as " + shortenAddress({ address: session?.address as string })}</Label>
                 <Button variant="outline" className="mt-4" onClick={() => router.push("/dashboard")}>
                   Continue to Dashboard
                 </Button>

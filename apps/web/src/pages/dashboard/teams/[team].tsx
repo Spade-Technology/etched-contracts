@@ -13,6 +13,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/brea
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetEtchesFromTeam } from "@/utils/hooks/useGetEtchesFromTeam";
 import { Label } from "@radix-ui/react-label";
+import { type } from "os";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   const router = useRouter();
   const teamId = router.query?.team;
+
+  if (!teamId || typeof teamId !== "string") return <div className="flex h-screen w-screen bg-white"> 404 </div>;
 
   const { $state, isLoading, team, etchToDisplay } = useGetEtchesFromTeam(teamId);
 

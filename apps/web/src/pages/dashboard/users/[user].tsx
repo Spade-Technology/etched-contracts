@@ -21,6 +21,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const user = router.query?.user;
 
+  if (!user || typeof user !== "string") return <div className="flex h-screen w-screen bg-white"> 404 </div>;
+
   const {
     isLoading: isQuerying,
     data: _ens,
