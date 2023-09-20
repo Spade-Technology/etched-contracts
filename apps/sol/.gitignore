@@ -1,0 +1,8 @@
+node_modules
+cache
+artifacts
+.env
+deployments
+typechain-types/
+coverage
+contracts-exposed
