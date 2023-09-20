@@ -37,11 +37,18 @@ export async function verifySiweMessage(credentials: Record<"message" | "signatu
   else if (!nextAuthUrl) return null;
   else nextAuthHost = new URL(nextAuthUrl).host;
 
-  const verified = await siwe.verify({
-    signature: credentials?.signature || "",
-    domain: nextAuthHost,
-    nonce: await getCsrfToken({ req }),
-  });
+  console.log(credentials);
+
+  const verified = await siwe
+    .verify({
+      signature: credentials?.signature || "",
+      domain: nextAuthHost,
+      // nonce: await getCsrfToken({ req }),
+    })
+    .catch((e) => {
+      console.log(e);
+      return { success: false };
+    });
 
   if (verified.success) return siwe;
 
@@ -54,6 +61,8 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
       async authorize(credentials) {
         try {
           if (!credentials) return null;
+
+          console.log(credentials);
 
           // Verify the message
           const siwe = await verifySiweMessage(

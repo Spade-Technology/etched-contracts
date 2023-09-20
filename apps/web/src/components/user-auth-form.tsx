@@ -5,8 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { ConnectWalletModalButtonWrapper } from "./connect-wallet";
 import { SignIn, useAuth } from "@clerk/nextjs";
 import { useSignIn } from "@/utils/hooks/useSignIn";
@@ -15,11 +14,13 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const { isLoaded, userId, sessionId, getToken, isSignedIn } = useAuth();
-  const { LoginUsingPatch } = useSignIn();
+  const { logIn } = useSignIn();
 
   React.useEffect(() => {
     if (sessionId && userId && isLoaded && isSignedIn) {
-      LoginUsingPatch();
+      logIn({
+        isPatchWallet: true,
+      });
     }
   }, [userId, sessionId, isSignedIn]);
 
@@ -39,6 +40,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         </div>
       </div>
       <SignIn />
+      <Button onClick={() => logIn({ isPatchWallet: true })} variant="default" className="w-full">
+        <Icons.logoLong className="mr-2 h-8" />
+        <span>Continue with Patch</span>
+      </Button>
     </div>
   );
 }

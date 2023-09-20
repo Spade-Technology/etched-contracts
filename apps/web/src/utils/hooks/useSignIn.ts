@@ -12,8 +12,9 @@ import { walletClientToProviderAndSigner } from "../wagmi";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import { useAuth, useSession } from "@clerk/nextjs";
-import { KERNEL_ACCOUNT_SUFFIX } from "@/contracts/patchwallet/seaport copy";
-import { formUserIdAndSuffix, getBaseAccountAddress } from "../patchWalletHelper";
+
+import { api } from "../api";
+import { env } from "@/env.mjs";
 
 export function signOut() {
   localStorage.clear();
@@ -24,39 +25,36 @@ export const useSignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { data: blockNumber } = useBlockNumber();
   const { address } = useAccount();
-  const { chain } = useNetwork();
+
   const { signMessageAsync } = useSignMessage();
-  const { getToken, isLoaded, userId, actor } = useAuth();
+  const { mutateAsync: generatePatchSignature } = api.patch.signMessageForPatchWallet.useMutation();
   const { session } = useSession();
-  const LoginUsingPatch = async () => {
-    if (!blockNumber) return;
+  const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
 
-    setIsLoading(true);
-
-    const address = await getBaseAccountAddress("email", session?.user.primaryEmailAddress?.emailAddress!);
-
-    console.log(address);
-
-    // const authSig = await generateSignatureUsingPatch(address);
-
-    // console.log(authSig);
-  };
-
-  const logIn = async ({}) => {
+  const logIn = async ({ isPatchWallet = false }: { isPatchWallet?: boolean }) => {
     try {
       if (!blockNumber) return;
 
       setIsLoading(true);
       // Generate the message to be signed
 
-      const authSig = await regenerateAuthSig();
+      const authSig = await regenerateAuthSig(undefined, { isPatchWallet, patchUserId: "business@lancedb.dev" });
 
       const blockchainMessage = await encodeAbiParameters(parseAbiParameters("uint256 blockNumber, address nodeAddress"), [
         10000000000n,
         currentNode! as Address,
       ]);
+
       const walletClient = await getWalletClient({ chainId: Number(currentNetworkId!) });
-      const blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
+      let blockchainSignature;
+      if (isPatchWallet)
+        blockchainSignature = (
+          await generatePatchSignature({
+            message: keccak256(blockchainMessage),
+            userId: "business@lancedb.dev",
+          })
+        ).signature;
+      else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
 
       // Send the signature to the server to be verified, and sign in or sign up the user
       await signIn("credentials", {
@@ -76,25 +74,34 @@ export const useSignIn = () => {
     setIsLoading(false);
   };
 
-  const generateSignatureUsingPatch = async (data: string) => {
-    const token = await getToken();
-
-    if (!token) throw new Error("No token");
-    if (!userId) throw new Error("No user id");
-
-    const json = await response.json();
-
-    console.log(json);
-  };
-
   const regenerateAuthSig = async (
     _expiration?: string,
     {
       addressOverride,
       chainIdOverride,
+
       isPatchWallet,
-    }: { addressOverride?: string; chainIdOverride?: number; isPatchWallet?: boolean } = {}
+      patchUserId,
+      patchBaseProvider,
+    }: {
+      addressOverride?: string;
+      chainIdOverride?: number;
+
+      isPatchWallet?: boolean;
+      patchUserId?: string;
+      patchBaseProvider?: string;
+    } = {}
   ) => {
+    if (isPatchWallet && !addressOverride)
+      addressOverride = (
+        await getUserFromId({
+          userId: patchUserId!,
+          baseProvider: patchBaseProvider ?? env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+        })
+      ).eoa;
+
+    console.log("first");
+
     const expiration_time = 60 * 60 * 24 * 7; // 7 days
     const expiration_date = new Date(Date.now() + expiration_time * 1000);
     const expiration = _expiration ?? expiration_date.toISOString();
@@ -108,29 +115,33 @@ export const useSignIn = () => {
       .find((line: string) => line.startsWith("Expiration Time:"))
       .split(": ")[1];
 
-    if (signature && new Date(expirationDateString) > new Date()) return signature;
+    // if (signature && new Date(expirationDateString) > new Date()) return signature;
 
     // -- 1. prepare 'sign-in with ethereum' message
     const preparedMessage = {
       domain: globalThis.location.host,
       address: addressOverride ?? address,
       version: "1",
-      chainId: chainIdOverride ?? chain!.id,
+      chainId: 1,
       expirationTime: expiration,
       uri: globalThis.location.href,
     };
+
+    console.log(preparedMessage);
 
     const message = new SiweMessage(preparedMessage);
     const body = message.prepareMessage();
 
     // -- 2. sign the message
+
     let signedResult: string | undefined;
     if (isPatchWallet) {
-      // Sign with PatchWallet
-      generateSignatureUsingPatch(body);
-    } else {
-      signedResult = await signMessageAsync({ message: body });
-    }
+      const patchSignatureResult = await generatePatchSignature({
+        userId: "business@lancedb.dev",
+        message: body,
+      });
+      signedResult = patchSignatureResult.signature;
+    } else signedResult = await signMessageAsync({ message: body });
 
     if (!signedResult) throw new Error("Unable to sign message");
 
@@ -157,5 +168,5 @@ export const useSignIn = () => {
     return authSig;
   };
 
-  return { isLoading, logIn, regenerateAuthSig, LoginUsingPatch };
+  return { isLoading, logIn, regenerateAuthSig };
 };
