@@ -1,0 +1,9 @@
+ens_contract.address
+const signers = await ethers.getSigners(); await ens_contract.safeMint(signers[0].address, "admin.etched")
+const signers = await ethers.getSigners(); && await ens_contract.safeMint(signers[0].address, "admin.etched")
+await ens_contract.safeMint(signers[0].address, "admin.etched")
+let ens_contract = await ENS.deploy("0x46eb1102f6d1a3D47242da2F7a321BD8b9E9C0E3")
+  const ensContract = await ENS.deploy("0x46eb1102f6d1a3D47242da2F7a321BD8b9E9C0E3")
+  const ensContract = await ENS.deploy(orgContract.address)
+const ENS = await ethers.getContractFactory("EtchENS");
+  const ENS = await ethers.getContractFactory("EtchENS");
