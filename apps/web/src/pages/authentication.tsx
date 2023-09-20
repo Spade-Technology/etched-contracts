@@ -47,7 +47,7 @@ export default function AuthenticationPage() {
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-primary" />
           <div className="relative z-20 flex items-center text-lg font-medium">
-            <Icons.logoLong color="white" className="mr-2 h-8" />
+            <Icons.logoLong color="white" className="mr-2 h-8 cursor-pointer" onClick={() => router.push("/")} />
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">

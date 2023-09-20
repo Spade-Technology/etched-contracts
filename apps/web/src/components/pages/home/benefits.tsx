@@ -5,8 +5,8 @@ import Library_SS from "public/images/home/library_SS.svg";
 import Dashboard_SS from "public/images/home/dashboard_SS.svg";
 import BackImage from "public/images/home/backImage.svg";
 import BlackForward from "public/icons/blackForward.svg";
-import BenefitsImage from "public/images/home/VDAO-apply.png";
 import { useRouter } from "next/router";
+import GradientImg from "public/images/home/Gradient.svg"
 
 const Benefits = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const Benefits = () => {
             <Image src={File_SS} alt="File_SS" width={162} height={111} className="pt-5" />
           </div>
 
-          <div className="py-6 text-2xl font-semibold">User friendly UI</div>
+          <div className="py-6 text-2xl font-semibold md:min-h-[120px]">User friendly UI</div>
 
           <div className="text-lg font-normal">
             Etcheds intuitive and user-friendly interface ensures a smooth experience for creators of all levels, without
@@ -34,7 +34,7 @@ const Benefits = () => {
             <Image src={Storage_SS} alt="File_SS" width={162} height={110} className="mx-auto pt-5" />
           </div>
 
-          <div className="py-6 text-2xl font-semibold">Privacy on your terms</div>
+          <div className="py-6 text-2xl font-semibold md:min-h-[120px]">Privacy on your terms</div>
 
           <div className="text-left text-lg font-normal">
             At Etched, we believe in putting you in control. With our platform, you can choose to keep your intellectual property
@@ -48,7 +48,7 @@ const Benefits = () => {
             <Image src={Library_SS} alt="File_SS" width={162} height={111} className="mx-auto pt-5" />
           </div>
 
-          <div className="py-6 text-2xl font-semibold">Etch Library</div>
+          <div className="py-6 text-2xl font-semibold md:min-h-[112px]">Etch Library</div>
 
           <div className="text-left text-lg font-normal">
             Keep your creative works organised and accessible in your personal Etch Library. Easily manage, track, and share your
@@ -71,12 +71,12 @@ const Benefits = () => {
           </div>
         </div>
       </div>
-
-      <div className="relative mt-32 rounded-3xl bg-gradient-to-r from-green-400 to-blue-500 pt-10 md:pt-24 ">
-        {/* <Image src={BackImage} alt="BackImage" className=" " /> */}
-
-        <div className=" flex flex-col justify-between md:flex-row">
-          <div className="my-auto px-10 text-left text-xl text-white font-medium">
+      {/* bg-gradient-to-r from-green-400 to-cyan-500 */}
+      <div className={`my-32  rounded-3xl bg-gradient-to-r from-green-400 to-cyan-500 pt-10 md:pt-24`} >
+      {/* <Image src={GradientImg} alt="BackImage" className="rounded-3xl" /> */}
+      {/* md:bottom-[340px] */}
+        <div className="relative flex flex-col justify-between md:flex-row">
+          <div className="my-auto px-10 text-left text-xl text-white font-medium max-w-[600px]">
             Unlock these advantages and more on a single platform. Tap the button below to get on the waitlist.
             <div
               onClick={() => router.push("/authentication")}
@@ -90,13 +90,14 @@ const Benefits = () => {
           <div>
             <Image
               src={Library_SS}
-              height={180}
-              width={325}
+              height={350}
+              width={485}
               alt="File_SS"
-              className="relative float-right rounded-r-none rounded-t-2xl bg-white"
+              className="w-[285px] md:w-[485px] relative float-right rounded-r-none rounded-t-2xl bg-white"
             />
           </div>
         </div>
+
       </div>
     </div>
   );

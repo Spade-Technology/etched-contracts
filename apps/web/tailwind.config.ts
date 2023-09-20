@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
@@ -11,6 +12,9 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        // 'gardient-pattern': `url(${gradientImg})`,
+      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",

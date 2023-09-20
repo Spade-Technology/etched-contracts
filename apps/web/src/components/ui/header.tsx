@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <div className="my-8 flex justify-between gap-3">
-      <Icons.logoLong color="#097B45" className="h-8 align-middle md:mr-2" />
+      <Icons.logoLong color="#097B45" className="h-8 cursor-pointer align-middle md:mr-2" onClick={() => router.push("/")} />
       <div className="hidden md:block">
         <div
           onClick={() => router.push("/dashboard")}
