@@ -2,13 +2,9 @@
 import { DashboardHeader } from "@/components/dashboard-header";
 import { DataTableDemo } from "@/components/etches-dashboard-table";
 import { SideBar } from "@/components/sidebar";
-import { Button } from "@/components/ui/button";
-import { Etch, usePaginatedQuery, useQuery } from "@/gqty";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { Metadata } from "next";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 
 export const metadata: Metadata = {
   title: "Dashboard",
