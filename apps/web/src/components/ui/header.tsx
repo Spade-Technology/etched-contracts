@@ -16,29 +16,29 @@ const Header = ({ setShowWaitlist }: Props) => {
       <Icons.logoLong color="#097B45" className="h-8 cursor-pointer align-middle md:mr-2" onClick={() => router.push("/")} />
       <div className="hidden md:block">
         <div className="flex gap-5">
-        <div
-          onClick={() => router.push("/")}
-          className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
-        >
-          Home
-        </div>
+          <div
+            onClick={() => router.push("/")}
+            className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
+          >
+            Home
+          </div>
 
-        <div
-          onClick={() => router.push("/dashboard")}
-          className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
-        >
-          Dashboard
-        </div>
+          <div
+            onClick={() => router.push("/dashboard")}
+            className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
+          >
+            Dashboard
+          </div>
 
-        <div
-          onClick={() => router.push("/authentication")}
-          className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
-        >
-          Create/Sign In
+          <div
+            onClick={() => router.push("/authentication")}
+            className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
+          >
+            Create/Sign In
+          </div>
         </div>
-        </div>
-      
       </div>
+
       <div
         // onClick={() => router.push("/authentication")}
         onClick={() => setShowWaitlist(true)}
