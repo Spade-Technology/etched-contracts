@@ -1,8 +1,12 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
+import { Dispatch, SetStateAction, useState } from "react";
 
-const HomeInfo = () => {
+interface Props {
+  setShowWaitlist: Dispatch<SetStateAction<boolean>>;
+}
+const HomeInfo = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
   return (
     <div>
@@ -18,7 +22,8 @@ const HomeInfo = () => {
         <input placeholder="Type email address here" className="bg-inherit px-5 outline-none" />
 
         <div
-          onClick={() => router.push("/authentication")}
+          // onClick={() => router.push("/authentication")}
+          onClick={() => setShowWaitlist(true)}
           className="mx-auto flex w-fit cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3  font-semibold text-white"
         >
           Join Waitlist
