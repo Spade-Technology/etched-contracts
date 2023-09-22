@@ -14,7 +14,7 @@ const Header = ({ setShowWaitlist }: Props) => {
   return (
     <div className="my-8 flex justify-between gap-3">
       <Icons.logoLong color="#097B45" className="h-8 cursor-pointer align-middle md:mr-2" onClick={() => router.push("/")} />
-      <div className="hidden md:block">
+      <div className="hidden ">
         <div className="flex gap-5">
           <div
             onClick={() => router.push("/")}
@@ -31,7 +31,7 @@ const Header = ({ setShowWaitlist }: Props) => {
           </div>
 
           <div
-            onClick={() => router.push("/authentication")}
+            // onClick={() => router.push("/authentication")}
             className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
           >
             Create/Sign In
@@ -42,7 +42,7 @@ const Header = ({ setShowWaitlist }: Props) => {
       <div
         // onClick={() => router.push("/authentication")}
         onClick={() => setShowWaitlist(true)}
-        className="my-auto flex cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3 text-sm font-semibold text-white md:text-lg"
+        className=" flex cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3 text-sm font-semibold text-white md:text-lg"
       >
         Join Waitlist
         <Image src={ForwardArrow} alt="forward" />
