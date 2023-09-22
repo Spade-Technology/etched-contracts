@@ -26,12 +26,12 @@ export default function Home() {
     <div className="mx-5  my-8 md:mx-24">
       <Header setShowWaitlist={setShowWaitlist} />
 
-      <div className="mx-auto pt-10 text-center align-middle md:pt-24">
+      <div className="mx-auto pt-10 text-center align-middle ">
         <Dialog open={showWaitlist} onOpenChange={(x) => setShowWaitlist(x)}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Join Etched Waitlist</DialogTitle>
-              <DialogDescription>Secure your spot in our exclusive community</DialogDescription>
+              <DialogTitle>Join The Etched Waitlist</DialogTitle>
+              {/* <DialogDescription>Secure your spot in our exclusive community</DialogDescription> */}
               <DialogDescription>
                 <div className="grid grid-cols-4 items-center gap-4 py-4">
                   <Label htmlFor="email" className="text-right">
@@ -48,7 +48,7 @@ export default function Home() {
                 </div>
               </DialogDescription>
               <DialogFooter>
-                <Button type="submit" className="gap-3 rounded-lg">
+                <Button type="submit" className="gap-3 mt-5 rounded-lg">
                   Join Waitlist <Image src={ForwardArrow} alt="forward" />
                 </Button>
               </DialogFooter>
