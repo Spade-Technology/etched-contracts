@@ -15,6 +15,10 @@ module.exports = {
       backgroundImage: {
         // 'gardient-pattern': `url(${gradientImg})`,
       },
+      fontFamily: {
+        body: ["Campton"],
+        header: ["WorkSans"],
+      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",

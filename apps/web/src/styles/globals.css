@@ -77,3 +77,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: "Campton";
+  src: url(../../public/fonts/campton-cufonfonts/CamptonMedium.otf);
+}
+
+@font-face {
+  font-family: "WorkSans";
+  src: url(../../public/fonts/Work_Sans/static/WorkSans-Bold.ttf);
+}

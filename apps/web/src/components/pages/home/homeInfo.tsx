@@ -10,11 +10,13 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
   return (
     <div>
-      <div className=" max-w-[800px] mx-auto text-4xl font-bold text-black md:text-7xl">
-        Modernise, Secure, and Manage Your IP
+      <div className="relative mx-auto max-w-[1266px] font-body text-4xl font-bold text-black md:text-[80px] md:leading-[90px]  xl:leading-normal">
+        <div className="mx-auto max-w-[1238px]">Etched: Modernise, Secure, and Manage Your IP</div>
+        <div className="absolute left-[-127px] top-[116.58px] -z-10 h-[155px] w-[332px] bg-[url(/images/home/wave.svg)] bg-contain bg-center bg-no-repeat opacity-50 md:left-[-139px] md:top-[133.58px] md:h-[299.65px] md:w-[641px] xl:left-[-189px]"></div>{" "}
+        <div className="absolute right-[-120px] top-[-31px] -z-10 h-[154px] w-[330px] bg-[url(/images/home/leftWave.svg)] bg-contain bg-center bg-no-repeat opacity-50 md:right-[-173px] md:top-[-30px] md:h-[263px] md:w-[562px] xl:right-[-230px] xl:top-[-58.58px] "></div>
       </div>
 
-      <div className="py-16 text-base md:text-2xl">
+      <div className="mx-auto max-w-[1500px] py-11 font-body text-base font-normal leading-5 tracking-[0.192px] md:py-16 md:text-2xl md:leading-[34px]">
         Create an ‘Etch’ and secure your intellectual property. An Etch is digital evidence, like a strain of DNA that is linked
         to the essence of your creation, proving what you did, when you say you did it. Etched empowers you to redefine your
         copyright, trademark security, and IP management. With robust safeguards and total transparency, we shield your creativity
@@ -22,17 +24,19 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
         <br />
         <br /> “Imagine more, create with confidence and worry less”
       </div>
-
-      <div className="mx-auto flex w-fit flex-col justify-between gap-5 rounded-[40px] bg-[#F1F5F9] p-5 text-lg md:flex-row md:gap-10">
-        <input placeholder="Type email address here" className="bg-inherit px-5 outline-none" />
+      <div className="mx-auto flex flex-col justify-between gap-5 rounded-[40px] bg-[#F1F5F9] py-5 text-lg max-md:max-w-[353px] max-md:items-center md:w-[630px] md:flex-row md:gap-10 md:pl-[42px] md:pr-5">
+        <input
+          placeholder="Type email address here"
+          className="w-full max-w-[300px] bg-inherit px-5 text-base font-normal outline-none max-md:text-center"
+        />
 
         <div
           // onClick={() => router.push("/authentication")}
           onClick={() => setShowWaitlist(true)}
-          className="mx-auto flex w-fit cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3  font-semibold text-white"
+          className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[30px] py-[15px] font-body text-sm font-semibold text-white md:text-lg"
         >
           Join Waitlist
-          <Image src={ForwardArrow} alt="forward" />
+          <Image src={ForwardArrow} alt="forward" className="h-[15px] w-[12.049px] " />
         </div>
       </div>
     </div>
