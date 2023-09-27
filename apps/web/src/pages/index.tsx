@@ -26,6 +26,7 @@ export default function Home() {
     <div className="">
       <Header setShowWaitlist={setShowWaitlist} />
 
+
       <div className="mx-auto pt-10 text-center align-middle ">
         <Dialog open={showWaitlist} onOpenChange={(x) => setShowWaitlist(x)}>
           <DialogContent className="sm:max-w-[425px]">
@@ -63,5 +64,7 @@ export default function Home() {
       <Footer />
       {/* {showWaitlist && <JoinWaitlist show={showWaitlist} close={() => setShowWaitlist(false)} />} */}
     </div>
+
+
   );
 }

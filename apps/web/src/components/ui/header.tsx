@@ -38,16 +38,19 @@ const Header = ({ setShowWaitlist }: Props) => {
             Create/Sign In
           </div>
         </div>
-      </div>
+      </div> 
+  
       </div>
       <div
         // onClick={() => router.push("/authentication")}
         onClick={() => setShowWaitlist(true)}
-        className="my-auto flex cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3 text-sm font-semibold text-white md:text-lg"
+        className="my-auto w-fit  flex cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3 text-sm font-semibold text-white md:text-lg"
       >
         Join Waitlist
         <Image src={ForwardArrow} alt="forward" />
       </div>
+
+   
     </div>
   );
 };
