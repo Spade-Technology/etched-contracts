@@ -12,6 +12,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        campton: ["Campton", "sans-serif"],
+      },
       backgroundImage: {
         // 'gardient-pattern': `url(${gradientImg})`,
       },
