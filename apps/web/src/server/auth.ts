@@ -126,11 +126,11 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
       },
     },
     pages: {
-      signIn: "/",
-      signOut: "/",
-      error: "/",
-      verifyRequest: "/",
-      newUser: "/",
+      signIn: "/authentication",
+      signOut: "/authentication",
+      error: "/authentication",
+      verifyRequest: "/authentication",
+      newUser: "/authentication",
     },
     // https://next-auth.js.org/configuration/providers/oauth
     providers,
