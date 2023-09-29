@@ -67,7 +67,7 @@ export default function AuthenticationPage() {
               </h1>
               <p className="text-sm text-muted-foreground">Welcome to Etched!</p>
             </div>
-            {status === "authenticated" && session && false ? (
+            {status === "authenticated" && session ? (
               <div className="flex w-full flex-col items-center justify-center">
                 <Label> Logged in {session?.address && "as " + shortenAddress({ address: session?.address as string })}</Label>
                 <Button variant="outline" className="mt-4" onClick={() => router.push("/dashboard")}>
@@ -77,14 +77,14 @@ export default function AuthenticationPage() {
             ) : (
               <UserAuthForm />
             )}
-            <Button
+            {/* <Button
               onClick={() => {
                 localStorage.clear();
                 window.location.reload();
               }}
             >
               TMP: Clear Cache
-            </Button>
+            </Button> */}
             <p className="px-8 text-center text-sm text-muted-foreground">
               By clicking continue, you agree to our{" "}
               <Link href="/terms" className="underline underline-offset-4 hover:text-primary">

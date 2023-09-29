@@ -39,11 +39,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
         </div>
       </div>
-      <SignIn />
-      <Button onClick={() => logIn({ isPatchWallet: true })} variant="default" className="w-full">
-        <Icons.logoLong className="mr-2 h-8" />
+      {/* <SignIn /> */}
+      {/* <Button onClick={() => logIn({ isPatchWallet: true })} variant="default" className="w-full"> */}
+      {/* <Icons.logoLong className="mr-2 h-8" />
         <span>Continue with Patch</span>
-      </Button>
+      </Button> */}
     </div>
   );
 }
