@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
 import { Icons } from "./icons";
 import { Dispatch, SetStateAction } from "react";
+// import bg from ""
 
 interface Props {
   setShowWaitlist: Dispatch<SetStateAction<boolean>>;
