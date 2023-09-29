@@ -10,7 +10,7 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
   return (
     <div>
-      <div className=" max-w-[800px] mx-auto text-4xl font-bold text-black md:text-7xl">
+      <div className="font-body max-w-[800px] mx-auto text-4xl font-bold text-black md:text-7xl">
         Modernise, Secure, and Manage Your IP
       </div>
 
