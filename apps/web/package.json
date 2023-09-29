@@ -19,7 +19,7 @@
     "@hookform/resolvers": "^3.3.1",
     "@lit-protocol/lit-node-client": "^2.2.49",
     "@next-auth/prisma-adapter": "^1.0.5",
-    "@prisma/client": "^5.2.0",
+    "@prisma/client": "^5.3.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -90,7 +90,7 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
-    "prisma": "^5.2.0",
+    "prisma": "^5.3.1",
     "tailwindcss": "^3.3.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"
