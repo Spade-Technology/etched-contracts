@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);
   return (
-    <div className="mx-5  my-8 md:mx-24">
+    <div className="">
       <Header setShowWaitlist={setShowWaitlist} />
 
       <div className="mx-auto pt-10 text-center align-middle ">
