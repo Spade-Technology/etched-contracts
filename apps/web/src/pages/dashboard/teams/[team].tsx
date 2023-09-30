@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetEtchesFromTeam } from "@/utils/hooks/useGetEtchesFromTeam";
 import { Label } from "@radix-ui/react-label";
 import { type } from "os";
+import { PageBoilerplate } from "@/components/page-boilerplate";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -45,43 +46,39 @@ export default function DashboardPage() {
   const ownerFormatted = isLoading ? undefined : organisation ?? ownerENS ?? ownerAddress ?? undefined;
 
   return (
-    <div className="flex h-screen w-screen bg-white">
-      <SideBar />
-      <div className="w-full pl-2 pr-3 pt-3">
-        <DashboardHeader />
-        <div className="mt-6 flex h-32 items-center px-6 shadow-etched-1">
+    <PageBoilerplate>
+      <div className="mt-6 flex h-32 items-center px-6 shadow-etched-1">
+        <div className="flex-col gap-2">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard/teams">Team</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href={"/dashboard/teams/" + teamId}>
+                <div className="flex gap-1">team {teamId ?? <Skeleton className="my-auto h-4 w-5" />}</div>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
           <div className="flex-col gap-2">
-            <Breadcrumb>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard/teams">Team</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink href={"/dashboard/teams/" + teamId}>
-                  <div className="flex gap-1">team {teamId ?? <Skeleton className="my-auto h-4 w-5" />}</div>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
-            <div className="flex-col gap-2">
-              <div className="flex gap-1">team {teamId ? teamId : <Skeleton className="my-auto h-4 w-5" />}</div>
-              <div className="flex gap-2">Owner: {ownerFormatted ?? <Skeleton className="my-auto h-4 w-16" />}</div>
-              <div className="flex gap-2">
-                Total Members:{" "}
-                {teamMembers.length !== _teamMembers?.length ? (
-                  <Skeleton className="my-auto h-4 w-4" />
-                ) : (
-                  Number(teamMembers?.length) + 1
-                )}
-              </div>
+            <div className="flex gap-1">team {teamId ? teamId : <Skeleton className="my-auto h-4 w-5" />}</div>
+            <div className="flex gap-2">Owner: {ownerFormatted ?? <Skeleton className="my-auto h-4 w-16" />}</div>
+            <div className="flex gap-2">
+              Total Members:{" "}
+              {teamMembers.length !== _teamMembers?.length ? (
+                <Skeleton className="my-auto h-4 w-4" />
+              ) : (
+                Number(teamMembers?.length) + 1
+              )}
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center">
-          <DataTableDemo isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
-        </div>
       </div>
-    </div>
+      <div className="flex flex-col items-center justify-center">
+        <DataTableDemo isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
+      </div>
+    </PageBoilerplate>
   );
 }

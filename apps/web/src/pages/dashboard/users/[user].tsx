@@ -11,6 +11,7 @@ import { contracts } from "@/contracts";
 import { shortenAddress } from "@/utils/hooks/address";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PageBoilerplate } from "@/components/page-boilerplate";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -42,42 +43,38 @@ export default function DashboardPage() {
   const userName = ens?.[0] ? ens?.[0]?.split(".etched")[0] : user ? shortenAddress({ address: user as string }) : user;
 
   return (
-    <div className="flex h-screen w-screen bg-white">
-      <SideBar />
-      <div className="w-full pl-2 pr-3 pt-3">
-        <DashboardHeader />
-        <div className="mt-6 flex h-16 items-center px-6 shadow-etched-1">
-          <h2 className="text-lg font-semibold">
-            <Breadcrumb>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard/users">Users</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem isCurrentPage>
-                <BreadcrumbLink href={"/dashboard/users/" + userName}>
-                  {userName ?? <Skeleton className="my-auto h-4 w-12" />}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
-            <div className="flex">
-              {userName ? (
-                <>
-                  {userName}
-                  {ens?.[0] && <span className="text-primary">.etched</span>}
-                </>
-              ) : (
-                <Skeleton className="my-auto h-4 w-24" />
-              )}
-              <span className="my-auto">'s history</span>
-            </div>
-          </h2>
-        </div>
-        <div className="flex flex-col items-center justify-center">
-          <DataTableDemo isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
-        </div>
+    <PageBoilerplate>
+      <div className="mt-6 flex h-16 items-center px-6 shadow-etched-1">
+        <h2 className="text-lg font-semibold">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard/users">Users</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href={"/dashboard/users/" + userName}>
+                {userName ?? <Skeleton className="my-auto h-4 w-12" />}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+          <div className="flex">
+            {userName ? (
+              <>
+                {userName}
+                {ens?.[0] && <span className="text-primary">.etched</span>}
+              </>
+            ) : (
+              <Skeleton className="my-auto h-4 w-24" />
+            )}
+            <span className="my-auto">'s history</span>
+          </div>
+        </h2>
       </div>
-    </div>
+      <div className="flex flex-col items-center justify-center">
+        <DataTableDemo isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
+      </div>
+    </PageBoilerplate>
   );
 }

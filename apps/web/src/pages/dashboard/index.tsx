@@ -1,6 +1,7 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { DataTableDemo } from "@/components/etches-dashboard-table";
+import { PageBoilerplate } from "@/components/page-boilerplate";
 import { SideBar } from "@/components/sidebar";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { Metadata } from "next";
@@ -16,14 +17,10 @@ export default function DashboardPage() {
   const { $state, isLoading, etchToDisplay } = useGetEtchesFromUser(session?.address?.toLowerCase());
 
   return (
-    <div className="flex h-screen w-screen bg-white">
-      <SideBar />
-      <div className="w-full pl-2 pr-3 pt-3">
-        <DashboardHeader />
-        <div className="flex flex-col items-center justify-center">
-          <DataTableDemo isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
-        </div>
+    <PageBoilerplate>
+      <div className="flex flex-col items-center justify-center">
+        <DataTableDemo isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
       </div>
-    </div>
+    </PageBoilerplate>
   );
 }
