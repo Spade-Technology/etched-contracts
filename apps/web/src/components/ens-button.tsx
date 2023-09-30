@@ -63,7 +63,7 @@ export const EtchedENS = () => {
     setTimeout(() => setCopiedState(false), 1000);
   };
 
-  return isLoading || ens.length > 0 ? (
+  return isLoading || ens?.length > 0 ? (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
