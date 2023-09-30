@@ -2,6 +2,7 @@ import { Icons } from "./icons";
 
 const Footer = () => {
   return (
+    <div className="mx-5 md:mx-24 "> 
     <div className="mx-auto mt-10 flex flex-col items-center justify-between border-t-[1px] border-t-black pt-7 text-center md:flex-row md:px-24 md:py-20">
       <div>
         <Icons.logoLong color="#097B45" className="h-9 " />
@@ -28,6 +29,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
