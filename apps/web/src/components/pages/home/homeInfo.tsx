@@ -22,6 +22,7 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
         <Image src={LeftHeaderBg} alt="" className="absolute bottom-10 md:-bottom-40" />
         <div className="mx-5 md:mx-24 py-16 text-base md:text-2xl">
 
+
 Create an ‘Etch’ and secure your intellectual property. An Etch is digital evidence, like a strain of DNA that is linked
 to the essence of your creation, proving what you did, when you say you did it. Etched empowers you to redefine your
 copyright, trademark security, and IP management. With robust safeguards and total transparency, we shield your creativity
