@@ -13,8 +13,9 @@ const Header = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
 
   return (
-    <div className="my-8 flex justify-between gap-3">
-      <Icons.logoLong color="#097B45" className="h-8 cursor-pointer align-middle md:mr-2" onClick={() => router.push("/")} />
+    <div className="mx-5 md:mx-24 flex justify-between md:gap-20">
+      <Icons.logoLong color="#097B45" className="h-8 my-auto cursor-pointer align-middle md:mr-2" onClick={() => router.push("/")} />
+      <div className="md:w-fit md:px-96 h-36 bg-[url('/images/backgrounds/middleHeaderBg.svg')]">
       <div className="hidden ">
         <div className="flex gap-5">
           <div
@@ -39,11 +40,11 @@ const Header = ({ setShowWaitlist }: Props) => {
           </div>
         </div>
       </div>
-
+      </div>
       <div
         // onClick={() => router.push("/authentication")}
         onClick={() => setShowWaitlist(true)}
-        className=" flex cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3 text-sm font-semibold text-white md:text-lg"
+        className="my-auto flex cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3 text-sm font-semibold text-white md:text-lg"
       >
         Join Waitlist
         <Image src={ForwardArrow} alt="forward" />

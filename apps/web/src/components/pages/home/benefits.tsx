@@ -16,7 +16,7 @@ interface Props {
 const Benefits = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
   return (
-    <div className="pt-16 text-center md:pt-28 ">
+    <div className="pt-16 mx-5 md:mx-24  text-center md:pt-28 ">
       <div className="text-[28px] font-semibold text-black md:text-[42px] ">Key Features</div>
       <div className="flex flex-col  gap-5 py-5 text-left md:flex-row md:justify-evenly">
         <div className="mx-auto max-w-[273px] ">
