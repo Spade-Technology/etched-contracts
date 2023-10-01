@@ -15,17 +15,12 @@ module.exports = {
       },
     },
     extend: {
-      fontFamily: {
-        campton: ["Campton", "sans-serif"],
-      },
+
       backgroundImage: {
         'gardient-pattern': '',
       },
       fontFamily: {
-        body: ['Campton'],
-        heading: ['Campton', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
-        roboto: ['Roboto', 'sans-serif'],
+        campton: ["Campton", "sans-serif"],
       },
       colors: {
         border: "var(--border)",

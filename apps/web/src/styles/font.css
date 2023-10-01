@@ -1,7 +1,0 @@
-/* Campton Cufonfonts */
-@font-face {
-    font-family: campton cufonfonts;
-    font-style: normal;
-    font-weight: 400;
-    src: local('Campton cufonfonts'), url(../../public/fonts/campton-cufonfonts/CamptonBold.otf) format('otf');
-  }

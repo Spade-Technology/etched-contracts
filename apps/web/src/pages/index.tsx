@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);
   return (
-    <div className="">
+    <div className="font-campton">
       <Header setShowWaitlist={setShowWaitlist} />
 
 
