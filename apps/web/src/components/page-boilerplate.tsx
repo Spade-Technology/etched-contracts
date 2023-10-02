@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { DashboardHeader } from "./dashboard-header";
 import { SideBar } from "./sidebar";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export const PageBoilerplate = ({ children }: { children: React.ReactNode }) => {
   // maybe a bit extra, should do the trick though, right
@@ -19,8 +20,10 @@ export const PageBoilerplate = ({ children }: { children: React.ReactNode }) => 
 };
 
 export const useVerifyAuth = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
-  if (!session) router.push("/auth/signin");
+  useEffect(() => {
+    if (!session && status == "unauthenticated") router.push("/authentication");
+  }, []);
 };
