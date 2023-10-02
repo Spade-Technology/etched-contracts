@@ -23,8 +23,9 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);
   return (
-    <div className="mx-5  my-8 md:mx-24">
+    <div className="font-campton">
       <Header setShowWaitlist={setShowWaitlist} />
+
 
       <div className="mx-auto pt-10 text-center align-middle ">
         <Dialog open={showWaitlist} onOpenChange={(x) => setShowWaitlist(x)}>
@@ -63,5 +64,7 @@ export default function Home() {
       <Footer />
       {/* {showWaitlist && <JoinWaitlist show={showWaitlist} close={() => setShowWaitlist(false)} />} */}
     </div>
+
+
   );
 }
