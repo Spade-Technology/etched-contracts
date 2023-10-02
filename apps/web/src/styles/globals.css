@@ -77,6 +77,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Campton cufonfonts";
+    font-family: "Campton";
   }
 }
