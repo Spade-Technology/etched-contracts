@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+// import CamptonBold from "./public/fonts/campton-cufonfonts"
+
+import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 
 module.exports = {
   darkMode: ["class"],
@@ -12,11 +15,12 @@ module.exports = {
       },
     },
     extend: {
+
+      backgroundImage: {
+        'gardient-pattern': '',
+      },
       fontFamily: {
         campton: ["Campton", "sans-serif"],
-      },
-      backgroundImage: {
-        // 'gardient-pattern': `url(${gradientImg})`,
       },
       colors: {
         border: "var(--border)",
