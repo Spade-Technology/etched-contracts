@@ -2,7 +2,7 @@ import Benefits from "@/components/pages/home/benefits";
 import HomeInfo from "@/components/pages/home/homeInfo";
 import JoinWaitlist from "@/components/pages/home/popups/joinWaitlist";
 import Footer from "@/components/ui/footer";
-import Header from "@/components/ui/header";
+import Header from "@/components/pages/home/header";
 import { useState } from "react";
 import {
   Dialog,
@@ -26,7 +26,6 @@ export default function Home() {
     <div className="font-campton">
       <Header setShowWaitlist={setShowWaitlist} />
 
-
       <div className="mx-auto pt-10 text-center align-middle ">
         <Dialog open={showWaitlist} onOpenChange={(x) => setShowWaitlist(x)}>
           <DialogContent className="sm:max-w-[425px]">
@@ -49,7 +48,7 @@ export default function Home() {
                 </div>
               </DialogDescription>
               <DialogFooter>
-                <Button type="submit" className="gap-3 mt-5 rounded-lg">
+                <Button type="submit" className="mt-5 gap-3 rounded-lg">
                   Join Waitlist <Image src={ForwardArrow} alt="forward" />
                 </Button>
               </DialogFooter>
@@ -64,7 +63,5 @@ export default function Home() {
       <Footer />
       {/* {showWaitlist && <JoinWaitlist show={showWaitlist} close={() => setShowWaitlist(false)} />} */}
     </div>
-
-
   );
 }
