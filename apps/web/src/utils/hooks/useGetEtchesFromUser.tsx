@@ -1,5 +1,8 @@
 import { Etch, EtchOwnership, Team, useQuery } from "@/gqty";
-import { useSession } from "next-auth/react";
+
+import { useEffect } from "react";
+
+export const RefreshEtchesEvent = new Event("refresh-etches");
 
 export const useGetEtchesFromUser = (userId?: string) => {
   const query = useQuery({});
@@ -46,6 +49,12 @@ export const useGetEtchesFromUser = (userId?: string) => {
       .map((el: Team) => el.managedEtches({ first: 10 })?.map((el: EtchOwnership) => el.etch))
       .reduce((acc: Etch[], val: any) => acc.concat(val), [] as Etch[]) ?? []),
   ];
+
+  useEffect(() => {
+    document.addEventListener("refresh-etches", () => {
+      query.$refetch(false);
+    });
+  }, []);
 
   const etchToDisplay = _etchToDisplay.filter((el) => el.__typename !== undefined);
 
