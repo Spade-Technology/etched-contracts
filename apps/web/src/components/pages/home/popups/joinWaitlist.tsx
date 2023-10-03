@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import CustomModal from "@/components/ui/customModal";
 import Image from "next/image";
 import ForwardArrow from "public/icons/forward-arrow.svg";
@@ -11,11 +10,16 @@ const JoinWaitlist = ({ show, close }: WaitlistProps) => {
   return (
     <CustomModal show={show} close={close}>
       <div className="py-5 md:p-5">
-        <div className="p-2 text-lg flex justify-between gap-2 md:gap-5">
-          Email : <input placeholder="Enter valid Mail" className="rounded-lg border-[1px] border-black px-2 md:px-5 py-2 outline-none" />
+        <div className="flex justify-between gap-2 p-2 text-lg md:gap-5">
+          Email :{" "}
+          <input placeholder="Enter valid Mail" className="rounded-lg border-[1px] border-black px-2 py-2 outline-none md:px-5" />
         </div>
-        <div className="p-2 text-lg flex justify-between gap-2 md:gap-5">
-          Company : <input placeholder="Enter Company Name" className="rounded-lg border-[1px] border-black px-2 md:px-5 py-2 outline-none" />
+        <div className="flex justify-between gap-2 p-2 text-lg md:gap-5">
+          Company :{" "}
+          <input
+            placeholder="Enter Company Name"
+            className="rounded-lg border-[1px] border-black px-2 py-2 outline-none md:px-5"
+          />
         </div>
 
         <div

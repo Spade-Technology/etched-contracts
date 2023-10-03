@@ -1,27 +1,7 @@
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { api } from "@/utils/api";
-import { shortenAddress } from "@/utils/hooks/address";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useContractRead } from "wagmi";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Skeleton } from "./ui/skeleton";
-import { useToast } from "./ui/use-toast";
-import ENSAbi from "@/contracts/abi/EtchENS.json";
-import { contracts } from "@/contracts";
 import { useQuery } from "@/gqty";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { Button } from "./ui/button";
 
 import {
   Select,
@@ -31,7 +11,6 @@ import {
   SelectLabel,
   SelectSeparator,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 
 export const TeamSelector = () => {

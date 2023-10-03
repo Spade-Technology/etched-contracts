@@ -11,22 +11,18 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } fr
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
+
 import { Switch } from "./ui/switch";
 
-import { currentNetwork } from "@/contracts";
-import * as LitJsSdk from "@lit-protocol/lit-node-client";
-
-import { useUploadThing } from "@/utils/uploadthing";
-import { useAccount } from "wagmi";
-import { toast } from "./ui/use-toast";
-import auth from "@/pages/api/auth/[...nextauth]";
-import { useSignIn } from "@/utils/hooks/useSignIn";
 import { useQuery } from "@/gqty";
+import { useSignIn } from "@/utils/hooks/useSignIn";
+import { useUploadThing } from "@/utils/uploadthing";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   etchTitle: z.string(),

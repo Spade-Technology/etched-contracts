@@ -1,12 +1,10 @@
 import Image from "next/image";
-import File_SS from "public/images/home/file_SS.svg";
-import Storage_SS from "public/images/home/storage_SS.svg";
-import Library_SS from "public/images/home/library_SS.svg";
-import Dashboard_SS from "public/images/home/dashboard_SS.svg";
-import BackImage from "public/images/home/backImage.svg";
-import BlackForward from "public/icons/blackForward.svg";
 import { useRouter } from "next/router";
-import GradientImg from "public/images/home/Gradient.svg";
+import BlackForward from "public/icons/blackForward.svg";
+import Dashboard_SS from "public/images/home/dashboard_SS.svg";
+import File_SS from "public/images/home/file_SS.svg";
+import Library_SS from "public/images/home/library_SS.svg";
+import Storage_SS from "public/images/home/storage_SS.svg";
 import { Dispatch, SetStateAction } from "react";
 
 interface Props {
@@ -16,7 +14,7 @@ interface Props {
 const Benefits = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
   return (
-    <div className="pt-16 mx-5 md:mx-24  text-center md:pt-28 ">
+    <div className="mx-5 pt-16 text-center  md:mx-24 md:pt-28 ">
       <div className="text-[28px] font-semibold text-black md:text-[42px] ">Key Features</div>
       <div className="flex flex-col  gap-5 py-5 text-left md:flex-row md:justify-evenly">
         <div className="mx-auto max-w-[273px] ">
