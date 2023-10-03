@@ -19,11 +19,28 @@ const Benefits = ({ setShowWaitlist }: Props) => {
       <div className="text-[28px] font-semibold text-black md:text-[42px]">Key Features</div>
       {/* FEATURES/BENEFITS */}
       <div className="relative -z-10 flex grid-cols-12 flex-col gap-[46px] pt-10 text-left min-[360px]:px-[42px] sm:grid">
-        {features.reverse().map(({ title, text, description, color, background, img }, index) => {
+        {features.map(({ title, text, description, color, background, img }, index) => {
           return (
             <div className={` sm:col-span-6 lg:col-span-3`}>
-              <div className={`rounded-2xl px-14 py-4 ` + `${background}`}>
-                <div className={`text-center text-lg font-bold ${color}`}>{title}</div>
+              <div
+                className={
+                  `rounded-2xl px-14 py-4 ` +
+                  `${index == 0 ? "bg-[#FFF8E5]" : index == 1 ? "bg-[#ECFDF5]" : index == 2 ? "bg-[#F0F9FF]" : "bg-[#EEF2FF]"}`
+                }
+              >
+                <div
+                  className={`text-center text-lg font-bold ${
+                    index == 0
+                      ? "text-[#DDA200]"
+                      : index == 1
+                      ? "text-[#047857]"
+                      : index == 2
+                      ? "text-[#0369A1]"
+                      : "text-[#4338CA]"
+                  }`}
+                >
+                  {title}
+                </div>
                 <Image src={img} alt="File_SS" width={162} height={110} className={`mx-auto pt-5`} />
               </div>
               <div className={`pb-4 pt-6 text-2xl font-semibold`}>{text}</div>
@@ -39,8 +56,8 @@ const Benefits = ({ setShowWaitlist }: Props) => {
       {/* bg-gradient-to-r from-green-400 to-cyan-500 */}
 
       <div
-        className={`max-xs:p-5 relative z-10 mx-auto mt-40 flex h-[539px] max-w-[1238px] flex-col gap-7 overflow-hidden
-      rounded-[32px] bg-[url(/images/home/backImage.svg)] bg-cover bg-center bg-no-repeat p-10 md:h-[438px] md:pb-[95px] md:pl-[45px]`}
+        className={`relative z-10 mx-auto mt-40 flex h-[539px] max-w-[1238px] flex-col gap-7 overflow-hidden rounded-[32px]
+      bg-[url(/images/home/backImage.svg)] bg-cover bg-center bg-no-repeat p-10 max-xs:p-5 md:h-[438px] md:pb-[95px] md:pl-[45px]`}
       >
         {/* <Image src={GradientImg} alt="BackImage" className="rounded-3xl" /> */}
         {/* md:bottom-[340px] */}
@@ -51,7 +68,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
         <div
           // onClick={() => router.push("/authentication")}
           onClick={() => setShowWaitlist(true)}
-          className="max-xs:px-5 max-xs:py-2 flex w-fit cursor-pointer items-center gap-[21px] rounded-[52.293px] bg-white px-[39px] py-[19px] font-campton  font-semibold text-black shadow-[0px_2.80141px_11.20565px_0px_rgba(20,20,43,0.10)]"
+          className="flex w-fit cursor-pointer items-center gap-[21px] rounded-[52.293px] bg-white px-[39px] py-[19px] font-campton font-semibold text-black shadow-[0px_2.80141px_11.20565px_0px_rgba(20,20,43,0.10)] max-xs:px-5 max-xs:py-2"
         >
           Join Waitlist
           <Image src={BlackForward} alt="forward" />
