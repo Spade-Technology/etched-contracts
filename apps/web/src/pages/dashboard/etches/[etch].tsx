@@ -1,6 +1,6 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { DataTableDemo } from "@/components/etches-dashboard-table";
+import { DataTable } from "@/components/etches-dashboard-table";
 import { SideBar } from "@/components/sidebar";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { Metadata } from "next";

@@ -1,24 +1,14 @@
 import Benefits from "@/components/pages/home/benefits";
-import HomeInfo from "@/components/pages/home/homeInfo";
-import JoinWaitlist from "@/components/pages/home/popups/joinWaitlist";
-import Footer from "@/components/ui/footer";
 import Header from "@/components/pages/home/header";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { Label } from "@/components/ui/label";
+import HomeInfo from "@/components/pages/home/homeInfo";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Footer from "@/components/ui/footer";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import ForwardArrow from "public/icons/forward-arrow.svg";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);
