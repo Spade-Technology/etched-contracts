@@ -1,5 +1,4 @@
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -9,12 +8,11 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
-import { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { signOut } from "@/utils/hooks/useSignIn";
 import { SearchIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { CreateEtchEvent } from "./create-etch-button";
+import { Button } from "./ui/button";
 
 export const commands = [
   {

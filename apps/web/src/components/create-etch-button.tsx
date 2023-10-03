@@ -19,10 +19,10 @@ import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
 import { useQuery } from "@/gqty";
+import { RefreshEtchesEvent } from "@/utils/hooks/useGetEtchesFromUser";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "./ui/use-toast";
-import { RefreshEtchesEvent } from "@/utils/hooks/useGetEtchesFromUser";
 
 const formSchema = z.object({
   etchTitle: z.string(),

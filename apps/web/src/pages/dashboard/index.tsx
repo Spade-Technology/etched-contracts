@@ -1,8 +1,6 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
-import { DashboardHeader } from "@/components/dashboard-header";
 import { DataTable } from "@/components/etches-dashboard-table";
 import { PageBoilerplate } from "@/components/page-boilerplate";
-import { SideBar } from "@/components/sidebar";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { Metadata } from "next";
 import { useSession } from "next-auth/react";

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
-import { Icons } from "../../ui/icons";
 import { Dispatch, SetStateAction } from "react";
+import { Icons } from "../../ui/icons";
 // import bg from ""
 
 interface Props {
