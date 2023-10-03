@@ -13,45 +13,47 @@ import { useState } from "react";
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);
   return (
-    <div className="font-campton">
-      <Header setShowWaitlist={setShowWaitlist} />
+    <div className="w-full overflow-hidden font-campton">
+      <section className="mx-5 md:mx-10 xl:mx-24">
+        <Header setShowWaitlist={setShowWaitlist} />
 
-      <div className="mx-auto pt-10 text-center align-middle ">
-        <Dialog open={showWaitlist} onOpenChange={(x) => setShowWaitlist(x)}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Join The Etched Waitlist</DialogTitle>
-              {/* <DialogDescription>Secure your spot in our exclusive community</DialogDescription> */}
-              <DialogDescription>
-                <div className="grid grid-cols-4 items-center gap-4 py-4">
-                  <Label htmlFor="email" className="text-right">
-                    Email:
-                  </Label>
-                  <Input id="email" defaultValue="example@domain.com" className="col-span-3" />
-                </div>
+        <div className="mx-auto text-center align-middle ">
+          <Dialog open={showWaitlist} onOpenChange={(x) => setShowWaitlist(x)}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Join The Etched Waitlist</DialogTitle>
+                {/* <DialogDescription>Secure your spot in our exclusive community</DialogDescription> */}
+                <DialogDescription>
+                  <div className="grid grid-cols-4 items-center gap-4 py-4">
+                    <Label htmlFor="email" className="text-right">
+                      Email:
+                    </Label>
+                    <Input id="email" defaultValue="example@domain.com" className="col-span-3" />
+                  </div>
 
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="company" className="text-right">
-                    Company:
-                  </Label>
-                  <Input id="company" defaultValue="Acme Corp" className="col-span-3" />
-                </div>
-              </DialogDescription>
-              <DialogFooter>
-                <Button type="submit" className="mt-5 gap-3 rounded-lg">
-                  Join Waitlist <Image src={ForwardArrow} alt="forward" />
-                </Button>
-              </DialogFooter>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="company" className="text-right">
+                      Company:
+                    </Label>
+                    <Input id="company" defaultValue="Acme Corp" className="col-span-3" />
+                  </div>
+                </DialogDescription>
+                <DialogFooter>
+                  <Button type="submit" className="mt-5 gap-3 rounded-lg">
+                    Join Waitlist <Image src={ForwardArrow} alt="forward" />
+                  </Button>
+                </DialogFooter>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
 
-        <HomeInfo setShowWaitlist={setShowWaitlist} />
-        <Benefits setShowWaitlist={setShowWaitlist} />
-      </div>
+          <HomeInfo setShowWaitlist={setShowWaitlist} />
+          <Benefits setShowWaitlist={setShowWaitlist} />
+        </div>
 
-      <Footer />
-      {/* {showWaitlist && <JoinWaitlist show={showWaitlist} close={() => setShowWaitlist(false)} />} */}
+        <Footer />
+        {/* {showWaitlist && <JoinWaitlist show={showWaitlist} close={() => setShowWaitlist(false)} />} */}
+      </section>
     </div>
   );
 }
