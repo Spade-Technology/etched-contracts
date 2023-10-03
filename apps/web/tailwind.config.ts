@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 // import CamptonBold from "./public/fonts/campton-cufonfonts"
-
+import defaultTheme from "tailwindcss/defaultTheme";
 import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 
 module.exports = {
@@ -15,9 +15,8 @@ module.exports = {
       },
     },
     extend: {
-
       backgroundImage: {
-        'gardient-pattern': '',
+        "gardient-pattern": "",
       },
       fontFamily: {
         campton: ["Campton", "sans-serif"],
@@ -97,6 +96,10 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         shake: "shake 0.5s ease-in-out",
       },
+    },
+    screens: {
+      xs: "330px",
+      ...defaultTheme.screens,
     },
   },
   plugins: [require("tailwindcss-animate")],
