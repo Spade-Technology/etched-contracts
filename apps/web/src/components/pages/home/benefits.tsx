@@ -1,12 +1,10 @@
 import Image from "next/image";
-import File_SS from "public/images/home/file_SS.svg";
-import Storage_SS from "public/images/home/storage_SS.svg";
-import Library_SS from "public/images/home/library_SS.svg";
-import Dashboard_SS from "public/images/home/dashboard_SS.svg";
-import BackImage from "public/images/home/backImage.svg";
-import BlackForward from "public/icons/blackForward.svg";
 import { useRouter } from "next/router";
-import GradientImg from "public/images/home/Gradient.svg";
+import BlackForward from "public/icons/blackForward.svg";
+import Dashboard_SS from "public/images/home/dashboard_SS.svg";
+import File_SS from "public/images/home/file_SS.svg";
+import Library_SS from "public/images/home/library_SS.svg";
+import Storage_SS from "public/images/home/storage_SS.svg";
 import { Dispatch, SetStateAction } from "react";
 import { features } from "./mockData";
 

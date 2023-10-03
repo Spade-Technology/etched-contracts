@@ -3,12 +3,10 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { Icons } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
 
-import { ConnectWalletModalButtonWrapper } from "./connect-wallet";
-import { SignIn, useAuth } from "@clerk/nextjs";
 import { useSignIn } from "@/utils/hooks/useSignIn";
+import { useAuth } from "@clerk/nextjs";
+import { ConnectWalletModalButtonWrapper } from "./connect-wallet";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 

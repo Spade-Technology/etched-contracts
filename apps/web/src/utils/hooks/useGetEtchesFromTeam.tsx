@@ -1,5 +1,4 @@
 import { Etch, EtchOwnership, Team, useQuery } from "@/gqty";
-import { useSession } from "next-auth/react";
 
 export const useGetEtchesFromTeam = (teamId?: string) => {
   const query = useQuery({});

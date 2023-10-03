@@ -1,4 +1,3 @@
-import * as React from "react";
 import { CaretSortIcon, ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
@@ -12,6 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,19 +21,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Etch, EtchOwnership, Team, Wallet } from "@/gqty";
+import { Etch, EtchOwnership } from "@/gqty";
+import { shortenAddress } from "@/utils/hooks/address";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { shortenAddress } from "@/utils/hooks/address";
-import { CreateEtchButton } from "./create-etch-button";
-import { Loader, Loader2 } from "lucide-react";
-import { Skeleton } from "./ui/skeleton";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
 
 dayjs.extend(relativeTime);
 
