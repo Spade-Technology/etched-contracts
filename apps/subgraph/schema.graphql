@@ -297,6 +297,20 @@ type TeamTransferToOrganisation @entity(immutable: true) {
   organisation: Organisation!
 }
 
+
+type TeamRenamed @entity(immutable: true) {
+  id: Bytes!
+
+  newName: String! # string
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+
+  team: Team!
+}
+
+
 ## ORGANISATION EVENTS ##
 
 type OrganisationApproval @entity(immutable: true) {
