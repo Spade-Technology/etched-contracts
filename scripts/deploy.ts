@@ -11,6 +11,8 @@ async function main() {
   const orgContract = await Org.deploy();
   await orgContract.deployed();
 
+  await orgContract.addNode("0x05C0999373F4d4519A338b9d07F2cE94E2904184"); // Bhanu's address
+
   console.log("Org deployed to:", orgContract.address);
 
   console.log("Organisations deployed to:", orgContract.address);
