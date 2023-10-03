@@ -2,6 +2,7 @@ import { etchRouter } from "@/server/api/routers/etch";
 import { createTRPCRouter } from "@/server/api/trpc";
 import { ensRouter } from "./routers/ens";
 import { patchRouter } from "./routers/patch";
+import { teamRouter } from "./routers/team";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { patchRouter } from "./routers/patch";
  */
 export const appRouter = createTRPCRouter({
   etch: etchRouter,
+  team: teamRouter,
   ens: ensRouter,
   patch: patchRouter,
 });

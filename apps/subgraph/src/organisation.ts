@@ -3,8 +3,10 @@ import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
   OrganisationCreated as OrganisationCreatedEvent,
+  OrganisationRenamed as OrganisationRenamedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   PermissionsUpdated as PermissionsUpdatedEvent,
+  
   Transfer as TransferEvent,
 } from "../generated/Organisation/Organisation";
 import {
@@ -17,6 +19,7 @@ import {
   OrganisationOwnership,
   Organisation,
   OrganisationPermission,
+  OrganisationRenamed,
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
 import { EOID, getOrgId, upsertOrg, upsertOrgOwnership, upsertOrgPermission } from "./utils";
@@ -44,6 +47,28 @@ export function handleOrganisationCreated(event: OrganisationCreatedEvent): void
 
   // create the organisation ownership record
   upsertOrgOwnership(orgOwnershipId, orgId, event.params.to);
+}
+
+export function handleOrganisationRenamed(event: OrganisationRenamedEvent): void {
+  const entity = new OrganisationRenamed(event.transaction.hash.concatI32(event.logIndex.toI32()));
+
+  entity.newName = event.params.newName;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  entity.organisation = event.params.orgId.toString();
+
+  entity.save();
+
+  const orgId = getOrgId(EOID.Org, event.params.orgId);
+  let org = Organisation.load(orgId);
+  if (org == null) org = new Organisation(orgId);
+
+  org.name = entity.newName;
+
+  org.save();
 }
 
 export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {

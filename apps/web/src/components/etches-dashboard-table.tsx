@@ -103,7 +103,7 @@ export const columns: EtchColumnDef[] = [
     cell: ({ row }) => {
       const ownership: EtchOwnership = row.getValue("ownership");
 
-      if (ownership?.team)
+      if (ownership?.team && ownership?.team?.teamId)
         return (
           <Link href={`/dashboard/teams/${ownership?.team?.teamId}`}>
             <div className="cursor-pointer text-right font-medium hover:underline">team {ownership?.team?.teamId}</div>
