@@ -1,5 +1,4 @@
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -9,11 +8,11 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
-import { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { signOut } from "@/utils/hooks/useSignIn";
 import { SearchIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CreateEtchEvent } from "./create-etch-button";
+import { Button } from "./ui/button";
 
 export const commands = [
   {
@@ -37,7 +36,7 @@ export const commands = [
     name: "New Etch",
     type: "create",
     action: () => {
-      document.dispatchEvent(new CustomEvent("create-etch"));
+      document.dispatchEvent(CreateEtchEvent);
     },
   },
   {
@@ -130,7 +129,7 @@ export function CommandMenu() {
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="flex w-full justify-start gap-2 rounded-sm p-3 text-slate-500"
+        className="flex w-full cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500"
       >
         <SearchIcon className="h-full scale-150" />
         Type a Command, or use {bsrtct("⌘K")}

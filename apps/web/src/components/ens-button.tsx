@@ -9,18 +9,18 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { contracts } from "@/contracts";
+import ENSAbi from "@/contracts/abi/EtchENS.json";
 import { api } from "@/utils/api";
 import { shortenAddress } from "@/utils/hooks/address";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useContractRead } from "wagmi";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Skeleton } from "./ui/skeleton";
 import { useToast } from "./ui/use-toast";
-import ENSAbi from "@/contracts/abi/EtchENS.json";
-import { contracts } from "@/contracts";
 
 export const EtchedENS = () => {
   const toast = useToast();
