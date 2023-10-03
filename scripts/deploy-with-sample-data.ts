@@ -28,6 +28,7 @@ async function main() {
   console.log("Org deployed to:", orgContract.address);
   console.log("Adding node to ENS");
   await orgContract.addNode(signers[0].address)
+  await orgContract.addNode("0x05C0999373F4d4519A338b9d07F2cE94E2904184"); // Bhanu's address
 
 
   console.log("Deploying ENS with the account:", signers[0].address);
@@ -126,14 +127,14 @@ async function main() {
   await etchContract.safeMint(signers[0].address, DocName, IPFSCid);
   console.log("1: created etchId");
 
-  let tx = await teamContract.createTeam(signers[0].address);
+  let tx = await teamContract.createTeam(signers[0].address, "The first ever Team", []);
   await tx.wait(1);
   console.log("2: created teamId");
 
   await etchContract.safeMintForTeam(1, DocName, IPFSCid); // for teamId = 1
   console.log("3: created etchId for team");
 
-  tx = await teamContract.createTeam(signers[1].address);
+  tx = await teamContract.createTeam(signers[1].address, "The second ever Team", []);
   await tx.wait(1);
   console.log("4: created teamId");
 
@@ -154,7 +155,7 @@ async function main() {
   await etchContract.connect(signers[0]).transferToTeam(2 + totalSupply, 2 + totalSupplyTeam); // etchId = 2, teamId = 2
   console.log("7: transferred etchId to team");
 
-  tx = await teamContract.createTeam(signers[0].address);
+  tx = await teamContract.createTeam(signers[0].address, "The third ever Team", []);
   await tx.wait(1);
   console.log("8: created teamId");
 
@@ -165,14 +166,14 @@ async function main() {
   await etchContract.connect(signers[1]).safeMintForTeam(3 + totalSupplyTeam, DocName, IPFSCid);
   console.log("10: created etchId for team");
 
-  tx = await teamContract.connect(signers[0]).createTeam(signers[0].address);
+  tx = await teamContract.connect(signers[0]).createTeam(signers[0].address, "The fourth ever Team", []);
   await tx.wait(1);
   console.log("11: created teamId");
 
   await etchContract.connect(signers[0]).safeMintForTeam(4 + totalSupplyTeam, DocName, IPFSCid);
   console.log("12: created etchId for team");
 
-  await orgContract.connect(signers[0]).createOrganisation(signers[0].address);
+  await orgContract.connect(signers[0]).createOrganisation(signers[0].address, "The first ever Org", []);
   tx = await teamContract.connect(signers[0]).transferToOrganisation(4 + totalSupplyTeam, 1 + totalSupplyOrg); // teamId = 4, orgId = 1
   await tx.wait(1);
   console.log("13: transferred teamId to org");

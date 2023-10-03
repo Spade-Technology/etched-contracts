@@ -70,11 +70,11 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers,
     });
 
     it("Should be able to create teams", async () => {
-      await teamContract.createTeam(signers[0].address);
+      await teamContract.createTeam(signers[0].address, "Team 1", []);
       const team = await teamContract.ownerOf(1 + totalSupplyTeam); // teamId = 1
       await expect(team).to.equal(signers[0].address);
 
-      await teamContract.createTeam(signers[1].address);
+      await teamContract.createTeam(signers[1].address, "Team 2", []);
       const team2 = await teamContract.ownerOf(2 + totalSupplyTeam); // teamId = 2
       await expect(team2).to.equal(signers[1].address);
     });
@@ -129,7 +129,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers,
 
   describe("Team Permission (Read & Write, no transfer) Etch tests", () => {
     it("Should be able to create a new Team using wallet 0", async () => {
-      await teamContract.createTeam(signers[0].address);
+      await teamContract.createTeam(signers[0].address, "Team 3", []);
       const team = await teamContract.ownerOf(3 + totalSupplyTeam); // teamId = 3
       await expect(team).to.equal(signers[0].address);
     });
@@ -196,7 +196,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers,
   describe("Organisation Permission on Team", () => {
     it("Should be able to create a new Team & Etch using wallet 0", async () => {
       await expect(teamContract.ownerOf(4 + totalSupplyTeam)).to.be.reverted; // check that teamId = 4 doesn't exist yet
-      await teamContract.connect(signers[0]).createTeam(signers[0].address);
+      await teamContract.connect(signers[0]).createTeam(signers[0].address,"Team 4", []);
       const team = await teamContract.ownerOf(4 + totalSupplyTeam); // teamId = 4
       await expect(team).to.equal(signers[0].address);
 
@@ -206,7 +206,7 @@ async function etchMainTests({ teamContract, orgContract, etchContract, signers,
     });
 
     it("Should be able to create Organisation", async () => {
-      await orgContract.connect(signers[0]).createOrganisation(signers[0].address);
+      await orgContract.connect(signers[0]).createOrganisation(signers[0].address, "Organisation 1", [])
       const org = await orgContract.ownerOf(1 + totalSupplyOrg); // orgId = 1
       await expect(org).to.equal(signers[0].address);
     });

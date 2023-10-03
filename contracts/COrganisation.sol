@@ -36,7 +36,8 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
      */
     function createOrganisation(
         address to,
-        string memory name
+        string memory name,
+        IOrganisation.userPermission[] memory users
     ) external override returns (uint256 newOrgId) {
         totalSupply.increment();
         uint256 orgId = totalSupply.current();
@@ -45,6 +46,8 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
 
         emit OrganisationCreated(orgId, to);
         emit OrganisationRenamed(orgId, name);
+
+        if (users.length > 0) setPermissionBulk(orgId, users);
 
         return orgId;
     }
@@ -123,6 +126,29 @@ contract Organisations is ERC721, IERC721Receiver, IOrganisation, NodeHandler {
         permissionOf[orgId][user] = permission;
 
         emit PermissionsUpdated(orgId, user, permission);
+    }
+
+    /**
+     * @notice Sets the permission of a user for a organisation.
+     *
+     * @param orgId The orginisationId
+     * @param users [address, uint] The user to set the permission for
+     *
+     * @dev Only an admin of the organisation can set permissions.
+     */
+    function setPermissionBulk(
+        uint256 orgId,
+        IOrganisation.userPermission[] memory users
+    ) public override {
+        require(
+            isAdmin(orgId, _msgSender()),
+            "ORGANISATION: Only an admin of the organisation can set permissions."
+        );
+
+        for (uint256 i = 0; i < users.length; i++) {
+            permissionOf[orgId][users[i].user] = users[i].permission;
+            emit PermissionsUpdated(orgId, users[i].user, users[i].permission);
+        }
     }
 
     /**

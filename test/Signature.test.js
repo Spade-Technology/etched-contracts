@@ -134,7 +134,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createTeam',
-        args: [signers[1].address]
+        args: [signers[1].address, "Another Team", []]
       });
 
 
@@ -153,7 +153,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createTeam',
-        args: [signers[3].address]
+        args: [signers[3].address, "Another Team", []]
       });
 
       const calldata = [functionData];
@@ -168,13 +168,13 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData1 = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createTeam',
-        args: [signers[2].address]
+        args: [signers[2].address, "Another Team", []]
       });
 
       const functionData2 = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createTeam',
-        args: [signers[3].address]
+        args: [signers[3].address, "Another Team", []]
       });
 
       const calldata = [functionData1, functionData2];
@@ -195,7 +195,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createTeam',
-        args: [signers[1].address]
+        args: [signers[1].address, "Another Team", []]
       });
 
 
@@ -227,7 +227,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createOrganisation',
-        args: [signers[2].address]
+        args: [signers[2].address, "Another Org", []]
       });
 
 
@@ -246,7 +246,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createOrganisation',
-        args: [signers[3].address]
+        args: [signers[3].address, "Another Org", []]
       });
 
       const calldata = [functionData];
@@ -260,7 +260,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createOrganisation',
-        args: [signers[3].address]
+        args: [signers[3].address, "Another Org", []]
       });
 
       const calldata = [functionData];
@@ -275,13 +275,13 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData1 = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createOrganisation',
-        args: [signers[2].address]
+        args: [signers[2].address, "Another Org", []]
       });
 
       const functionData2 = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createOrganisation',
-        args: [signers[3].address]
+        args: [signers[3].address, "Another Org", []]
       });
 
       const calldata = [functionData1, functionData2];
@@ -302,7 +302,7 @@ async function etchSigTests({ teamContract, orgContract, etchContract, signers, 
       const functionData = encodeFunctionData({
         abi: artifact.abi,
         functionName: 'createOrganisation',
-        args: [signers[3].address]
+        args: [signers[3].address, "Another Org", []]
       });
 
 

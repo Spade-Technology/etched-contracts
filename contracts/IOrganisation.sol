@@ -10,6 +10,11 @@ abstract contract IOrganisation is IERC721 {
         Admin
     }
 
+    struct userPermission {
+        address user;
+        EPermissions permission;
+    }
+
     event OrganisationCreated(uint256 indexed orgId, address indexed to);
     event PermissionsUpdated(
         uint256 indexed orgId,
@@ -30,7 +35,8 @@ abstract contract IOrganisation is IERC721 {
 
     function createOrganisation(
         address to,
-        string memory name
+        string memory name,
+        userPermission[] memory users
     ) external virtual returns (uint256 newOrgId);
 
     function renameOrganisation(
@@ -42,6 +48,11 @@ abstract contract IOrganisation is IERC721 {
         uint256 orgId,
         address user,
         EPermissions permission
+    ) external virtual;
+
+    function setPermissionBulk(
+        uint256 orgId,
+        userPermission[] memory users
     ) external virtual;
 
     function getNumberOfOrganisationsCreated()

@@ -44,7 +44,8 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
      */
     function createTeam(
         address to,
-        string memory teamName
+        string memory teamName,
+        ITeams.userPermissions[] memory users
     ) external override returns (uint256 newTeamId) {
         totalSupply.increment();
         uint256 teamId = totalSupply.current();
@@ -53,6 +54,8 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
 
         emit TeamCreated(teamId, to);
         emit TeamRenamed(teamId, teamName);
+
+        if (users.length > 0) setPermissionBulk(teamId, users);
 
         return teamId;
     }
@@ -108,6 +111,24 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
         permissionsOfTeam[teamId][user] = permission;
 
         emit PermissionsUpdated(teamId, user, permission);
+    }
+
+    /**
+     * @notice Sets the permission of a user for a team.
+     *
+     * @param teamId Set the permission of a user for a team
+     * @param users [address, uint] The user to set the permission for
+     *
+     * @dev Only the owner of the team can set permissions. Let it be an organisation, or a user.
+     */
+    function setPermissionBulk(
+        uint256 teamId,
+        ITeams.userPermissions[] memory users
+    ) public override onlyAdmin(teamId) {
+        for (uint256 i = 0; i < users.length; i++) {
+            permissionsOfTeam[teamId][users[i].user] = users[i].permission;
+            emit PermissionsUpdated(teamId, users[i].user, users[i].permission);
+        }
     }
 
     /**
