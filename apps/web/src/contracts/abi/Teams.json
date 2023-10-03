@@ -128,6 +128,25 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "newName",
+        "type": "string"
+      }
+    ],
+    "name": "TeamRenamed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -295,6 +314,28 @@
         "internalType": "address",
         "name": "to",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "teamName",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ITeams.userPermissions[]",
+        "name": "users",
+        "type": "tuple[]"
       }
     ],
     "name": "createTeam",
@@ -601,6 +642,24 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "newName",
+        "type": "string"
+      }
+    ],
+    "name": "renameTeam",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
@@ -695,6 +754,36 @@
       }
     ],
     "name": "setPermission",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ITeams.userPermissions[]",
+        "name": "users",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setPermissionBulk",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
