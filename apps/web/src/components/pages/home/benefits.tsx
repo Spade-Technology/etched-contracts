@@ -25,7 +25,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
               <div
                 className={
                   `rounded-2xl px-14 py-4 ` +
-                  `${index == 0 ? "bg-[#FFF8E5" : index == 1 ? "bg-[#ECFDF5]" : index == 2 ? "bg-[#F0F9FF]" : "bg-[#EEF2FF]"}`
+                  `${index == 0 ? "bg-[#FFF8E5]" : index == 1 ? "bg-[#ECFDF5]" : index == 2 ? "bg-[#F0F9FF]" : "bg-[#EEF2FF]"}`
                 }
               >
                 <div
