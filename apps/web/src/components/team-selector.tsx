@@ -16,7 +16,7 @@ import {
 export const TeamSelector = () => {
   const { data: session, status } = useSession();
 
-  const [selectedBehalfOf, setSelectedBehalfOf] = useState({ name: "Myself", org: "Personhood" });
+  const [selectedBehalfOf, setSelectedBehalfOf] = useState({ name: "Private", org: "Yourself" });
 
   const query = useQuery({});
   const teams = query.teams({
