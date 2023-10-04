@@ -23,6 +23,7 @@ import { useQuery } from "@/gqty";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "./ui/use-toast";
+import { TeamSelector, getSelectedTeam } from "./team-selector";
 
 const formSchema = z.object({
   etchTitle: z.string(),
@@ -71,8 +72,9 @@ export const CreateEtchButton = () => {
         fileName: data.etchTitle,
         fileDescription: data.etchDescription,
 
-        // If the IpfsCid is empty, it can be set later.
-        ipfsCid: "",
+        team: getSelectedTeam().id,
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
 
       setStatus("Uploading file... (0%)");
@@ -183,6 +185,7 @@ export const CreateEtchButton = () => {
                           </FormItem>
                         )}
                       />
+                      <TeamSelector className="" horizontal />
                       <FormField
                         control={form.control}
                         name="etchDescription"

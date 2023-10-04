@@ -1,6 +1,6 @@
-import { useQuery } from "@/gqty";
+import { Organisation, Team, useQuery } from "@/gqty";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
 import {
@@ -12,16 +12,32 @@ import {
   SelectSeparator,
   SelectTrigger,
 } from "@/components/ui/select";
-import { CreateTeamDialog } from "./create-team-dialog";
-import { CreateOrgDialog } from "./create-org-dialog";
+import { Separator } from "./ui/separator";
 
-export const TeamSelector = () => {
+type TeamSelector = {
+  name: string;
+  org: string;
+  id: string;
+};
+
+const emptyTeam = { name: "Private", org: "Yourself", id: "" };
+export const getSelectedTeam: () => TeamSelector = () =>
+  JSON.parse(localStorage.getItem("selectedBehalfOf") || "false") ?? emptyTeam;
+
+export const TeamSelector = ({
+  className = "w-1/8 h-full !border-0 !ring-0",
+  horizontal,
+}: {
+  className: string;
+  horizontal: boolean;
+}) => {
   const { data: session, status } = useSession();
-
-  const [selectedBehalfOf, setSelectedBehalfOf] = useState({ name: "Private", org: "Yourself" });
+  const [isOpened, setIsOpened] = useState(false);
+  const [selectedBehalfOf, setSelectedBehalfOf] = useState(emptyTeam);
 
   const query = useQuery({});
-  const teams = query.teams({
+
+  const _teams = query.teams({
     where: {
       or: [
         {
@@ -39,22 +55,73 @@ export const TeamSelector = () => {
     },
   });
 
+  const organisations = query.organisations({
+    where: {
+      or: [
+        {
+          ownership_: {
+            owner: session?.address?.toLowerCase(),
+          },
+        },
+        {
+          permissions_: {
+            wallet: session?.address?.toLowerCase(),
+            permissionLevel_gt: 0,
+          },
+        },
+      ],
+    },
+  });
+
+  const teams = [
+    ..._teams,
+    ...(organisations
+      .map((el: Organisation) => el.managedTeams({ first: 10 })?.map((el) => el.team))
+      .reduce((acc: Team[], val: any) => acc.concat(val), [] as Team[]) ?? []),
+  ].filter((team) => !!team.__typename);
+
   const behalfOf = teams
     .map((team) => ({
       name: "Team " + team.teamId,
-      org: team.ownership.organisation?.orgId ?? "Sole Team",
+      org: team.ownership.organisation?.name ?? team.ownership.organisation?.orgId ?? "Sole Team",
       teamId: team.teamId,
     }))
     .filter((team) => !!team.teamId);
 
   const Organisations = behalfOf.map((team) => team.org);
 
+  const handleSelectTeam = ({ name, organisation, teamId }: { name: string; organisation: string; teamId: string }) => {
+    setSelectedBehalfOf({ name, org: organisation, id: teamId });
+    localStorage.setItem("selectedBehalfOf", JSON.stringify({ name, org: organisation, id: teamId }));
+    setIsOpened(false);
+  };
+
+  useEffect(() => {
+    const selectedBehalfOf = localStorage.getItem("selectedBehalfOf");
+    if (selectedBehalfOf) setSelectedBehalfOf(JSON.parse(selectedBehalfOf));
+  }, []);
+
   return (
-    <Select onValueChange={(e) => console.log(e)}>
-      <SelectTrigger className="#ring-0 h-full w-[180px] !border-0  !ring-0 ">
-        <div className="flex flex-col items-start justify-center">
+    <Select
+      onValueChange={(el) =>
+        handleSelectTeam({
+          name: el,
+          organisation: behalfOf.find((team) => team.name === el)?.org ?? "Sole Team",
+          teamId: behalfOf.find((team) => team.name === el)?.teamId ?? "",
+        })
+      }
+      open={isOpened}
+      onOpenChange={(b) => status === "authenticated" && setIsOpened(b)}
+    >
+      <SelectTrigger className={className}>
+        <div
+          className={
+            "justify-cente mr-4 flex " + (horizontal ? "flex-row items-center justify-center gap-4" : "flex-col items-start")
+          }
+        >
           <span className="text-sm font-semibold text-gray-800">{selectedBehalfOf.name}</span>
-          <span className="text-xs text-gray-500">{selectedBehalfOf.org}</span>
+          <Separator orientation="vertical" />
+          <span className="text text-ellipsis text-xs text-gray-500">{selectedBehalfOf.org}</span>
         </div>
       </SelectTrigger>
       <SelectContent>
@@ -62,8 +129,8 @@ export const TeamSelector = () => {
           <SelectItem value="Myself">Myself</SelectItem>
           <SelectSeparator className="SelectSeparator" />
           {Organisations.map((org, index) => (
-            <>
-              <SelectGroup key={index}>
+            <div key={index}>
+              <SelectGroup>
                 <SelectLabel>{org}</SelectLabel>
                 {behalfOf
                   .filter((team) => team.org === org && team.teamId)
@@ -74,21 +141,27 @@ export const TeamSelector = () => {
                   ))}
               </SelectGroup>
               <SelectSeparator className="SelectSeparator" />
-            </>
+            </div>
           ))}
         </SelectGroup>
         <SelectGroup className="flex flex-col">
           <SelectLabel>Actions</SelectLabel>
-          <CreateTeamDialog>
-            <Button variant={"ghost"} className="flex w-full justify-start rounded-sm p-2">
-              New Team
-            </Button>
-          </CreateTeamDialog>
-          <CreateOrgDialog>
-            <Button variant={"ghost"} className="flex w-full justify-start rounded-sm p-2">
-              New Orgnisation
-            </Button>
-          </CreateOrgDialog>
+
+          <Button
+            variant={"ghost"}
+            className="flex w-full justify-start rounded-sm p-2"
+            onClick={() => document.dispatchEvent(new CustomEvent("create-team"))}
+          >
+            New Team
+          </Button>
+
+          <Button
+            variant={"ghost"}
+            className="flex w-full justify-start rounded-sm p-2"
+            onClick={() => document.dispatchEvent(new CustomEvent("create-org"))}
+          >
+            New Orgnisation
+          </Button>
         </SelectGroup>
       </SelectContent>
     </Select>
