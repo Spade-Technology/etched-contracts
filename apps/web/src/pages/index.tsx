@@ -12,6 +12,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);
+
   return (
     <div className="w-full overflow-hidden font-campton">
       <section className="mx-5 md:mx-10 xl:mx-24">
