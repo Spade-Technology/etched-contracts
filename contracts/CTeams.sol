@@ -39,6 +39,7 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
      *
      * @param to The address of the organisations contract.
      * @param teamName The name of the team
+     * @param users The users to set the permissions for
      *
      * @return newTeamId The teamId of the EtchUID
      */
@@ -54,6 +55,35 @@ contract Teams is ERC721, IERC721Receiver, ITeams, NodeHandler {
 
         emit TeamCreated(teamId, to);
         emit TeamRenamed(teamId, teamName);
+
+        if (users.length > 0) setPermissionBulk(teamId, users);
+
+        return teamId;
+    }
+
+    /**
+     * @notice Sets the address of the organisations contract.
+     *
+     * @param orgId the ID of the organisation to create the team for
+     * @param teamName The name of the team
+     * @param users The users to set the permissions for
+     *
+     * @return newTeamId The teamId of the EtchUID
+     */
+    function createTeamForOrganisation(
+        uint256 orgId,
+        string memory teamName,
+        ITeams.userPermissions[] memory users
+    ) external override returns (uint256 newTeamId) {
+        totalSupply.increment();
+        uint256 teamId = totalSupply.current();
+
+        _safeMint(organisations, teamId);
+        organisationOf[teamId] = orgId;
+
+        emit TeamCreated(teamId, organisations);
+        emit TeamRenamed(teamId, teamName);
+        emit TransferToOrganisation(teamId, orgId);
 
         if (users.length > 0) setPermissionBulk(teamId, users);
 

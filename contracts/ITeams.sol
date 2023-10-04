@@ -30,6 +30,12 @@ interface ITeams is IERC721 {
         ITeams.userPermissions[] memory users
     ) external returns (uint256 newTeamId);
 
+    function createTeamForOrganisation(
+        uint256 orgId,
+        string memory teamName,
+        ITeams.userPermissions[] memory users
+    ) external returns (uint256 newTeamId);
+
     function renameTeam(uint256 teamId, string memory newName) external;
 
     function hasPermission(
