@@ -21,7 +21,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
       <div className="relative -z-10 flex grid-cols-12 flex-col gap-[46px] pt-10 text-left min-[360px]:px-[42px] sm:grid">
         {features.map(({ title, text, description, color, background, img }, index) => {
           return (
-            <div className={` sm:col-span-6 lg:col-span-3`}>
+            <div className={` sm:col-span-6 lg:col-span-3`} key={index}>
               <div
                 className={
                   `rounded-2xl px-14 py-4 ` +
