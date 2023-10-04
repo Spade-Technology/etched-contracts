@@ -8,7 +8,7 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "lint": "next lint",
-    "start": "next start",
+    "start": "dotenv -e ../../.env -- next start",
     "graphql:gqty": "dotenv -e ../../.env -- bash ./update_gqty.sh",
     "graphql:codegen": "get-graphql-schema https://api.studio.thegraph.com/query/51710/etched/version/latest > schema.graphql && graphql codegen",
     "graphql:coverage": "get-graphql-schema https://api.studio.thegraph.com/query/51710/etched/version/latest > schema.graphql && graphql coverage",
