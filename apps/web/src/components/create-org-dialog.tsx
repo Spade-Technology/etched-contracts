@@ -73,13 +73,7 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
 
   return (
     <AlertDialog open={isOpen}>
-      <AlertDialogTrigger asChild>
-        {children ?? (
-          <Button className="w-96" onClick={() => setIsOpen(true)}>
-            Create Org
-          </Button>
-        )}
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild></AlertDialogTrigger>
       <AlertDialogContent className={"max-h-screen overflow-y-scroll lg:max-w-screen-lg"}>
         <div className="w-full">
           <AlertDialogHeader>

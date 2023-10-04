@@ -13,23 +13,32 @@ export const teamRouter = createTRPCRouter({
       z.object({
         teamName: z.string(),
         teamMembers: z.array(z.string()),
+        owningOrg: z.string(),
         blockchainSignature: z.string(),
         blockchainMessage: z.string(),
       })
     )
     .mutation(
       async ({
-        input: { teamName, teamMembers, blockchainMessage, blockchainSignature },
+        input: { teamName, teamMembers, owningOrg, blockchainMessage, blockchainSignature },
         ctx: {
           session: { address },
         },
       }) => {
         // we need to send two calls, one to create the etch and get the etch id, and then another to set Metadata
-        const calldata = encodeFunctionData({
-          abi: TeamABI,
-          functionName: "createTeam",
-          args: [address, teamName, teamMembers],
-        });
+        let calldata;
+        if (owningOrg === "None")
+          calldata = encodeFunctionData({
+            abi: TeamABI,
+            functionName: "createTeam",
+            args: [address, teamName, teamMembers],
+          });
+        else
+          calldata = encodeFunctionData({
+            abi: TeamABI,
+            functionName: "createTeamForOrganisation",
+            args: [owningOrg, teamName, teamMembers],
+          });
 
         const tx = await walletClient.writeContract({
           address: contracts.Team,
