@@ -23,6 +23,14 @@ export const useGetEtchesFromUser = (userId?: string) => {
     },
   });
 
+  const organisations = query.organisations({
+    where: {
+      ownership_: {
+        owner: userId,
+      },
+    },
+  });
+
   const teams = query.teams({
     where: {
       or: [
@@ -41,9 +49,17 @@ export const useGetEtchesFromUser = (userId?: string) => {
     },
   });
 
+  console.log();
+
   const _etchToDisplay = [
     ...etches,
-    ...(teams
+    ...([
+      ...teams,
+      ...(organisations
+        .map((organisation) => organisation.managedTeams({ first: 10 })?.map((el) => el.team))
+        ?.reduce((acc: Team[], val: any) => acc.concat(val), [] as Team[]) ?? []),
+    ]
+      .filter((team, index, self) => self.findIndex((t) => t.teamId === team.teamId) === index)
       .map((el: Team) => el.managedEtches({ first: 10 })?.map((el: EtchOwnership) => el.etch))
       .reduce((acc: Etch[], val: any) => acc.concat(val), [] as Etch[]) ?? []),
   ];
