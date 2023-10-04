@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
 import { Dispatch, SetStateAction, useState } from "react";
 import LeftHeaderBg from "public/images/backgrounds/leftHeaderBg.svg";
-import RightHeaderBg from "public/images/backgrounds/RightHeaderBg.svg";
+import RightHeaderBg from "public/images/backgrounds/rightHeaderBg.svg";
 
 interface Props {
   setShowWaitlist: Dispatch<SetStateAction<boolean>>;
