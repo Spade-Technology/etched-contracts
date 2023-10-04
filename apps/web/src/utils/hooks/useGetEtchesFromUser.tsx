@@ -2,8 +2,6 @@ import { Etch, EtchOwnership, Team, useQuery } from "@/gqty";
 
 import { useEffect } from "react";
 
-export const RefreshEtchesEvent = new Event("refresh-etches");
-
 export const useGetEtchesFromUser = (userId?: string) => {
   const query = useQuery({});
 
@@ -52,6 +50,7 @@ export const useGetEtchesFromUser = (userId?: string) => {
 
   useEffect(() => {
     document.addEventListener("refresh-etches", () => {
+      console.log("first");
       query.$refetch(false);
     });
   }, []);
