@@ -5,34 +5,34 @@ import EtchABI from "@abis/Etches.json";
 import { TRPCError } from "@trpc/server";
 import { Address, decodeEventLog, encodeFunctionData, keccak256 } from "viem";
 import { z } from "zod";
-import TeamABI from "@/contracts/abi/Teams.json";
+import OrgABI from "@/contracts/abi/Organisations.json";
 
-export const teamRouter = createTRPCRouter({
-  createTeam: protectedProcedure
+export const orgRouter = createTRPCRouter({
+  createOrg: protectedProcedure
     .input(
       z.object({
-        teamName: z.string(),
-        teamMembers: z.array(z.string()),
+        orgName: z.string(),
+        orgMembers: z.array(z.string()),
         blockchainSignature: z.string(),
         blockchainMessage: z.string(),
       })
     )
     .mutation(
       async ({
-        input: { teamName, teamMembers, blockchainMessage, blockchainSignature },
+        input: { orgName, orgMembers, blockchainMessage, blockchainSignature },
         ctx: {
           session: { address },
         },
       }) => {
         // we need to send two calls, one to create the etch and get the etch id, and then another to set Metadata
         const calldata = encodeFunctionData({
-          abi: TeamABI,
-          functionName: "createTeam",
-          args: [address, teamName, teamMembers],
+          abi: OrgABI,
+          functionName: "createOrganisation",
+          args: [address, orgName, orgMembers],
         });
 
         const tx = await walletClient.writeContract({
-          address: contracts.Team,
+          address: contracts.Org,
           functionName: "delegateCallsToSelf",
           args: [
             [

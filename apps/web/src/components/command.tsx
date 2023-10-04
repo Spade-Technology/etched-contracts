@@ -11,7 +11,7 @@ import {
 import { signOut } from "@/utils/hooks/useSignIn";
 import { SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CreateEtchEvent } from "./create-etch-button";
+
 import { Button } from "./ui/button";
 
 export const commands = [
@@ -36,11 +36,11 @@ export const commands = [
     name: "New Etch",
     type: "create",
     action: () => {
-      document.dispatchEvent(CreateEtchEvent);
+      document.dispatchEvent(new CustomEvent("create-etch"));
     },
   },
   {
-    shortcut: "t",
+    shortcut: "d",
     name: "New Team",
     type: "create",
     action: () => {

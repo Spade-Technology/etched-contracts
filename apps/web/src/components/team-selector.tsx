@@ -12,6 +12,8 @@ import {
   SelectSeparator,
   SelectTrigger,
 } from "@/components/ui/select";
+import { CreateTeamDialog } from "./create-team-dialog";
+import { CreateOrgDialog } from "./create-org-dialog";
 
 export const TeamSelector = () => {
   const { data: session, status } = useSession();
@@ -77,12 +79,16 @@ export const TeamSelector = () => {
         </SelectGroup>
         <SelectGroup className="flex flex-col">
           <SelectLabel>Actions</SelectLabel>
-          <Button variant={"ghost"} className="flex w-full justify-start rounded-sm p-2">
-            New Team
-          </Button>
-          <Button variant={"ghost"} className="flex w-full justify-start rounded-sm p-2">
-            New Orgnisation
-          </Button>
+          <CreateTeamDialog>
+            <Button variant={"ghost"} className="flex w-full justify-start rounded-sm p-2">
+              New Team
+            </Button>
+          </CreateTeamDialog>
+          <CreateOrgDialog>
+            <Button variant={"ghost"} className="flex w-full justify-start rounded-sm p-2">
+              New Orgnisation
+            </Button>
+          </CreateOrgDialog>
         </SelectGroup>
       </SelectContent>
     </Select>
