@@ -26,10 +26,10 @@ export const getSelectedTeam: () => TeamSelector = () =>
 
 export const TeamSelector = ({
   className = "w-1/8 h-full !border-0 !ring-0",
-  horizontal,
+  horizontal = false,
 }: {
-  className: string;
-  horizontal: boolean;
+  className?: string;
+  horizontal?: boolean;
 }) => {
   const { data: session, status } = useSession();
   const [isOpened, setIsOpened] = useState(false);
