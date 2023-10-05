@@ -51,7 +51,7 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
           className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[30px] py-[15px] font-campton text-sm font-semibold text-white md:text-lg"
         >
           Join Waitlist
-          <Image src={ForwardArrow} alt="forward" className="h-[15px] w-[12.049px]" />
+          <Image src={ForwardArrow} alt="forward" className="h-[15px] w-[12px]" />
         </div>
       </div>
     </div>
