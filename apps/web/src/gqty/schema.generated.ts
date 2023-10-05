@@ -845,6 +845,7 @@ export enum EtchOwnership_orderBy {
   team = "team",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
 }
 
@@ -946,6 +947,7 @@ export enum EtchPermission_orderBy {
   team = "team",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   wallet = "wallet",
   wallet__id = "wallet__id",
@@ -1487,6 +1489,7 @@ export enum OrganisationApprovalForAll_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   owner = "owner",
   transactionHash = "transactionHash",
@@ -1613,6 +1616,7 @@ export enum OrganisationApproval_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   owner = "owner",
   tokenId = "tokenId",
@@ -1783,6 +1787,7 @@ export enum OrganisationCreated_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   to = "to",
   transactionHash = "transactionHash",
@@ -1850,6 +1855,7 @@ export enum OrganisationOwnership_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   owner = "owner",
   owner__id = "owner__id",
@@ -1925,6 +1931,7 @@ export enum OrganisationPermission_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   permissionLevel = "permissionLevel",
   wallet = "wallet",
@@ -2031,6 +2038,104 @@ export enum OrganisationPermissionsUpdated_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
+  organisation__orgId = "organisation__orgId",
+  transactionHash = "transactionHash",
+}
+
+export interface OrganisationRenamed_filter {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<OrganisationRenamed_filter>>>;
+  blockNumber?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockNumber_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  id?: InputMaybe<Scalars["Bytes"]>;
+  id_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_gt?: InputMaybe<Scalars["Bytes"]>;
+  id_gte?: InputMaybe<Scalars["Bytes"]>;
+  id_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  id_lt?: InputMaybe<Scalars["Bytes"]>;
+  id_lte?: InputMaybe<Scalars["Bytes"]>;
+  id_not?: InputMaybe<Scalars["Bytes"]>;
+  id_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  newName?: InputMaybe<Scalars["String"]>;
+  newName_contains?: InputMaybe<Scalars["String"]>;
+  newName_contains_nocase?: InputMaybe<Scalars["String"]>;
+  newName_ends_with?: InputMaybe<Scalars["String"]>;
+  newName_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  newName_gt?: InputMaybe<Scalars["String"]>;
+  newName_gte?: InputMaybe<Scalars["String"]>;
+  newName_in?: InputMaybe<Array<Scalars["String"]>>;
+  newName_lt?: InputMaybe<Scalars["String"]>;
+  newName_lte?: InputMaybe<Scalars["String"]>;
+  newName_not?: InputMaybe<Scalars["String"]>;
+  newName_not_contains?: InputMaybe<Scalars["String"]>;
+  newName_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  newName_not_ends_with?: InputMaybe<Scalars["String"]>;
+  newName_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  newName_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  newName_not_starts_with?: InputMaybe<Scalars["String"]>;
+  newName_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  newName_starts_with?: InputMaybe<Scalars["String"]>;
+  newName_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  or?: InputMaybe<Array<InputMaybe<OrganisationRenamed_filter>>>;
+  organisation?: InputMaybe<Scalars["String"]>;
+  organisation_?: InputMaybe<Organisation_filter>;
+  organisation_contains?: InputMaybe<Scalars["String"]>;
+  organisation_contains_nocase?: InputMaybe<Scalars["String"]>;
+  organisation_ends_with?: InputMaybe<Scalars["String"]>;
+  organisation_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  organisation_gt?: InputMaybe<Scalars["String"]>;
+  organisation_gte?: InputMaybe<Scalars["String"]>;
+  organisation_in?: InputMaybe<Array<Scalars["String"]>>;
+  organisation_lt?: InputMaybe<Scalars["String"]>;
+  organisation_lte?: InputMaybe<Scalars["String"]>;
+  organisation_not?: InputMaybe<Scalars["String"]>;
+  organisation_not_contains?: InputMaybe<Scalars["String"]>;
+  organisation_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  organisation_not_ends_with?: InputMaybe<Scalars["String"]>;
+  organisation_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  organisation_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  organisation_not_starts_with?: InputMaybe<Scalars["String"]>;
+  organisation_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  organisation_starts_with?: InputMaybe<Scalars["String"]>;
+  organisation_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  transactionHash?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  transactionHash_lt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_lte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+}
+
+export enum OrganisationRenamed_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newName = "newName",
+  organisation = "organisation",
+  organisation__createdAt = "organisation__createdAt",
+  organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   transactionHash = "transactionHash",
 }
@@ -2135,6 +2240,7 @@ export enum OrganisationTransfer_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   to = "to",
   tokenId = "tokenId",
@@ -2163,6 +2269,26 @@ export interface Organisation_filter {
   id_not?: InputMaybe<Scalars["ID"]>;
   id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
   managedTeams_?: InputMaybe<TeamOwnership_filter>;
+  name?: InputMaybe<Scalars["String"]>;
+  name_contains?: InputMaybe<Scalars["String"]>;
+  name_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_ends_with?: InputMaybe<Scalars["String"]>;
+  name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_gt?: InputMaybe<Scalars["String"]>;
+  name_gte?: InputMaybe<Scalars["String"]>;
+  name_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_lt?: InputMaybe<Scalars["String"]>;
+  name_lte?: InputMaybe<Scalars["String"]>;
+  name_not?: InputMaybe<Scalars["String"]>;
+  name_not_contains?: InputMaybe<Scalars["String"]>;
+  name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_not_starts_with?: InputMaybe<Scalars["String"]>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_starts_with?: InputMaybe<Scalars["String"]>;
+  name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
   or?: InputMaybe<Array<InputMaybe<Organisation_filter>>>;
   orgId?: InputMaybe<Scalars["BigInt"]>;
   orgId_gt?: InputMaybe<Scalars["BigInt"]>;
@@ -2182,6 +2308,7 @@ export enum Organisation_orderBy {
   createdAt = "createdAt",
   id = "id",
   managedTeams = "managedTeams",
+  name = "name",
   orgId = "orgId",
   ownership = "ownership",
   ownership__id = "ownership__id",
@@ -2287,6 +2414,7 @@ export enum TeamApprovalForAll_orderBy {
   team = "team",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   transactionHash = "transactionHash",
 }
@@ -2413,6 +2541,7 @@ export enum TeamApproval_orderBy {
   team = "team",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   tokenId = "tokenId",
   transactionHash = "transactionHash",
@@ -2510,6 +2639,7 @@ export enum TeamCreated_orderBy {
   teamId = "teamId",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   to = "to",
   transactionHash = "transactionHash",
@@ -2670,12 +2800,14 @@ export enum TeamOwnership_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   owner = "owner",
   owner__id = "owner__id",
   team = "team",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
 }
 
@@ -2750,6 +2882,7 @@ export enum TeamPermission_orderBy {
   team = "team",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   wallet = "wallet",
   wallet__id = "wallet__id",
@@ -2855,6 +2988,104 @@ export enum TeamPermissionsUpdated_orderBy {
   teamId = "teamId",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
+  team__teamId = "team__teamId",
+  transactionHash = "transactionHash",
+}
+
+export interface TeamRenamed_filter {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<TeamRenamed_filter>>>;
+  blockNumber?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockNumber_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not?: InputMaybe<Scalars["BigInt"]>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_gte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  blockTimestamp_lt?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_lte?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not?: InputMaybe<Scalars["BigInt"]>;
+  blockTimestamp_not_in?: InputMaybe<Array<Scalars["BigInt"]>>;
+  id?: InputMaybe<Scalars["Bytes"]>;
+  id_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_gt?: InputMaybe<Scalars["Bytes"]>;
+  id_gte?: InputMaybe<Scalars["Bytes"]>;
+  id_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  id_lt?: InputMaybe<Scalars["Bytes"]>;
+  id_lte?: InputMaybe<Scalars["Bytes"]>;
+  id_not?: InputMaybe<Scalars["Bytes"]>;
+  id_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  id_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  newName?: InputMaybe<Scalars["String"]>;
+  newName_contains?: InputMaybe<Scalars["String"]>;
+  newName_contains_nocase?: InputMaybe<Scalars["String"]>;
+  newName_ends_with?: InputMaybe<Scalars["String"]>;
+  newName_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  newName_gt?: InputMaybe<Scalars["String"]>;
+  newName_gte?: InputMaybe<Scalars["String"]>;
+  newName_in?: InputMaybe<Array<Scalars["String"]>>;
+  newName_lt?: InputMaybe<Scalars["String"]>;
+  newName_lte?: InputMaybe<Scalars["String"]>;
+  newName_not?: InputMaybe<Scalars["String"]>;
+  newName_not_contains?: InputMaybe<Scalars["String"]>;
+  newName_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  newName_not_ends_with?: InputMaybe<Scalars["String"]>;
+  newName_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  newName_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  newName_not_starts_with?: InputMaybe<Scalars["String"]>;
+  newName_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  newName_starts_with?: InputMaybe<Scalars["String"]>;
+  newName_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  or?: InputMaybe<Array<InputMaybe<TeamRenamed_filter>>>;
+  team?: InputMaybe<Scalars["String"]>;
+  team_?: InputMaybe<Team_filter>;
+  team_contains?: InputMaybe<Scalars["String"]>;
+  team_contains_nocase?: InputMaybe<Scalars["String"]>;
+  team_ends_with?: InputMaybe<Scalars["String"]>;
+  team_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  team_gt?: InputMaybe<Scalars["String"]>;
+  team_gte?: InputMaybe<Scalars["String"]>;
+  team_in?: InputMaybe<Array<Scalars["String"]>>;
+  team_lt?: InputMaybe<Scalars["String"]>;
+  team_lte?: InputMaybe<Scalars["String"]>;
+  team_not?: InputMaybe<Scalars["String"]>;
+  team_not_contains?: InputMaybe<Scalars["String"]>;
+  team_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  team_not_ends_with?: InputMaybe<Scalars["String"]>;
+  team_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  team_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  team_not_starts_with?: InputMaybe<Scalars["String"]>;
+  team_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  team_starts_with?: InputMaybe<Scalars["String"]>;
+  team_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  transactionHash?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_gte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+  transactionHash_lt?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_lte?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_contains?: InputMaybe<Scalars["Bytes"]>;
+  transactionHash_not_in?: InputMaybe<Array<Scalars["Bytes"]>>;
+}
+
+export enum TeamRenamed_orderBy {
+  blockNumber = "blockNumber",
+  blockTimestamp = "blockTimestamp",
+  id = "id",
+  newName = "newName",
+  team = "team",
+  team__createdAt = "team__createdAt",
+  team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   transactionHash = "transactionHash",
 }
@@ -2968,11 +3199,13 @@ export enum TeamTransferToOrganisation_orderBy {
   organisation = "organisation",
   organisation__createdAt = "organisation__createdAt",
   organisation__id = "organisation__id",
+  organisation__name = "organisation__name",
   organisation__orgId = "organisation__orgId",
   team = "team",
   teamId = "teamId",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   transactionHash = "transactionHash",
 }
@@ -3077,6 +3310,7 @@ export enum TeamTransfer_orderBy {
   team = "team",
   team__createdAt = "team__createdAt",
   team__id = "team__id",
+  team__name = "team__name",
   team__teamId = "team__teamId",
   to = "to",
   tokenId = "tokenId",
@@ -3106,6 +3340,26 @@ export interface Team_filter {
   id_not?: InputMaybe<Scalars["ID"]>;
   id_not_in?: InputMaybe<Array<Scalars["ID"]>>;
   managedEtches_?: InputMaybe<EtchOwnership_filter>;
+  name?: InputMaybe<Scalars["String"]>;
+  name_contains?: InputMaybe<Scalars["String"]>;
+  name_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_ends_with?: InputMaybe<Scalars["String"]>;
+  name_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_gt?: InputMaybe<Scalars["String"]>;
+  name_gte?: InputMaybe<Scalars["String"]>;
+  name_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_lt?: InputMaybe<Scalars["String"]>;
+  name_lte?: InputMaybe<Scalars["String"]>;
+  name_not?: InputMaybe<Scalars["String"]>;
+  name_not_contains?: InputMaybe<Scalars["String"]>;
+  name_not_contains_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with?: InputMaybe<Scalars["String"]>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_not_in?: InputMaybe<Array<Scalars["String"]>>;
+  name_not_starts_with?: InputMaybe<Scalars["String"]>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars["String"]>;
+  name_starts_with?: InputMaybe<Scalars["String"]>;
+  name_starts_with_nocase?: InputMaybe<Scalars["String"]>;
   or?: InputMaybe<Array<InputMaybe<Team_filter>>>;
   ownership_?: InputMaybe<TeamOwnership_filter>;
   permissions_?: InputMaybe<TeamPermission_filter>;
@@ -3126,6 +3380,7 @@ export enum Team_orderBy {
   externalEtches = "externalEtches",
   id = "id",
   managedEtches = "managedEtches",
+  name = "name",
   ownership = "ownership",
   ownership__id = "ownership__id",
   permissions = "permissions",
@@ -3210,6 +3465,7 @@ export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
   OrganisationOwnership_orderBy: true,
   OrganisationPermission_orderBy: true,
   OrganisationPermissionsUpdated_orderBy: true,
+  OrganisationRenamed_orderBy: true,
   OrganisationTransfer_orderBy: true,
   Organisation_orderBy: true,
   String: true,
@@ -3220,6 +3476,7 @@ export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
   TeamOwnership_orderBy: true,
   TeamPermission_orderBy: true,
   TeamPermissionsUpdated_orderBy: true,
+  TeamRenamed_orderBy: true,
   TeamTransferToOrganisation_orderBy: true,
   TeamTransfer_orderBy: true,
   Team_orderBy: true,
@@ -4572,6 +4829,7 @@ export const generatedSchema = {
         where: "TeamOwnership_filter",
       },
     },
+    name: { __type: "String" },
     orgId: { __type: "BigInt!" },
     ownership: { __type: "OrganisationOwnership!" },
     permissions: {
@@ -5205,6 +5463,97 @@ export const generatedSchema = {
     transactionHash_not_contains: { __type: "Bytes" },
     transactionHash_not_in: { __type: "[Bytes!]" },
   },
+  OrganisationRenamed: {
+    __typename: { __type: "String!" },
+    blockNumber: { __type: "BigInt!" },
+    blockTimestamp: { __type: "BigInt!" },
+    id: { __type: "Bytes!" },
+    newName: { __type: "String!" },
+    organisation: { __type: "Organisation!" },
+    transactionHash: { __type: "Bytes!" },
+  },
+  OrganisationRenamed_filter: {
+    _change_block: { __type: "BlockChangedFilter" },
+    and: { __type: "[OrganisationRenamed_filter]" },
+    blockNumber: { __type: "BigInt" },
+    blockNumber_gt: { __type: "BigInt" },
+    blockNumber_gte: { __type: "BigInt" },
+    blockNumber_in: { __type: "[BigInt!]" },
+    blockNumber_lt: { __type: "BigInt" },
+    blockNumber_lte: { __type: "BigInt" },
+    blockNumber_not: { __type: "BigInt" },
+    blockNumber_not_in: { __type: "[BigInt!]" },
+    blockTimestamp: { __type: "BigInt" },
+    blockTimestamp_gt: { __type: "BigInt" },
+    blockTimestamp_gte: { __type: "BigInt" },
+    blockTimestamp_in: { __type: "[BigInt!]" },
+    blockTimestamp_lt: { __type: "BigInt" },
+    blockTimestamp_lte: { __type: "BigInt" },
+    blockTimestamp_not: { __type: "BigInt" },
+    blockTimestamp_not_in: { __type: "[BigInt!]" },
+    id: { __type: "Bytes" },
+    id_contains: { __type: "Bytes" },
+    id_gt: { __type: "Bytes" },
+    id_gte: { __type: "Bytes" },
+    id_in: { __type: "[Bytes!]" },
+    id_lt: { __type: "Bytes" },
+    id_lte: { __type: "Bytes" },
+    id_not: { __type: "Bytes" },
+    id_not_contains: { __type: "Bytes" },
+    id_not_in: { __type: "[Bytes!]" },
+    newName: { __type: "String" },
+    newName_contains: { __type: "String" },
+    newName_contains_nocase: { __type: "String" },
+    newName_ends_with: { __type: "String" },
+    newName_ends_with_nocase: { __type: "String" },
+    newName_gt: { __type: "String" },
+    newName_gte: { __type: "String" },
+    newName_in: { __type: "[String!]" },
+    newName_lt: { __type: "String" },
+    newName_lte: { __type: "String" },
+    newName_not: { __type: "String" },
+    newName_not_contains: { __type: "String" },
+    newName_not_contains_nocase: { __type: "String" },
+    newName_not_ends_with: { __type: "String" },
+    newName_not_ends_with_nocase: { __type: "String" },
+    newName_not_in: { __type: "[String!]" },
+    newName_not_starts_with: { __type: "String" },
+    newName_not_starts_with_nocase: { __type: "String" },
+    newName_starts_with: { __type: "String" },
+    newName_starts_with_nocase: { __type: "String" },
+    or: { __type: "[OrganisationRenamed_filter]" },
+    organisation: { __type: "String" },
+    organisation_: { __type: "Organisation_filter" },
+    organisation_contains: { __type: "String" },
+    organisation_contains_nocase: { __type: "String" },
+    organisation_ends_with: { __type: "String" },
+    organisation_ends_with_nocase: { __type: "String" },
+    organisation_gt: { __type: "String" },
+    organisation_gte: { __type: "String" },
+    organisation_in: { __type: "[String!]" },
+    organisation_lt: { __type: "String" },
+    organisation_lte: { __type: "String" },
+    organisation_not: { __type: "String" },
+    organisation_not_contains: { __type: "String" },
+    organisation_not_contains_nocase: { __type: "String" },
+    organisation_not_ends_with: { __type: "String" },
+    organisation_not_ends_with_nocase: { __type: "String" },
+    organisation_not_in: { __type: "[String!]" },
+    organisation_not_starts_with: { __type: "String" },
+    organisation_not_starts_with_nocase: { __type: "String" },
+    organisation_starts_with: { __type: "String" },
+    organisation_starts_with_nocase: { __type: "String" },
+    transactionHash: { __type: "Bytes" },
+    transactionHash_contains: { __type: "Bytes" },
+    transactionHash_gt: { __type: "Bytes" },
+    transactionHash_gte: { __type: "Bytes" },
+    transactionHash_in: { __type: "[Bytes!]" },
+    transactionHash_lt: { __type: "Bytes" },
+    transactionHash_lte: { __type: "Bytes" },
+    transactionHash_not: { __type: "Bytes" },
+    transactionHash_not_contains: { __type: "Bytes" },
+    transactionHash_not_in: { __type: "[Bytes!]" },
+  },
   OrganisationTransfer: {
     __typename: { __type: "String!" },
     blockNumber: { __type: "BigInt!" },
@@ -5327,6 +5676,26 @@ export const generatedSchema = {
     id_not: { __type: "ID" },
     id_not_in: { __type: "[ID!]" },
     managedTeams_: { __type: "TeamOwnership_filter" },
+    name: { __type: "String" },
+    name_contains: { __type: "String" },
+    name_contains_nocase: { __type: "String" },
+    name_ends_with: { __type: "String" },
+    name_ends_with_nocase: { __type: "String" },
+    name_gt: { __type: "String" },
+    name_gte: { __type: "String" },
+    name_in: { __type: "[String!]" },
+    name_lt: { __type: "String" },
+    name_lte: { __type: "String" },
+    name_not: { __type: "String" },
+    name_not_contains: { __type: "String" },
+    name_not_contains_nocase: { __type: "String" },
+    name_not_ends_with: { __type: "String" },
+    name_not_ends_with_nocase: { __type: "String" },
+    name_not_in: { __type: "[String!]" },
+    name_not_starts_with: { __type: "String" },
+    name_not_starts_with_nocase: { __type: "String" },
+    name_starts_with: { __type: "String" },
+    name_starts_with_nocase: { __type: "String" },
     or: { __type: "[Organisation_filter]" },
     orgId: { __type: "BigInt" },
     orgId_gt: { __type: "BigInt" },
@@ -5374,6 +5743,7 @@ export const generatedSchema = {
         where: "EtchOwnership_filter",
       },
     },
+    name: { __type: "String" },
     ownership: { __type: "TeamOwnership!" },
     permissions: {
       __type: "[TeamPermission!]",
@@ -6029,6 +6399,97 @@ export const generatedSchema = {
     transactionHash_not_contains: { __type: "Bytes" },
     transactionHash_not_in: { __type: "[Bytes!]" },
   },
+  TeamRenamed: {
+    __typename: { __type: "String!" },
+    blockNumber: { __type: "BigInt!" },
+    blockTimestamp: { __type: "BigInt!" },
+    id: { __type: "Bytes!" },
+    newName: { __type: "String!" },
+    team: { __type: "Team!" },
+    transactionHash: { __type: "Bytes!" },
+  },
+  TeamRenamed_filter: {
+    _change_block: { __type: "BlockChangedFilter" },
+    and: { __type: "[TeamRenamed_filter]" },
+    blockNumber: { __type: "BigInt" },
+    blockNumber_gt: { __type: "BigInt" },
+    blockNumber_gte: { __type: "BigInt" },
+    blockNumber_in: { __type: "[BigInt!]" },
+    blockNumber_lt: { __type: "BigInt" },
+    blockNumber_lte: { __type: "BigInt" },
+    blockNumber_not: { __type: "BigInt" },
+    blockNumber_not_in: { __type: "[BigInt!]" },
+    blockTimestamp: { __type: "BigInt" },
+    blockTimestamp_gt: { __type: "BigInt" },
+    blockTimestamp_gte: { __type: "BigInt" },
+    blockTimestamp_in: { __type: "[BigInt!]" },
+    blockTimestamp_lt: { __type: "BigInt" },
+    blockTimestamp_lte: { __type: "BigInt" },
+    blockTimestamp_not: { __type: "BigInt" },
+    blockTimestamp_not_in: { __type: "[BigInt!]" },
+    id: { __type: "Bytes" },
+    id_contains: { __type: "Bytes" },
+    id_gt: { __type: "Bytes" },
+    id_gte: { __type: "Bytes" },
+    id_in: { __type: "[Bytes!]" },
+    id_lt: { __type: "Bytes" },
+    id_lte: { __type: "Bytes" },
+    id_not: { __type: "Bytes" },
+    id_not_contains: { __type: "Bytes" },
+    id_not_in: { __type: "[Bytes!]" },
+    newName: { __type: "String" },
+    newName_contains: { __type: "String" },
+    newName_contains_nocase: { __type: "String" },
+    newName_ends_with: { __type: "String" },
+    newName_ends_with_nocase: { __type: "String" },
+    newName_gt: { __type: "String" },
+    newName_gte: { __type: "String" },
+    newName_in: { __type: "[String!]" },
+    newName_lt: { __type: "String" },
+    newName_lte: { __type: "String" },
+    newName_not: { __type: "String" },
+    newName_not_contains: { __type: "String" },
+    newName_not_contains_nocase: { __type: "String" },
+    newName_not_ends_with: { __type: "String" },
+    newName_not_ends_with_nocase: { __type: "String" },
+    newName_not_in: { __type: "[String!]" },
+    newName_not_starts_with: { __type: "String" },
+    newName_not_starts_with_nocase: { __type: "String" },
+    newName_starts_with: { __type: "String" },
+    newName_starts_with_nocase: { __type: "String" },
+    or: { __type: "[TeamRenamed_filter]" },
+    team: { __type: "String" },
+    team_: { __type: "Team_filter" },
+    team_contains: { __type: "String" },
+    team_contains_nocase: { __type: "String" },
+    team_ends_with: { __type: "String" },
+    team_ends_with_nocase: { __type: "String" },
+    team_gt: { __type: "String" },
+    team_gte: { __type: "String" },
+    team_in: { __type: "[String!]" },
+    team_lt: { __type: "String" },
+    team_lte: { __type: "String" },
+    team_not: { __type: "String" },
+    team_not_contains: { __type: "String" },
+    team_not_contains_nocase: { __type: "String" },
+    team_not_ends_with: { __type: "String" },
+    team_not_ends_with_nocase: { __type: "String" },
+    team_not_in: { __type: "[String!]" },
+    team_not_starts_with: { __type: "String" },
+    team_not_starts_with_nocase: { __type: "String" },
+    team_starts_with: { __type: "String" },
+    team_starts_with_nocase: { __type: "String" },
+    transactionHash: { __type: "Bytes" },
+    transactionHash_contains: { __type: "Bytes" },
+    transactionHash_gt: { __type: "Bytes" },
+    transactionHash_gte: { __type: "Bytes" },
+    transactionHash_in: { __type: "[Bytes!]" },
+    transactionHash_lt: { __type: "Bytes" },
+    transactionHash_lte: { __type: "Bytes" },
+    transactionHash_not: { __type: "Bytes" },
+    transactionHash_not_contains: { __type: "Bytes" },
+    transactionHash_not_in: { __type: "[Bytes!]" },
+  },
   TeamTransfer: {
     __typename: { __type: "String!" },
     blockNumber: { __type: "BigInt!" },
@@ -6262,6 +6723,26 @@ export const generatedSchema = {
     id_not: { __type: "ID" },
     id_not_in: { __type: "[ID!]" },
     managedEtches_: { __type: "EtchOwnership_filter" },
+    name: { __type: "String" },
+    name_contains: { __type: "String" },
+    name_contains_nocase: { __type: "String" },
+    name_ends_with: { __type: "String" },
+    name_ends_with_nocase: { __type: "String" },
+    name_gt: { __type: "String" },
+    name_gte: { __type: "String" },
+    name_in: { __type: "[String!]" },
+    name_lt: { __type: "String" },
+    name_lte: { __type: "String" },
+    name_not: { __type: "String" },
+    name_not_contains: { __type: "String" },
+    name_not_contains_nocase: { __type: "String" },
+    name_not_ends_with: { __type: "String" },
+    name_not_ends_with_nocase: { __type: "String" },
+    name_not_in: { __type: "[String!]" },
+    name_not_starts_with: { __type: "String" },
+    name_not_starts_with_nocase: { __type: "String" },
+    name_starts_with: { __type: "String" },
+    name_starts_with_nocase: { __type: "String" },
     or: { __type: "[Team_filter]" },
     ownership_: { __type: "TeamOwnership_filter" },
     permissions_: { __type: "TeamPermission_filter" },
@@ -6756,6 +7237,22 @@ export const generatedSchema = {
         where: "OrganisationPermissionsUpdated_filter",
       },
     },
+    organisationRenamed: {
+      __type: "OrganisationRenamed",
+      __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
+    },
+    organisationRenameds: {
+      __type: "[OrganisationRenamed!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "OrganisationRenamed_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "OrganisationRenamed_filter",
+      },
+    },
     organisationTransfer: {
       __type: "OrganisationTransfer",
       __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
@@ -6892,6 +7389,19 @@ export const generatedSchema = {
         skip: "Int",
         subgraphError: "_SubgraphErrorPolicy_!",
         where: "TeamPermissionsUpdated_filter",
+      },
+    },
+    teamRenamed: { __type: "TeamRenamed", __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" } },
+    teamRenameds: {
+      __type: "[TeamRenamed!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "TeamRenamed_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "TeamRenamed_filter",
       },
     },
     teamTransfer: {
@@ -7302,6 +7812,22 @@ export const generatedSchema = {
         where: "OrganisationPermissionsUpdated_filter",
       },
     },
+    organisationRenamed: {
+      __type: "OrganisationRenamed",
+      __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
+    },
+    organisationRenameds: {
+      __type: "[OrganisationRenamed!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "OrganisationRenamed_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "OrganisationRenamed_filter",
+      },
+    },
     organisationTransfer: {
       __type: "OrganisationTransfer",
       __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" },
@@ -7438,6 +7964,19 @@ export const generatedSchema = {
         skip: "Int",
         subgraphError: "_SubgraphErrorPolicy_!",
         where: "TeamPermissionsUpdated_filter",
+      },
+    },
+    teamRenamed: { __type: "TeamRenamed", __args: { block: "Block_height", id: "ID!", subgraphError: "_SubgraphErrorPolicy_!" } },
+    teamRenameds: {
+      __type: "[TeamRenamed!]!",
+      __args: {
+        block: "Block_height",
+        first: "Int",
+        orderBy: "TeamRenamed_orderBy",
+        orderDirection: "OrderDirection",
+        skip: "Int",
+        subgraphError: "_SubgraphErrorPolicy_!",
+        where: "TeamRenamed_filter",
       },
     },
     teamTransfer: {
@@ -7741,6 +8280,7 @@ export interface Organisation {
     skip?: Maybe<Scalars["Int"]>;
     where?: Maybe<TeamOwnership_filter>;
   }) => Maybe<Array<TeamOwnership>>;
+  name?: Maybe<ScalarsEnums["String"]>;
   orgId: ScalarsEnums["BigInt"];
   ownership: OrganisationOwnership;
   permissions: (args?: {
@@ -7844,6 +8384,16 @@ export interface OrganisationPermissionsUpdated {
   transactionHash: ScalarsEnums["Bytes"];
 }
 
+export interface OrganisationRenamed {
+  __typename?: "OrganisationRenamed";
+  blockNumber: ScalarsEnums["BigInt"];
+  blockTimestamp: ScalarsEnums["BigInt"];
+  id: ScalarsEnums["Bytes"];
+  newName: ScalarsEnums["String"];
+  organisation: Organisation;
+  transactionHash: ScalarsEnums["Bytes"];
+}
+
 export interface OrganisationTransfer {
   __typename?: "OrganisationTransfer";
   blockNumber: ScalarsEnums["BigInt"];
@@ -7899,6 +8449,7 @@ export interface Team {
     skip?: Maybe<Scalars["Int"]>;
     where?: Maybe<EtchOwnership_filter>;
   }) => Maybe<Array<EtchOwnership>>;
+  name?: Maybe<ScalarsEnums["String"]>;
   ownership: TeamOwnership;
   permissions: (args?: {
     /**
@@ -8000,6 +8551,16 @@ export interface TeamPermissionsUpdated {
   newPermission: ScalarsEnums["Int"];
   team: Team;
   teamId: ScalarsEnums["BigInt"];
+  transactionHash: ScalarsEnums["Bytes"];
+}
+
+export interface TeamRenamed {
+  __typename?: "TeamRenamed";
+  blockNumber: ScalarsEnums["BigInt"];
+  blockTimestamp: ScalarsEnums["BigInt"];
+  id: ScalarsEnums["Bytes"];
+  newName: ScalarsEnums["String"];
+  team: Team;
   transactionHash: ScalarsEnums["Bytes"];
 }
 
@@ -9182,6 +9743,50 @@ export interface Query {
     subgraphError?: Maybe<_SubgraphErrorPolicy_>;
     where?: Maybe<OrganisationPermissionsUpdated_filter>;
   }) => Array<OrganisationPermissionsUpdated>;
+  organisationRenamed: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<OrganisationRenamed>;
+  organisationRenameds: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<OrganisationRenamed_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<OrganisationRenamed_filter>;
+  }) => Array<OrganisationRenamed>;
   organisationTransfer: (args: {
     /**
      * The block at which the query should be executed. Can either be a `{ hash:
@@ -9578,6 +10183,50 @@ export interface Query {
     subgraphError?: Maybe<_SubgraphErrorPolicy_>;
     where?: Maybe<TeamPermissionsUpdated_filter>;
   }) => Array<TeamPermissionsUpdated>;
+  teamRenamed: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<TeamRenamed>;
+  teamRenameds: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<TeamRenamed_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<TeamRenamed_filter>;
+  }) => Array<TeamRenamed>;
   teamTransfer: (args: {
     /**
      * The block at which the query should be executed. Can either be a `{ hash:
@@ -10730,6 +11379,50 @@ export interface Subscription {
     subgraphError?: Maybe<_SubgraphErrorPolicy_>;
     where?: Maybe<OrganisationPermissionsUpdated_filter>;
   }) => Array<OrganisationPermissionsUpdated>;
+  organisationRenamed: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<OrganisationRenamed>;
+  organisationRenameds: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<OrganisationRenamed_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<OrganisationRenamed_filter>;
+  }) => Array<OrganisationRenamed>;
   organisationTransfer: (args: {
     /**
      * The block at which the query should be executed. Can either be a `{ hash:
@@ -11126,6 +11819,50 @@ export interface Subscription {
     subgraphError?: Maybe<_SubgraphErrorPolicy_>;
     where?: Maybe<TeamPermissionsUpdated_filter>;
   }) => Array<TeamPermissionsUpdated>;
+  teamRenamed: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    id: Scalars["ID"];
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+  }) => Maybe<TeamRenamed>;
+  teamRenameds: (args: {
+    /**
+     * The block at which the query should be executed. Can either be a `{ hash:
+     * Bytes }` value containing a block hash, a `{ number: Int }` containing the
+     * block number, or a `{ number_gte: Int }` containing the minimum block
+     * number. In the case of `number_gte`, the query will be executed on the
+     * latest block only if the subgraph has progressed to or past the minimum
+     * block number. Defaults to the latest block when omitted.
+     */
+    block?: Maybe<Block_height>;
+    /**
+     * @defaultValue `100`
+     */
+    first?: Maybe<Scalars["Int"]>;
+    orderBy?: Maybe<TeamRenamed_orderBy>;
+    orderDirection?: Maybe<OrderDirection>;
+    /**
+     * @defaultValue `0`
+     */
+    skip?: Maybe<Scalars["Int"]>;
+    /**
+     * Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+     * @defaultValue `"deny"`
+     */
+    subgraphError?: Maybe<_SubgraphErrorPolicy_>;
+    where?: Maybe<TeamRenamed_filter>;
+  }) => Array<TeamRenamed>;
   teamTransfer: (args: {
     /**
      * The block at which the query should be executed. Can either be a `{ hash:
@@ -11321,6 +12058,7 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   OrganisationOwnership_orderBy: OrganisationOwnership_orderBy | undefined;
   OrganisationPermission_orderBy: OrganisationPermission_orderBy | undefined;
   OrganisationPermissionsUpdated_orderBy: OrganisationPermissionsUpdated_orderBy | undefined;
+  OrganisationRenamed_orderBy: OrganisationRenamed_orderBy | undefined;
   OrganisationTransfer_orderBy: OrganisationTransfer_orderBy | undefined;
   Organisation_orderBy: Organisation_orderBy | undefined;
   TeamApprovalForAll_orderBy: TeamApprovalForAll_orderBy | undefined;
@@ -11330,6 +12068,7 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   TeamOwnership_orderBy: TeamOwnership_orderBy | undefined;
   TeamPermission_orderBy: TeamPermission_orderBy | undefined;
   TeamPermissionsUpdated_orderBy: TeamPermissionsUpdated_orderBy | undefined;
+  TeamRenamed_orderBy: TeamRenamed_orderBy | undefined;
   TeamTransferToOrganisation_orderBy: TeamTransferToOrganisation_orderBy | undefined;
   TeamTransfer_orderBy: TeamTransfer_orderBy | undefined;
   Team_orderBy: Team_orderBy | undefined;

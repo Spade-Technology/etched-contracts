@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export const LogoAnimated = ({ className }: { className?: string }) => {
   const [shake, setShake] = useState(false);

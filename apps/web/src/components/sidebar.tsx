@@ -1,8 +1,3 @@
-import { shortenAddress } from "@/utils/hooks/address";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import LogoLong from "public/icons/etched-long.svg";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,10 +12,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogoAnimated } from "./icons/logo-long-animated";
+import { shortenAddress } from "@/utils/hooks/address";
 import { signOut } from "@/utils/hooks/useSignIn";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Icons } from "./ui/icons";
+import { LogoAnimated } from "./icons/logo-long-animated";
 
 const sideBarElementCn =
   "cursor-pointer flex flex-col items-center justify-center rounded-lg px-3 py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700 h-20";

@@ -25,23 +25,41 @@ export const etchRouter = createTRPCRouter({
       z.object({
         fileName: z.string(),
         fileDescription: z.string(),
-        ipfsCid: z.string(),
-        // authSig: z.any(),
-        // file_link: z.string(),
+        team: z.string(),
+        blockchainMessage: z.string(),
+        blockchainSignature: z.string(),
       })
     )
     .mutation(
       async ({
-        input: { fileName },
+        input: { fileName, fileDescription, team, blockchainMessage, blockchainSignature },
         ctx: {
           session: { address },
         },
       }) => {
         // we need to send two calls, one to create the etch and get the etch id, and then another to set Metadata
+
+        const functionName = team ? "safeMintForTeam" : "safeMint";
+        const args = team ? [team, fileName, ""] : [address, fileName, ""];
+
+        const calldata = encodeFunctionData({
+          abi: EtchABI,
+          functionName: functionName,
+          args: args,
+        });
+
         const tx1 = await walletClient.writeContract({
           address: contracts.Etch,
-          functionName: "safeMint",
-          args: [address, fileName, ""],
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
           abi: EtchABI,
         });
 

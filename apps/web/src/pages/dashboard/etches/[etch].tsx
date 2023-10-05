@@ -1,20 +1,9 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
-import { DashboardHeader } from "@/components/dashboard-header";
-import { DataTableDemo } from "@/components/etches-dashboard-table";
-import { SideBar } from "@/components/sidebar";
-import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
-import { Metadata } from "next";
-import { useRouter } from "next/router";
-import { useContractRead } from "wagmi";
-import ENSAbi from "@/contracts/abi/EtchENS.json";
-import { contracts } from "@/contracts";
-import { shortenAddress } from "@/utils/hooks/address";
+import { PageBoilerplate } from "@/components/page-boilerplate";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetEtchesFromTeam } from "@/utils/hooks/useGetEtchesFromTeam";
-import { Label } from "@radix-ui/react-label";
-import { type } from "os";
-import { PageBoilerplate } from "@/components/page-boilerplate";
+import { Metadata } from "next";
+import { useRouter } from "next/router";
 
 export const metadata: Metadata = {
   title: "Dashboard",

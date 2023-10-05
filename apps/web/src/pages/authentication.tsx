@@ -1,18 +1,16 @@
 import { Metadata } from "next";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { UserAuthForm } from "@/components/user-auth-form";
+import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
-import { useAccount } from "wagmi";
-import { useIsConnected } from "@/utils/hooks/useIsConnected";
-import { shortenAddress } from "@/utils/hooks/address";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/router";
+import { UserAuthForm } from "@/components/user-auth-form";
+import { shortenAddress } from "@/utils/hooks/address";
+import { useIsConnected } from "@/utils/hooks/useIsConnected";
 import { useSession } from "next-auth/react";
-import { useAuth, useSignIn } from "@clerk/nextjs";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
 export const metadata: Metadata = {
   title: "Authentication",
