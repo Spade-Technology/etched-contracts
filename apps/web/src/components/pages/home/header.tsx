@@ -6,7 +6,7 @@ import { Icons } from "../../ui/icons";
 // import bg from ""
 
 interface Props {
-  setShowWaitlist: Dispatch<SetStateAction<boolean>>;
+  setShowWaitlist: (open: boolean | string) => void;
 }
 
 const Header = ({ setShowWaitlist }: Props) => {
@@ -16,7 +16,7 @@ const Header = ({ setShowWaitlist }: Props) => {
     <div className="relative z-10 mx-auto flex max-w-[1566px] justify-between gap-3 pb-[88px] pt-[62px] md:pb-20 xl:pb-[156px] xl:pt-8">
       <Icons.logoLong
         color="#097B45"
-        className="max-xs:w-20 h-8 w-[120px] cursor-pointer align-middle md:mr-2"
+        className="h-8 w-[120px] cursor-pointer align-middle max-xs:w-20 md:mr-2"
         onClick={() => router.push("/")}
       />
 
@@ -52,7 +52,7 @@ const Header = ({ setShowWaitlist }: Props) => {
       <div
         // onClick={() => router.push("/authentication")}
         onClick={() => setShowWaitlist(true)}
-        className="max-xs:gap-1 max-xs:px-4 flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[23px] py-2.5 text-sm font-semibold text-white md:px-[30px] md:py-[15px] md:text-lg"
+        className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[23px] py-2.5 text-sm font-semibold text-white max-xs:gap-1 max-xs:px-4 md:px-[30px] md:py-[15px] md:text-lg"
       >
         Join Waitlist
         <Image src={ForwardArrow} alt="forward" className="h-[15px] w-[12.049px] " />

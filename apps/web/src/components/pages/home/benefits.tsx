@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction } from "react";
 import { features } from "./mockData";
 
 interface Props {
-  setShowWaitlist: Dispatch<SetStateAction<boolean>>;
+  setShowWaitlist: (open: boolean | string) => void;
 }
 
 const Benefits = ({ setShowWaitlist }: Props) => {
