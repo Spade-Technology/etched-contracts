@@ -1,22 +1,13 @@
 import * as React from "react";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "./ui/button";
-import { useAccount, useConnect } from "wagmi";
-import Image from "next/image";
-import { useSignIn } from "@/utils/hooks/useSignIn";
-import { useIsConnected } from "@/utils/hooks/useIsConnected";
-import { shortenAddress } from "@/utils/hooks/address";
-import { Label } from "./ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { shortenAddress } from "@/utils/hooks/address";
+import { useIsConnected } from "@/utils/hooks/useIsConnected";
+import { useSignIn } from "@/utils/hooks/useSignIn";
+import Image from "next/image";
+import { useAccount, useConnect } from "wagmi";
+import { Button } from "./ui/button";
 
 interface ConnectWallet extends React.HTMLAttributes<HTMLDivElement> {}
 

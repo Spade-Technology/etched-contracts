@@ -33,6 +33,7 @@ type Etch @entity {
 
 type Team @entity {
   id: ID!
+  name: String
   teamId: BigInt!
   ownership: TeamOwnership! @derivedFrom(field: "team")
   permissions: [TeamPermission!] @derivedFrom(field: "team")
@@ -46,6 +47,7 @@ type Team @entity {
 
 type Organisation @entity {
   id: ID!
+  name: String
   orgId: BigInt!
   ownership: OrganisationOwnership! @derivedFrom(field: "organisation")
   permissions: [OrganisationPermission!] @derivedFrom(field: "organisation")
@@ -295,6 +297,20 @@ type TeamTransferToOrganisation @entity(immutable: true) {
   organisation: Organisation!
 }
 
+
+type TeamRenamed @entity(immutable: true) {
+  id: Bytes!
+
+  newName: String! # string
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+
+  team: Team!
+}
+
+
 ## ORGANISATION EVENTS ##
 
 type OrganisationApproval @entity(immutable: true) {
@@ -365,6 +381,19 @@ type OrganisationTransfer @entity(immutable: true) {
 
   organisation: Organisation!
 }
+
+type OrganisationRenamed @entity(immutable: true) {
+  id: Bytes!
+
+  newName: String! # string
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+
+  organisation: Organisation!
+}
+
 
 type EtchENSCreated @entity(immutable: true) {
   id: Bytes!

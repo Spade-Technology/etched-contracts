@@ -1,8 +1,6 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
-import { DashboardHeader } from "@/components/dashboard-header";
-import { DataTableDemo } from "@/components/etches-dashboard-table";
+import { DataTable } from "@/components/etches-dashboard-table";
 import { PageBoilerplate } from "@/components/page-boilerplate";
-import { SideBar } from "@/components/sidebar";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { Metadata } from "next";
 import { useSession } from "next-auth/react";
@@ -19,7 +17,7 @@ export default function DashboardPage() {
   return (
     <PageBoilerplate>
       <div className="flex flex-col items-center justify-center">
-        <DataTableDemo isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
+        <DataTable isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
       </div>
     </PageBoilerplate>
   );

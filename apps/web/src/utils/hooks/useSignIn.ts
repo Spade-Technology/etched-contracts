@@ -18,6 +18,7 @@ import { env } from "@/env.mjs";
 
 export function signOut() {
   localStorage.clear();
+
   _signOut({ callbackUrl: "/" });
 }
 
@@ -92,15 +93,13 @@ export const useSignIn = () => {
       patchBaseProvider?: string;
     } = {}
   ) => {
-    if (isPatchWallet && !addressOverride)
-      addressOverride = (
-        await getUserFromId({
-          userId: patchUserId!,
-          baseProvider: patchBaseProvider ?? env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
-        })
-      ).eoa;
-
-    console.log("first");
+    // if (isPatchWallet && !addressOverride)
+    //   addressOverride = (
+    //     await getUserFromId({
+    //       userId: patchUserId!,
+    //       baseProvider: patchBaseProvider ?? env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+    //     })
+    //   ).eoa;
 
     const expiration_time = 60 * 60 * 24 * 7; // 7 days
     const expiration_date = new Date(Date.now() + expiration_time * 1000);
@@ -115,7 +114,7 @@ export const useSignIn = () => {
       .find((line: string) => line.startsWith("Expiration Time:"))
       .split(": ")[1];
 
-    // if (signature && new Date(expirationDateString) > new Date()) return signature;
+    if (signature && new Date(expirationDateString) > new Date()) return signature;
 
     // -- 1. prepare 'sign-in with ethereum' message
     const preparedMessage = {
@@ -135,13 +134,14 @@ export const useSignIn = () => {
     // -- 2. sign the message
 
     let signedResult: string | undefined;
-    if (isPatchWallet) {
-      const patchSignatureResult = await generatePatchSignature({
-        userId: "business@lancedb.dev",
-        message: body,
-      });
-      signedResult = patchSignatureResult.signature;
-    } else signedResult = await signMessageAsync({ message: body });
+    // if (isPatchWallet) {
+    //   const patchSignatureResult = await generatePatchSignature({
+    //     userId: "business@lancedb.dev",
+    //     message: body,
+    //   });
+    //   signedResult = patchSignatureResult.signature;
+    // } else
+    signedResult = await signMessageAsync({ message: body });
 
     if (!signedResult) throw new Error("Unable to sign message");
 
