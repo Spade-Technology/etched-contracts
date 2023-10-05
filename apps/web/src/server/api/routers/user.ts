@@ -30,8 +30,6 @@ export const userRouter = createTRPCRouter({
         create: { email, company },
       });
 
-      console.log(el);
-
       return true;
     }),
 });
