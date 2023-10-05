@@ -6,10 +6,13 @@ import LeftHeaderBg from "public/images/backgrounds/leftHeaderBg.svg";
 import RightHeaderBg from "public/images/backgrounds/rightHeaderBg.svg";
 
 interface Props {
-  setShowWaitlist: Dispatch<SetStateAction<boolean>>;
+  setShowWaitlist: (open: boolean | string) => void;
 }
+
 const HomeInfo = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+
   return (
     <div>
       <div className="relative mx-auto max-w-[1266px] text-4xl font-bold text-black md:text-[80px] md:leading-[90px]  xl:leading-normal">
@@ -40,11 +43,12 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
         <input
           placeholder="Type email address here"
           className="w-full max-w-[300px] bg-inherit px-5 text-base font-normal outline-none max-md:text-center"
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <div
           // onClick={() => router.push("/authentication")}
-          onClick={() => setShowWaitlist(true)}
+          onClick={() => setShowWaitlist(email.length > 0 ? email : true)}
           className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[30px] py-[15px] font-campton text-sm font-semibold text-white md:text-lg"
         >
           Join Waitlist
