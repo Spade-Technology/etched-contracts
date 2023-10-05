@@ -22,7 +22,7 @@ const links = [
 const Footer = () => {
   return (
     <footer className="mx-auto mt-[76px] border-t-[1px] border-t-[#94A3B8] pb-[65px] pt-7 md:mt-[54px] md:py-[72px] lg:px-24">
-      <main className="mx-auto flex max-w-[1566px] flex-col justify-between text-start text-base  font-normal leading-[27px] md:flex-row md:text-xl md:leading-[34px]">
+      <main className="mx-auto flex max-w-[1280px] flex-col justify-between text-start text-base  font-normal leading-[27px] md:flex-row md:text-xl md:leading-[34px] ">
         <section>
           <Icons.logoLong color="#097B45" className="h-[35px] !w-[133px] max-sm:mx-auto" />
           <div className="mx-auto w-[136px] pt-[13px] max-sm:text-center md:w-[200px]">

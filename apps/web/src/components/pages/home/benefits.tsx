@@ -15,7 +15,7 @@ interface Props {
 const Benefits = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
   return (
-    <div className="mx-auto w-full max-w-[1566px] pt-[76px] text-center md:pt-[131px]">
+    <div className="mx-auto w-full max-w-[1280px] pt-[76px] text-center md:pt-[131px]">
       <div className="text-[28px] font-semibold text-black md:text-[42px]">Key Features</div>
       {/* FEATURES/BENEFITS */}
       <div className="relative -z-10 flex grid-cols-12 flex-col gap-[46px] pt-10 text-left min-[360px]:px-[42px] sm:grid">
@@ -56,7 +56,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
       {/* bg-gradient-to-r from-green-400 to-cyan-500 */}
 
       <div
-        className={`relative z-10 mx-auto mt-40 flex h-[539px] max-w-[1238px] flex-col gap-7 overflow-hidden rounded-[32px]
+        className={`relative z-10 mx-auto mt-40 flex h-[539px] max-w-[1280px] flex-col gap-7 overflow-hidden rounded-[32px]
       bg-[url(/images/home/backImage.svg)] bg-cover bg-center bg-no-repeat p-10 max-xs:p-5 md:h-[438px] md:pb-[95px] md:pl-[45px]`}
       >
         {/* <Image src={GradientImg} alt="BackImage" className="rounded-3xl" /> */}
