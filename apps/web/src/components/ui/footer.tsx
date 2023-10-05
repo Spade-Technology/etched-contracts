@@ -29,15 +29,19 @@ const Footer = () => {
             123 Baker Street London, W1U 6TE United Kingdom
           </div>
         </section>
-        <section className="mt-7 flex flex-col justify-between gap-7 md:flex-row md:gap-[80px] lg:gap-[150px]">
+        <section className="-mt-1 flex flex-col justify-between gap-7 md:flex-row md:gap-[80px] lg:gap-[150px]">
           {links.map(({ title, links }, index) => {
             return (
               <div className="text-right max-sm:text-center" key={index}>
-                <div className="font-header text-[28px] font-bold leading-[47.7px]">{title}</div>
+                <div className="font-header text-[28px] font-semibold leading-[47.7px]">{title}</div>
                 <div className="flex flex-col gap-3">
                   {links.map(({ url, text }) => {
                     return (
-                      <Link href={url} className={index === 0 ? "text-[#94A3B8] md:text-left" : ""} key={text}>
+                      <Link
+                        href={url}
+                        className={"text-slate-500 hover:underline " + (index === 0 ? "md:text-left" : "")}
+                        key={text}
+                      >
                         {text}
                       </Link>
                     );
