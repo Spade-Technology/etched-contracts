@@ -12,9 +12,9 @@ const links = [
   {
     title: "Social",
     links: [
+      { url: "https://www.linkedin.com/company/etched-tech/", text: "LinkedIn" },
       { url: "#", text: "Instagram" },
       { url: "#", text: "Twitter" },
-      { url: "#", text: "LinkedIn" },
     ],
   },
 ];
@@ -26,7 +26,11 @@ const Footer = () => {
         <section>
           <Icons.logoLong color="#097B45" className="h-[35px] !w-[133px] max-sm:mx-auto" />
           <div className="mx-auto w-[136px] pt-[13px] max-sm:text-center md:w-[200px]">
-            123 Baker Street London, W1U 6TE United Kingdom
+            Dashwood House
+            <br />
+            EC2M 1QS
+            <br />
+            London
           </div>
         </section>
         <section className="-mt-1 flex flex-col justify-between gap-7 md:flex-row md:gap-[80px] lg:gap-[150px]">
@@ -41,6 +45,7 @@ const Footer = () => {
                         href={url}
                         className={"text-slate-500 hover:underline " + (index === 0 ? "md:text-left" : "")}
                         key={text}
+                        target={url.startsWith("http") ? "_blank" : ""}
                       >
                         {text}
                       </Link>
