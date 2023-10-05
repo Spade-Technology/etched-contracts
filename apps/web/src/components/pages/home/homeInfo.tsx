@@ -15,7 +15,7 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
 
   return (
     <div>
-      <div className="relative mx-auto max-w-[1280px] text-4xl font-bold text-black md:text-[80px] md:leading-[90px]  xl:leading-normal">
+      <div className="relative mx-auto max-w-[1280px] text-4xl font-bold text-black md:text-[80px] md:leading-[45px]  xl:leading-tight">
         <Image
           src={RightHeaderBg}
           alt=""
@@ -29,7 +29,7 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
         />
       </div>
 
-      <div className="mx-auto my-16 max-w-[1280px] text-center text-[22px] font-normal leading-8 tracking-[0.18px]">
+      <div className="mx-auto my-16 max-w-[1280px] text-center text-[22px] font-normal leading-8 tracking-[0.18px] text-slate-600">
         The future of IP management is here. An ‘Etch’ is digital evidence of what you do and when you do it. By allowing you to
         create ‘Etches’, Etched empowers you to claim and control your intellectual property worldwide, at the click of a button,
         even if you do not have it registered. It allows you to manage your IP better by changing the way you think of your
