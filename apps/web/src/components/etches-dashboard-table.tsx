@@ -34,10 +34,12 @@ import { CreateEtchButton } from "./create-etch-button";
 import { Loader, Loader2 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime);
 
 type EtchColumnDef = { headerName?: string } & ColumnDef<Etch>;
+
 
 export const columns: EtchColumnDef[] = [
   {
@@ -142,7 +144,8 @@ export const columns: EtchColumnDef[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)}>Copy Etch ID</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)} className="cursor-pointer">Copy Etch ID</DropdownMenuItem>
+              {/* <DropdownMenuItem onClick={() => router.push("/editEtch")} className="cursor-pointer">Edit Etch</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -156,6 +159,7 @@ export function DataTableDemo({ data = [], isLoading }: { data: Etch[]; isLoadin
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const router = useRouter()
 
   const table = useReactTable({
     data,
@@ -250,7 +254,7 @@ export function DataTableDemo({ data = [], isLoading }: { data: Etch[]; isLoadin
               table.getRowModel().rows.map((row) => (
                 <TableRow className="hover:bg-slate-50" key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell onClick={() => router.push("/dashboard/editEtch")} className="cursor-pointer" key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </TableRow>
               ))
