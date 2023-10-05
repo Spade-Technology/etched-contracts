@@ -13,3 +13,12 @@ datasource db {
 model User {
     address String @id @unique
 }
+
+model Subscriber {
+    email String @id @unique
+
+    company    String?
+    subscribed Boolean @default(true)
+
+    subscribedAt DateTime @default(now())
+}

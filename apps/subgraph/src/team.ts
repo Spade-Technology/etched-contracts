@@ -5,6 +5,7 @@ import {
   OwnershipTransferred as OwnershipTransferredEvent,
   PermissionsUpdated as PermissionsUpdatedEvent,
   TeamCreated as TeamCreatedEvent,
+  TeamRenamed as TeamRenamedEvent,
   Transfer as TransferEvent,
   TransferToOrganisation as TransferToOrganisationEvent,
 } from "../generated/Team/Team";
@@ -16,6 +17,8 @@ import {
   TeamCreated,
   TeamTransfer,
   TeamTransferToOrganisation,
+  TeamRenamed,
+  Team,
 
 } from "../generated/schema";
 import { getOrCreateWallet } from "./wallet";
@@ -40,6 +43,28 @@ export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
   const teamPermissionId = getTeamId(ETID.Permission, event.params.teamId, event.params.account.toString());
 
   upsertTeamPermission(teamId, teamPermissionId, event.params.account, event.params.newPermission);
+}
+
+export function handleTeamRenamed(event: TeamRenamedEvent): void {
+  const entity = new TeamRenamed(event.transaction.hash.concatI32(event.logIndex.toI32()));
+
+  entity.newName = event.params.newName;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  entity.team = event.params.teamId.toString();
+
+  entity.save();
+
+  const teamId = getTeamId(ETID.Team, event.params.teamId);
+  let team = Team.load(teamId);
+  if (team == null) team = new Team(teamId); // create if it doesn't exist yet. Shouldn't happen
+
+  team.name = entity.newName;
+
+  team.save();
 }
 
 export function handleTeamCreated(event: TeamCreatedEvent): void {

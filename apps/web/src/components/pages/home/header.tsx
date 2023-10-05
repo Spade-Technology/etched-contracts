@@ -3,22 +3,19 @@ import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
 import { Dispatch, SetStateAction } from "react";
 import { Icons } from "../../ui/icons";
+import { LogoAnimated } from "@/components/icons/logo-long-animated";
 // import bg from ""
 
 interface Props {
-  setShowWaitlist: Dispatch<SetStateAction<boolean>>;
+  setShowWaitlist: (open: boolean | string) => void;
 }
 
 const Header = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
 
   return (
-    <div className="relative z-10 mx-auto flex max-w-[1566px] items-center justify-between gap-3 pb-[88px] pt-[62px] md:pb-20 xl:pb-[156px] xl:pt-8">
-      <Icons.logoLong
-        color="#097B45"
-        className="h-8 w-[120px] cursor-pointer align-middle max-xs:w-20 md:mr-2"
-        onClick={() => router.push("/")}
-      />
+    <div className="relative z-10 mx-auto flex max-w-[1440px] items-center justify-between gap-3 pb-[88px] pt-[62px] md:pb-20 xl:pb-[156px] xl:pt-8">
+      <LogoAnimated />
 
       <div
         className="absolute left-[calc((100%-394px)/2)] top-0 -z-10 hidden h-[177px] w-[394px] bg-[url(/images/backgrounds/middleHeaderBg.svg)]

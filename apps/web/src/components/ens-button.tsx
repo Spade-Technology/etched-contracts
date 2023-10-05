@@ -67,7 +67,7 @@ export const EtchedENS = () => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <div className="flex cursor-pointer items-center gap-2 rounded-md border-[1.5px] px-4 py-2" onClick={copy}>
+          <div className="flex  cursor-pointer items-center gap-2 rounded-md border-[1.5px] px-4 py-2" onClick={copy}>
             <EtchedWalletIcon />
             {isLoading ? (
               <Skeleton className="h-[10px] w-20 rounded-full" />

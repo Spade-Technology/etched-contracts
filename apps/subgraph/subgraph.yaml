@@ -6,9 +6,9 @@ dataSources:
     name: Etch
     network: arbitrum-goerli
     source:
-      address: "0xa3ADCF594048C918Cb04c189f0B04C28bb407BA1"
+      address: "0x06E274278c218278D517857C57b5715823487e5f"
       abi: Etch
-      startBlock: 40681186
+      startBlock: 45349100
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -52,9 +52,9 @@ dataSources:
     name: Team
     network: arbitrum-goerli
     source:
-      address: "0xE6F34aD54B23ecDE8a5103f16Fb78428a142F69a"
+      address: "0x67338e2FEcb8293F3aec39790D04d16c0a7631d6"
       abi: Team
-      startBlock: 40681186
+      startBlock: 45349100
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -67,6 +67,7 @@ dataSources:
         - TeamCreated
         - TeamTransfer
         - TransferToOrganisation
+        - TeamRenamed
       abis:
         - name: Team
           file: ./abis/Team.json
@@ -85,14 +86,16 @@ dataSources:
           handler: handleTransfer
         - event: TransferToOrganisation(indexed uint256,indexed uint256)
           handler: handleTransferToOrganisation
+        - event: TeamRenamed(indexed uint256,string)
+          handler: handleTeamRenamed
       file: ./src/team.ts
   - kind: ethereum
     name: Organisation
     network: arbitrum-goerli
     source:
-      address: "0x88c34ED120c7F9E5a1FD78502C1b59ECAE45fBbf"
+      address: "0x5A6CEB6fF72A9a6819D9C381dF92cCF2b1dacF1F"
       abi: Organisation
-      startBlock: 40681186
+      startBlock: 45349100
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -104,6 +107,7 @@ dataSources:
         - OrganisationOwnershipTransferred
         - OrganisationPermissionsUpdated
         - OrganisationTransfer
+        - OrganisationRenamed
       abis:
         - name: Organisation
           file: ./abis/Organisation.json
@@ -120,14 +124,16 @@ dataSources:
           handler: handlePermissionsUpdated
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+        - event: OrganisationRenamed(indexed uint256,string)
+          handler: handleOrganisationRenamed
       file: ./src/organisation.ts
   - kind: ethereum
     name: EtchENS
     network: arbitrum-goerli
     source:
-      address: "0x97b7B7F96343348D0e4058fA8e77d6c978dF493A"
+      address: "0xb0e46E03e0Db6fcD3b12501560d522F78663820d"
       abi: EtchENS
-      startBlock: 40681186
+      startBlock: 45349100
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
