@@ -11,7 +11,7 @@ import {
 import { signOut } from "@/utils/hooks/useSignIn";
 import { SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CreateEtchEvent } from "./create-etch-button";
+
 import { Button } from "./ui/button";
 
 export const commands = [
@@ -36,11 +36,11 @@ export const commands = [
     name: "New Etch",
     type: "create",
     action: () => {
-      document.dispatchEvent(CreateEtchEvent);
+      document.dispatchEvent(new CustomEvent("create-etch"));
     },
   },
   {
-    shortcut: "t",
+    shortcut: "d",
     name: "New Team",
     type: "create",
     action: () => {
@@ -129,7 +129,7 @@ export function CommandMenu() {
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="flex w-full cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500"
+        className="mx-auto flex w-full max-w-[30%] cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500"
       >
         <SearchIcon className="h-full scale-150" />
         Type a Command, or use {bsrtct("⌘K")}

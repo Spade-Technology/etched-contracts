@@ -1,5 +1,7 @@
 import { CommandMenu } from "./command";
 import { CreateEtchButton } from "./create-etch-button";
+import { CreateOrgDialog } from "./create-org-dialog";
+import { CreateTeamDialog } from "./create-team-dialog";
 import { EtchedENS } from "./ens-button";
 import { TeamSelector } from "./team-selector";
 
@@ -8,11 +10,7 @@ export const DashboardHeader = () => {
     <div className="flex h-16 items-center px-6 shadow-etched-1">
       <CreateEtchButton />
 
-      <div className="w-full flex-grow" />
-
       <CommandMenu />
-
-      <div className="w-full flex-grow" />
 
       {/* Etched ENS */}
       <EtchedENS />
@@ -20,6 +18,10 @@ export const DashboardHeader = () => {
       <div className="mx-6 h-full border-[1px]" />
 
       <TeamSelector />
+
+      {/* Modals & More */}
+      <CreateTeamDialog />
+      <CreateOrgDialog />
     </div>
   );
 };

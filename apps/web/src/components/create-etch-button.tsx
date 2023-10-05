@@ -19,10 +19,11 @@ import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
 import { useQuery } from "@/gqty";
-import { RefreshEtchesEvent } from "@/utils/hooks/useGetEtchesFromUser";
+
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "./ui/use-toast";
+import { TeamSelector, getSelectedTeam } from "./team-selector";
 
 const formSchema = z.object({
   etchTitle: z.string(),
@@ -34,8 +35,6 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
-
-export const CreateEtchEvent = new Event("create-etch");
 
 export const CreateEtchButton = () => {
   const [fileBlobUrl, setFileBlobUrl] = React.useState<string>("");
@@ -73,8 +72,9 @@ export const CreateEtchButton = () => {
         fileName: data.etchTitle,
         fileDescription: data.etchDescription,
 
-        // If the IpfsCid is empty, it can be set later.
-        ipfsCid: "",
+        team: getSelectedTeam().id,
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
 
       setStatus("Uploading file... (0%)");
@@ -113,7 +113,7 @@ export const CreateEtchButton = () => {
         variant: "success",
       });
 
-      dispatchEvent(RefreshEtchesEvent);
+      dispatchEvent(new CustomEvent("refresh-etches"));
       setEtchCreated(data.etchTitle);
       setStatus("");
     } catch (e) {
@@ -185,6 +185,7 @@ export const CreateEtchButton = () => {
                           </FormItem>
                         )}
                       />
+                      <TeamSelector className="" horizontal />
                       <FormField
                         control={form.control}
                         name="etchDescription"
