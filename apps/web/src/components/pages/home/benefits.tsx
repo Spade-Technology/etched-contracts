@@ -41,7 +41,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
                 >
                   {title}
                 </div>
-                <Image src={img} alt="File_SS" width={162} height={110} className={`mx-auto pt-5`} />
+                <Image src={img} alt="File_SS" width={162} height={110} className={`mx-auto rounded-[9px] pt-5`} />
               </div>
               <div className={`pb-4 pt-6 text-2xl font-semibold`}>{text}</div>
 
