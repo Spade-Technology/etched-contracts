@@ -10,7 +10,8 @@ import { toast } from "@/components/ui/use-toast";
 import { api } from "@/utils/api";
 import Image from "next/image";
 import ForwardArrow from "public/icons/forward-arrow.svg";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);
@@ -46,6 +47,19 @@ export default function Home() {
     });
   };
 
+  const templateParams = {
+    email: email,
+    company: company,
+  };
+  emailjs.send("service_5qb9qlk", "template_326w3y1", templateParams, "DVByqzTZ6WrqYWvD2").then(
+    function (response) {
+      console.log("SUCCESS!", response.status, response.text);
+    },
+    function (error) {
+      console.log("FAILED...", error);
+    }
+  );
+
   const showWaitlistUsing = (open: boolean | string) => {
     setShowWaitlist(!!open);
 
@@ -61,7 +75,15 @@ export default function Home() {
 
         <div className="mx-auto text-center align-middle ">
           <WaitlistDialog
-            {...{ showWaitlist, showWaitlistUsing, email, setEmail, setCompany, isLoading, handleSubscribeToNewsletter }}
+            {...{
+              showWaitlist,
+              showWaitlistUsing,
+              email,
+              setEmail,
+              setCompany,
+              isLoading,
+              handleSubscribeToNewsletter,
+            }}
           />
 
           <HomeInfo setShowWaitlist={showWaitlistUsing} />
@@ -98,7 +120,7 @@ const WaitlistDialog = ({
         <DialogHeader>
           <DialogTitle>Join The Etched Waitlist</DialogTitle>
           {/* <DialogDescription>Secure your spot in our exclusive community</DialogDescription> */}
-          <DialogDescription>
+          <DialogDescription className="pt-5">
             <div className="grid grid-cols-4 items-center gap-4 py-4">
               <Label htmlFor="email" className="text-right">
                 Email:
