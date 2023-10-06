@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import InputDropdown from "@/components/ui/input-dropdown-";
+import InputDropdown from "@/components/ui/input-dropdown";
 import ProfileCard from "@/components/ui/profile-card";
 import Placeholder1 from "public/icons/dashboard/placeholder1.svg";
 import Placeholder2 from "public/icons/dashboard/placeholder2.svg";
