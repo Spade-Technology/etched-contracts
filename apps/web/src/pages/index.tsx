@@ -1,6 +1,6 @@
 import Benefits from "@/components/pages/home/benefits";
 import Header from "@/components/pages/home/header";
-import HomeInfo from "@/components/pages/home/homeInfo";
+import HomeInfo from "@/components/pages/home/home-info";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Footer from "@/components/ui/footer";
