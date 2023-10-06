@@ -95,7 +95,7 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
       <AlertDialogContent className={"max-h-screen overflow-y-scroll lg:max-w-screen-lg"}>
         <div className="w-full">
           <AlertDialogHeader>
-            <AlertDialogTitle>Create New Etch</AlertDialogTitle>
+            <AlertDialogTitle>Create New Team</AlertDialogTitle>
           </AlertDialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
