@@ -1,4 +1,4 @@
-import { Etch, EtchOwnership, Team, useQuery } from "@/gqty";
+import { Etch, EtchOwnership, EtchOwnership_orderBy, Etch_orderBy, Team, useQuery } from "@/gqty";
 
 import { useEffect } from "react";
 
@@ -7,6 +7,7 @@ export const useGetEtchesFromUser = (userId?: string) => {
 
   const etches = query.etches({
     first: 10,
+    orderBy: Etch_orderBy.createdAt,
     where: {
       or: [
         {
@@ -60,7 +61,9 @@ export const useGetEtchesFromUser = (userId?: string) => {
         ?.reduce((acc: Team[], val: any) => acc.concat(val), [] as Team[]) ?? []),
     ]
       .filter((team, index, self) => self.findIndex((t) => t.teamId === team.teamId) === index)
-      .map((el: Team) => el.managedEtches({ first: 10 })?.map((el: EtchOwnership) => el.etch))
+      .map((el: Team) =>
+        el.managedEtches({ first: 10, orderBy: EtchOwnership_orderBy.etch__createdAt })?.map((el: EtchOwnership) => el.etch)
+      )
       .reduce((acc: Etch[], val: any) => acc.concat(val), [] as Etch[]) ?? []),
   ];
 
