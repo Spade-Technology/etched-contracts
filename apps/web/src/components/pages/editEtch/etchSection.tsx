@@ -8,10 +8,14 @@ import BgImage6 from "public/images/dashboard/image6.svg"
 import BgImage7 from "public/images/dashboard/image7.svg"
 import Edit from "./components/edit"
 import Comments from "./components/comments"
+import AddUser from "./components/addUser"
+import { useState } from "react"
 
 const EtchSection = () => {
+    const [openAddUser, setOpenAddUser] = useState(false)
 
-    return(<div>
+    return(
+    <div>
         <div className="flex justify-between my-4 gap-4">
             <div className="bg-[#F3F5F5] p-4 rounded-2xl text-black w-fit flex justify-between flex-col">
                 <Image src={BgImage1} alt="bgImage" />
@@ -25,9 +29,11 @@ const EtchSection = () => {
 
                 </div>
             </div>
-            <Edit />     
+            <Edit setOpenAddUser={setOpenAddUser} />     
         </div>
         <Comments />
+
+        <AddUser show={openAddUser} setShow={setOpenAddUser} />
     </div>
     )
 }
