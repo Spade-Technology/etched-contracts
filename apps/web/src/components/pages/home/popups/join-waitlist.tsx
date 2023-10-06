@@ -1,4 +1,4 @@
-import CustomModal from "@/components/ui/customModal";
+import CustomModal from "@/components/ui/custom-modal";
 import Image from "next/image";
 import ForwardArrow from "public/icons/forward-arrow.svg";
 
