@@ -6,7 +6,7 @@ import Placeholder1 from "public/icons/dashboard/placeholder1.svg";
 import Placeholder2 from "public/icons/dashboard/placeholder2.svg";
 import Placeholder3 from "public/icons/dashboard/placeholder3.svg";
 import { useState } from "react";
-import ProfileCard from "@/components/ui/profileCard";
+import ProfileCard from "@/components/ui/profile-card";
 
 type UserProps = {
   show: boolean;
@@ -66,7 +66,15 @@ const AddUser = ({ show, setShow }: UserProps) => {
             <div className="py-3 text-base">People with access</div>
             {selectedProfiles ? (
               selectedProfiles.map((profile, idx) => (
-                <ProfileCard key={idx} name={profile.name} image={profile.image} link={profile.link} role={profile.role} dropDownOn dropDownItems={["Viewer", "Editor"]} />
+                <ProfileCard
+                  key={idx}
+                  name={profile.name}
+                  image={profile.image}
+                  link={profile.link}
+                  role={profile.role}
+                  dropDownOn
+                  dropDownItems={["Viewer", "Editor"]}
+                />
               ))
             ) : (
               <div className="text-sm text-[#9C9C9C]">No one has been invited to access this Etch yet.</div>
