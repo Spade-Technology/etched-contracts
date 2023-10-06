@@ -8,7 +8,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction } from "react";
-import { ProfileProps } from "../pages/editEtch/components/add-user";
+import { ProfileProps } from "../pages/etch/edit/components/add-user";
 import { Button } from "./button";
 import ProfileCard from "./profile-card";
 
