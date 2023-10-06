@@ -17,9 +17,9 @@ const EtchSection = () => {
   return (
     <div>
       <div className="my-4 flex justify-between gap-4">
-        <div className="flex w-fit flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
-          <Image src={BgImage1} alt="bgImage" />
-          <div className="flex justify-between pt-4">
+        <div className="flex w-full flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
+          <Image src={BgImage1} alt="bgImage" className="mx-auto my-auto" />
+          <div className="flex justify-center gap-2 pt-4">
             <Image src={BgImage2} alt="bgImage" />
             <Image src={BgImage3} alt="bgImage" />
             <Image src={BgImage4} alt="bgImage" />

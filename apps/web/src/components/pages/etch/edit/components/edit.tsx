@@ -21,19 +21,27 @@ const Edit = ({ setOpenAddUser }: EditProps) => {
   const [edit, setEdit] = useState(false);
 
   return (
-    <div className={` ${edit ? "bg-[#F3F5F5] text-[#6D6D6D]" : " bg-[#097B45] text-[#FBFBFB]"} relative  z-10 w-fit rounded-2xl`}>
-      <Image src={edit ? BgEditVector : BgVector} alt="" className="absolute right-0 -z-10 rounded-2xl bg-transparent" />
+    <div
+      className={` ${
+        edit ? "bg-[#F3F5F5] text-[#6D6D6D]" : " bg-[#097B45] text-[#FBFBFB]"
+      } relative z-10 w-fit rounded-2xl transition-colors`}
+    >
+      <Image
+        src={edit ? BgEditVector : BgVector}
+        alt=""
+        className="absolute right-0 -z-10 rounded-2xl bg-transparent transition-all"
+      />
       <div className="z-10 p-7">
         <div className="flex justify-between gap-24  ">
           {edit ? (
-            <div className="w-full">
+            <div className=" w-full">
               <div>Etch Name</div>
               <Input placeholder="Etch Name" className="w-full bg-[#F3F5F5]" />
             </div>
           ) : (
             <div className="flex justify-between">
               <Icons.etchedIcon className="my-auto h-8 cursor-pointer align-middle md:mr-2" />
-              <div className="my-auto text-2xl">Etch Name</div>
+              <div className="my-auto mt-1 text-2xl">Etch Name</div>
             </div>
           )}
           {!edit && (
@@ -51,7 +59,6 @@ const Edit = ({ setOpenAddUser }: EditProps) => {
           <div className={`text-base font-normal ${edit ? "#6D6D6D" : "text-[#E2E2E2]"}`}>jimcarlosxsak23.etched</div>
           <Button
             variant="default"
-            onClick={() => setEdit(false)}
             className={`${
               edit ? "border-[#097B45] bg-transparent text-[#097B45]" : "border-[#A1FFD3] text-[#A1FFD3]"
             } gap-2  rounded-full  border-[1px] px-3 text-base`}
@@ -80,10 +87,10 @@ const Edit = ({ setOpenAddUser }: EditProps) => {
         )}
         <div className={`${edit ? "bg-[#FFF]" : "bg-[#A1FFD3]"} mt-7 rounded-2xl p-4 text-[#6D6D6D]`}>
           <div>Shared with</div>
-          <ProfileCard image={Placeholder1} name="Jim Carlos" link="jimcarlosxsak23.etched" role="owner" />
-          <ProfileCard image={Placeholder2} name="Tom Robins" link="tom.etched" role="editor" />
+          <ProfileCard image={Placeholder1} name="jimcarlosxsak23.etched" link="0x1234...5678" role="owner" />
+          <ProfileCard image={Placeholder2} name="tom.etched" link="0x2234...5678" role="editor" />
 
-          <ProfileCard image={Placeholder3} name="Tom Robins" link="tom.etched" role="editor" />
+          <ProfileCard image={Placeholder3} name="louis.etched" link="0x3234...5678" role="editor" />
 
           <Button
             onClick={() => setOpenAddUser(true)}
