@@ -7,7 +7,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,15 +15,12 @@ import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
 
-import { toast } from "./ui/use-toast";
 import { useQuery } from "@/gqty";
-import { useSession } from "next-auth/react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger } from "./ui/select";
 import { SelectValue } from "@radix-ui/react-select";
-import { TeamSelector } from "./team-selector";
+import { useSession } from "next-auth/react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger } from "./ui/select";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   teamName: z.string(),

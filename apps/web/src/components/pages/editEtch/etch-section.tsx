@@ -6,10 +6,10 @@ import BgImage4 from "public/images/dashboard/image4.svg";
 import BgImage5 from "public/images/dashboard/image5.svg";
 import BgImage6 from "public/images/dashboard/image6.svg";
 import BgImage7 from "public/images/dashboard/image7.svg";
-import Edit from "./components/edit";
-import Comments from "./components/comments";
-import AddUser from "./components/add-user";
 import { useState } from "react";
+import AddUser from "./components/add-user";
+import Comments from "./components/comments";
+import Edit from "./components/edit";
 
 const EtchSection = () => {
   const [openAddUser, setOpenAddUser] = useState(false);

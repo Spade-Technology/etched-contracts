@@ -22,8 +22,8 @@ import { useQuery } from "@/gqty";
 
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { useUploadThing } from "@/utils/uploadthing";
-import { toast } from "./ui/use-toast";
 import { TeamSelector, getSelectedTeam } from "./team-selector";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   etchTitle: z.string(),

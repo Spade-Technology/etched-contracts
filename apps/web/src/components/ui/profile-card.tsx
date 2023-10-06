@@ -1,20 +1,13 @@
-import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Icons } from "./icons";
+import Image from "next/image";
 import { Button } from "./button";
+import { Icons } from "./icons";
 
 type ProfileProps = {
   image?: any;
@@ -39,7 +32,10 @@ const ProfileCard = ({ image, name, link, role, dropDownOn, dropDownItems }: Pro
         {dropDownOn ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant={"ghost"} className=" float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D]">
+              <Button
+                variant={"ghost"}
+                className=" float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D]"
+              >
                 {role ? role : dropDownItems && dropDownItems[0]} <Icons.dropdownIcon />
               </Button>
             </DropdownMenuTrigger>

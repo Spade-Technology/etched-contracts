@@ -1,16 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
+import AddIcon from "public/icons/dashboard/editEtch/addIcon.svg";
 import PenIcon from "public/icons/dashboard/editEtch/pen.svg";
-import BgVector from "public/images/backgrounds/dashboard/vector.svg";
-import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
-import RightArrow from "public/icons/dashboard/editEtch/rightArrow.svg";
 import Placeholder1 from "public/icons/dashboard/placeholder1.svg";
 import Placeholder2 from "public/icons/dashboard/placeholder2.svg";
 import Placeholder3 from "public/icons/dashboard/placeholder3.svg";
-import AddIcon from "public/icons/dashboard/editEtch/addIcon.svg";
-import { Input } from "@/components/ui/input";
+import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
+import BgVector from "public/images/backgrounds/dashboard/vector.svg";
+import { Dispatch, SetStateAction, useState } from "react";
 import ProfileCard from "../../../ui/profile-card";
 
 type EditProps = {

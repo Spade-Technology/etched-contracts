@@ -38,7 +38,6 @@ dayjs.extend(relativeTime);
 
 type EtchColumnDef = { headerName?: string } & ColumnDef<Etch>;
 
-
 export const columns: EtchColumnDef[] = [
   {
     id: "select",
@@ -142,7 +141,9 @@ export const columns: EtchColumnDef[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)} className="cursor-pointer">Copy Etch ID</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)} className="cursor-pointer">
+                Copy Etch ID
+              </DropdownMenuItem>
               {/* <DropdownMenuItem onClick={() => router.push("/editEtch")} className="cursor-pointer">Edit Etch</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -157,7 +158,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const router = useRouter()
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -252,7 +253,9 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
               table.getRowModel().rows.map((row) => (
                 <TableRow className="hover:bg-slate-50" key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell onClick={() => router.push("/dashboard/editEtch")} className="cursor-pointer" key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell onClick={() => router.push("/dashboard/editEtch")} className="cursor-pointer" key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))

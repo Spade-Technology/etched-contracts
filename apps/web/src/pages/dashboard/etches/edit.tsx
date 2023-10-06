@@ -1,4 +1,3 @@
-import { DataTableDemo } from "@/components/etches-dashboard-table";
 import { PageBoilerplate } from "@/components/page-boilerplate";
 import EtchSection from "@/components/pages/editEtch/etch-section";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
