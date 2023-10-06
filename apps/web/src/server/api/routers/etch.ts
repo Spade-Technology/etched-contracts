@@ -25,7 +25,7 @@ export const etchRouter = createTRPCRouter({
       z.object({
         fileName: z.string(),
         fileDescription: z.string(),
-        team: z.string(),
+        team: z.string().optional(),
         blockchainMessage: z.string(),
         blockchainSignature: z.string(),
       })
@@ -66,7 +66,7 @@ export const etchRouter = createTRPCRouter({
         const transactionResult = await publicClient.waitForTransactionReceipt({
           hash: tx1,
         });
-        console.log({tx1}, {transactionResult})
+        console.log({ tx1 }, { transactionResult });
         if (!transactionResult.logs[0]) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Transaction failed" });
 
         const transferEvent = decodeEventLog({
