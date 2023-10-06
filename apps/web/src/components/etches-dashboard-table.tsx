@@ -154,7 +154,7 @@ export const columns: EtchColumnDef[] = [
 ];
 
 export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: boolean }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: "createdAt", desc: false }]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
