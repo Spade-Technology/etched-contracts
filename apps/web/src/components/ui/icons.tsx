@@ -159,7 +159,11 @@ export const Icons = {
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path id="Vector" d="M9.75 4.41667L5.58333 0.25C5.25 -0.0833333 4.75 -0.0833333 4.41667 0.25C4.08333 0.583333 4.08333 1.08333 4.41667 1.41667L7.16667 4.16667H0.833333C0.333333 4.16667 0 4.5 0 5C0 5.5 0.333333 5.83333 0.833333 5.83333H7.16667L4.41667 8.58333C4.08333 8.91667 4.08333 9.41667 4.41667 9.75C4.75 10.0833 5.25 10.0833 5.58333 9.75L9.75 5.58333C10.0833 5.33333 10.0833 4.75 9.75 4.41667Z" fill={color} />
 </svg>
-
+  ),
+  dropdownIcon:({ color = "#6D6D6D", ...props }: { color?: string } & IconProps) => (
+  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0.611328 0H10L9.625 0.449636L5.23633 5.71602L5.00195 6L4.76367 5.71602L0.375 0.449636L0 0H0.611328Z" fill="#6D6D6D"/>
+  </svg>
   ),
   twitter: (props: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>

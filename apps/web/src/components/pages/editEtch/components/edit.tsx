@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import Image from "next/image";
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import PenIcon from "public/icons/dashboard/editEtch/pen.svg"
 import BgVector from "public/images/backgrounds/dashboard/vector.svg"
 import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg"
@@ -11,28 +11,16 @@ import Placeholder2 from "public/icons/dashboard/placeholder2.svg"
 import Placeholder3 from "public/icons/dashboard/placeholder3.svg"
 import AddIcon from "public/icons/dashboard/editEtch/addIcon.svg"
 import { Input } from "@/components/ui/input";
+import ProfileCard from "../../../ui/profileCard";
 
-type ProfileProps = {
-    image: any,
-    name: string,
-    link: string,
-    owner?: boolean
+
+
+type EditProps = {
+    setOpenAddUser: Dispatch<SetStateAction<boolean>>
 }
-const ProfileCard = ({image, name, link, owner} : ProfileProps) => {
-    return ( <div className="py-1">
-    <div className="flex justify-between gap-24">
-        <div className="flex justify-between">
-            <Image src={image} alt="placeholder" />
-            <div className="px-2">
-                <div>{name}</div>
-                <div> {link}</div>
-            </div>
-        </div>
-        <div>{owner ? "Owner" : "Editor"}</div>
-    </div>
-</div>)
-}
-const Edit = () => {
+
+
+const Edit = ( { setOpenAddUser } : EditProps ) => {
     const [owner, setOwner] = useState(false)
     const [edit, setEdit] = useState(false)
 
@@ -79,12 +67,12 @@ const Edit = () => {
 }
             <div className={`${edit ? "bg-[#FFF]" : "bg-[#A1FFD3]"} text-[#6D6D6D] rounded-2xl p-4 mt-7`}>
                 <div>Shared with</div>
-               <ProfileCard image={Placeholder1} name="Jim Carlos" link="jimcarlosxsak23.etched" owner={true} /> 
-               <ProfileCard image={Placeholder2} name="Tom Robins" link="tom.etched" /> 
+               <ProfileCard image={Placeholder1} name="Jim Carlos" link="jimcarlosxsak23.etched" role="owner" /> 
+               <ProfileCard image={Placeholder2} name="Tom Robins" link="tom.etched" role="editor" /> 
 
-               <ProfileCard image={Placeholder3} name="Tom Robins" link="tom.etched" /> 
+               <ProfileCard image={Placeholder3} name="Tom Robins" link="tom.etched" role="editor"  /> 
 
-               <Button className="mt-10 w-full bg-transparent text-[#097B45] gap-3 border-[#097B45] border-[2px] rounded-3xl " >
+               <Button onClick={() => setOpenAddUser(true)} className="mt-10 w-full bg-transparent text-[#097B45] gap-3 border-[#097B45] border-[2px] rounded-3xl " >
               <Image src={AddIcon}  alt="add-icon" />  Add more users</Button>
             </div>
 
