@@ -10,7 +10,7 @@ import Placeholder3 from "public/icons/dashboard/placeholder3.svg";
 import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
 import BgVector from "public/images/backgrounds/dashboard/vector.svg";
 import { Dispatch, SetStateAction, useState } from "react";
-import ProfileCard from "../../../ui/profile-card";
+import ProfileCard from "../../../../ui/profile-card";
 
 type EditProps = {
   setOpenAddUser: Dispatch<SetStateAction<boolean>>;
