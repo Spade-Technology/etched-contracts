@@ -3,23 +3,14 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Image from "next/image";
 import { Icons } from "@/components/ui/icons";
-import { Button } from "./button";
-import { Dispatch, SetStateAction, useState } from "react";
-import ProfileCard from "./profile-card";
+import { Input } from "@/components/ui/input";
+import { Dispatch, SetStateAction } from "react";
 import { ProfileProps } from "../pages/editEtch/components/add-user";
+import { Button } from "./button";
+import ProfileCard from "./profile-card";
 
 type InputDropdownProps = {
   data: {
