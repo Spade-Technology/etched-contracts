@@ -47,18 +47,18 @@ export default function Home() {
     });
   };
 
-  const templateParams = {
-    email: email,
-    company: company,
-  };
-  emailjs.send("service_5qb9qlk", "template_326w3y1", templateParams, "DVByqzTZ6WrqYWvD2").then(
-    function (response) {
-      console.log("SUCCESS!", response.status, response.text);
-    },
-    function (error) {
-      console.log("FAILED...", error);
-    }
-  );
+  // const templateParams = {
+  //   email: email,
+  //   company: company,
+  // };
+  // emailjs.send("service_5qb9qlk", "template_326w3y1", templateParams, "DVByqzTZ6WrqYWvD2").then(
+  //   function (response) {
+  //     console.log("SUCCESS!", response.status, response.text);
+  //   },
+  //   function (error) {
+  //     console.log("FAILED...", error);
+  //   }
+  // );
 
   const showWaitlistUsing = (open: boolean | string) => {
     setShowWaitlist(!!open);
