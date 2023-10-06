@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
-import { Dispatch, SetStateAction, useState } from "react";
 import LeftHeaderBg from "public/images/backgrounds/leftHeaderBg.svg";
 import RightHeaderBg from "public/images/backgrounds/rightHeaderBg.svg";
+import { useState } from "react";
 
 interface Props {
   setShowWaitlist: (open: boolean | string) => void;

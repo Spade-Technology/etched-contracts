@@ -1,5 +1,5 @@
-import { Icons } from "./icons";
 import Link from "next/link";
+import { Icons } from "./icons";
 
 const links = [
   {

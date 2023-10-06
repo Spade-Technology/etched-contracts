@@ -8,10 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { api } from "@/utils/api";
+import emailjs from "@emailjs/browser";
 import Image from "next/image";
 import ForwardArrow from "public/icons/forward-arrow.svg";
-import { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { useState } from "react";
 
 export default function Home() {
   const [showWaitlist, setShowWaitlist] = useState(false);

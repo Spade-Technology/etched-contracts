@@ -1,12 +1,12 @@
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import InputDropdown from "@/components/ui/input-dropDown";
+import ProfileCard from "@/components/ui/profile-card";
 import Placeholder1 from "public/icons/dashboard/placeholder1.svg";
 import Placeholder2 from "public/icons/dashboard/placeholder2.svg";
 import Placeholder3 from "public/icons/dashboard/placeholder3.svg";
 import { useState } from "react";
-import ProfileCard from "@/components/ui/profile-card";
 
 type UserProps = {
   show: boolean;

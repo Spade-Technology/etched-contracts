@@ -16,8 +16,8 @@ import { shortenAddress } from "@/utils/hooks/address";
 import { signOut } from "@/utils/hooks/useSignIn";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Icons } from "./ui/icons";
 import { LogoAnimated } from "./icons/logo-long-animated";
+import { Icons } from "./ui/icons";
 
 const sideBarElementCn =
   "cursor-pointer flex flex-col items-center justify-center rounded-lg px-3 py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700 h-20";
@@ -31,7 +31,7 @@ enum activePage {
   ETCH_LIBRARY,
   MARKETPLACE,
   COMMUNITY,
-  SETTINGS
+  SETTINGS,
 }
 
 export const SideBar = () => {
@@ -44,9 +44,9 @@ export const SideBar = () => {
       ? activePage.SETTINGS
       : path.includes("/etchLibrary")
       ? activePage.ETCH_LIBRARY
-      : path.includes("/marketplace") 
+      : path.includes("/marketplace")
       ? activePage.MARKETPLACE
-      :path.includes("community") 
+      : path.includes("community")
       ? activePage.COMMUNITY
       : activePage.DASHBOARD
     : activePage.DASHBOARD;
@@ -58,34 +58,35 @@ export const SideBar = () => {
           <LogoAnimated className="mx-auto" />
         </div>
 
-        <ul className="space-y-2 text-sm font-medium my-auto">
+        <ul className="my-auto space-y-2 text-sm font-medium">
           <li>
             <a className={active === activePage.DASHBOARD ? activeClassName : sideBarElementCn}>
-              <Icons.dashboard color={active === activePage.DASHBOARD ? "#097B45" : "#9C9C9C"} className="h-6 w-6"  />
+              <Icons.dashboard color={active === activePage.DASHBOARD ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
               <span className="whitespace-nowrap">Dashboard</span>
             </a>
           </li>
           <li>
             <a className={active === activePage.ETCH_LIBRARY ? activeClassName : sideBarElementCn}>
-            <Icons.etchLibrary color={active === activePage.ETCH_LIBRARY ? "#097B45" : "#9C9C9C"} className="h-6 w-6"  />
+              <Icons.etchLibrary color={active === activePage.ETCH_LIBRARY ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
               <span className="whitespace-nowrap">Etch Library</span>
             </a>
           </li>
           <li>
             <a className={active === activePage.MARKETPLACE ? activeClassName : sideBarElementCn}>
-            <Icons.marketplace color={active === activePage.MARKETPLACE ? "#097B45" : "#9C9C9C"}  />
+              <Icons.marketplace color={active === activePage.MARKETPLACE ? "#097B45" : "#9C9C9C"} />
               <span className="whitespace-nowrap">Marketplace</span>
             </a>
           </li>
           <li>
             <a className={active === activePage.COMMUNITY ? activeClassName : sideBarElementCn}>
-            <Icons.community color={active === activePage.COMMUNITY ? "#097B45" : "#9C9C9C"}  />
+              <Icons.community color={active === activePage.COMMUNITY ? "#097B45" : "#9C9C9C"} />
               <span className="whitespace-nowrap">Community</span>
             </a>
           </li>
           <li>
             <a className={active === activePage.SETTINGS ? activeClassName : sideBarElementCn}>
-            <Icons.settings color={active === activePage.SETTINGS ? "#097B45" : "#9C9C9C"}  />              <span className="whitespace-nowrap">Settings</span>
+              <Icons.settings color={active === activePage.SETTINGS ? "#097B45" : "#9C9C9C"} />{" "}
+              <span className="whitespace-nowrap">Settings</span>
             </a>
           </li>
         </ul>
