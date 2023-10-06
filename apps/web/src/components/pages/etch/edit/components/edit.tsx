@@ -96,7 +96,9 @@ const Edit = ({ setOpenAddUser }: EditProps) => {
         {edit && (
           <div className="float-right py-5">
             <div className="flex justify-start gap-5">
-              <Button className="border-none bg-transparent text-[#6D6D6D]">Cancel</Button>
+              <Button className="border-none bg-transparent text-[#6D6D6D]" onClick={() => setEdit(false)}>
+                Cancel
+              </Button>
 
               <Button className="rounded-lg">Save Changes</Button>
             </div>
