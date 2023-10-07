@@ -82,7 +82,7 @@ export const TeamSelector = ({
 
   const behalfOf = teams
     .map((team) => ({
-      name: "Team " + team.teamId,
+      name: team.name ?? "Team " + team.teamId,
       org: team.ownership.organisation?.name ?? team.ownership.organisation?.orgId ?? "Sole Team",
       teamId: team.teamId,
     }))
