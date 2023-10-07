@@ -191,7 +191,7 @@ export const CreateEtchButton = () => {
                           </FormItem>
                         )}
                       />
-                      <TeamSelector className="" horizontal />
+                      <TeamSelector className=" " horizontal />
                       <FormField
                         control={form.control}
                         name="etchDescription"
