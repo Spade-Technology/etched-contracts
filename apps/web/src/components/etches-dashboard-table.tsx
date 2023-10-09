@@ -31,6 +31,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Skeleton } from "./ui/skeleton";
 
 dayjs.extend(relativeTime);
@@ -140,7 +141,10 @@ export const columns: EtchColumnDef[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)}>Copy Etch ID</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)} className="cursor-pointer">
+                Copy Etch ID
+              </DropdownMenuItem>
+              {/* <DropdownMenuItem onClick={() => router.push("/editEtch")} className="cursor-pointer">Edit Etch</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -150,10 +154,11 @@ export const columns: EtchColumnDef[] = [
 ];
 
 export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: boolean }) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: "createdAt", desc: false }]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -248,7 +253,9 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
               table.getRowModel().rows.map((row) => (
                 <TableRow className="hover:bg-slate-50" key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell onClick={() => router.push("/dashboard/editEtch")} className="cursor-pointer" key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))

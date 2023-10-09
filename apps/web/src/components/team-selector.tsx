@@ -82,13 +82,13 @@ export const TeamSelector = ({
 
   const behalfOf = teams
     .map((team) => ({
-      name: "Team " + team.teamId,
+      name: team.name ?? "Team " + team.teamId,
       org: team.ownership.organisation?.name ?? team.ownership.organisation?.orgId ?? "Sole Team",
       teamId: team.teamId,
     }))
     .filter((team) => !!team.teamId);
 
-  const Organisations = behalfOf.map((team) => team.org);
+  const Organisations = behalfOf.map((team) => team.org).filter((org, index, self) => self.indexOf(org) === index);
 
   const handleSelectTeam = ({ name, organisation, teamId }: { name: string; organisation: string; teamId: string }) => {
     setSelectedBehalfOf({ name, org: organisation, id: teamId });
