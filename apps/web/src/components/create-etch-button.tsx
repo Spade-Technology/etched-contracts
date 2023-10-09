@@ -22,8 +22,8 @@ import { useQuery } from "@/gqty";
 
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { useUploadThing } from "@/utils/uploadthing";
-import { toast } from "./ui/use-toast";
 import { TeamSelector, getSelectedTeam } from "./team-selector";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   etchTitle: z.string(),
@@ -113,7 +113,6 @@ export const CreateEtchButton = () => {
         variant: "success",
       });
 
-      dispatchEvent(new CustomEvent("refresh-etches"));
       setEtchCreated(data.etchTitle);
       setStatus("");
     } catch (e) {
@@ -160,7 +159,14 @@ export const CreateEtchButton = () => {
                 </div>
                 <div className="flex gap-8">
                   <Button onClick={() => setEtchCreated("")}>Create a new Etch</Button>
-                  <AlertDialogCancel onClick={() => setIsOpen(false)}>Back to Dashboard</AlertDialogCancel>
+                  <AlertDialogCancel
+                    onClick={() => {
+                      dispatchEvent(new CustomEvent("refresh-etches"));
+                      setIsOpen(false);
+                    }}
+                  >
+                    Back to Dashboard
+                  </AlertDialogCancel>
                 </div>
               </div>
             </>
@@ -185,7 +191,7 @@ export const CreateEtchButton = () => {
                           </FormItem>
                         )}
                       />
-                      <TeamSelector className="" horizontal />
+                      <TeamSelector className=" " horizontal />
                       <FormField
                         control={form.control}
                         name="etchDescription"
