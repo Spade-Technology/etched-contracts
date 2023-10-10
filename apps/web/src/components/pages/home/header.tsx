@@ -2,6 +2,7 @@ import { LogoAnimated } from "@/components/icons/logo-long-animated";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
+import NewOrg from "./popups/new-org";
 // import bg from ""
 
 interface Props {
@@ -44,6 +45,7 @@ const Header = ({ setShowWaitlist }: Props) => {
           </div>
         </div>
       </div>
+      <NewOrg />
       <div
         // onClick={() => router.push("/authentication")}
         onClick={() => setShowWaitlist(true)}
