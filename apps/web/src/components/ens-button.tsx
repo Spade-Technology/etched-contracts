@@ -21,23 +21,24 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Skeleton } from "./ui/skeleton";
 import { useToast } from "./ui/use-toast";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 export const EtchedENS = () => {
   const toast = useToast();
 
   const [etched, setEtched] = useState("");
+  const loggedInAddress = useLoggedInAddress();
 
-  const { data: session, status } = useSession();
   const {
-    isLoading: isQuerying,
+    isLoading,
     data: _ens,
     refetch,
   } = useContractRead({
     abi: ENSAbi,
     address: contracts.ENS,
     functionName: "getENS",
-    args: [session?.address],
-    enabled: !!session?.address,
+    args: [loggedInAddress],
+    enabled: !!loggedInAddress,
   });
   const ens = (_ens as string[]) || undefined;
 
@@ -53,8 +54,6 @@ export const EtchedENS = () => {
   });
 
   const [copiedState, setCopiedState] = useState(false);
-
-  const isLoading = isQuerying || status === "loading";
 
   const copy = async () => {
     await navigator.clipboard.writeText(ens?.[0] || "");
@@ -90,7 +89,7 @@ export const EtchedENS = () => {
                       (copiedState && "!opacity-0")
                     }
                   >
-                    {session?.address && shortenAddress({ address: session?.address })}
+                    {loggedInAddress && shortenAddress({ address: loggedInAddress })}
                   </span>
                   <span
                     className={

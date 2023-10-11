@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "./ui/separator";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 type TeamSelector = {
   name: string;
@@ -31,11 +32,12 @@ export const TeamSelector = ({
   className?: string;
   horizontal?: boolean;
 }) => {
-  const { data: session, status } = useSession();
   const [isOpened, setIsOpened] = useState(false);
   const [selectedBehalfOf, setSelectedBehalfOf] = useState(emptyTeam);
 
-  const { isLoading, error, teams, uniqueOrgs } = useGetTeamsFromUser(session?.address?.toLowerCase());
+  const loggedInAddress = useLoggedInAddress();
+
+  const { isLoading, error, teams, uniqueOrgs } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
 
   const behalfOf = teams
     .map((team) => ({
