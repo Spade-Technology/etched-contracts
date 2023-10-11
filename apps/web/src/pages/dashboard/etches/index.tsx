@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 export default function EditEtch() {
   const { data: session } = useSession();
-  const { $state, isLoading, etchToDisplay } = useGetEtchesFromUser(session?.address?.toLowerCase());
+  // const { $state, isLoading, etchToDisplay } = useGetEtchesFromUser(session?.address?.toLowerCase());
 
   return (
     <PageBoilerplate>

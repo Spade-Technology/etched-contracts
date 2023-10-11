@@ -2,6 +2,7 @@ import { graphql } from "@/gql";
 import { useContext, useEffect } from "react";
 import { useQuery } from "urql";
 import { refetchContext } from "../urql";
+import { Etch } from "@/gql/graphql";
 
 const GET_ETCHES_FROM_TEAM_QUERY = graphql(`
   query TeamEtches($teamId: BigInt!) {
@@ -68,7 +69,7 @@ export const useGetEtchesFromTeam = (teamId?: string) => {
   if (!etchesData) return { etches: [], isLoading: fetching, error };
 
   const team = etchesData.teams?.[0];
-  const etches = team?.managedEtches.map((etch: any) => etch.etch);
+  const etches: Etch[] = team?.managedEtches?.map((etch: any) => etch.etch) ?? [];
 
   return { etches, team, isLoading: fetching, error, refetch };
 };

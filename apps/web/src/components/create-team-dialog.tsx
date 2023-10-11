@@ -56,7 +56,7 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
     query: ORGANISATIONS_QUERY,
     variables: { address: loggedInAddress.toLowerCase() },
   });
-  const organisations: Organisation[] = data ? data.organisations : [];
+  const organisations: Partial<Organisation>[] = data ? data.organisations : [];
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
