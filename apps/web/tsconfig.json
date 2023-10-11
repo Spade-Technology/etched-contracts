@@ -31,7 +31,8 @@
     "**/*.mjs",
     "sol2/tsconfig.json",
     "next.config.js",
-    "next.config.js"
+    "next.config.js",
+    "src/utils/urql.tss"
   ],
   "exclude": ["node_modules"]
 }

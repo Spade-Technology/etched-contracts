@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Etch, EtchOwnership } from "@/gqty";
+
 import { shortenAddress } from "@/utils/hooks/address";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -33,6 +33,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Skeleton } from "./ui/skeleton";
+import { Etch, EtchOwnership } from "@/gql/graphql";
 
 dayjs.extend(relativeTime);
 
@@ -104,18 +105,19 @@ export const columns: EtchColumnDef[] = [
     cell: ({ row }) => {
       const ownership: EtchOwnership = row.getValue("ownership");
 
-      if (ownership?.team && ownership?.team?.teamId)
+      if (ownership?.team && ownership?.team?.name) {
+        console.log(ownership.team.teamId);
         return (
           <Link href={`/dashboard/teams/${ownership?.team?.teamId}`}>
-            <div className="cursor-pointer text-right font-medium hover:underline">team {ownership?.team?.teamId}</div>
+            <div className="cursor-pointer text-right font-medium hover:underline">{ownership?.team?.name}</div>
           </Link>
         );
-      else
+      } else
         return (
           <Link href={`/dashboard/users/${ownership?.owner?.id}`}>
             <div className="cursor-pointer text-right font-medium hover:underline">
               {ownership?.owner?.id ? (
-                ownership?.owner?.etchENS({ first: 1 })[0]?.name ?? shortenAddress({ address: ownership?.owner?.id })
+                ownership?.owner?.etchENS?.[0]?.name ?? shortenAddress({ address: ownership?.owner?.id })
               ) : (
                 <Skeleton className="ml-auto h-3 w-12" />
               )}
@@ -154,7 +156,7 @@ export const columns: EtchColumnDef[] = [
 ];
 
 export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: boolean }) {
-  const [sorting, setSorting] = React.useState<SortingState>([{ id: "createdAt", desc: false }]);
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: "createdAt", desc: true }]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -253,7 +255,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
               table.getRowModel().rows.map((row) => (
                 <TableRow className="hover:bg-slate-50" key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell onClick={() => router.push("/dashboard/editEtch")} className="cursor-pointer" key={cell.id}>
+                    <TableCell className="cursor-pointer" key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

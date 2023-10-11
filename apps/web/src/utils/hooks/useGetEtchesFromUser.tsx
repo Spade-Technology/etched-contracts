@@ -1,80 +1,92 @@
-import { Etch, EtchOwnership, Etch_orderBy, Team, useQuery } from "@/gqty";
+import { graphql } from "@/gql";
+import { useContext, useEffect } from "react";
+import { useClient, useQuery, useSubscription } from "urql";
+import { refetchContext } from "../urql";
 
-import { useEffect } from "react";
+const EtchFragment = graphql(`
+  fragment EtchFragment on Etch {
+    id
+    tokenId
+    createdAt
+    documentName
+
+    ownership {
+      id
+      owner {
+        id
+        etchENS {
+          id
+          name
+        }
+      }
+      team {
+        id
+        teamId
+        name
+      }
+    }
+  }
+`);
+
+const GET_ETCHES_FROM_USER_ETCHES_QUERY = graphql(`
+  query Etches($userId: String!) {
+    etches(
+      first: 100
+      orderBy: createdAt
+      where: { or: [{ ownership_: { owner: $userId } }, { permissions_: { wallet: $userId } }] }
+    ) {
+      id
+      ...EtchFragment
+    }
+
+    teams(where: { or: [{ ownership_: { owner: $userId } }, { permissions_: { wallet: $userId, permissionLevel_gt: 0 } }] }) {
+      id
+      managedEtches {
+        id
+        etch {
+          ...EtchFragment
+        }
+      }
+    }
+
+    organisations(where: { ownership_: { owner: $userId } }) {
+      id
+      managedTeams {
+        id
+        team {
+          id
+          managedEtches {
+            id
+            etch {
+              ...EtchFragment
+            }
+          }
+        }
+      }
+    }
+  }
+`);
 
 export const useGetEtchesFromUser = (userId?: string) => {
-  const query = useQuery({});
-
-  const etches = query.etches({
-    first: 100,
-    orderBy: Etch_orderBy.createdAt,
-    where: {
-      or: [
-        {
-          ownership_: {
-            owner: userId,
-          },
-        },
-        {
-          permissions_: {
-            wallet: userId,
-          },
-        },
-      ],
-    },
+  const [{ data: etchesData, fetching, error, operation }, reexecute] = useQuery({
+    query: GET_ETCHES_FROM_USER_ETCHES_QUERY,
+    variables: { userId },
   });
 
-  const organisations = query.organisations({
-    where: {
-      ownership_: {
-        owner: userId,
-      },
-    },
-  });
+  const refetch = () => reexecute({ requestPolicy: "network-only" });
 
-  const teams = query.teams({
-    where: {
-      or: [
-        {
-          ownership_: {
-            owner: userId,
-          },
-        },
-        {
-          permissions_: {
-            wallet: userId,
-            permissionLevel_gt: 0,
-          },
-        },
-      ],
-    },
-  });
+  const { setRefetchEtches } = useContext(refetchContext);
+  useEffect(() => setRefetchEtches(refetch), [operation]);
 
-  console.log();
+  if (!etchesData) return { etches: [], isLoading: fetching, error };
 
-  const _etchToDisplay = [
-    ...etches,
-    ...([
-      ...teams,
-      ...(organisations
-        .map((organisation) => organisation.managedTeams({ first: 10 })?.map((el) => el.team))
-        ?.reduce((acc: Team[], val: any) => acc.concat(val), [] as Team[]) ?? []),
-    ]
-      .filter((team, index, self) => self.findIndex((t) => t.teamId === team.teamId) === index)
-      .map((el: Team) => el.managedEtches({ first: 100 })?.map((el: EtchOwnership) => el.etch))
-      .reduce((acc: Etch[], val: any) => acc.concat(val), [] as Etch[]) ?? []),
+  const etches = [
+    ...etchesData.etches,
+    ...etchesData.teams.flatMap((team: any) => team.managedEtches.map((etch: any) => etch.etch)),
+    ...etchesData.organisations.flatMap((org: any) =>
+      org.managedTeams.flatMap((team: any) => team.team.managedEtches.map((etch: any) => etch.etch))
+    ),
   ];
 
-  useEffect(() => {
-    document.addEventListener("refresh-etches", () => {
-      console.log("first");
-      query.$refetch(false);
-    });
-  }, []);
-
-  const etchToDisplay = _etchToDisplay.filter((el) => el.__typename !== undefined);
-
-  const isLoading = etchToDisplay.length !== _etchToDisplay.length || query.$state.isLoading || !userId;
-
-  return { etchToDisplay, isLoading, $state: query.$state };
+  return { etches, isLoading: fetching, error, refetch };
 };
