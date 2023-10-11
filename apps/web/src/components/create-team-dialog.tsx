@@ -13,15 +13,17 @@ import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import { useQuery } from "urql";
 import * as z from "zod";
 import { Button } from "./ui/button";
-import { useQuery } from "urql";
 
 import { SelectValue } from "@radix-ui/react-select";
-import { useSession } from "next-auth/react";
+
+import { graphql } from "@/gql";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger } from "./ui/select";
 import { toast } from "./ui/use-toast";
-import { graphql } from "@/gql";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { Organisation } from "@/gql/graphql";
 
 const formSchema = z.object({
   teamName: z.string(),
@@ -47,13 +49,14 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
   const [state, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { mutateAsync, isLoading } = api.team.createTeam.useMutation();
-  const { data: session } = useSession();
+
+  const loggedInAddress = useLoggedInAddress();
 
   const [{ data, fetching }, refetch] = useQuery({
     query: ORGANISATIONS_QUERY,
-    variables: { address: session?.address?.toLowerCase() },
+    variables: { address: loggedInAddress.toLowerCase() },
   });
-  const organisations = data ? data.organisations : [];
+  const organisations: Organisation[] = data ? data.organisations : [];
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
