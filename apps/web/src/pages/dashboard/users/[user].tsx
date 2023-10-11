@@ -35,9 +35,8 @@ export default function DashboardPage() {
   });
   const ens = (_ens as string[]) || undefined;
 
-  const { $state, isLoading, etchToDisplay } = useGetEtchesFromUser(user);
+  const { error, isLoading, etches } = useGetEtchesFromUser(user);
 
-  console.log({ ens, etchToDisplay, user });
   const userName = ens?.[0] ? ens?.[0]?.split(".etched")[0] : user ? shortenAddress({ address: user as string }) : user;
 
   return (
@@ -71,7 +70,7 @@ export default function DashboardPage() {
         </h2>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <DataTable isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
+        <DataTable isLoading={isLoading} data={error ? [] : etches} />
       </div>
     </PageBoilerplate>
   );
