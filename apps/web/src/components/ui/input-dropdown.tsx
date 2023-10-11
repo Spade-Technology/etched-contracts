@@ -99,7 +99,7 @@ type InputDropdownTwoProps = {
 const InputDropdownTwo = ({ data, roleData, selectedItems, setSelectedItems }: InputDropdownTwoProps) => {
   const ref: React.MutableRefObject<HTMLElement> | any = useRef();
   const [inputValue, setInputValue] = useState("");
-  const [role, setRole] = useState("read only");
+  const [role, setRole] = useState(roleData[0]);
   const [openDropdown, setOpenDropdown] = useState(false);
 
   const users = data.filter(({ name }) => name.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()));
