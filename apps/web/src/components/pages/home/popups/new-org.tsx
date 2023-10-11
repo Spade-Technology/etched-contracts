@@ -44,12 +44,6 @@ export default function NewOrg() {
 
   return (
     <>
-      <div
-        onClick={() => setOpenModal(true)}
-        className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[23px] py-2.5 text-sm font-semibold text-white max-xs:gap-1 max-xs:px-4 md:px-[30px] md:py-[15px] md:text-lg"
-      >
-        Create New Organization
-      </div>
       <Dialog open={openModal} onOpenChange={(x) => setOpenModal(x)}>
         <DialogContent className="max-w-[440px]">
           {!inviteUsers.state ? (
