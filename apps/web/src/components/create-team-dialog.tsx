@@ -13,14 +13,17 @@ import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import { useQuery } from "urql";
 import * as z from "zod";
 import { Button } from "./ui/button";
 
-import { useQuery } from "@/gqty";
 import { SelectValue } from "@radix-ui/react-select";
-import { useSession } from "next-auth/react";
+
+import { graphql } from "@/gql";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger } from "./ui/select";
 import { toast } from "./ui/use-toast";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { Organisation } from "@/gql/graphql";
 
 const formSchema = z.object({
   teamName: z.string(),
@@ -30,22 +33,30 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
+const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
+  query Organisations($address: String!) {
+    organisations(
+      where: { or: [{ ownership_: { owner: $address } }, { permissions_: { wallet: $address, permissionLevel_gt: 0 } }] }
+    ) {
+      orgId
+      id
+      name
+    }
+  }
+`);
+
 export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) => {
   const [state, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { mutateAsync, isLoading } = api.team.createTeam.useMutation();
-  const { data } = useSession();
 
-  const query = useQuery();
+  const loggedInAddress = useLoggedInAddress();
 
-  const organisations = query.organisations({
-    where: {
-      or: [
-        { ownership_: { owner: data?.address?.toLowerCase() } },
-        { permissions_: { wallet: data?.address?.toLowerCase(), permissionLevel_gt: 0 } },
-      ],
-    },
+  const [{ data, fetching }, refetch] = useQuery({
+    query: ORGANISATIONS_QUERY,
+    variables: { address: loggedInAddress.toLowerCase() },
   });
+  const organisations: Partial<Organisation>[] = data ? data.organisations : [];
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -59,7 +70,6 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
 
   const onSubmit = async (data: FormData) => {
     try {
-      console.log(data);
       await mutateAsync({
         teamName: data.teamName,
         teamMembers: data.teamMembers,
@@ -129,7 +139,8 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
                               <SelectGroup>
                                 <SelectItem value="None">No Organisation</SelectItem>
                                 <SelectSeparator className="SelectSeparator" />
-                                {organisations?.[0]?.id &&
+                                {!fetching &&
+                                  organisations?.[0]?.id &&
                                   organisations.map(
                                     (org, index) =>
                                       org.orgId && (

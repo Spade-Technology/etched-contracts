@@ -64,7 +64,7 @@ const AddUser = ({ show, setShow }: UserProps) => {
             <InputDropdown data={profiles} selectedItems={selectedProfiles} setSelectedItems={setSelectedProfiles} />
 
             <div className="py-3 text-base">People with access</div>
-            {selectedProfiles ? (
+            {selectedProfiles && selectedProfiles.length > 0  ? (
               selectedProfiles.map((profile, idx) => (
                 <ProfileCard
                   key={idx}

@@ -9,31 +9,42 @@ import { Label } from "@/components/ui/label";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
 
+type user = {
+  id: string;
+  name: string;
+  role: string;
+};
+
+type inviteUsers = {
+  state: boolean;
+  name: string;
+  users: user[];
+};
+
 export default function NewOrg() {
   const [openModal, setOpenModal] = useState(false);
   const [orgName, setOrgName] = useState("");
-  const [roleData, setRoleData] = useState(["member", "admin"]);
-  const [selectedProfiles, setSelectedProfiles] = useState([]);
-  const [inviteUsers, setInviteUsers] = useState({ state: false, name: "", users: [] });
+  const [selectedProfiles, setSelectedProfiles] = useState<user[]>([]);
+  const [inviteUsers, setInviteUsers] = useState<inviteUsers>({ state: false, name: "", users: [] });
 
-  const users = [
+  const users: user[] = [
     {
-      id: 0,
+      id: "0",
       name: "ex: tom12.etched",
       role: "member",
     },
     {
-      id: 1,
+      id: "1",
       name: "Benjamin.etched",
       role: "member",
     },
     {
-      id: 2,
+      id: "2",
       name: "Sophia5678.etched",
       role: "member",
     },
     {
-      id: 3,
+      id: "3",
       name: "Olivia3456.etched",
       role: "member",
     },
@@ -41,18 +52,12 @@ export default function NewOrg() {
 
   const editUserRole = ({ id, item }: { id: string; item: string }) => {
     const user = selectedProfiles?.find((profile: any) => profile.id === id);
-    user.role = item;
+    if (user) user.role = item;
     setSelectedProfiles([...selectedProfiles]);
   };
 
   return (
     <>
-      <div
-        onClick={() => setOpenModal(true)}
-        className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[23px] py-2.5 text-sm font-semibold text-white max-xs:gap-1 max-xs:px-4 md:px-[30px] md:py-[15px] md:text-lg"
-      >
-        Create New Organization
-      </div>
       <Dialog open={openModal} onOpenChange={(x) => setOpenModal(x)}>
         <DialogContent className="max-w-[440px]">
           {!inviteUsers.state ? (

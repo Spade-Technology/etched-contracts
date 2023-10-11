@@ -1,18 +1,75 @@
-import { Etch, EtchOwnership, Team, useQuery } from "@/gqty";
+import { graphql } from "@/gql";
+import { useContext, useEffect } from "react";
+import { useQuery } from "urql";
+import { refetchContext } from "../urql";
+import { Etch } from "@/gql/graphql";
+
+const GET_ETCHES_FROM_TEAM_QUERY = graphql(`
+  query TeamEtches($teamId: BigInt!) {
+    teams(where: { teamId: $teamId }) {
+      id
+      ownership {
+        owner {
+          id
+          etchENS {
+            id
+            name
+          }
+        }
+        organisation {
+          id
+          orgId
+          name
+        }
+      }
+      permissions(where: { permissionLevel_gt: 0 }) {
+        id
+        wallet {
+          id
+        }
+      }
+      managedEtches {
+        id
+        etch {
+          id
+          tokenId
+          createdAt
+          documentName
+          ownership {
+            id
+            owner {
+              id
+              etchENS {
+                id
+                name
+              }
+            }
+            team {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`);
 
 export const useGetEtchesFromTeam = (teamId?: string) => {
-  const query = useQuery({});
-
-  const teams = query.teams({
-    where: {
-      teamId,
-    },
+  const [{ data: etchesData, fetching, error, operation }, reexecute] = useQuery({
+    query: GET_ETCHES_FROM_TEAM_QUERY,
+    variables: { teamId },
   });
 
-  const _etches = teams.map((el: Team) => el.managedEtches({ first: 10 })?.map((el: EtchOwnership) => el.etch));
-  const etches = _etches.reduce((acc: Etch[], val: any) => acc.concat(val), [] as Etch[]) ?? [];
+  const refetch = () => reexecute({ requestPolicy: "network-only" });
 
-  const isLoading = query.$state.isLoading || !teamId || _etches.length !== etches.length;
+  const { setRefetchEtches } = useContext(refetchContext);
+  useEffect(() => setRefetchEtches(refetch), [operation]);
 
-  return { etchToDisplay: etches, team: teams[0], isLoading, $state: query.$state };
+  if (!etchesData) return { etches: [], isLoading: fetching, error };
+
+  const team = etchesData.teams?.[0];
+  const etches: Etch[] = team?.managedEtches?.map((etch: any) => etch.etch) ?? [];
+
+  return { etches, team, isLoading: fetching, error, refetch };
 };
