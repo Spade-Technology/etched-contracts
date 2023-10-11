@@ -14,6 +14,7 @@ import ProfileCard from "./profile-card";
 import { SearchInput } from "./search-input";
 import { cn } from "@/lib/utils";
 import { string } from "zod";
+import { GoodIcon } from "../icons/good";
 
 type InputDropdownProps = {
   data: {
@@ -69,19 +70,20 @@ type InputDropdownTwoProps = {
     name: string;
     role: string;
   }[];
+  roleData: string[];
   selectedItems: any;
   setSelectedItems: Dispatch<SetStateAction<string[]>>;
 };
 
-const InputDropdownTwo = ({ data, selectedItems, setSelectedItems }: InputDropdownTwoProps) => {
+const InputDropdownTwo = ({ data, roleData, selectedItems, setSelectedItems }: InputDropdownTwoProps) => {
   const ref: React.MutableRefObject<HTMLElement> | any = useRef();
   const [inputValue, setInputValue] = useState("");
-  const [role, setRole] = useState("member");
+  const [role, setRole] = useState("read only");
   const [openDropdown, setOpenDropdown] = useState(false);
 
   const users = data.filter(({ name }) => name.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()));
 
-  const addUser = ({ id, name, role }: { id: number; name: string; role: string }) => {
+  const addData = ({ id, name, role }: { id: number; name: string; role: string }) => {
     setOpenDropdown(false);
     const found = selectedItems.find((selected: any) => selected.id === id);
     if (!found) {
@@ -121,7 +123,7 @@ const InputDropdownTwo = ({ data, selectedItems, setSelectedItems }: InputDropdo
                 return (
                   <div
                     key={id}
-                    onClick={() => addUser({ id, name, role })}
+                    onClick={() => addData({ id, name, role })}
                     className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                   >
                     {name}
@@ -142,9 +144,15 @@ const InputDropdownTwo = ({ data, selectedItems, setSelectedItems }: InputDropdo
         </DropdownMenuTrigger>
         <DropdownMenuContent className=" items-start">
           <DropdownMenuGroup>
-            {["member", "admin"].map((item, idx) => {
+            {roleData.map((item, idx) => {
               return (
-                <DropdownMenuItem key={idx} onClick={() => setRole(item)} textValue="Jim Carlos">
+                <DropdownMenuItem
+                  key={idx}
+                  onClick={() => setRole(item)}
+                  className="flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  hover:bg-accent"
+                  textValue="Jim Carlos"
+                >
+                  <GoodIcon className={role === item ? "" : "hidden"} />
                   {item}
                 </DropdownMenuItem>
               );
