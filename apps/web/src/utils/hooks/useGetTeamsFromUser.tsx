@@ -19,7 +19,7 @@ const TeamFragment = graphql(`
 `);
 
 const GET_TEAMS_FROM_USER_QUERY = graphql(`
-  query Teams($userId: String!) {
+  query Teams($userId: String) {
     teams(where: { or: [{ ownership_: { owner: $userId } }, { permissions_: { wallet: $userId, permissionLevel_gt: 0 } }] }) {
       ...TeamFragment
     }

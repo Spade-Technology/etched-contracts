@@ -29,7 +29,7 @@ const EtchFragment = graphql(`
 `);
 
 const GET_ETCHES_FROM_USER_ETCHES_QUERY = graphql(`
-  query Etches($userId: String!) {
+  query Etches($userId: String) {
     etches(
       first: 100
       orderBy: createdAt

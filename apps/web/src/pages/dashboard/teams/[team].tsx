@@ -21,7 +21,7 @@ export default function DashboardPage() {
 
   const { error, isLoading, team, etches } = useGetEtchesFromTeam(teamId);
 
-  const teamMembers = team?.permissions.map((permission: any) => permission.wallet);
+  const teamMembers = team?.permissions?.map((permission: any) => permission.wallet);
 
   const organisation =
     team?.ownership?.organisation &&

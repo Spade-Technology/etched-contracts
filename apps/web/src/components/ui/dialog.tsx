@@ -8,7 +8,9 @@ const Dialog = DialogPrimitive.Root;
 
 const DialogTrigger = DialogPrimitive.Trigger;
 
-const DialogPortal = ({ className, ...props }: DialogPrimitive.DialogPortalProps) => (
+const DialogPortal = ({ className, ...props }: DialogPrimitive.DialogPortalProps & { className?: string }) => (
+  // ignore ts error because DialogPrimitive.Portal will soon support className
+  // @ts-ignore
   <DialogPrimitive.Portal className={cn(className)} {...props} />
 );
 DialogPortal.displayName = DialogPrimitive.Portal.displayName;

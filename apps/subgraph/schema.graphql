@@ -252,7 +252,7 @@ type TeamOwnershipTransferred @entity(immutable: true) {
 
 type TeamPermissionsUpdated @entity(immutable: true) {
   id: Bytes!
-  teamId: BigInt! # uint256
+
   account: Bytes! # address
   newPermission: Int! # uint8
   blockNumber: BigInt!
@@ -264,7 +264,7 @@ type TeamPermissionsUpdated @entity(immutable: true) {
 
 type TeamCreated @entity(immutable: true) {
   id: Bytes!
-  teamId: BigInt! # uint256
+
   to: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -287,7 +287,7 @@ type TeamTransfer @entity(immutable: true) {
 
 type TeamTransferToOrganisation @entity(immutable: true) {
   id: Bytes!
-  teamId: BigInt! # uint256
+
   orgId: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
