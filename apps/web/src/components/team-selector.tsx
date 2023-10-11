@@ -14,6 +14,7 @@ import {
 import { Separator } from "./ui/separator";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { Skeleton } from "./ui/skeleton";
 
 type TeamSelector = {
   name: string;
@@ -68,7 +69,7 @@ export const TeamSelector = ({
         })
       }
       open={isOpened}
-      onOpenChange={(b) => status === "authenticated" && setIsOpened(b)}
+      onOpenChange={(b) => setIsOpened(b)}
     >
       <SelectTrigger className={className}>
         <div
@@ -85,7 +86,14 @@ export const TeamSelector = ({
         <SelectGroup>
           <SelectItem value="Myself">Myself</SelectItem>
           <SelectSeparator className="SelectSeparator" />
-          {!isLoading &&
+          {isLoading ? (
+            <div className="flex flex-col gap-3">
+              <Skeleton className="mt-2 h-5 w-16" />
+              <Skeleton className="h-3 w-6" />
+              <Skeleton className="h-3 w-6" />
+              <SelectSeparator className="SelectSeparator" />
+            </div>
+          ) : (
             !error &&
             uniqueOrgs?.map((org, index) => (
               <div key={index}>
@@ -101,7 +109,8 @@ export const TeamSelector = ({
                 </SelectGroup>
                 <SelectSeparator className="SelectSeparator" />
               </div>
-            ))}
+            ))
+          )}
         </SelectGroup>
         <SelectGroup className="flex flex-col">
           <SelectLabel>Actions</SelectLabel>
