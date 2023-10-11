@@ -36,18 +36,19 @@ const InputDropdown = ({ data, selectedItems, setSelectedItems }: InputDropdownP
 
   const searchFun = (evt: any) => {
     const search = evt.target.value;
-    if(search && search.length > 0) {
-    const result = data?.filter((item: ProfileProps) => {
-      return item.name?.toLowerCase().includes(search.toLowerCase()) || item.link?.toLowerCase().includes(search.toLowerCase());
-    });
-    if (result) {
-      setSelectedItems(result);
-    }} else {
-      setSelectedItems([])
+    if (search && search.length > 0) {
+      const result = data?.filter((item: ProfileProps) => {
+        return item.name?.toLowerCase().includes(search.toLowerCase()) || item.link?.toLowerCase().includes(search.toLowerCase());
+      });
+      if (result) {
+        setSelectedItems(result);
+      }
+    } else {
+      setSelectedItems([]);
     }
   };
 
-  console.log("searched >>", selectedItems)
+  console.log("searched >>", selectedItems);
 
   return (
     <DropdownMenu>
@@ -85,12 +86,12 @@ const InputDropdown = ({ data, selectedItems, setSelectedItems }: InputDropdownP
 
 type InputDropdownTwoProps = {
   data: {
-    id: number;
+    id: string;
     name: string;
     role: string;
   }[];
   selectedItems: any;
-  setSelectedItems: Dispatch<SetStateAction<string[]>>;
+  setSelectedItems: Dispatch<SetStateAction<any[]>>;
 };
 
 const InputDropdownTwo = ({ data, selectedItems, setSelectedItems }: InputDropdownTwoProps) => {
@@ -101,7 +102,7 @@ const InputDropdownTwo = ({ data, selectedItems, setSelectedItems }: InputDropdo
 
   const users = data.filter(({ name }) => name.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()));
 
-  const addUser = ({ id, name, role }: { id: number; name: string; role: string }) => {
+  const addUser = ({ id, name, role }: { id: string; name: string; role: string }) => {
     setOpenDropdown(false);
     const found = selectedItems.find((selected: any) => selected.id === id);
     if (!found) {
