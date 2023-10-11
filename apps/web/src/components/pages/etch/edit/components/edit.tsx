@@ -24,7 +24,7 @@ const Edit = ({ setOpenAddUser }: EditProps) => {
     <div
       className={` ${
         edit ? "bg-[#F3F5F5] text-[#6D6D6D]" : " bg-[#097B45] text-[#FBFBFB]"
-      } relative z-10 w-fit rounded-2xl transition-colors`}
+      } relative z-10 h-fit w-fit rounded-2xl transition-colors`}
     >
       <Image
         src={edit ? BgEditVector : BgVector}
