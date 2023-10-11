@@ -11,19 +11,18 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } fr
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
-import { useQuery } from "@/gqty";
-
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { useUploadThing } from "@/utils/uploadthing";
 import { TeamSelector, getSelectedTeam } from "./team-selector";
 import { toast } from "./ui/use-toast";
+import { refetchContext } from "@/utils/urql";
 
 const formSchema = z.object({
   etchTitle: z.string(),
@@ -45,10 +44,10 @@ export const CreateEtchButton = () => {
   const [state, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [etchCreated, setEtchCreated] = useState("");
+  const { refetchEtches } = useContext(refetchContext);
   const { startUpload, isUploading } = useUploadThing("EtchUpload", {
     onUploadProgress: (progress) => setStatus(`Uploading file... (${progress}%)`),
   });
-  const { $refetch, etches } = useQuery({});
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({
@@ -104,9 +103,7 @@ export const CreateEtchButton = () => {
       });
 
       setStatus("refreshing etches...");
-
-      await $refetch(true);
-
+      dispatchEvent(new CustomEvent("refresh-etches"));
       toast({
         title: "Etch created",
         description: "Your etch has been created",
@@ -161,7 +158,7 @@ export const CreateEtchButton = () => {
                   <Button onClick={() => setEtchCreated("")}>Create a new Etch</Button>
                   <AlertDialogCancel
                     onClick={() => {
-                      dispatchEvent(new CustomEvent("refresh-etches"));
+                      refetchEtches();
                       setIsOpen(false);
                     }}
                   >

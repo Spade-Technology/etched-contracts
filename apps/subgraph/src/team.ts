@@ -27,7 +27,7 @@ import { EOID, ETID, getOrgId, getTeamId, upsertTeam, upsertTeamOwnership, upser
 
 export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
   const entity = new TeamPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.teamId = event.params.teamId;
+
   entity.account = event.params.account;
   entity.newPermission = event.params.newPermission;
 
@@ -69,7 +69,7 @@ export function handleTeamRenamed(event: TeamRenamedEvent): void {
 
 export function handleTeamCreated(event: TeamCreatedEvent): void {
   const entity = new TeamCreated(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.teamId = event.params.teamId;
+
   entity.to = event.params.to;
 
   entity.blockNumber = event.block.number;
@@ -119,7 +119,7 @@ export function handleTransferToOrganisation(event: TransferToOrganisationEvent)
   const organisationId = getOrgId(EOID.Org, event.params.orgId);
 
   const entity = new TeamTransferToOrganisation(event.transaction.hash.concatI32(event.logIndex.toI32()));
-  entity.teamId = event.params.teamId;
+
   entity.orgId = event.params.orgId;
 
   entity.blockNumber = event.block.number;

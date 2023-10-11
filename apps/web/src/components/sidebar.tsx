@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { shortenAddress } from "@/utils/hooks/address";
-import { signOut } from "@/utils/hooks/useSignIn";
+import { signOut, useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Icons } from "./ui/icons";
@@ -37,6 +37,8 @@ enum activePage {
 export const SideBar = () => {
   const { data } = useSession();
   const router = useRouter();
+
+  const loggedInAddress = useLoggedInAddress();
 
   const path = router.asPath;
   const active = path.startsWith("/dashboard")
@@ -94,7 +96,7 @@ export const SideBar = () => {
           <UserSettings>
             <div className="flex w-full justify-between rounded-lg px-3 py-2 hover:bg-slate-100">
               <span className="my-auto text-sm font-medium text-black dark:text-white">
-                {data ? shortenAddress({ address: data?.address ?? "" }) : "Loading..."}
+                {loggedInAddress ? shortenAddress({ address: loggedInAddress ?? "" }) : "Loading..."}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

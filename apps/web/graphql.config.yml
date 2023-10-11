@@ -1,0 +1,3 @@
+overwrite: true
+schema:
+  - https://api.studio.thegraph.com/query/51710/etched/version/latest

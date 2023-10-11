@@ -1,4 +1,3 @@
-import { Organisation, Team, useQuery } from "@/gqty";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
@@ -13,6 +12,9 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Separator } from "./ui/separator";
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { Skeleton } from "./ui/skeleton";
 
 type TeamSelector = {
   name: string;
@@ -31,54 +33,12 @@ export const TeamSelector = ({
   className?: string;
   horizontal?: boolean;
 }) => {
-  const { data: session, status } = useSession();
   const [isOpened, setIsOpened] = useState(false);
   const [selectedBehalfOf, setSelectedBehalfOf] = useState(emptyTeam);
 
-  const query = useQuery({});
+  const loggedInAddress = useLoggedInAddress();
 
-  const _teams = query.teams({
-    where: {
-      or: [
-        {
-          ownership_: {
-            owner: session?.address?.toLowerCase(),
-          },
-        },
-        {
-          permissions_: {
-            wallet: session?.address?.toLowerCase(),
-            permissionLevel_gt: 0,
-          },
-        },
-      ],
-    },
-  });
-
-  const organisations = query.organisations({
-    where: {
-      or: [
-        {
-          ownership_: {
-            owner: session?.address?.toLowerCase(),
-          },
-        },
-        {
-          permissions_: {
-            wallet: session?.address?.toLowerCase(),
-            permissionLevel_gt: 0,
-          },
-        },
-      ],
-    },
-  });
-
-  const teams = [
-    ..._teams,
-    ...(organisations
-      .map((el: Organisation) => el.managedTeams({ first: 10 })?.map((el) => el.team))
-      .reduce((acc: Team[], val: any) => acc.concat(val), [] as Team[]) ?? []),
-  ].filter((team) => !!team.__typename);
+  const { isLoading, error, teams, uniqueOrgs } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
 
   const behalfOf = teams
     .map((team) => ({
@@ -87,8 +47,6 @@ export const TeamSelector = ({
       teamId: team.teamId,
     }))
     .filter((team) => !!team.teamId);
-
-  const Organisations = behalfOf.map((team) => team.org).filter((org, index, self) => self.indexOf(org) === index);
 
   const handleSelectTeam = ({ name, organisation, teamId }: { name: string; organisation: string; teamId: string }) => {
     setSelectedBehalfOf({ name, org: organisation, id: teamId });
@@ -111,7 +69,7 @@ export const TeamSelector = ({
         })
       }
       open={isOpened}
-      onOpenChange={(b) => status === "authenticated" && setIsOpened(b)}
+      onOpenChange={(b) => setIsOpened(b)}
     >
       <SelectTrigger className={className}>
         <div
@@ -128,21 +86,31 @@ export const TeamSelector = ({
         <SelectGroup>
           <SelectItem value="Myself">Myself</SelectItem>
           <SelectSeparator className="SelectSeparator" />
-          {Organisations.map((org, index) => (
-            <div key={index}>
-              <SelectGroup>
-                <SelectLabel>{org}</SelectLabel>
-                {behalfOf
-                  .filter((team) => team.org === org && team.teamId)
-                  .map((team, index) => (
-                    <SelectItem key={index} value={team.name}>
-                      {team.name}
-                    </SelectItem>
-                  ))}
-              </SelectGroup>
+          {isLoading ? (
+            <div className="flex flex-col gap-3">
+              <Skeleton className="mt-2 h-5 w-16" />
+              <Skeleton className="h-3 w-6" />
+              <Skeleton className="h-3 w-6" />
               <SelectSeparator className="SelectSeparator" />
             </div>
-          ))}
+          ) : (
+            !error &&
+            uniqueOrgs?.map((org, index) => (
+              <div key={index}>
+                <SelectGroup>
+                  <SelectLabel>{org}</SelectLabel>
+                  {behalfOf
+                    .filter((team) => team.org === org && team.teamId)
+                    .map((team, index) => (
+                      <SelectItem key={index} value={team.name}>
+                        {team.name}
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+                <SelectSeparator className="SelectSeparator" />
+              </div>
+            ))
+          )}
         </SelectGroup>
         <SelectGroup className="flex flex-col">
           <SelectLabel>Actions</SelectLabel>
