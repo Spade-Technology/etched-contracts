@@ -9,10 +9,10 @@ import { Label } from "@/components/ui/label";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
 
-export default function NewOrg() {
+export default function NewTeam() {
   const [openModal, setOpenModal] = useState(false);
   const [orgName, setOrgName] = useState("");
-  const [roleData, setRoleData] = useState(["member", "admin"]);
+  const [roleData, setRoleData] = useState(["read only", "read & write"]);
   const [selectedProfiles, setSelectedProfiles] = useState([]);
   const [inviteUsers, setInviteUsers] = useState({ state: false, name: "", users: [] });
 
@@ -51,19 +51,27 @@ export default function NewOrg() {
         onClick={() => setOpenModal(true)}
         className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[23px] py-2.5 text-sm font-semibold text-white max-xs:gap-1 max-xs:px-4 md:px-[30px] md:py-[15px] md:text-lg"
       >
-        Create New Organization
+        Create New Team
       </div>
       <Dialog open={openModal} onOpenChange={(x) => setOpenModal(x)}>
         <DialogContent className="max-w-[440px]">
           {!inviteUsers.state ? (
             // INVITE USER FORM
             <>
-              <DialogTitle className="text-base text-primary">New Organization</DialogTitle>
+              <DialogTitle className="text-base text-primary">New Team</DialogTitle>
               <DialogDescription>
-                <Label className="font-semibold">Organization Name</Label>
+                <Label className="font-semibold">Select Organization</Label>
                 <Input
                   id="text"
                   placeholder="Name your organization"
+                  className="col-span-3 mb-7"
+                  value={orgName}
+                  onChange={(e) => setOrgName(e.target.value)}
+                />
+                <Label className="font-semibold">Team Name</Label>
+                <Input
+                  id="text"
+                  placeholder="Name your team"
                   className="col-span-3 mb-7"
                   value={orgName}
                   onChange={(e) => setOrgName(e.target.value)}
