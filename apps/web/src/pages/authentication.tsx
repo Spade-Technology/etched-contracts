@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
+import { signOut } from "@/utils/hooks/useSignIn";
 
 export const metadata: Metadata = {
   title: "Authentication",
@@ -70,6 +71,9 @@ export default function AuthenticationPage() {
                 <Label> Logged in {session?.address && "as " + shortenAddress({ address: session?.address as string })}</Label>
                 <Button variant="outline" className="mt-4" onClick={() => router.push("/dashboard")}>
                   Continue to Dashboard
+                </Button>
+                <Button variant="destructive" className="mt-4" onClick={() => signOut()}>
+                  Log Out
                 </Button>
               </div>
             ) : (

@@ -9,7 +9,9 @@ class Lit {
     if (this.client) return;
 
     console.log("connecting to lit node");
+
     await client.connect();
+
     console.log("connected to lit node");
     this.client = client;
   }
