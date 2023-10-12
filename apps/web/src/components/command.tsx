@@ -132,7 +132,7 @@ export function CommandMenu() {
 
   const { isLoading, etches, organisations, teams, wallets } = useSearchGQL(currentSearch[0]);
 
-  const getItemName = (item: Team | Organisation | Etch | Wallet) => {
+  const getItemName = (item: Partial<Team> | Partial<Organisation> | Partial<Etch> | Partial<Wallet>) => {
     switch (item.id.split("-")[1]) {
       case "Etch":
         return (item as Etch)?.documentName;
