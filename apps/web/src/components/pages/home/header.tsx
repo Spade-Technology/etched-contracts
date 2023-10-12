@@ -44,7 +44,6 @@ const Header = ({ setShowWaitlist }: Props) => {
           </div>
         </div>
       </div>
-      <NewOrg />
       <div
         // onClick={() => router.push("/authentication")}
         onClick={() => setShowWaitlist(true)}
