@@ -2,7 +2,7 @@ import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   schema: process.env.NEXT_PUBLIC_THEGRAPH_URL,
-  documents: ["src/**/*.tsx"],
+  documents: ["src/**/*.tsx", "src/**/*.ts"],
   overwrite: true,
 
   ignoreNoDocuments: true, // for better experience with the watcher

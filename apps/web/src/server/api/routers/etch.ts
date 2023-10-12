@@ -19,6 +19,20 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { defaultAccessControlConditions } from "@/utils/accessControlConditions";
 import { env } from "@/env.mjs";
 
+const accessControlConditions = [
+  {
+    contractAddress: "",
+    standardContractType: "",
+    chain: currentNetwork,
+    method: "eth_getBalance",
+    parameters: [":userAddress", "latest"],
+    returnValueTest: {
+      comparator: ">=",
+      value: "1", // 0.000001 ETH
+    },
+  },
+];
+
 export const etchRouter = createTRPCRouter({
   mintEtch: protectedProcedure
     .input(
@@ -154,7 +168,8 @@ export const etchRouter = createTRPCRouter({
           infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
           infuraSecretKey: process.env.INFURA_API_SECRET as string,
           litNodeClient: lit.client as any,
-          evmContractConditions: defaultAccessControlConditions({ etchId }),
+          accessControlConditions,
+          // evmContractConditions: defaultAccessControlConditions({ etchId }),
         });
 
         return { ipfsCid };

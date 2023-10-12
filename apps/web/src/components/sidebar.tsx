@@ -18,6 +18,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Icons } from "./ui/icons";
 import { LogoAnimated } from "./icons/logo-long-animated";
+import Link from "next/link";
 
 const sideBarElementCn =
   "cursor-pointer flex flex-col items-center justify-center rounded-lg px-3 py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700";
@@ -62,10 +63,10 @@ export const SideBar = () => {
 
         <ul className="my-auto space-y-2 text-sm font-medium">
           <li>
-            <a className={active === activePage.DASHBOARD ? activeClassName : sideBarElementCn}>
+            <Link className={active === activePage.DASHBOARD ? activeClassName : sideBarElementCn} href={"/dashboard/"}>
               <Icons.dashboard color={active === activePage.DASHBOARD ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
               <span className="mt-2 whitespace-nowrap">Dashboard</span>
-            </a>
+            </Link>
           </li>
           <li>
             <a className={active === activePage.ETCH_LIBRARY ? activeClassName : sideBarElementCn}>
