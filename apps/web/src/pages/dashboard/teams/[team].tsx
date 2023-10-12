@@ -3,7 +3,8 @@ import { DataTable } from "@/components/etches-dashboard-table";
 import { PageBoilerplate } from "@/components/page-boilerplate";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { shortenAddress } from "@/utils/hooks/address";
+import { Wallet } from "@/gql/graphql";
+import { formatUserFromWallet, shortenAddress } from "@/utils/hooks/address";
 import { useGetEtchesFromTeam } from "@/utils/hooks/useGetEtchesFromTeam";
 import { Metadata } from "next";
 import { useRouter } from "next/router";
@@ -29,10 +30,6 @@ export default function DashboardPage() {
       ? team?.ownership?.organisation?.name
       : "Organisation " + team?.ownership?.organisation?.orgId);
 
-  const ownerENS = team?.ownership?.owner?.etchENS?.[0]?.name ?? undefined;
-  const ownerAddress = team?.ownership?.owner?.id && shortenAddress({ address: team?.ownership?.owner?.id });
-  const ownerFormatted = isLoading ? undefined : organisation ?? ownerENS ?? ownerAddress ?? undefined;
-
   return (
     <PageBoilerplate>
       <div className="mt-6 flex h-32 items-center px-6 shadow-etched-1">
@@ -52,7 +49,14 @@ export default function DashboardPage() {
           </Breadcrumb>
           <div className="flex-col gap-2">
             <div className="flex gap-1">team {teamId ? teamId : <Skeleton className="my-auto h-4 w-5" />}</div>
-            <div className="flex gap-2">Owner: {ownerFormatted ?? <Skeleton className="my-auto h-4 w-16" />}</div>
+            <div className="flex gap-2">
+              Owner:{" "}
+              {formatUserFromWallet({
+                user: team?.ownership?.owner as Partial<Wallet>,
+                isLoading: isLoading,
+                override: organisation,
+              }) ?? <Skeleton className="my-auto h-4 w-16" />}
+            </div>
             <div className="flex gap-2">
               Total Members: {isLoading ? <Skeleton className="my-auto h-4 w-4" /> : Number(teamMembers?.length) + 1}
             </div>
