@@ -75,7 +75,11 @@ export const columns: EtchColumnDef[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}</div>,
+    cell: ({ row }) => (
+      <Link className="hover:underline" href={`/dashboard/etches/${row.getValue("tokenId")}`}>
+        {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
+      </Link>
+    ),
   },
   {
     accessorKey: "createdAt",
@@ -106,7 +110,6 @@ export const columns: EtchColumnDef[] = [
       const ownership: EtchOwnership = row.getValue("ownership");
 
       if (ownership?.team && ownership?.team?.name) {
-        console.log(ownership.team.teamId);
         return (
           <Link href={`/dashboard/teams/${ownership?.team?.teamId}`}>
             <div className="cursor-pointer text-right font-medium hover:underline">{ownership?.team?.name}</div>
