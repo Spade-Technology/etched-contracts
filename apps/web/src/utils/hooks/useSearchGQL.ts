@@ -2,7 +2,7 @@ import { graphql } from "@/gql";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "urql";
 import { refetchContext } from "../urql";
-import { Etch, EtchEns_OrderBy, Team, Wallet } from "@/gql/graphql";
+import { Etch, EtchEns_OrderBy, Organisation, Team, Wallet } from "@/gql/graphql";
 
 const SEARCH_GQL_QUERY = graphql(`
   query Search($input: String) {
@@ -67,7 +67,7 @@ export const useSearchGQL = (input?: string) => {
     return {
       etches: [] as Partial<Etch>[],
       teams: [] as Partial<Team>[],
-      organisations: [] as Partial<Team>[],
+      organisations: [] as Partial<Organisation>[],
       wallets: [] as Partial<Wallet>[],
       isLoading: fetching,
       error,
@@ -75,7 +75,7 @@ export const useSearchGQL = (input?: string) => {
 
   const etches = searchData.etches as Partial<Etch>[];
   const teams = searchData.teams as Partial<Team>[];
-  const organisations = searchData.organisations as Partial<Team>[];
+  const organisations = searchData.organisations as Partial<Organisation>[];
   const wallets = searchData.wallets as Partial<Wallet>[];
 
   return { etches, teams, organisations, wallets, isLoading: fetching, error, refetch };
