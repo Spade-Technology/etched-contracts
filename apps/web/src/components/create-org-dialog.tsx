@@ -72,7 +72,6 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     if (orgMembers.length > 0) {
-      localStorage.setItem("orgData", JSON.stringify({ orgName, orgMembers }));
       setOrgData({ orgName, orgMembers });
 
       setTimeout(() => {
@@ -107,6 +106,11 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
     const user = orgMembers?.find((profile: any) => profile.id === id);
     if (user) user.role = item;
     setOrgMembers([...orgMembers]);
+  };
+
+  const removeAccess = (id: string) => {
+    const members = orgMembers?.filter((profile: any) => profile.id !== id);
+    setOrgMembers(members);
   };
 
   useEffect(() => {
@@ -166,12 +170,16 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className=" items-start p-1">
                                 <DropdownMenuGroup>
-                                  {roleData.map((item, idx) => {
+                                  {[...roleData, "Remove access"].map((item, idx) => {
                                     return (
                                       <DropdownMenuItem
                                         key={idx}
-                                        onClick={() => editUserRole({ id, item })}
-                                        className="flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  hover:bg-accent"
+                                        onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeAccess(id))}
+                                        className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
+                                          idx < 2
+                                            ? "hover:bg-accent"
+                                            : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                                        }`}
                                         textValue="Jim Carlos"
                                       >
                                         <GoodIcon className={role === item ? "" : "hidden"} />
