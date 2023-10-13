@@ -34,7 +34,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
     <div
       className={` ${
         edit ? "bg-[#F3F5F5] text-[#6D6D6D]" : " bg-[#097B45] text-[#FBFBFB]"
-      } relative z-10 w-fit basis-1/3 rounded-2xl transition-colors`}
+      } relative z-10 w-fit basis-1/3 rounded-2xl transition-colors mx-auto`}
     >
       <Image
         src={edit ? BgEditVector : BgVector}
@@ -45,7 +45,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
         <div className="flex justify-between gap-4">
           {edit ? (
             <div className=" w-full">
-              <div>{etch?.documentName}</div>
+              <div>{etch?.documentName ? etch?.documentName : "Etch Name" }</div>
               <Input defaultValue={etch?.documentName} className="w-full bg-[#F3F5F5]" />
             </div>
           ) : (
@@ -74,7 +74,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
           <div className="flex justify-between py-1">
             {isLoading ? (
               <Skeleton className="my-auto h-4 w-16" />
-            ) : (
+            ) : etch?.ownership ?  (
               <Link
                 className={`text-base font-normal hover:underline ${edit ? "#6D6D6D" : "text-[#E2E2E2]"}`}
                 href={
@@ -89,7 +89,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
                   override: etch?.ownership?.team?.name,
                 })}
               </Link>
-            )}
+            ): "0x00....000000"}
             <Button
               variant="default"
               className={`${

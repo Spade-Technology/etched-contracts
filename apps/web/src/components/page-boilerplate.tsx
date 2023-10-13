@@ -9,7 +9,7 @@ export const PageBoilerplate = ({ children }: { children: React.ReactNode }) => 
   useVerifyAuth();
 
   return (
-    <div className="flex h-screen w-screen bg-white">
+    <div className="flex bg-white">
       <SideBar />
       <div className="w-full pl-2 pr-3 pt-3">
         <DashboardHeader />
