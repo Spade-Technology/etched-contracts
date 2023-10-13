@@ -10,6 +10,7 @@ import { currentChain } from "@/utils/wagmi";
 import { currentNetwork } from "@/contracts";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
+import { Loader2Icon } from "lucide-react";
 
 const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -42,15 +43,12 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
     if (!decryptedArrayBuffer) return;
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
-    console.log(image);
     setSelectedImg(image);
 
     return {};
   };
 
   useEffect(() => {
-    console.log(etch?.ipfsCid);
-    console.log(!!etch?.ipfsCid);
     if (etch?.ipfsCid) decrypt();
   }, [etch?.ipfsCid]);
 
@@ -58,13 +56,11 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
     <div>
       <div className="my-4 flex justify-between gap-4">
         <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
-          {/* <Image
-            src={selectedImg ? selectedImg : BgImage1}
-            height={564}
-            width={684}
-            alt="bgImage"
-            className="col-span-2 mx-auto my-auto"
-          /> */}
+          {selectedImg ? (
+            <Image src={selectedImg} height={564} width={684} alt="bgImage" className="col-span-2 mx-auto my-auto" />
+          ) : (
+            <Loader2Icon className="animate-spin" />
+          )}
           <div className="flex h-full w-full  justify-center gap-2 pt-4">
             {/* {imagesList.map((image, idx) => {
               return (

@@ -150,8 +150,6 @@ export function CommandMenu() {
       const aName = getItemName(a).toLowerCase();
       const bName = getItemName(b).toLowerCase();
 
-      console.log({ aName, bName, "a<b": aName < bName });
-
       if (currentSearch[0].length > 0) {
         const search = currentSearch[0].toLowerCase();
         const aIndex = aName.indexOf(search);

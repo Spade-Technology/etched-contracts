@@ -1,4 +1,4 @@
-import { contracts, currentNetwork, currentNode } from "@/contracts";
+import { camelCaseNetwork, contracts, currentNetwork, currentNode } from "@/contracts";
 import { lit } from "@/lit";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { publicClient, walletClient } from "@/server/web3";
@@ -18,20 +18,6 @@ import { z, infer } from "zod";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { defaultAccessControlConditions } from "@/utils/accessControlConditions";
 import { env } from "@/env.mjs";
-
-const accessControlConditions = [
-  {
-    contractAddress: "",
-    standardContractType: "",
-    chain: currentNetwork,
-    method: "eth_getBalance",
-    parameters: [":userAddress", "latest"],
-    returnValueTest: {
-      comparator: ">=",
-      value: "1", // 0.000001 ETH
-    },
-  },
-];
 
 export const etchRouter = createTRPCRouter({
   mintEtch: protectedProcedure
@@ -164,13 +150,30 @@ export const etchRouter = createTRPCRouter({
         const ipfsCid = await LitJsSdk.encryptToIpfs({
           authSig,
           file,
-          chain: currentNetwork,
+          chain: camelCaseNetwork,
           infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
           infuraSecretKey: process.env.INFURA_API_SECRET as string,
+
           litNodeClient: lit.client as any,
-          accessControlConditions,
-          // evmContractConditions: defaultAccessControlConditions({ etchId }),
+
+          evmContractConditions: defaultAccessControlConditions({ etchId }),
+        }).catch((err) => {
+          console.log(err);
+          console.log(err.stack);
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
         });
+
+        const decryptedArrayBuffer = await LitJsSdk.decryptFromIpfs({
+          authSig,
+          ipfsCid: ipfsCid, // This is returned from the above encryption
+          litNodeClient: lit.client as any,
+        }).catch((e) => {
+          console.log(e);
+          if (e.errorKind == "Validation") alert("You are not authorized to view this document");
+          else alert("Something went wrong");
+        });
+
+        console.log(decryptedArrayBuffer);
 
         return { ipfsCid };
       }
