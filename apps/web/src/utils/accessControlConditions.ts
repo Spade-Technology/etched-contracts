@@ -39,15 +39,11 @@ interface ABIParams {
 }
 
 export const defaultAccessControlConditions = ({ etchId }: { etchId: string }): AccsEVMParams[] => {
-  console.log(
-    EtchABI,
-    EtchABI.find((abi) => abi.name === "hasReadPermission")
-  );
   return [
     {
       contractAddress: contracts.Etch,
       functionName: "hasReadPermission",
-      functionParams: [etchId],
+      functionParams: [":userAddress", etchId],
       chain: currentNetwork,
       functionAbi: EtchABI.find((abi) => abi.name === "hasReadPermission") as FunctionABI,
 

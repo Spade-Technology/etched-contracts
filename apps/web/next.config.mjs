@@ -2,6 +2,7 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
+import webpack from "webpack";
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
@@ -10,6 +11,12 @@ const config = {
 
   experimental: {
     esmExternals: false, // THIS IS THE FLAG THAT MATTERS
+  },
+
+  webpack: (config, { isServer }) => {
+    config.plugins.push(new webpack.IgnorePlugin({ resourceRegExp: /^node:buffer$/ }));
+
+    return config;
   },
 
   /**

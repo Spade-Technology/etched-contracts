@@ -1,25 +1,20 @@
-import { getCsrfToken, signIn, signOut as _signOut } from "next-auth/react";
-import { useState } from "react";
+import { currentNetworkId, currentNode } from "@/contracts";
+import { useSession } from "@clerk/nextjs";
+import { getWalletClient } from "@wagmi/core";
+import { signOut as _signOut, signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
-import { useAccount, useBlockNumber, useNetwork, useSignMessage } from "wagmi";
-import * as LitJsSdk from "@lit-protocol/lit-node-client";
-import { currentNetwork, currentNetworkId, currentNode } from "@/contracts";
-import { Address, encodeAbiParameters, encodePacked, hashMessage, keccak256, parseAbiParameters } from "viem";
-import { getWalletClient, signMessage } from "@wagmi/core";
-import { parseAbi } from "abitype";
-import { lit } from "@/lit";
-import { walletClientToProviderAndSigner } from "../wagmi";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { useAuth, useSession } from "@clerk/nextjs";
+import { Address, encodeAbiParameters, keccak256, parseAbiParameters } from "viem";
+import { useAccount, useBlockNumber, useSignMessage } from "wagmi";
 
 import { api } from "../api";
-import { env } from "@/env.mjs";
 
 export function signOut() {
   localStorage.clear();
 
-  _signOut({ callbackUrl: "/" });
+  _signOut({ callbackUrl: "/authentication" });
 }
 
 export const useSignIn = () => {
@@ -169,4 +164,15 @@ export const useSignIn = () => {
   };
 
   return { isLoading, logIn, regenerateAuthSig };
+};
+
+export const useLoggedInAddress = () => {
+  const [loggedInAddress, setLoggedInAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    const authSignature = JSON.parse(localStorage.getItem("lit-auth-signature") ?? "{}");
+    setLoggedInAddress(authSignature.address);
+  }, []);
+
+  return loggedInAddress || "";
 };

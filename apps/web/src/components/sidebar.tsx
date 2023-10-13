@@ -13,11 +13,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { shortenAddress } from "@/utils/hooks/address";
-import { signOut } from "@/utils/hooks/useSignIn";
+import { signOut, useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Icons } from "./ui/icons";
 import { LogoAnimated } from "./icons/logo-long-animated";
+import Link from "next/link";
 
 const sideBarElementCn =
   "cursor-pointer flex flex-col items-center justify-center rounded-lg px-3 py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700";
@@ -37,6 +38,8 @@ enum activePage {
 export const SideBar = () => {
   const { data } = useSession();
   const router = useRouter();
+
+  const loggedInAddress = useLoggedInAddress();
 
   const path = router.asPath;
   const active = path.startsWith("/dashboard")
@@ -60,10 +63,10 @@ export const SideBar = () => {
 
         <ul className="my-auto space-y-2 text-sm font-medium">
           <li>
-            <a className={active === activePage.DASHBOARD ? activeClassName : sideBarElementCn}>
+            <Link className={active === activePage.DASHBOARD ? activeClassName : sideBarElementCn} href={"/dashboard/"}>
               <Icons.dashboard color={active === activePage.DASHBOARD ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
               <span className="mt-2 whitespace-nowrap">Dashboard</span>
-            </a>
+            </Link>
           </li>
           <li>
             <a className={active === activePage.ETCH_LIBRARY ? activeClassName : sideBarElementCn}>
@@ -94,7 +97,7 @@ export const SideBar = () => {
           <UserSettings>
             <div className="flex w-full justify-between rounded-lg px-3 py-2 hover:bg-slate-100">
               <span className="my-auto text-sm font-medium text-black dark:text-white">
-                {data ? shortenAddress({ address: data?.address ?? "" }) : "Loading..."}
+                {loggedInAddress ? shortenAddress({ address: loggedInAddress ?? "" }) : "Loading..."}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -3,7 +3,8 @@ import { DataTable } from "@/components/etches-dashboard-table";
 import { PageBoilerplate } from "@/components/page-boilerplate";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { shortenAddress } from "@/utils/hooks/address";
+import { Wallet } from "@/gql/graphql";
+import { formatUserFromWallet, shortenAddress } from "@/utils/hooks/address";
 import { useGetEtchesFromTeam } from "@/utils/hooks/useGetEtchesFromTeam";
 import { Metadata } from "next";
 import { useRouter } from "next/router";
@@ -19,23 +20,15 @@ export default function DashboardPage() {
 
   if (!teamId || typeof teamId !== "string") return <div className="flex h-screen w-screen bg-white"> 404 </div>;
 
-  const { $state, isLoading, team, etchToDisplay } = useGetEtchesFromTeam(teamId);
+  const { error, isLoading, team, etches } = useGetEtchesFromTeam(teamId);
 
-  const _teamMembers = team
-    ?.permissions({
-      first: 100,
-      where: {
-        permissionLevel_gt: 0,
-      },
-    })
-    ?.map((memberPermission) => memberPermission.wallet);
+  const teamMembers = team?.permissions?.map((permission: any) => permission.wallet);
 
-  const teamMembers = _teamMembers?.filter((el) => el.__typename !== undefined) ?? [];
-
-  const organisation = team?.ownership?.organisation?.orgId ? "Organisation " + team?.ownership?.organisation?.orgId : undefined;
-  const ownerENS = team?.ownership?.owner?.etchENS({ first: 1 })[0]?.name ?? undefined;
-  const ownerAddress = team?.ownership?.owner?.id && shortenAddress({ address: team?.ownership?.owner?.id });
-  const ownerFormatted = isLoading ? undefined : organisation ?? ownerENS ?? ownerAddress ?? undefined;
+  const organisation =
+    team?.ownership?.organisation &&
+    (team?.ownership?.organisation?.name
+      ? team?.ownership?.organisation?.name
+      : "Organisation " + team?.ownership?.organisation?.orgId);
 
   return (
     <PageBoilerplate>
@@ -56,20 +49,22 @@ export default function DashboardPage() {
           </Breadcrumb>
           <div className="flex-col gap-2">
             <div className="flex gap-1">team {teamId ? teamId : <Skeleton className="my-auto h-4 w-5" />}</div>
-            <div className="flex gap-2">Owner: {ownerFormatted ?? <Skeleton className="my-auto h-4 w-16" />}</div>
             <div className="flex gap-2">
-              Total Members:{" "}
-              {teamMembers.length !== _teamMembers?.length ? (
-                <Skeleton className="my-auto h-4 w-4" />
-              ) : (
-                Number(teamMembers?.length) + 1
-              )}
+              Owner:{" "}
+              {formatUserFromWallet({
+                user: team?.ownership?.owner as Partial<Wallet>,
+                isLoading: isLoading,
+                override: organisation,
+              }) ?? <Skeleton className="my-auto h-4 w-16" />}
+            </div>
+            <div className="flex gap-2">
+              Total Members: {isLoading ? <Skeleton className="my-auto h-4 w-4" /> : Number(teamMembers?.length) + 1}
             </div>
           </div>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <DataTable isLoading={isLoading} data={isLoading || $state.error ? [] : etchToDisplay} />
+        <DataTable isLoading={isLoading} data={error ? [] : etches} />
       </div>
     </PageBoilerplate>
   );

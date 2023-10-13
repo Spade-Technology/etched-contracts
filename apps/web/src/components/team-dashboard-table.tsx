@@ -33,11 +33,11 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Skeleton } from "./ui/skeleton";
-import { Etch, EtchOwnership } from "@/gql/graphql";
+import { Team, TeamOwnership } from "@/gql/graphql";
 
 dayjs.extend(relativeTime);
 
-type EtchColumnDef = { headerName?: string } & ColumnDef<Etch>;
+type EtchColumnDef = { headerName?: string } & ColumnDef<Team>;
 
 export const columns: EtchColumnDef[] = [
   {
@@ -57,11 +57,11 @@ export const columns: EtchColumnDef[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "tokenId",
+    accessorKey: "teamId",
     header: "ID",
     headerName: "ID",
     cell: ({ row }) => {
-      return <div className="capitalize">{row.getValue("tokenId") ?? <Skeleton className="h-3 w-3" />}</div>;
+      return <div className="capitalize">{row.getValue("teamId") ?? <Skeleton className="h-3 w-3" />}</div>;
     },
   },
   {
@@ -75,11 +75,7 @@ export const columns: EtchColumnDef[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <Link className="hover:underline" href={`/dashboard/etches/${row.getValue("tokenId")}`}>
-        {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
-      </Link>
-    ),
+    cell: ({ row }) => <div className="lowercase">{row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}</div>,
   },
   {
     accessorKey: "createdAt",
@@ -107,12 +103,13 @@ export const columns: EtchColumnDef[] = [
     headerName: "Owner",
     header: () => <div className="text-right">Owner</div>,
     cell: ({ row }) => {
-      const ownership: EtchOwnership = row.getValue("ownership");
+      const ownership: TeamOwnership = row.getValue("ownership");
 
       if (ownership?.team && ownership?.team?.name) {
+        console.log(ownership.team.teamId);
         return (
-          <Link href={`/dashboard/teams/${ownership?.team?.teamId}`}>
-            <div className="cursor-pointer text-right font-medium hover:underline">{ownership?.team?.name}</div>
+          <Link href={`/dashboard/teams/${ownership?.organisation?.orgId}`}>
+            <div className="cursor-pointer text-right font-medium hover:underline">{ownership?.organisation?.orgId}</div>
           </Link>
         );
       } else
@@ -133,7 +130,7 @@ export const columns: EtchColumnDef[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const etch = row.original;
+      const team = row.original;
 
       return (
         <div className="flex justify-end">
@@ -146,7 +143,7 @@ export const columns: EtchColumnDef[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(team.teamId)} className="cursor-pointer">
                 Copy Etch ID
               </DropdownMenuItem>
               {/* <DropdownMenuItem onClick={() => router.push("/editEtch")} className="cursor-pointer">Edit Etch</DropdownMenuItem> */}
@@ -158,7 +155,7 @@ export const columns: EtchColumnDef[] = [
   },
 ];
 
-export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: boolean }) {
+export function DataTable({ data = [], isLoading }: { data: Team[]; isLoading?: boolean }) {
   const [sorting, setSorting] = React.useState<SortingState>([{ id: "createdAt", desc: true }]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});

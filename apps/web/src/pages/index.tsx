@@ -72,7 +72,6 @@ export default function Home() {
     <div className="w-full overflow-hidden font-campton">
       <section className="mx-5 md:mx-10 xl:mx-24">
         <Header setShowWaitlist={showWaitlistUsing} />
-
         <div className="mx-auto text-center align-middle ">
           <WaitlistDialog
             {...{

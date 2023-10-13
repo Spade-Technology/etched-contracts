@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 export default function EditEtch() {
   const { data: session } = useSession();
-  const { $state, isLoading, etchToDisplay } = useGetEtchesFromUser(session?.address?.toLowerCase());
+  // const { $state, isLoading, etchToDisplay } = useGetEtchesFromUser(session?.address?.toLowerCase());
 
   return (
     <PageBoilerplate>
@@ -14,7 +14,7 @@ export default function EditEtch() {
           Client 2 Etch Folder {">"} Blueprints {">"} Chip designs {">"} S2 Chip {">"} Etch file name
         </div>
 
-        <EtchSection />
+        {/* <EtchSection /> */}
       </div>
     </PageBoilerplate>
   );
