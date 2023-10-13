@@ -12,8 +12,6 @@ import Edit from "./components/edit";
 import { Etch } from "@/gql/graphql";
 
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
-import { currentChain } from "@/utils/wagmi";
-import { currentNetwork } from "@/contracts";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
 
@@ -37,7 +35,7 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
       authSig,
       ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
       litNodeClient: lit.client as any,
-    }).catch((e) => {
+    }).catch((e: any) => {
       console.log(e);
       if (e.errorKind == "Validation") alert("You are not authorized to view this document");
       else alert("Something went wrong");
@@ -61,18 +59,18 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
   }, [etch?.ipfsCid]);
 
   return (
-    <div>
-      <div className="my-4 flex justify-between gap-4">
+    <div className="w-full">
+      <div className="my-4 flex justify-between gap-4 flex-col md:flex-row">
         <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
-          {/* <Image
+          <Image
             src={selectedImg ? selectedImg : BgImage1}
             height={564}
             width={684}
             alt="bgImage"
             className="col-span-2 mx-auto my-auto"
-          /> */}
-          <div className="flex h-full w-full  justify-center gap-2 pt-4">
-            {/* {imagesList.map((image, idx) => {
+          />
+          <div className="flex overflow-scroll h-full w-full  justify-center gap-2 pt-4">
+            {imagesList.map((image, idx) => {
               return (
                 <Image
                   height={112}
@@ -84,7 +82,7 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
                   onClick={() => setSelectedImg(image)}
                 />
               );
-            })} */}
+            })}
           </div>
         </div>
         <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
