@@ -110,6 +110,12 @@ const config: ExtendedHardhatUserConfig = {
       accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
       chainId: 421613,
     },
+
+    ogor: {
+      url: "https://optimism-goerli.gateway.tenderly.co/" + process.env.TENDERLY_NODE_ACCESS_KEY,
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
+      chainId: 420,
+    },
   },
 
   // Define the etherscan configuration
@@ -117,6 +123,7 @@ const config: ExtendedHardhatUserConfig = {
     apiKey: {
       sepolia: process.env.ETHERSCAN_API_KEY || "",
       arbitrumGoerli: process.env.ETHERSCAN_API_KEY_ARB || "",
+      optimisticGoerli: process.env.ETHERSCAN_API_KEY_OPT || "",
     }
   },
 
