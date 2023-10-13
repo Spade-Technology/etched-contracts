@@ -25,6 +25,14 @@ dotenv.config();
 interface ExtendedHardhatUserConfig extends HardhatUserConfig {
   etherscan?: {
     apiKey?: string | Record<string, string>;
+    customChains?: [{
+      network: string;
+      chainId: number;
+      urls: {
+        apiURL: string;
+        browserURL: string;
+      }
+    }]
   };
   gasReporter?: {
     currency?: string;
@@ -116,6 +124,13 @@ const config: ExtendedHardhatUserConfig = {
       accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
       chainId: 420,
     },
+
+    "base-goerli": {
+      url: "https://base-goerli.gateway.tenderly.co/" + process.env.TENDERLY_NODE_ACCESS_KEY,
+      accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
+      chainId: 84531,
+      
+    }
   },
 
   // Define the etherscan configuration
@@ -124,7 +139,18 @@ const config: ExtendedHardhatUserConfig = {
       sepolia: process.env.ETHERSCAN_API_KEY || "",
       arbitrumGoerli: process.env.ETHERSCAN_API_KEY_ARB || "",
       optimisticGoerli: process.env.ETHERSCAN_API_KEY_OPT || "",
-    }
+      baseGoerli: process.env.ETHERSCAN_API_KEY_BASE || "",
+    },
+    customChains: [
+      {
+        network: "baseGoerli",
+        chainId: 84531,
+        urls: {
+          apiURL: "https://api-goerli.basescan.org/api",
+          browserURL: "https://goerli.basescan.org"
+        }
+      }
+    ]
   },
 
   // Define the gasReporter configuration
