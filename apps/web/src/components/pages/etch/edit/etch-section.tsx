@@ -1,10 +1,4 @@
 import Image from "next/image";
-import BgImage1 from "public/images/dashboard/image1.svg";
-import BgImage2 from "public/images/dashboard/image2.svg";
-import BgImage3 from "public/images/dashboard/image3.svg";
-import BgImage4 from "public/images/dashboard/image4.svg";
-import BgImage5 from "public/images/dashboard/image5.svg";
-import BgImage6 from "public/images/dashboard/image6.svg";
 import { useEffect, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
@@ -22,7 +16,7 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
   const [selectedImg, setSelectedImg] = useState("");
   const { regenerateAuthSig } = useSignIn();
 
-  const imagesList = [BgImage1, BgImage2, BgImage3, BgImage4, BgImage5, BgImage6];
+  // const imagesList = [BgImage1, BgImage2, BgImage3, BgImage4, BgImage5, BgImage6];
 
   const decrypt = async () => {
     await lit.connect();
