@@ -28,8 +28,6 @@ async function main() {
   console.log("Org deployed to:", orgContract.address);
   console.log("Adding node to ENS");
   await orgContract.addNode(signers[0].address)
-  await orgContract.addNode("0x05C0999373F4d4519A338b9d07F2cE94E2904184"); // Bhanu's address
-
 
   console.log("Deploying ENS with the account:", signers[0].address);
   const ENS = await ethers.getContractFactory("EtchENS");

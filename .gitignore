@@ -6,3 +6,4 @@ deployments
 typechain-types/
 coverage
 contracts-exposed
+.DS_Store
