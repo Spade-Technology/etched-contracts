@@ -15,6 +15,7 @@ import { SearchInput } from "./search-input";
 import { cn } from "@/lib/utils";
 import { string } from "zod";
 import { GoodIcon } from "../icons/good";
+import { user } from "../create-team-dialog";
 
 type InputDropdownProps = {
   data: {
@@ -91,24 +92,31 @@ type InputDropdownTwoProps = {
     name: string;
     role: string;
   }[];
+  type: string;
+  placeholder: string;
   roleData: string[];
   selectedItems: any;
   setSelectedItems: Dispatch<SetStateAction<any[]>>;
 };
 
-const InputDropdownTwo = ({ data, roleData, selectedItems, setSelectedItems }: InputDropdownTwoProps) => {
+const InputDropdownTwo = ({ data, roleData, type, placeholder, selectedItems, setSelectedItems }: InputDropdownTwoProps) => {
   const ref: React.MutableRefObject<HTMLElement> | any = useRef();
-  const [inputValue, setInputValue] = useState("");
-  const [role, setRole] = useState(roleData[0]);
+  const [input, setInput] = useState({ value: "", placeholder });
+  const [role, setRole] = useState<string | any>(roleData[0]);
   const [openDropdown, setOpenDropdown] = useState(false);
 
-  const users = data.filter(({ name }) => name.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()));
+  const users = data.filter(({ name }) => name.toLocaleLowerCase().includes(input.value.toLocaleLowerCase()));
 
-  const addData = ({ id, name, role }: { id: number; name: string; role: string }) => {
+  const addData = ({ id, name, role }: user) => {
     setOpenDropdown(false);
     const found = selectedItems.find((selected: any) => selected.id === id);
     if (!found) {
-      setSelectedItems([...selectedItems, { id, name, role }]);
+      if (type === "singleSelect") {
+        setSelectedItems([{ id, name, role }]);
+      } else {
+        setSelectedItems([...selectedItems, { id, name, role }]);
+      }
+      setInput({ ...input, placeholder: name });
     }
   };
 
@@ -128,10 +136,10 @@ const InputDropdownTwo = ({ data, roleData, selectedItems, setSelectedItems }: I
         <main ref={ref}>
           <SearchInput
             type="text"
-            placeholder="ex: tom12.etched"
-            value={inputValue}
+            placeholder={input.placeholder}
+            value={input.value}
             onClick={() => setOpenDropdown(true)}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => setInput({ ...input, value: e.target.value })}
             className="border-none p-3 outline-none"
           />
           <div
@@ -141,13 +149,20 @@ const InputDropdownTwo = ({ data, roleData, selectedItems, setSelectedItems }: I
           >
             <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
               {users.map(({ id, name }) => {
+                const isSelected = selectedItems.find((item: any) => item.name === name);
                 return (
                   <div
                     key={id}
                     onClick={() => addData({ id, name, role })}
-                    className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                    className={`${
+                      isSelected ? "pointer-events-none" : ""
+                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
                   >
                     {name}
+                    <div className="flex items-center gap-1">
+                      {+id * name.length}
+                      <GoodIcon className={`${isSelected ? "" : "hidden"}`} />
+                    </div>
                   </div>
                 );
               })}
@@ -163,7 +178,7 @@ const InputDropdownTwo = ({ data, roleData, selectedItems, setSelectedItems }: I
             {role} <Icons.dropdownIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className=" items-start">
+        <DropdownMenuContent className={roleData.length > 0 ? " items-start" : "hidden"}>
           <DropdownMenuGroup>
             {roleData.map((item, idx) => {
               return (
