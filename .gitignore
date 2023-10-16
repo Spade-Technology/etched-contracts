@@ -35,6 +35,5 @@ yarn-error.log*
 # vercel
 .vercel
 
-
-
 *.icloud
+.DS_Store

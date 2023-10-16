@@ -7,3 +7,4 @@ typechain-types/
 generated
 build
 tests/.bin/
+.DS_Store
