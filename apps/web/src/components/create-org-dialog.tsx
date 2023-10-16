@@ -33,8 +33,8 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
   const [isLoading, setIsLoading] = useState(false);
   const [orgName, setOrgName] = useState("");
   const [roleData, setRoleData] = useState(["member", "admin"]);
-  const [orgMembers, setOrgMembers] = useState<user[]>([]);
-  const [orgData, setOrgData] = useState<FormData>({});
+  const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
+  const [orgData, setOrgData] = useState<FormData | any>({});
   const { mutateAsync } = api.org.createOrg.useMutation();
 
   const users: user[] = [

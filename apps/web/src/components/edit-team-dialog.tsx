@@ -1,4 +1,4 @@
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,9 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useQuery } from "urql";
 import * as z from "zod";
 import { Button } from "./ui/button";
-
 import { SelectValue } from "@radix-ui/react-select";
-
 import { graphql } from "@/gql";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger } from "./ui/select";
 import { toast } from "./ui/use-toast";
@@ -31,18 +29,37 @@ const formSchema = z.object({
   teamOrganisation: z.string(),
 });
 
+const users: user[] = [
+  {
+    id: "0",
+    name: "ex: tom12.etched",
+    role: "member",
+  },
+  {
+    id: "1",
+    name: "Benjamin.etched",
+    role: "member",
+  },
+  {
+    id: "2",
+    name: "Sophia5678.etched",
+    role: "member",
+  },
+  {
+    id: "3",
+    name: "Olivia3456.etched",
+    role: "member",
+  },
+];
+
+const roleData = ["read only", "read & write"];
+
 type FormData = z.infer<typeof formSchema>;
 
-type user = {
+export type user = {
   id: string;
   name: string;
   role: string;
-};
-
-type datatype = {
-  teamOrganisation: string;
-  teamName: string;
-  teamMembers: user[];
 };
 
 const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
@@ -57,13 +74,15 @@ const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) => {
+export const EditTeamDialog = ({ children, modifyTeamData }: { children?: React.ReactNode; modifyTeamData: any }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [teamName, setTeamName] = useState("");
-  const [roleData, setRoleData] = useState(["read only", "read & write"]);
-  const [teamMembers, setTeamMembers] = useState<user[] | any>([]);
-  const [teamData, setTeamData] = useState<datatype | any>({});
+  const [teamName, setTeamName] = useState(modifyTeamData?.teamName || "");
+  const [teamMembers, setTeamMembers] = useState<user[] | any>(modifyTeamData?.teamMembers || []);
+  const [teamOrganisation, setTeamOrganisation] = useState<string>(modifyTeamData?.teamOrganisation || "");
+  const [teamData, setTeamData] = useState<FormData | any>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [deleteTeam, setDeleteTeam] = useState({ state: false, confirm: false });
+  const [transferOwnership, setTransferOwnership] = useState({ state: false, confirm: false });
   const { mutateAsync } = api.team.createTeam.useMutation();
 
   const loggedInAddress = useLoggedInAddress();
@@ -72,45 +91,25 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
     query: ORGANISATIONS_QUERY,
     variables: { address: loggedInAddress.toLowerCase() },
   });
+
   const organisations: Partial<Organisation>[] = data ? data.organisations : [];
 
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    // resolver: zodResolver(formSchema),
 
     defaultValues: {
       teamName,
       teamMembers,
-      teamOrganisation: "None",
+      teamOrganisation,
     },
   });
 
-  const users: user[] = [
-    {
-      id: "0",
-      name: "ex: tom12.etched",
-      role: "member",
-    },
-    {
-      id: "1",
-      name: "Benjamin.etched",
-      role: "member",
-    },
-    {
-      id: "2",
-      name: "Sophia5678.etched",
-      role: "member",
-    },
-    {
-      id: "3",
-      name: "Olivia3456.etched",
-      role: "member",
-    },
-  ];
-
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
+    console.log(teamOrganisation);
+
     if (teamMembers.length > 0 && data.teamOrganisation && teamName) {
-      setTeamData({ teamOrganisation: data.teamOrganisation, teamName, teamMembers });
+      setTeamData({ teamOrganisation, teamName, teamMembers });
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
@@ -149,6 +148,8 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
     // }
   };
 
+  const formValidate = (errors: any) => console.error(errors);
+
   const editUserRole = ({ id, item }: { id: string; item: string }) => {
     const user = teamMembers?.find((profile: any) => profile.id === id);
     if (user) user.role = item;
@@ -160,59 +161,63 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
     setTeamMembers(members);
   };
 
-  useEffect(() => {
-    document.addEventListener("create-team", () => {
-      setOpenModal(true);
-    });
-  }, []);
+  const chooseOption = (idx: any) => {
+    if (idx > 0) {
+      setDeleteTeam({ ...deleteTeam, state: true });
+    } else {
+      setTransferOwnership({ ...transferOwnership, state: true });
+    }
+  };
+
+  const props = { teamName, setDeleteTeam, transferOwnership, setOpenModal, setTransferOwnership, setTeamOrganisation };
 
   return (
     <>
       <Button onClick={() => setOpenModal(!openModal)}>modify team</Button>
       <Dialog open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
         <DialogContent className={"max-w-[440px]"}>
-          {!teamData.teamName ? (
-            // INVITE USER FORM
+          {!teamData.teamName && !deleteTeam.state && !transferOwnership.state ? (
+            // EDIT TEAM FORM
             <>
-              <DialogTitle className="text-base text-primary">New Team</DialogTitle>
+              <div className="flex justify-between">
+                <DialogTitle className="text-base text-primary">Modify Team</DialogTitle>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      style={{ backdropFilter: "blur(50px)" }}
+                      className={`${
+                        modifyTeamData?.teamName ? "" : "hidden"
+                      } absolute right-4 top-4 z-50 flex h-[29px] w-[29px] items-center justify-center rounded-full duration-300 hover:bg-[#D3FBE8]`}
+                    >
+                      <BarIcon className="h-[21px] w-[5px]" />
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="mr-[150px] items-start p-1">
+                    <DropdownMenuGroup>
+                      {["Transfer Ownership", "Remove access"].map((item, idx) => {
+                        return (
+                          <DropdownMenuItem
+                            key={idx}
+                            onClick={() => chooseOption(idx)}
+                            className={`flex cursor-pointer items-center justify-start gap-[7px] rounded-sm p-3 text-xs capitalize text-accent-foreground  ${
+                              idx < 1
+                                ? "hover:bg-accent"
+                                : "rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                            }`}
+                            textValue="Jim Carlos"
+                          >
+                            {idx == 1 ? <DeleteIcon className="h-4 w-3" /> : <TransferIcon className="h-4 w-3" />}
+                            {item}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <DialogDescription>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <Label className="font-semibold">Select Organization</Label>
-                    <FormField
-                      control={form.control}
-                      name="teamOrganisation"
-                      render={({ field }: { field: FieldValues }) => (
-                        <FormItem className="mb-7">
-                          <FormControl>
-                            {/* {console.log()} */}
-                            <Select {...field} onValueChange={(e: any) => field.onChange(e)}>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectItem value="None">No Organisation</SelectItem>
-                                  <SelectSeparator className="SelectSeparator" />
-                                  {!fetching &&
-                                    organisations?.[0]?.id &&
-                                    organisations.map(
-                                      (org, index) =>
-                                        org.orgId && (
-                                          <div key={index}>
-                                            <SelectItem key={index} value={org.orgId}>
-                                              {org.name ?? org.id}
-                                            </SelectItem>
-                                          </div>
-                                        )
-                                    )}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                  <form onSubmit={form.handleSubmit(onSubmit, formValidate)}>
                     <Label className="font-semibold">Team Name</Label>
                     <Input
                       disabled={isLoading}
@@ -224,10 +229,10 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
                     />
                     <Label className="font-semibold">Invite users</Label>
                     <InputDropdownTwo
-                      data={users}
                       placeholder="ex: astrew.etched"
-                      type={"multiSelect"}
+                      data={users}
                       roleData={roleData}
+                      type={"multiSelect"}
                       selectedItems={teamMembers}
                       setSelectedItems={setTeamMembers}
                     />
@@ -304,15 +309,21 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
                 </Form>
               </DialogDescription>
             </>
-          ) : teamData.teamName ? (
+          ) : teamData.teamName && !deleteTeam.state && !transferOwnership.state ? (
             // INVITED USERS
             <>
               <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
-                New Team {teamData.teamName} has been created! 🎉
+                {teamData.teamOrganisation} is now owner of Team {teamData.teamName} 🎉
               </DialogTitle>
               <DialogDescription>
                 <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
                   <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
+                  <section className="flex items-center justify-between ">
+                    <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">
+                      {teamOrganisation}
+                    </div>
+                    <div className="">Owner</div>
+                  </section>
                   {teamData?.teamMembers?.map(({ id, name, role }: user) => {
                     return (
                       <section key={id} className="flex items-center justify-between ">
@@ -324,11 +335,147 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
                 </div>
               </DialogDescription>
             </>
+          ) : deleteTeam.state ? (
+            <ConfirmDelectDialog {...props} />
+          ) : transferOwnership.state ? (
+            <TransferOwnershipDialog {...props} />
           ) : (
             ""
           )}
         </DialogContent>
       </Dialog>
+    </>
+  );
+};
+
+type confirm = {
+  teamName: string;
+  setDeleteTeam: any;
+  setOpenModal: any;
+  setTransferOwnership: any;
+  transferOwnership: any;
+  setTeamOrganisation: any;
+};
+
+const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOpenModal }) => {
+  const removeTeam = () => {
+    setDeleteTeam({ confirm: true, state: false });
+    setOpenModal(false);
+  };
+  return (
+    <section>
+      <DialogTitle className="mb-6 text-center text-base text-[#f55]">Deleting Team Confirmation</DialogTitle>
+      <div className="mx-auto w-[342px] text-center text-muted-foreground">
+        Are you sure that you want to delete Team <span className="capitalize">“{teamName}”</span>?
+      </div>
+
+      <footer className="mt-10 flex items-center justify-center gap-5">
+        <div
+          onClick={() => setDeleteTeam({ confirm: true, state: false })}
+          className="cursor-pointer text-sm font-semibold text-muted-foreground hover:text-foreground"
+        >
+          Cancel
+        </div>
+        <div>
+          <Button
+            // isLoading={'isLoading'}
+            // type="submit"
+            onClick={() => removeTeam()}
+          >
+            Yes
+          </Button>
+        </div>
+      </footer>
+    </section>
+  );
+};
+
+const TransferOwnershipDialog: React.FC<confirm> = ({
+  teamName,
+  transferOwnership,
+  setTransferOwnership,
+  setTeamOrganisation,
+  setOpenModal,
+}) => {
+  const [owner, setOwner] = useState("individual");
+  const [ownerData, setOwnerData] = useState<user[]>([]);
+
+  const transfer = (e: any) => {
+    e.preventDefault();
+    const item: user | any = ownerData.find((idx) => idx.name);
+    setTeamOrganisation(item.name);
+    console.log(item.name);
+
+    setTransferOwnership({ state: false });
+  };
+
+  return (
+    <>
+      <DialogTitle className="text-base text-primary">Transfer Ownership</DialogTitle>
+      <DialogDescription>
+        <form onSubmit={transfer}>
+          <Label className="font-semibold">Select</Label>
+          <section className="mb-7 mt-[9px] flex gap-5">
+            {["individual", "organization"].map((item) => {
+              return (
+                <div onClick={() => setOwner(item)} className="flex items-center gap-1">
+                  <div className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] border-muted-foreground">
+                    <div
+                      className={`${owner == item ? "scale-100" : "scale-0"} h-3 w-3 rounded-full bg-primary duration-300`}
+                    ></div>
+                  </div>
+                  <div
+                    className={`text-sm font-medium capitalize text-muted-foreground ${
+                      owner == item ? "!text-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {item}
+                  </div>
+                </div>
+              );
+            })}
+          </section>
+          {owner === "individual" && (
+            <>
+              <Label className="font-semibold">Transfer to</Label>
+              <InputDropdownTwo
+                data={users}
+                type={"singleSelect"}
+                roleData={[]}
+                placeholder={"ex: astrew.etched"}
+                selectedItems={ownerData}
+                setSelectedItems={setOwnerData}
+              />
+            </>
+          )}
+
+          {owner !== "individual" && (
+            <>
+              {" "}
+              <Label className="font-semibold">Organization Name</Label>
+              <InputDropdownTwo
+                data={users}
+                type={"singleSelect"}
+                roleData={[]}
+                placeholder="ex: Prolific Inc."
+                selectedItems={ownerData}
+                setSelectedItems={setOwnerData}
+              />
+            </>
+          )}
+
+          <footer className="mt-10 flex items-center justify-end gap-5">
+            <div onClick={() => transfer()} className="cursor-pointer text-sm font-semibold hover:text-foreground">
+              Cancel
+            </div>
+            <div>
+              <Button isLoading={false} type="submit" className={`${ownerData.length < 1 ? " cursor-not-allowed" : ""}`}>
+                Done
+              </Button>
+            </div>
+          </footer>
+        </form>
+      </DialogDescription>
     </>
   );
 };

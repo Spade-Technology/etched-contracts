@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -11,12 +11,14 @@ interface Types {
   onClick: React.MouseEventHandler<HTMLInputElement>;
 }
 const SearchInput: React.FC<Types> = ({ className, type, placeholder, value, onChange, onClick, ...props }) => {
-  console.log(value);
+  useEffect(() => {
+    console.log(value);
+  });
 
   return (
     <input
       type={type}
-      value={value}
+      // value={value}
       placeholder={placeholder}
       onChange={onChange}
       onClick={onClick}

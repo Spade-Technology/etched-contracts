@@ -2,12 +2,12 @@ import { CommandMenu } from "./command";
 import { CreateEtchButton } from "./create-etch-button";
 import { CreateOrgDialog } from "./create-org-dialog";
 import { CreateTeamDialog } from "./create-team-dialog";
+import { EditTeamDialog } from "./edit-team-dialog";
 import { EtchedENS } from "./ens-button";
 import { TeamSelector } from "./team-selector";
 
 export const DashboardHeader = () => {
   const modifyTeamData = {
-    ok: "m",
     teamOrganisation: "None",
     teamName: "spade tech",
     teamMembers: [
@@ -36,7 +36,7 @@ export const DashboardHeader = () => {
 
       {/* Etched ENS */}
       <EtchedENS />
-      <CreateTeamDialog modifyTeamData={modifyTeamData} />
+      <EditTeamDialog modifyTeamData={modifyTeamData} />
 
       <div className="mx-6 h-full border-[1px]" />
 
