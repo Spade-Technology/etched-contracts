@@ -1,6 +1,11 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
-const client = new LitJsSdk.LitNodeClient({});
+const client = new LitJsSdk.LitNodeClient({
+  network: "cayenne",
+
+  // only on client
+  alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
+});
 
 class Lit {
   public client: LitJsSdk.LitNodeClient | undefined;
@@ -9,7 +14,9 @@ class Lit {
     if (this.client) return;
 
     console.log("connecting to lit node");
+
     await client.connect();
+
     console.log("connected to lit node");
     this.client = client;
   }

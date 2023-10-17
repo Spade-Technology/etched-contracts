@@ -1,11 +1,11 @@
 import EtchABI from "@abis/Etches.json";
-import { contracts, currentNetwork } from "@/contracts";
+import { camelCaseNetwork, contracts, currentNetwork } from "@/contracts";
 
 declare type ConditionType = "solRpc" | "evmBasic" | "evmContract" | "cosmos";
 declare type Chain = string;
 
 interface AccsRegularParams {
-  conditionType?: ConditionType;
+  conditionType: ConditionType;
   returnValueTest: {
     key?: string;
     comparator: string;
@@ -38,22 +38,24 @@ interface ABIParams {
   type: string;
 }
 
-export const defaultAccessControlConditions = ({ etchId }: { etchId: string }): AccsEVMParams[] => {
-  console.log(
-    EtchABI,
-    EtchABI.find((abi) => abi.name === "hasReadPermission")
-  );
+export const defaultAccessControlConditions = ({ etchId }: { etchId: string }): any[] => {
   return [
     {
+      conditionType: "evmContract",
+
       contractAddress: contracts.Etch,
+
       functionName: "hasReadPermission",
-      functionParams: [etchId],
-      chain: currentNetwork,
+      method: "hasReadPermission",
+      functionParams: [":userAddress", etchId],
+      params: [":userAddress", etchId],
+      parameters: [":userAddress", etchId],
       functionAbi: EtchABI.find((abi) => abi.name === "hasReadPermission") as FunctionABI,
 
+      chain: camelCaseNetwork,
       returnValueTest: {
         key: "",
-        comparator: "==",
+        comparator: "=",
         value: "true",
       },
     },

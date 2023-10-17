@@ -14,7 +14,7 @@ import { api } from "../api";
 export function signOut() {
   localStorage.clear();
 
-  _signOut({ callbackUrl: "/" });
+  _signOut({ callbackUrl: "/authentication" });
 }
 
 export const useSignIn = () => {

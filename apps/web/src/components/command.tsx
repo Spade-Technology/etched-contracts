@@ -9,10 +9,15 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { signOut } from "@/utils/hooks/useSignIn";
-import { SearchIcon } from "lucide-react";
+import { BriefcaseIcon, Loader2Icon, SearchIcon, Users2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "./ui/button";
+import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
+import { Skeleton } from "./ui/skeleton";
+import { FileIcon } from "@radix-ui/react-icons";
+import { Label } from "./ui/label";
+import { Etch, Organisation, Team, Wallet } from "@/gql/graphql";
 
 export const commands = [
   {
@@ -91,6 +96,7 @@ export const bsrtct = (shortcut: string) => {
 
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
+  const currentSearch = useState("");
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -124,6 +130,47 @@ export function CommandMenu() {
     }
   };
 
+  const { isLoading, etches, organisations, teams, wallets } = useSearchGQL(currentSearch[0]);
+
+  const getItemName = (item: Partial<Team> | Partial<Organisation> | Partial<Etch> | Partial<Wallet>) => {
+    switch (item.id.split("-")[1]) {
+      case "Etch":
+        return (item as Etch)?.documentName;
+      case "Team":
+        return (item as Team)?.name;
+      case "Organisation":
+        return (item as Organisation)?.name;
+      default:
+        return (item as Wallet)?.etchENS?.[0]?.name || (item as Wallet)?.id || "";
+    }
+  };
+
+  const mostRelevent = [...etches, ...organisations, ...teams, ...wallets]
+    .sort((a, b) => {
+      const aName = getItemName(a).toLowerCase();
+      const bName = getItemName(b).toLowerCase();
+
+      if (currentSearch[0].length > 0) {
+        const search = currentSearch[0].toLowerCase();
+        const aIndex = aName.indexOf(search);
+        const bIndex = bName.indexOf(search);
+        if (aIndex !== -1 && bIndex !== -1) {
+          return aIndex < bIndex ? -1 : 1;
+        } else if (aIndex !== -1) {
+          return -1;
+        } else if (bIndex !== -1) {
+          return 1;
+        }
+      }
+      return 0;
+    })
+    .slice(0, 2);
+
+  // dirty fix to refresh the search once the data is loaded
+  useEffect(() => {
+    if (!isLoading) currentSearch[1](currentSearch[0]);
+  });
+
   return (
     <div className="w-full">
       <Button
@@ -136,8 +183,64 @@ export function CommandMenu() {
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput
+          placeholder="Type a command or search..."
+          onValueChange={(value) => currentSearch[1](value)}
+          value={currentSearch[0]}
+        />
         <CommandList>
+          {isLoading ? (
+            <>
+              <Loader2Icon className="mx-auto my-4 animate-spin" />
+              <CommandSeparator />
+            </>
+          ) : (
+            <>
+              <CommandGroup heading="Global Search">
+                {etches
+                  .slice(0, 2)
+                  .filter((etch) => mostRelevent.includes(etch))
+                  .map((etch, index) => (
+                    <CommandItem
+                      key={index}
+                      className="flex justify-between"
+                      // onSelect={() => handleAction(etch.action)}
+                    >
+                      {/* <FileIcon /> */}
+                      {etch.documentName + " - " + etch.tokenId}
+                    </CommandItem>
+                  ))}
+                {teams
+                  .slice(0, 2)
+                  .filter((team) => mostRelevent.includes(team))
+                  .map((team, index) => (
+                    <CommandItem
+                      key={index}
+                      className="flex justify-between"
+                      // onSelect={() => handleAction(team.action)}
+                    >
+                      {/* <Users2Icon /> */}
+                      {team.name}
+                    </CommandItem>
+                  ))}
+                {organisations
+                  .slice(0, 2)
+                  .filter((organisation) => mostRelevent.includes(organisation))
+                  .map((organisation, index) => (
+                    <CommandItem
+                      key={index}
+                      className="flex justify-between"
+                      // onSelect={() => handleAction(team.action)}
+                    >
+                      {/* <BriefcaseIcon /> */}
+                      {organisation.name}
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
+              <CommandSeparator />
+            </>
+          )}
+
           <CommandEmpty>No results found.</CommandEmpty>
 
           {Object.entries(
