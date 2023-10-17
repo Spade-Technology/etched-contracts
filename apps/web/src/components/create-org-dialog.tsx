@@ -28,11 +28,12 @@ type user = {
   role: string;
 };
 
+export const roleData = ["member", "admin"];
+
 export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [orgName, setOrgName] = useState("");
-  const [roleData, setRoleData] = useState(["member", "admin"]);
   const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
   const [orgData, setOrgData] = useState<FormData | any>({});
   const { mutateAsync } = api.org.createOrg.useMutation();
