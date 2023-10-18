@@ -30,8 +30,15 @@ type user = {
 
 export const roleData = ["member", "admin"];
 
-export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) => {
-  const [openModal, setOpenModal] = useState(false);
+export const CreateOrgDialog = ({
+  children,
+  openOrgModal,
+  setOpenOrgModal,
+}: {
+  children?: React.ReactNode;
+  openOrgModal: boolean;
+  setOpenOrgModal: any;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [orgName, setOrgName] = useState("");
   const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
@@ -97,7 +104,7 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
     //     blockchainMessage: localStorage.getItem("blockchainMessage")!,
     //   });
 
-    //   setOpenModal(false);
+    //   setOpenOrgModal(false);
     // } catch (e) {
     //   console.log(e);
     // }
@@ -116,12 +123,12 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
 
   useEffect(() => {
     document.addEventListener("create-org", () => {
-      setOpenModal(true);
+      setOpenOrgModal(true);
     });
   }, []);
 
   return (
-    <Dialog open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
+    <Dialog open={openOrgModal} onOpenChange={() => setOpenOrgModal(!openOrgModal)}>
       <DialogContent className={"max-w-[440px]"}>
         {!orgData.orgName ? (
           // INVITE USER FORM
@@ -142,6 +149,7 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
                   />
                   <Label className="font-semibold">Invite users</Label>
                   <InputDropdownTwo
+                    placeholder="ex: astrew.etched"
                     data={users}
                     roleData={roleData}
                     selectedItems={orgMembers}
@@ -199,7 +207,7 @@ export const CreateOrgDialog = ({ children }: { children?: React.ReactNode }) =>
 
                   <footer className="mt-10 flex items-center justify-end gap-5">
                     <div
-                      onClick={() => setOpenModal(false)}
+                      onClick={() => setOpenOrgModal(false)}
                       className="cursor-pointer text-sm font-semibold hover:text-foreground"
                     >
                       Cancel

@@ -7,9 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useQuery } from "urql";
 import * as z from "zod";
 import { Button } from "./ui/button";
-
 import { SelectValue } from "@radix-ui/react-select";
-
 import { graphql } from "@/gql";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger } from "./ui/select";
 import { toast } from "./ui/use-toast";
@@ -57,11 +55,18 @@ const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+export const CreateTeamDialog = ({
+  children,
+  openTeamModal,
+  setOpenTeamModal,
+}: {
+  children?: React.ReactNode;
+  openTeamModal: boolean;
+  setOpenTeamModal: any;
+}) => {
   const [teamName, setTeamName] = useState("");
   const [roleData, setRoleData] = useState(["read only", "read & write"]);
-  const [teamMembers, setTeamMembers] = useState<user[] | any>([]);
+  const [teamMembers, setTeamMembers] = useState<user[]>([]);
   const [teamData, setTeamData] = useState<datatype | any>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { mutateAsync } = api.team.createTeam.useMutation();
@@ -138,7 +143,7 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
     //     description: "Your team has been created",
     //     variant: "success",
     //   });
-    //   // setOpenModal(false);
+    //   // setOpenTeamModal(false);
     // } catch (e) {
     //   console.log(e);
     //   toast({
@@ -162,14 +167,13 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
 
   useEffect(() => {
     document.addEventListener("create-team", () => {
-      setOpenModal(true);
+      setOpenTeamModal(true);
     });
   }, []);
 
   return (
     <>
-      <Button onClick={() => setOpenModal(!openModal)}>modify team</Button>
-      <Dialog open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
+      <Dialog open={openTeamModal} onOpenChange={() => setOpenTeamModal(!openTeamModal)}>
         <DialogContent className={"max-w-[440px]"}>
           {!teamData.teamName ? (
             // INVITE USER FORM
@@ -285,7 +289,7 @@ export const CreateTeamDialog = ({ children }: { children?: React.ReactNode }) =
 
                     <footer className="mt-10 flex items-center justify-end gap-5">
                       <div
-                        onClick={() => setOpenModal(false)}
+                        onClick={() => setOpenTeamModal(false)}
                         className="cursor-pointer text-sm font-semibold hover:text-foreground"
                       >
                         Cancel

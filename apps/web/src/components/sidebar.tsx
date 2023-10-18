@@ -54,6 +54,14 @@ export const SideBar = () => {
       : activePage.DASHBOARD
     : activePage.DASHBOARD;
 
+  const pages = [
+    { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard, state: activePage.DASHBOARD },
+    { url: "/dashboard", title: "Etch Library", Icon: Icons.etchLibrary, state: activePage.ETCH_LIBRARY },
+    { url: "/dashboard", title: "Marketplace", Icon: Icons.marketplace, state: activePage.MARKETPLACE },
+    { url: "/dashboard", title: "Community", Icon: Icons.community, state: activePage.COMMUNITY },
+    { url: "/settings", title: "Settings", Icon: Icons.etchLibrary, state: activePage.SETTINGS },
+  ];
+
   return (
     <aside id="sidebar" className="left-0 top-0 z-40 h-screen w-52 transition-transform" aria-label="Sidebar">
       <div className="flex h-full flex-col overflow-y-auto  py-4 dark:border-slate-700 dark:bg-slate-900">
@@ -62,36 +70,16 @@ export const SideBar = () => {
         </div>
 
         <ul className="my-auto space-y-2 text-sm font-medium">
-          <li>
-            <Link className={active === activePage.DASHBOARD ? activeClassName : sideBarElementCn} href={"/dashboard/"}>
-              <Icons.dashboard color={active === activePage.DASHBOARD ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
-              <span className="mt-2 whitespace-nowrap">Dashboard</span>
-            </Link>
-          </li>
-          <li>
-            <a className={active === activePage.ETCH_LIBRARY ? activeClassName : sideBarElementCn}>
-              <Icons.etchLibrary color={active === activePage.ETCH_LIBRARY ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
-              <span className="mt-2 whitespace-nowrap">Etch Library</span>
-            </a>
-          </li>
-          <li>
-            <a className={active === activePage.MARKETPLACE ? activeClassName : sideBarElementCn}>
-              <Icons.marketplace color={active === activePage.MARKETPLACE ? "#097B45" : "#9C9C9C"} />
-              <span className="mt-2 whitespace-nowrap">Marketplace</span>
-            </a>
-          </li>
-          <li>
-            <a className={active === activePage.COMMUNITY ? activeClassName : sideBarElementCn}>
-              <Icons.community color={active === activePage.COMMUNITY ? "#097B45" : "#9C9C9C"} />
-              <span className="mt-2 whitespace-nowrap">Community</span>
-            </a>
-          </li>
-          <li>
-            <a className={active === activePage.SETTINGS ? activeClassName : sideBarElementCn}>
-              <Icons.settings color={active === activePage.SETTINGS ? "#097B45" : "#9C9C9C"} />{" "}
-              <span className="mt-2 whitespace-nowrap">Settings</span>
-            </a>
-          </li>
+          {pages.map(({ url, title, state, Icon }) => {
+            return (
+              <li>
+                <Link className={active === state ? activeClassName : sideBarElementCn} href={url}>
+                  <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
+                  <span className="mt-2 whitespace-nowrap">{title}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
         <div className="mt-auto flex">
           <UserSettings>
