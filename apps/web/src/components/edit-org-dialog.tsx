@@ -229,7 +229,6 @@ export const EditOrgDialog = ({ children, modifyOrgData }: { children?: React.Re
                     selectedItems={orgMembers}
                     setSelectedItems={setOrgMembers}
                   />
-                  {console.log(modifyOrgData)}
 
                   <section>
                     {orgMembers.length > 0 && (

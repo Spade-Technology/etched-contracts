@@ -64,12 +64,10 @@ export const DashboardHeader = () => {
       <EditOrgDialog modifyOrgData={modifyOrgData} />
 
       <div className="mx-6 h-full border-[1px]" />
-
-      <TeamSelector />
-
       {/* Modals & More */}
       <CreateTeamDialog />
       <CreateOrgDialog />
+      <TeamSelector />
     </div>
   );
 };
