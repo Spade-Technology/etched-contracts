@@ -23,12 +23,35 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 type user = {
-  id: string;
-  name: string;
-  role: string;
+  id?: string;
+  name?: string;
+  role?: string;
 };
 
 export const roleData = ["member", "admin"];
+
+export const users: user[] = [
+  {
+    id: "0",
+    name: "ex: tom12.etched",
+    role: "member",
+  },
+  {
+    id: "1",
+    name: "Benjamin.etched",
+    role: "admin",
+  },
+  {
+    id: "2",
+    name: "Sophia5678.etched",
+    role: "member",
+  },
+  {
+    id: "3",
+    name: "Olivia3456.etched",
+    role: "admin",
+  },
+];
 
 export const CreateOrgDialog = ({
   children,
@@ -36,37 +59,14 @@ export const CreateOrgDialog = ({
   setOpenOrgModal,
 }: {
   children?: React.ReactNode;
-  openOrgModal: boolean;
-  setOpenOrgModal: any;
+  openOrgModal?: boolean;
+  setOpenOrgModal?: any;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [orgName, setOrgName] = useState("");
   const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
   const [orgData, setOrgData] = useState<FormData | any>({});
   const { mutateAsync } = api.org.createOrg.useMutation();
-
-  const users: user[] = [
-    {
-      id: "0",
-      name: "ex: tom12.etched",
-      role: "member",
-    },
-    {
-      id: "1",
-      name: "Benjamin.etched",
-      role: "member",
-    },
-    {
-      id: "2",
-      name: "Sophia5678.etched",
-      role: "member",
-    },
-    {
-      id: "3",
-      name: "Olivia3456.etched",
-      role: "member",
-    },
-  ];
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),

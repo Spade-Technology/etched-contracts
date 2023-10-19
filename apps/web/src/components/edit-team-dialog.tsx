@@ -72,8 +72,17 @@ const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-export const EditTeamDialog = ({ children, modifyTeamData }: { children?: React.ReactNode; modifyTeamData: any }) => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+export const EditTeamDialog = ({
+  children,
+  modifyTeamData,
+  openEditTeamModal,
+  setOpenEditTeamModal,
+}: {
+  children?: React.ReactNode;
+  modifyTeamData: any;
+  openEditTeamModal: boolean;
+  setOpenEditTeamModal: any;
+}) => {
   const [teamName, setTeamName] = useState(modifyTeamData?.teamName || "");
   const [teamMembers, setTeamMembers] = useState<user[] | any>(modifyTeamData?.teamMembers || []);
   const [teamOrganisation, setTeamOrganisation] = useState<string>(modifyTeamData?.teamOrganisation || "");
@@ -135,7 +144,7 @@ export const EditTeamDialog = ({ children, modifyTeamData }: { children?: React.
     //     description: "Your team has been created",
     //     variant: "success",
     //   });
-    //   // setOpenModal(false);
+    //   // setOpenEditTeamModal(false);
     // } catch (e) {
     //   console.log(e);
     //   toast({
@@ -167,12 +176,11 @@ export const EditTeamDialog = ({ children, modifyTeamData }: { children?: React.
     }
   };
 
-  const props = { teamName, setDeleteTeam, transferOwnership, setOpenModal, setTransferOwnership, setTeamOrganisation };
+  const props = { teamName, setDeleteTeam, transferOwnership, setOpenEditTeamModal, setTransferOwnership, setTeamOrganisation };
 
   return (
     <>
-      <Button onClick={() => setOpenModal(!openModal)}>modify team</Button>
-      <Dialog open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
+      <Dialog open={openEditTeamModal} onOpenChange={() => setOpenEditTeamModal(!openEditTeamModal)}>
         <DialogContent className={"max-w-[440px]"}>
           {!teamData.teamName && !deleteTeam.state && !transferOwnership.state ? (
             // EDIT TEAM FORM
@@ -288,7 +296,7 @@ export const EditTeamDialog = ({ children, modifyTeamData }: { children?: React.
 
                     <footer className="mt-10 flex items-center justify-end gap-5">
                       <div
-                        onClick={() => setOpenModal(false)}
+                        onClick={() => setOpenEditTeamModal(false)}
                         className="cursor-pointer text-sm font-semibold hover:text-foreground"
                       >
                         Cancel
@@ -349,16 +357,16 @@ export const EditTeamDialog = ({ children, modifyTeamData }: { children?: React.
 type confirm = {
   teamName: string;
   setDeleteTeam: any;
-  setOpenModal: any;
+  setOpenEditTeamModal: any;
   setTransferOwnership: any;
   transferOwnership: any;
   setTeamOrganisation: any;
 };
 
-const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOpenModal }) => {
+const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOpenEditTeamModal }) => {
   const removeTeam = () => {
     setDeleteTeam({ confirm: true, state: false });
-    setOpenModal(false);
+    setOpenEditTeamModal(false);
   };
   return (
     <section>
@@ -393,7 +401,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
   transferOwnership,
   setTransferOwnership,
   setTeamOrganisation,
-  setOpenModal,
+  setOpenEditTeamModal,
 }) => {
   const [owner, setOwner] = useState("individual");
   const [ownerData, setOwnerData] = useState<user[]>([]);

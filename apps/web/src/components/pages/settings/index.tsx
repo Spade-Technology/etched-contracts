@@ -1,7 +1,23 @@
-import { CreateOrgDialog } from "@/components/create-org-dialog";
+import { CreateOrgDialog, users } from "@/components/create-org-dialog";
 import { CreateTeamDialog } from "@/components/create-team-dialog";
+import { EditButton } from "@/components/ui/edit-button";
 import { Icons } from "@/components/ui/icons";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { users as teamMembers } from "./../../create-team-dialog";
+import { EditOrgDialog, user } from "@/components/edit-org-dialog";
+import { EditTeamDialog } from "@/components/edit-team-dialog";
+
+const modifyTeamData = {
+  teamOrganisation: "None",
+  teamName: "spade tech",
+  teamMembers: teamMembers,
+};
+
+const modifyOrgData = {
+  orgName: "SpaceX",
+  teamName: "spade tech",
+  orgMembers: users,
+};
 
 export const SidebarDialog = () => {
   const [activeTab, setActiveTab] = useState<string>("Manage");
@@ -38,21 +54,56 @@ export const SidebarDialog = () => {
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState<boolean>(false);
   const [openTeamModal, setOpenTeamModal] = useState<boolean>(false);
+  const [openEditOrgModal, setOpenEditOrgModal] = useState<boolean>(false);
+  const [openEditTeamModal, setOpenEditTeamModal] = useState<boolean>(false);
+  const [accordion, setAccordion] = useState<string>("");
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
   const orgs = [
-    { id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC" },
-    { id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC" },
+    {
+      id: "ID:987",
+      title: "Blue Origin",
+      date: "Created on 12th Oct. 2023, 12:30:14 UTC",
+      members: users,
+      teams: [{ id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: teamMembers }],
+    },
+    {
+      id: "ID:987",
+      title: "Firehawks",
+      date: "Created on 12th Oct. 2023, 12:30:14 UTC",
+      members: users,
+      teams: [{ id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: teamMembers }],
+    },
+    {
+      id: "ID:987",
+      title: "Spade tech",
+      date: "Created on 12th Oct. 2023, 12:30:14 UTC",
+      members: users,
+      teams: [{ id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: teamMembers }],
+    },
   ];
 
-  const props = { openOrgModal, setOpenOrgModal, openTeamModal, setOpenTeamModal };
+  const props = {
+    accordion,
+    setAccordion,
+    openOrgModal,
+    setOpenOrgModal,
+    openTeamModal,
+    setOpenTeamModal,
+    openEditOrgModal,
+    setOpenEditOrgModal,
+    openEditTeamModal,
+    setOpenEditTeamModal,
+  };
 
   return (
     <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-[60px]">
-      {/* Modals & More */}
+      {/*------------- Modals & More -------------*/}
       <CreateTeamDialog {...props} />
       <CreateOrgDialog {...props} />
+      <EditTeamDialog {...props} modifyTeamData={modifyTeamData} />
+      <EditOrgDialog {...props} modifyOrgData={modifyOrgData} />
 
       <header className="flex gap-5">
         {buttons.map(({ name }, idx) => {
@@ -68,29 +119,136 @@ export const ManageDialog = () => {
         })}
       </header>
 
-      {orgs.map(({ id, title, date }, idx) => {
-        const props = { id, title, date };
-        return <OrgDialog key={idx} {...props} />;
+      {orgs.map(({ id, title, date, members, teams }, idx) => {
+        const prop = { ...props, id, title, date, members, teams };
+        return <OrgDialog key={idx} {...prop} />;
       })}
     </article>
   );
 };
 
-export const OrgDialog = ({ id, title, date }: { id: string; title: string; date: string }) => {
+export const OrgDialog = ({
+  id,
+  title,
+  date,
+  members,
+  teams,
+  accordion,
+  setAccordion,
+  setOpenEditOrgModal,
+  setOpenEditTeamModal,
+}: {
+  id: string;
+  title: string;
+  date: string;
+  members: user[];
+  teams: any[];
+  accordion: string;
+  setAccordion: any;
+  setOpenEditOrgModal: any;
+  setOpenEditTeamModal: any;
+}) => {
+  const [height, setHeight] = useState(0);
+  const ref = useRef<HTMLInputElement | any>(null);
+
+  const openAccordion = () => {
+    if (accordion !== title) {
+      setAccordion(title);
+    } else {
+      setAccordion("");
+    }
+  };
+
+  // THIS USEFFECT IS USED TO GET DIV HEIGHT
+  useEffect(() => {
+    if (accordion === title) {
+      setHeight(ref.current?.scrollHeight);
+    } else {
+      setHeight(0);
+    }
+    window.addEventListener("resize", () => {
+      if (accordion === title) {
+        setHeight(ref.current?.scrollHeight);
+      } else {
+        setHeight(0);
+      }
+    });
+
+    return () => {
+      window.removeEventListener("resize", () => {
+        setHeight(0);
+      });
+    };
+  }, [accordion]);
+
   return (
-    <article className="h-[105px] w-full px-10 shadow-[0px_7.11111px_35.55556px_5.33333px_rgba(0,0,0,0.10)]">
-      <div className="flex h-full items-center">
+    <article
+      className={`h-fit w-full bg-white px-10 shadow-[0px_7.11111px_35.55556px_5.33333px_rgba(0,0,0,0.10)] ${
+        accordion === title ? " pb-10" : ""
+      }`}
+    >
+      <header onClick={openAccordion} className="flex h-[105px] cursor-pointer items-center">
         <div className="mr-4 text-xl font-bold text-foreground">{title}</div>
         <div className="mr-[27px] text-sm font-medium text-muted-foreground">{id}</div>
         <div className="max text-sm font-medium text-muted-foreground max-lg:hidden">{date}</div>
+        <EditButton onClick={() => setOpenEditOrgModal(true)} title=" Modify organization" />
 
-        <div className="ml-auto flex cursor-pointer items-center gap-2 rounded-full border-[1px] border-primary px-2 py-1 text-base font-medium text-primary duration-300 ">
-          <Icons.edit className="h-[14px]" color={"#097B45"} />
-          Modify organization
-        </div>
+        <Icons.dropdown className={`${accordion === title ? "rotate-180" : "rotate-0"} mb-2.5 ml-[37px] w-6 duration-300`} />
+      </header>
+      <main ref={ref} style={{ height: `${height}px` }} className="overflow-hidden bg-white duration-300">
+        <section className="flex gap-[53px]">
+          <div>
+            <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
+            <div className="mt-4 flex flex-col gap-2">
+              {members.map(({ name }) => {
+                return <div className=" text-sm font-medium lowercase text-neutral-500">{name}</div>;
+              })}
+            </div>
+          </div>
+          <div>
+            <div className="text-base font-bold tracking-tight text-neutral-700">Access</div>
+            <div className="mt-4 flex flex-col gap-2">
+              {members.map(({ role }) => {
+                return <div className=" text-sm font-medium lowercase text-neutral-500">{role}</div>;
+              })}
+            </div>
+          </div>
+        </section>
 
-        <Icons.dropdown className="mb-2.5 ml-[37px] w-6 cursor-pointer" />
-      </div>
+        <section className="mt-10 flex flex-col gap-5">
+          {teams.map(({ id, title, date, members }: { id: string; title: string; date: string; members?: user[] }) => {
+            return (
+              <article className="w-fit rounded-2xl bg-accent p-4">
+                <div className="flex justify-between">
+                  <div className="text-base font-bold text-neutral-700">Team: {title}</div>
+                  {/* {console.log(teams)} */}
+                  <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
+                </div>
+                <section className="flex gap-[53px]">
+                  <div>
+                    <div className="mt-4 flex flex-col gap-2">
+                      {members.map(({ name }) => {
+                        return <div className=" text-sm font-medium text-neutral-500">{name}</div>;
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="mt-4 flex flex-col gap-2">
+                      {members.map(({ role }) => {
+                        return <div className=" text-sm font-medium text-neutral-500">{role}</div>;
+                      })}
+                    </div>
+                  </div>
+                </section>
+                <div className="mt-7 flex justify-between text-xs font-medium text-neutral-400">
+                  <div>{date}</div>
+                  <div>{id}</div>
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      </main>
     </article>
   );
 };
