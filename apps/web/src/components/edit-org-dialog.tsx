@@ -53,9 +53,9 @@ const users: user[] = [
 type FormData = z.infer<typeof formSchema>;
 
 export type user = {
-  id: string;
-  name: string;
-  role: string;
+  id?: string;
+  name?: string;
+  role?: string;
 };
 
 const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
@@ -70,8 +70,17 @@ const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-export const EditOrgDialog = ({ children, modifyOrgData }: { children?: React.ReactNode; modifyOrgData: any }) => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+export const EditOrgDialog = ({
+  children,
+  modifyOrgData,
+  openEditOrgModal,
+  setOpenEditOrgModal,
+}: {
+  children?: React.ReactNode;
+  modifyOrgData: any;
+  openEditOrgModal: boolean;
+  setOpenEditOrgModal: any;
+}) => {
   const [orgName, setOrgName] = useState(modifyOrgData?.orgName || "");
   const [orgMembers, setOrgMembers] = useState<user[] | any>(modifyOrgData?.orgMembers || []);
   const [orgData, setOrgData] = useState<FormData | any>({});
@@ -131,7 +140,7 @@ export const EditOrgDialog = ({ children, modifyOrgData }: { children?: React.Re
     //     description: "Your team has been created",
     //     variant: "success",
     //   });
-    //   // setOpenModal(false);
+    //   // setOpenEditOrgModal(false);
     // } catch (e) {
     //   console.log(e);
     //   toast({
@@ -163,12 +172,11 @@ export const EditOrgDialog = ({ children, modifyOrgData }: { children?: React.Re
     }
   };
 
-  const props = { orgName, setDeleteTeam, transferOwnership, setOpenModal, setTransferOwnership, setOrgName };
+  const props = { orgName, setDeleteTeam, transferOwnership, setOpenEditOrgModal, setTransferOwnership, setOrgName };
 
   return (
     <>
-      <Button onClick={() => setOpenModal(!openModal)}>modify organization</Button>
-      <Dialog open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
+      <Dialog open={openEditOrgModal} onOpenChange={() => setOpenEditOrgModal(!openEditOrgModal)}>
         <DialogContent className={"max-w-[440px]"}>
           {!orgData.orgName && !deleteTeam && !transferOwnership ? (
             // EDIT TEAM FORM
@@ -283,7 +291,7 @@ export const EditOrgDialog = ({ children, modifyOrgData }: { children?: React.Re
 
                   <footer className="mt-10 flex items-center justify-end gap-5">
                     <div
-                      onClick={() => setOpenModal(false)}
+                      onClick={() => setOpenEditOrgModal(false)}
                       className="cursor-pointer text-sm font-semibold hover:text-foreground"
                     >
                       Cancel
@@ -341,16 +349,16 @@ export const EditOrgDialog = ({ children, modifyOrgData }: { children?: React.Re
 type confirm = {
   orgName: string;
   setDeleteTeam: any;
-  setOpenModal: any;
+  setOpenEditOrgModal: any;
   setTransferOwnership: any;
   transferOwnership: boolean;
   setOrgName: any;
 };
 
-const ConfirmDelectDialog: React.FC<confirm> = ({ orgName, setDeleteTeam, setOpenModal }) => {
+const ConfirmDelectDialog: React.FC<confirm> = ({ orgName, setDeleteTeam, setOpenEditOrgModal }) => {
   const removeTeam = () => {
     setDeleteTeam(true);
-    setOpenModal(false);
+    setOpenEditOrgModal(false);
   };
 
   return (
@@ -386,7 +394,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
   transferOwnership,
   setTransferOwnership,
   setOrgName,
-  setOpenModal,
+  setOpenEditOrgModal,
 }) => {
   const [ownerData, setOwnerData] = useState<user[]>([]);
 

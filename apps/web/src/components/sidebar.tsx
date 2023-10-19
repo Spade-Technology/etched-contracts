@@ -55,11 +55,11 @@ export const SideBar = () => {
     : activePage.DASHBOARD;
 
   const pages = [
-    { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard, state: activePage.DASHBOARD },
-    { url: "/dashboard", title: "Etch Library", Icon: Icons.etchLibrary, state: activePage.ETCH_LIBRARY },
-    { url: "/dashboard", title: "Marketplace", Icon: Icons.marketplace, state: activePage.MARKETPLACE },
-    { url: "/dashboard", title: "Community", Icon: Icons.community, state: activePage.COMMUNITY },
-    { url: "/settings", title: "Settings", Icon: Icons.etchLibrary, state: activePage.SETTINGS },
+    { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
+    { url: "/dashboard", title: "Etch Library", Icon: Icons.etchLibrary },
+    { url: "/dashboard", title: "Marketplace", Icon: Icons.marketplace },
+    { url: "/dashboard", title: "Community", Icon: Icons.community },
+    { url: "/settings", title: "Settings", Icon: Icons.etchLibrary },
   ];
 
   return (
@@ -70,10 +70,10 @@ export const SideBar = () => {
         </div>
 
         <ul className="my-auto space-y-2 text-sm font-medium">
-          {pages.map(({ url, title, state, Icon }) => {
+          {pages.map(({ url, title, Icon }) => {
             return (
               <li>
-                <Link className={active === state ? activeClassName : sideBarElementCn} href={url}>
+                <Link className={url === path ? activeClassName : sideBarElementCn} href={url}>
                   <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
                   <span className="mt-2 whitespace-nowrap">{title}</span>
                 </Link>

@@ -55,14 +55,37 @@ const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
+export const users: user[] = [
+  {
+    id: "0",
+    name: "ex: tom12.etched",
+    role: "Owner",
+  },
+  {
+    id: "1",
+    name: "Benjamin.etched",
+    role: "Read & Write",
+  },
+  {
+    id: "2",
+    name: "Sophia5678.etched",
+    role: "Owner",
+  },
+  {
+    id: "3",
+    name: "Olivia3456.etched",
+    role: "Read & Write",
+  },
+];
+
 export const CreateTeamDialog = ({
   children,
   openTeamModal,
   setOpenTeamModal,
 }: {
   children?: React.ReactNode;
-  openTeamModal: boolean;
-  setOpenTeamModal: any;
+  openTeamModal?: boolean;
+  setOpenTeamModal?: any;
 }) => {
   const [teamName, setTeamName] = useState("");
   const [roleData, setRoleData] = useState(["read only", "read & write"]);
@@ -88,29 +111,6 @@ export const CreateTeamDialog = ({
       teamOrganisation: "None",
     },
   });
-
-  const users: user[] = [
-    {
-      id: "0",
-      name: "ex: tom12.etched",
-      role: "member",
-    },
-    {
-      id: "1",
-      name: "Benjamin.etched",
-      role: "member",
-    },
-    {
-      id: "2",
-      name: "Sophia5678.etched",
-      role: "member",
-    },
-    {
-      id: "3",
-      name: "Olivia3456.etched",
-      role: "member",
-    },
-  ];
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
