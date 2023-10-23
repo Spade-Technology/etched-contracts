@@ -160,8 +160,8 @@ const InputDropdownTwo = ({ data, roleData, type, placeholder, selectedItems, se
                   >
                     {name}
                     <div className="flex items-center gap-1">
-                      {+id * name.length}
-                      <GoodIcon className={`${isSelected ? "" : "hidden"}`} />
+                      {/* {+id * name.length} */}
+                      <GoodIcon className={`${isSelected ? "" : "invisible"}`} />
                     </div>
                   </div>
                 );

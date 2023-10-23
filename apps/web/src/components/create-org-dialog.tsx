@@ -62,11 +62,10 @@ export const CreateOrgDialog = ({
   openOrgModal?: boolean;
   setOpenOrgModal?: any;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [orgName, setOrgName] = useState("");
   const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
   const [orgData, setOrgData] = useState<FormData | any>({});
-  const { mutateAsync } = api.org.createOrg.useMutation();
+  const { mutateAsync ,isLoading} = api.org.createOrg.useMutation();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -78,36 +77,45 @@ export const CreateOrgDialog = ({
   });
 
   const onSubmit = async (data: FormData) => {
-    setIsLoading(true);
-    if (orgMembers.length > 0) {
-      setOrgData({ orgName, orgMembers });
+    // setIsLoading(true);
+    // if (orgMembers.length > 0) {
+    //   setOrgData({ orgName, orgMembers });
 
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    } else {
+    //   setTimeout(() => {
+    //     setIsLoading(false);
+    //   }, 2000);
+    // } else {
+    //   toast({
+    //     title: "Something went wrong",
+    //     description: "Please try again",
+    //     variant: "destructive",
+    //   });
+    //   setTimeout(() => {
+    //     setIsLoading(false);
+    //   }, 2000);
+    // }
+
+    try {
+      await mutateAsync({
+        orgName: orgName,
+        orgMembers: [],
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+      });
+      toast({
+        title: "org created",
+        description: "successfull",
+        variant: "success",
+      });
+      setOpenOrgModal(false);
+    } catch (e) {
+      console.log(e);
       toast({
         title: "Something went wrong",
         description: "Please try again",
         variant: "destructive",
       });
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
     }
-
-    // try {
-    //   await mutateAsync({
-    //     orgName: data.orgName,
-    //     orgMembers: data.orgMembers,
-    //     blockchainSignature: localStorage.getItem("blockchainSignature")!,
-    //     blockchainMessage: localStorage.getItem("blockchainMessage")!,
-    //   });
-
-    //   setOpenOrgModal(false);
-    // } catch (e) {
-    //   console.log(e);
-    // }
   };
 
   const editUserRole = ({ id, item }: { id: string; item: string }) => {

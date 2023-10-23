@@ -141,8 +141,8 @@ export const CreateEtchButton = () => {
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="w-96" onClick={() => setIsOpen(true)}>
-          Create Etch
+        <Button className="w-fit px-5 duration-500 hover:shadow-etched-1" onClick={() => setIsOpen(true)}>
+          + Create Etch
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className={"max-h-screen overflow-y-scroll lg:max-w-screen-lg"}>

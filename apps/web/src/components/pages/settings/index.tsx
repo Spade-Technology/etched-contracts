@@ -6,6 +6,23 @@ import React, { useEffect, useRef, useState } from "react";
 import { users as teamMembers } from "./../../create-team-dialog";
 import { EditOrgDialog, user } from "@/components/edit-org-dialog";
 import { EditTeamDialog } from "@/components/edit-team-dialog";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { Organisation } from "@/gql/graphql";
+import { graphql } from "@/gql";
+import { useQuery } from "urql";
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+
+const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
+  query Organisations($address: String!) {
+    organisations(
+      where: { or: [{ ownership_: { owner: $address } }, { permissions_: { wallet: $address, permissionLevel_gt: 0 } }] }
+    ) {
+      orgId
+      id
+      name
+    }
+  }
+`);
 
 const modifyTeamData = {
   teamOrganisation: "None",
@@ -33,9 +50,10 @@ export const SidebarDialog = () => {
 
   return (
     <aside className="flex flex-col gap-[6px]">
-      {tabs.map(({ Icon, name }) => {
+      {tabs.map(({ Icon, name }, idx) => {
         return (
           <div
+            key={idx}
             onClick={() => setActiveTab(name)}
             className={`flex w-[118px] cursor-pointer items-center gap-3 rounded-[8px] py-3 text-base font-medium text-muted-foreground duration-300 ${
               activeTab == name ? "bg-primary px-3 text-white" : "hover:text-foreground"
@@ -57,6 +75,15 @@ export const ManageDialog = () => {
   const [openEditOrgModal, setOpenEditOrgModal] = useState<boolean>(false);
   const [openEditTeamModal, setOpenEditTeamModal] = useState<boolean>(false);
   const [accordion, setAccordion] = useState<string>("");
+
+  const loggedInAddress = useLoggedInAddress();
+  const [{ data, fetching }, refetch] = useQuery({
+    query: ORGANISATIONS_QUERY,
+    variables: { address: loggedInAddress.toLowerCase() },
+  });
+  const organisations = data ? data.organisations : [];
+
+  const { isLoading, teams, error } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
@@ -95,11 +122,14 @@ export const ManageDialog = () => {
     setOpenEditOrgModal,
     openEditTeamModal,
     setOpenEditTeamModal,
+    organisations,
+    fetching,
   };
 
   return (
-    <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-[60px]">
+    <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-5 lg:pl-[60px]">
       {/*------------- Modals & More -------------*/}
+      {console.log(teams)}
       <CreateTeamDialog {...props} />
       <CreateOrgDialog {...props} />
       <EditTeamDialog {...props} modifyTeamData={modifyTeamData} />
@@ -121,7 +151,7 @@ export const ManageDialog = () => {
 
       {orgs.map(({ id, title, date, members, teams }, idx) => {
         const prop = { ...props, id, title, date, members, teams };
-        return <OrgDialog key={idx} {...prop} />;
+        return <OrgDialog {...prop} />;
       })}
     </article>
   );
@@ -183,6 +213,7 @@ export const OrgDialog = ({
 
   return (
     <article
+      key={title}
       className={`h-fit w-full bg-white px-10 shadow-[0px_7.11111px_35.55556px_5.33333px_rgba(0,0,0,0.10)] ${
         accordion === title ? " pb-10" : ""
       }`}
