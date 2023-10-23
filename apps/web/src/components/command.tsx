@@ -176,7 +176,7 @@ export function CommandMenu() {
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="mx-auto flex w-full max-w-[30%] cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500"
+        className="mx-auto flex w-full max-w-[50%] cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500"
       >
         <SearchIcon className="h-full scale-150" />
         Type a Command, or use {bsrtct("⌘K")}
