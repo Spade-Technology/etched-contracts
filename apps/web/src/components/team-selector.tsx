@@ -27,7 +27,7 @@ export const getSelectedTeam: () => TeamSelector = () =>
   JSON.parse(localStorage.getItem("selectedBehalfOf") || "false") ?? emptyTeam;
 
 export const TeamSelector = ({
-  className = "w-1/8 h-full !border-0 !ring-0",
+  className = "w-fit h-full !border-0 !ring-0",
   horizontal = false,
 }: {
   className?: string;
@@ -77,7 +77,7 @@ export const TeamSelector = ({
             "justify-cente mr-4 flex " + (horizontal ? "flex-row items-center justify-center gap-4" : "flex-col items-start")
           }
         >
-          <span className="text-sm font-semibold text-gray-800">{selectedBehalfOf.name}</span>
+          <span className="whitespace-nowrap text-sm font-semibold text-gray-800">{selectedBehalfOf.name}</span>
           <Separator orientation="vertical" />
           <span className="text text-ellipsis text-xs text-gray-500">{selectedBehalfOf.org}</span>
         </div>
