@@ -28,6 +28,7 @@ async function main() {
   console.log("Org deployed to:", orgContract.address);
   console.log("Adding node to ENS");
   await orgContract.addNode(signers[0].address)
+  await orgContract.addNode("0x138b743c7176C51CBd8694A0e8764b93325D4041") // Obirijah
 
   console.log("Deploying ENS with the account:", signers[0].address);
   const ENS = await ethers.getContractFactory("EtchENS");
