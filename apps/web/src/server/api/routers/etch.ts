@@ -151,6 +151,7 @@ export const etchRouter = createTRPCRouter({
           authSig,
           file,
           chain: camelCaseNetwork,
+
           infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
           infuraSecretKey: process.env.INFURA_API_SECRET as string,
 
