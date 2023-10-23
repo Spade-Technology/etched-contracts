@@ -43,18 +43,6 @@ type datatype = {
   teamMembers: user[];
 };
 
-const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
-  query Organisations($address: String!) {
-    organisations(
-      where: { or: [{ ownership_: { owner: $address } }, { permissions_: { wallet: $address, permissionLevel_gt: 0 } }] }
-    ) {
-      orgId
-      id
-      name
-    }
-  }
-`);
-
 export const users: user[] = [
   {
     id: "0",
@@ -82,25 +70,20 @@ export const CreateTeamDialog = ({
   children,
   openTeamModal,
   setOpenTeamModal,
+  organisations,
+  fetching,
 }: {
   children?: React.ReactNode;
-  openTeamModal?: boolean;
+  openTeamModal?: boolean | any;
   setOpenTeamModal?: any;
+  organisations?: Partial<Organisation>[];
+  fetching?: boolean | any;
 }) => {
   const [teamName, setTeamName] = useState("");
   const [roleData, setRoleData] = useState(["read only", "read & write"]);
   const [teamMembers, setTeamMembers] = useState<user[]>([]);
   const [teamData, setTeamData] = useState<datatype | any>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { mutateAsync } = api.team.createTeam.useMutation();
-
-  const loggedInAddress = useLoggedInAddress();
-
-  const [{ data, fetching }, refetch] = useQuery({
-    query: ORGANISATIONS_QUERY,
-    variables: { address: loggedInAddress.toLowerCase() },
-  });
-  const organisations: Partial<Organisation>[] = data ? data.organisations : [];
+  const { mutateAsync, isLoading } = api.team.createTeam.useMutation();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -113,45 +96,43 @@ export const CreateTeamDialog = ({
   });
 
   const onSubmit = async (data: FormData) => {
-    setIsLoading(true);
-    if (teamMembers.length > 0 && data.teamOrganisation && teamName) {
-      setTeamData({ teamOrganisation: data.teamOrganisation, teamName, teamMembers });
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    }
+    // if (teamMembers.length > 0 && data.teamOrganisation && teamName) {
+    //   setTeamData({ teamOrganisation: data.teamOrganisation, teamName, teamMembers });
 
-    // try {
-    //   await mutateAsync({
-    //     teamName: data.teamName,
-    //     teamMembers: data.teamMembers,
-    //     owningOrg: data.teamOrganisation,
-    //     blockchainSignature: localStorage.getItem("blockchainSignature")!,
-    //     blockchainMessage: localStorage.getItem("blockchainMessage")!,
-    //   });
-    //   toast({
-    //     title: "Team created",
-    //     description: "Your team has been created",
-    //     variant: "success",
-    //   });
-    //   // setOpenTeamModal(false);
-    // } catch (e) {
-    //   console.log(e);
+    // } else {
     //   toast({
     //     title: "Something went wrong",
     //     description: "Please try again",
     //     variant: "destructive",
     //   });
+
     // }
+
+    const members: string[] = teamMembers.map(({ name }) => name);
+    console.log(members);
+
+    try {
+      await mutateAsync({
+        teamName: teamName,
+        teamMembers: [],
+        owningOrg: data.teamOrganisation,
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+      });
+      toast({
+        title: "Team created",
+        description: "Your team has been created",
+        variant: "success",
+      });
+      setOpenTeamModal(false);
+    } catch (e) {
+      console.log(e);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
   };
 
   const editUserRole = ({ id, item }: { id: string; item: string }) => {
@@ -173,6 +154,7 @@ export const CreateTeamDialog = ({
 
   return (
     <>
+      {/* {console.log(organisations)} */}
       <Dialog open={openTeamModal} onOpenChange={() => setOpenTeamModal(!openTeamModal)}>
         <DialogContent className={"max-w-[440px]"}>
           {!teamData.teamName ? (

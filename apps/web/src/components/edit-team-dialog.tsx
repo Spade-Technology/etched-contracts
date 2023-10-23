@@ -248,9 +248,8 @@ export const EditTeamDialog = ({
                         <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                           {teamMembers.map(({ id, name, role }) => {
                             return (
-                              <section className="flex items-center justify-between">
+                              <section key={id} className="flex items-center justify-between">
                                 <div
-                                  key={id}
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
@@ -422,9 +421,9 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
         <form onSubmit={transfer}>
           <Label className="font-semibold">Select</Label>
           <section className="mb-7 mt-[9px] flex gap-5">
-            {["individual", "organization"].map((item) => {
+            {["individual", "organization"].map((item, id) => {
               return (
-                <div onClick={() => setOwner(item)} className="flex items-center gap-1">
+                <div key={id} onClick={() => setOwner(item)} className="flex items-center gap-1">
                   <div className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] border-muted-foreground">
                     <div
                       className={`${owner == item ? "scale-100" : "scale-0"} h-3 w-3 rounded-full bg-primary duration-300`}

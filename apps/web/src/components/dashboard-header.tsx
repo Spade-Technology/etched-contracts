@@ -6,23 +6,21 @@ import { EtchedENS } from "./ens-button";
 import { TeamSelector } from "./team-selector";
 
 export const DashboardHeader = () => {
-  
-
   return (
-    <div className="flex h-16 items-center px-6 shadow-etched-1">
+    <div className="sticky top-0 flex h-16 w-full items-center justify-between bg-white px-6 shadow-etched-1">
       <CreateEtchButton />
-      <br />
       <CommandMenu />
 
-      {/* Etched ENS */}
-      <EtchedENS />
+      <div className="flex h-full w-fit items-center gap-3">
+        {/* Etched ENS */}
+        <EtchedENS />
+        <div className="h-full border-[1px]" />
+        <TeamSelector horizontal={true} className="w-fit py-2" />
+      </div>
 
-
-      <div className="mx-6 h-full border-[1px]" />
       {/* Modals & More */}
       <CreateTeamDialog />
       <CreateOrgDialog />
-      <TeamSelector />
     </div>
   );
 };

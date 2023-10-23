@@ -243,9 +243,8 @@ export const EditOrgDialog = ({
                       <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                         {orgMembers.map(({ id, name, role }) => {
                           return (
-                            <section className="flex items-center justify-between">
+                            <section key={id} className="flex items-center justify-between">
                               <div
-                                key={id}
                                 // onClick={() => inviteUser({ id, name, role })}
                                 className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                               >
