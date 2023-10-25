@@ -83,6 +83,11 @@ abstract contract IEtches is IERC721 {
         string calldata ipfsCid
     ) external virtual {}
 
+    function updateMetadata(
+        uint256 tokenId,
+        string calldata newDocumentName
+    ) external virtual {}
+
     function commentOnEtch(
         uint256 tokenId,
         string memory commentIpfsCid

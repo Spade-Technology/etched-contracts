@@ -110,6 +110,44 @@ contract Etches is ERC721, IEtches, NodeHandler {
     }
 
     /**
+     * @notice Update the metadata for an initialized Etch
+     *
+     * @param tokenId The Etch's ID to update the metadata for
+     * @param newDocumentName The new name of the document
+     *
+     * @dev This function can only be called if the user has write permission for the Etch, and the Etch has been initialized.
+     * @dev This function can only be called if the Etch has been initialized.
+     */
+    function updateMetadata(
+        uint256 tokenId,
+        string calldata newDocumentName
+    ) external virtual override {
+        require(
+            hasWritePermission(_msgSender(), tokenId) || isNode(_msgSender()),
+            "ETCH: Not allowed to write this Etch"
+        );
+
+        require(
+            bytes(metadataOf[tokenId].ipfsCid).length != 0,
+            "ETCH: Etch Metadata isn't already initialized"
+        );
+
+        SEtch memory etch = metadataOf[tokenId];
+
+        // We Update only the document name rn.
+        // We keep the rest on the etch as it is.
+        metadataOf[tokenId] = SEtch({
+            creator: etch.creator,
+            documentName: newDocumentName,
+            ipfsCid: etch.ipfsCid,
+            commentsCount: etch.commentsCount,
+            timestamp: etch.timestamp
+        });
+
+        emit EtchMetadataUpdated(tokenId, etch.ipfsCid, newDocumentName);
+    }
+
+    /**
      * @notice Comments on an Etch (Ex: Signature, Approval, etc.)
      *
      * @param tokenId The Etch's ID to comment on
