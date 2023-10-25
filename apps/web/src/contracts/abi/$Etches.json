@@ -146,6 +146,12 @@
       {
         "indexed": false,
         "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
         "name": "documentName",
         "type": "string"
       }
@@ -1430,6 +1436,11 @@
       {
         "internalType": "string",
         "name": "documentName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
         "type": "string"
       },
       {
