@@ -27,6 +27,7 @@ type Etch @entity {
 
   ipfsCid: String!
   documentName: String!
+  description: String
 
   createdAt: BigInt! 
 }
