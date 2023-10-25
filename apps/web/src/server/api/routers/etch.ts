@@ -127,7 +127,50 @@ export const etchRouter = createTRPCRouter({
         return { tx };
       }
     ),
+  updateMetadata: protectedProcedure
+    .input(
+      z.object({
+        fileName: z.string(),
+        etchId: z.string(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { etchId, fileName, blockchainSignature, blockchainMessage },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: EtchABI,
+          functionName: "updateMetadata",
+          args: [etchId, fileName],
+        });
 
+        const tx = await walletClient.writeContract({
+          address: contracts.Etch,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
   uploadAndEncrypt: protectedProcedure
     .input(
       z.object({
