@@ -121,7 +121,8 @@ contract Etches is ERC721, IEtches, NodeHandler {
      */
     function updateMetadata(
         uint256 tokenId,
-        string calldata newDocumentName
+        string calldata newDocumentName,
+        string calldata newDescription
     ) external virtual override {
         require(
             hasWritePermission(_msgSender(), tokenId) || isNode(_msgSender()),
@@ -145,7 +146,12 @@ contract Etches is ERC721, IEtches, NodeHandler {
             timestamp: etch.timestamp
         });
 
-        emit EtchMetadataUpdated(tokenId, etch.ipfsCid, newDocumentName);
+        emit EtchMetadataUpdated(
+            tokenId,
+            etch.ipfsCid,
+            newDescription,
+            newDocumentName
+        );
     }
 
     /**
