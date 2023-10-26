@@ -39,6 +39,7 @@ export const TeamSelector = ({
   const loggedInAddress = useLoggedInAddress();
 
   const { isLoading, error, teams, uniqueOrgs } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
+  // console.log(teams);
 
   const behalfOf = teams
     .map((team) => ({

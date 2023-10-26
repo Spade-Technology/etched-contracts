@@ -70,11 +70,11 @@ export const SidebarDialog = () => {
 };
 
 export const ManageDialog = () => {
-  const [openOrgModal, setOpenOrgModal] = useState<boolean>(false);
-  const [openTeamModal, setOpenTeamModal] = useState<boolean>(false);
-  const [openEditOrgModal, setOpenEditOrgModal] = useState<boolean>(false);
-  const [openEditTeamModal, setOpenEditTeamModal] = useState<boolean>(false);
-  const [accordion, setAccordion] = useState<string>("");
+  const [openOrgModal, setOpenOrgModal] = useState(false);
+  const [openTeamModal, setOpenTeamModal] = useState(false);
+  const [openEditOrgModal, setOpenEditOrgModal] = useState(false);
+  const [openEditTeamModal, setOpenEditTeamModal] = useState(false);
+  const [accordion, setAccordion] = useState("");
 
   const loggedInAddress = useLoggedInAddress();
   const [{ data, fetching }, refetch] = useQuery({
@@ -83,33 +83,11 @@ export const ManageDialog = () => {
   });
   const organisations = data ? data.organisations : [];
 
-  const { isLoading, teams, error } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
+  const { isLoading, teams } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
-  const orgs = [
-    {
-      id: "ID:987",
-      title: "Blue Origin",
-      date: "Created on 12th Oct. 2023, 12:30:14 UTC",
-      members: users,
-      teams: [{ id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: teamMembers }],
-    },
-    {
-      id: "ID:987",
-      title: "Firehawks",
-      date: "Created on 12th Oct. 2023, 12:30:14 UTC",
-      members: users,
-      teams: [{ id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: teamMembers }],
-    },
-    {
-      id: "ID:987",
-      title: "Spade tech",
-      date: "Created on 12th Oct. 2023, 12:30:14 UTC",
-      members: users,
-      teams: [{ id: "ID:987", title: "Firehawks", date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: teamMembers }],
-    },
-  ];
+  // const results = organisations.filter(( item) => teams.some(({ name }) =>  === item.ownership.organisation.name));
 
   const props = {
     accordion,
@@ -125,11 +103,12 @@ export const ManageDialog = () => {
     organisations,
     fetching,
   };
+  console.log(teams);
+  console.log(organisations);
 
   return (
     <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-5 lg:pl-[60px]">
       {/*------------- Modals & More -------------*/}
-      {console.log(teams)}
       <CreateTeamDialog {...props} />
       <CreateOrgDialog {...props} />
       <EditTeamDialog {...props} modifyTeamData={modifyTeamData} />
@@ -149,8 +128,9 @@ export const ManageDialog = () => {
         })}
       </header>
 
-      {orgs.map(({ id, title, date, members, teams }, idx) => {
-        const prop = { ...props, id, title, date, members, teams };
+      {organisations?.map(({ id, orgId, name }, idx) => {
+        const team = teams?.filter(({ ownership }) => ownership.organisation.name === name);
+        const prop = { ...props, id, orgId, name, date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: users, team };
         return <OrgDialog {...prop} />;
       })}
     </article>
@@ -159,31 +139,33 @@ export const ManageDialog = () => {
 
 export const OrgDialog = ({
   id,
-  title,
+  name,
+  orgId,
   date,
   members,
-  teams,
+  team,
   accordion,
   setAccordion,
   setOpenEditOrgModal,
   setOpenEditTeamModal,
 }: {
   id: string;
-  title: string;
+  orgId: string;
+  name: string;
   date: string;
   members: user[];
-  teams: any[];
+  team: any[];
   accordion: string;
   setAccordion: any;
-  setOpenEditOrgModal: any;
+  setOpenEditOrgModal: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenEditTeamModal: any;
 }) => {
   const [height, setHeight] = useState(0);
   const ref = useRef<HTMLInputElement | any>(null);
 
   const openAccordion = () => {
-    if (accordion !== title) {
-      setAccordion(title);
+    if (accordion !== name) {
+      setAccordion(name);
     } else {
       setAccordion("");
     }
@@ -191,13 +173,13 @@ export const OrgDialog = ({
 
   // THIS USEFFECT IS USED TO GET DIV HEIGHT
   useEffect(() => {
-    if (accordion === title) {
+    if (accordion === name) {
       setHeight(ref.current?.scrollHeight);
     } else {
       setHeight(0);
     }
     window.addEventListener("resize", () => {
-      if (accordion === title) {
+      if (accordion === name) {
         setHeight(ref.current?.scrollHeight);
       } else {
         setHeight(0);
@@ -213,18 +195,18 @@ export const OrgDialog = ({
 
   return (
     <article
-      key={title}
+      key={name}
       className={`h-fit w-full bg-white px-10 shadow-[0px_7.11111px_35.55556px_5.33333px_rgba(0,0,0,0.10)] ${
-        accordion === title ? " pb-10" : ""
+        accordion === name ? " pb-10" : ""
       }`}
     >
       <header onClick={openAccordion} className="flex h-[105px] cursor-pointer items-center">
-        <div className="mr-4 text-xl font-bold text-foreground">{title}</div>
-        <div className="mr-[27px] text-sm font-medium text-muted-foreground">{id}</div>
+        <div className="mr-4 text-xl font-bold capitalize text-foreground">{name}</div>
+        <div className="mr-[27px] text-sm font-medium text-muted-foreground">{orgId}</div>
         <div className="max text-sm font-medium text-muted-foreground max-lg:hidden">{date}</div>
         <EditButton onClick={() => setOpenEditOrgModal(true)} title=" Modify organization" />
 
-        <Icons.dropdown className={`${accordion === title ? "rotate-180" : "rotate-0"} mb-2.5 ml-[37px] w-6 duration-300`} />
+        <Icons.dropdown className={`${accordion === name ? "rotate-180" : "rotate-0"} mb-2.5 ml-[37px] w-6 duration-300`} />
       </header>
       <main ref={ref} style={{ height: `${height}px` }} className="overflow-hidden bg-white duration-300">
         <section className="flex gap-[53px]">
@@ -247,11 +229,13 @@ export const OrgDialog = ({
         </section>
 
         <section className="mt-10 flex flex-col gap-5">
-          {teams.map(({ id, title, date, members }: { id: string; title: string; date: string; members?: user[] }) => {
+          {team?.map(({ id, teamId, name }: { id: string; name: string; teamId: string; date: string; members: user[] }) => {
+            const members = teamMembers;
+            const date = "Created on 12th Oct. 2023, 12:30:14 UTC";
             return (
               <article className="w-fit rounded-2xl bg-accent p-4">
                 <div className="flex justify-between">
-                  <div className="text-base font-bold text-neutral-700">Team: {title}</div>
+                  <div className="text-base font-bold capitalize text-neutral-700">Team: {name}</div>
                   {/* {console.log(teams)} */}
                   <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
                 </div>
@@ -273,7 +257,7 @@ export const OrgDialog = ({
                 </section>
                 <div className="mt-7 flex justify-between text-xs font-medium text-neutral-400">
                   <div>{date}</div>
-                  <div>{id}</div>
+                  <div>{teamId}</div>
                 </div>
               </article>
             );
