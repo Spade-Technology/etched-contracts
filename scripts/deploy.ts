@@ -11,7 +11,6 @@ async function main() {
   const orgContract = await Org.deploy();
   await orgContract.deployed();
 
-
   console.log("Org deployed to:", orgContract.address);
 
   console.log("Organisations deployed to:", orgContract.address);
@@ -28,18 +27,29 @@ async function main() {
 
   console.log("Etches deployed to:", etchContract.address);
 
+  const Ens = await ethers.getContractFactory("EtchENS");
+  const ensContract = await Ens.deploy(orgContract.address);
+  await ensContract.deployed();
+
+  console.log("ENS deployed to:", ensContract.address);
+
   console.log(process.env.EXPORTED_CONTRACT_FILE);
   // export addresses to process.env.EXPORTED_CONTRACT_FILE + hardhatNetwork + .json
 
   const network = process.env.HARDHAT_NETWORK || "";
   const exportedContractFile = process.env.EXPORTED_CONTRACT_FILE || "";
-  const exportedContractPath = path.join(__dirname, "..", exportedContractFile + network + ".json");
+  const exportedContractPath = path.join(
+    __dirname,
+    "..",
+    exportedContractFile + network + ".json"
+  );
 
   console.log("exportedContractPath", exportedContractPath);
   const exportedContract = {
     Org: orgContract.address,
     Team: teamContract.address,
     Etch: etchContract.address,
+    ENS: ensContract.address,
   };
 
   fs.writeFileSync(exportedContractPath, JSON.stringify(exportedContract));
@@ -74,6 +84,11 @@ async function main() {
   await run("verify:verify", {
     address: etchContract.address,
     constructorArguments: [teamContract.address],
+  });
+
+  await run("verify:verify", {
+    address: ensContract.address,
+    constructorArguments: [ensContract.address],
   });
 }
 
