@@ -102,7 +102,7 @@ export const etchRouter = createTRPCRouter({
         const calldata = encodeFunctionData({
           abi: EtchABI,
           functionName: "setMetadata",
-          args: [etchId, fileName, ipfsCid],
+          args: [etchId, fileName, "", ipfsCid],
         });
 
         const tx = await walletClient.writeContract({

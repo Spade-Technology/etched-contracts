@@ -82,8 +82,10 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           // If user doesn't exist, create it
           if (!user) user = await prisma.user.create({ data: { address: siwe.address } });
 
+          console.log(user);
+
           // Return the user info
-          return { id: user.address };
+          return { id: siwe.address };
         } catch (e) {
           return null;
         }
@@ -117,9 +119,9 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
   return {
     callbacks: {
       async session({ session, token }) {
-        let user = await prisma.user.findUnique({
-          where: { address: token.sub },
-        });
+        // let user = await prisma.user.findUnique({
+        //   where: { address: token.sub },
+        // });
 
         session.address = token.sub;
         return session;
