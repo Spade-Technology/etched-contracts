@@ -35,6 +35,7 @@ abstract contract IEtches is IERC721 {
     event EtchMetadataUpdated(
         uint256 indexed tokenId,
         string ipfsCid,
+        string description,
         string documentName
     );
     event EtchTransferedToTeam(
@@ -80,6 +81,7 @@ abstract contract IEtches is IERC721 {
     function setMetadata(
         uint256 tokenId,
         string calldata documentName,
+        string calldata description,
         string calldata ipfsCid
     ) external virtual {}
 
