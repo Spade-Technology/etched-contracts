@@ -17,38 +17,53 @@ const EOrgPermissions = {
 const DocName = "Fake Doc Name";
 const IPFSCid = "Fake IPFSCid";
 
-async function main() {
+async function main () {
   const signers = await ethers.getSigners();
 
   console.log("Deploying contracts with the account:", signers[0].address);
 
   const Org = await ethers.getContractFactory("Organisations");
   const orgContract = await Org.deploy()
-  await orgContract.deployed();
+  const resOrg = await orgContract.deployed();
   console.log("Org deployed to:", orgContract.address);
-  console.log("Adding node to ENS");
+  console.log("Adding node to ORG");
   await orgContract.addNode(signers[0].address)
-  await orgContract.addNode("0x138b743c7176C51CBd8694A0e8764b93325D4041") // Obirijah
-
-  console.log("Deploying ENS with the account:", signers[0].address);
-  const ENS = await ethers.getContractFactory("EtchENS");
-  const ensContract = await ENS.deploy(orgContract.address)
-  await ensContract.deployed();  
-  await ensContract.connect(signers[0]).safeMint(signers[0].address, "admin.etched")
-  
-
-  console.log("ENS deployed to:", ensContract.address);
-
+  // await orgContract.addNode("0x138b743c7176C51CBd8694A0e8764b93325D4041") // Obirijah
   console.log("Organisations deployed to:", orgContract.address);
+  // console.dir(resOrg)
 
+
+  // console.log("Deploying ENS with the account:", signers[0].address);
+  // const ENS = await ethers.getContractFactory("EtchENS");
+  // const ensContract = await ENS.deploy(orgContract.address, {
+  //   nonce: Math.floor(Math.random() * (10000 - 1 + 1) + 1),
+  //   gasLimit:250_000
+  // })
+  //const resEns = await ensContract.deployed();
+  // await ensContract.connect(signers[0]).safeMint(signers[0].address, "admin.etched")
+
+
+  // console.log("ENS deployed to:", ensContract.address);
+
+
+  console.log("Deploying TEAMS with the account:", signers[0].address);
   const Team = await ethers.getContractFactory("Teams");
-  const teamContract = await Team.deploy(orgContract.address);
-  await teamContract.deployed();
-
+  
+  const teamContract = await Team.deploy(orgContract.address, {
+    nonce: Math.floor(Math.random() * (10000 - 1 + 1) + 1),
+    gasLimit: 250_000,
+  });
+  
+  const resTeam = await teamContract.deployed();
   console.log("Teams deployed to:", teamContract.address);
+  // console.dir(resTeam)
 
+  console.log("Deploying ETCH with the account:", signers[0].address);
   const Etch = await ethers.getContractFactory("Etches");
-  const etchContract = await Etch.deploy(teamContract.address);
+  const etchContract = await Etch.deploy(teamContract.address, {
+    nonce: Math.floor(Math.random() * (10000 - 1 + 1) + 1),
+    gasLimit: 250_000
+  });
   await etchContract.deployed();
 
   console.log("Etches deployed to:", etchContract.address);
@@ -64,7 +79,7 @@ async function main() {
     Org: orgContract.address,
     Team: teamContract.address,
     Etch: etchContract.address,
-    ENS: ensContract.address,
+    // ENS: ensContract.address,
   };
 
   fs.writeFileSync(exportedContractPath, JSON.stringify(exportedContract));
@@ -73,51 +88,51 @@ async function main() {
 
 
   if (network != "hardhat" && network != "") {
-  //   await tenderly.verify({
-  //     name: "EtchENS",
-  //     address: orgContract.address,
-  //   });
-  
+    //   await tenderly.verify({
+    //     name: "EtchENS",
+    //     address: orgContract.address,
+    //   });
 
-  // await tenderly.verify({
-  //   name: "Organisations",
-  //   address: orgContract.address,
-  // });
 
-  // await tenderly.verify({
-  //   name: "Teams",
-  //   address: teamContract.address,
-  // });
+    // await tenderly.verify({
+    //   name: "Organisations",
+    //   address: orgContract.address,
+    // });
 
-  // await tenderly.verify({
-  //   name: "Etches",
-  //   address: etchContract.address,
-  // });
+    // await tenderly.verify({
+    //   name: "Teams",
+    //   address: teamContract.address,
+    // });
 
-  const  sleep = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    // await tenderly.verify({
+    //   name: "Etches",
+    //   address: etchContract.address,
+    // });
 
-  sleep(1000);
+    const sleep = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  await run("verify:verify", {
-    address: ensContract.address,
-    constructorArguments: [orgContract.address],
-  });
+    sleep(1000);
 
-  await run("verify:verify", {
-    address: orgContract.address,
-    constructorArguments: [],
-  });
+    // await run("verify:verify", {
+    //   address: ensContract.address,
+    //   constructorArguments: [orgContract.address],
+    // });
 
-  await run("verify:verify", {
-    address: teamContract.address,
-    constructorArguments: [orgContract.address],
-  });
+    await run("verify:verify", {
+      address: orgContract.address,
+      constructorArguments: [],
+    });
 
-  await run("verify:verify", {
-    address: etchContract.address,
-    constructorArguments: [teamContract.address],
-  });
-}
+    await run("verify:verify", {
+      address: teamContract.address,
+      constructorArguments: [orgContract.address],
+    });
+
+    await run("verify:verify", {
+      address: etchContract.address,
+      constructorArguments: [teamContract.address],
+    });
+  }
 
   const totalSupply = Number(await etchContract.getTotalSupply());
   const totalSupplyTeam = Number(await teamContract.getNumberOfTeamsCreated());
@@ -147,7 +162,7 @@ async function main() {
 
   tx = await teamContract
     .connect(signers[1])
-    ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyTeam);
+  ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyTeam);
   await tx.wait(1);
   console.log("6: transferred teamId");
 
@@ -183,7 +198,7 @@ async function main() {
 
   tx = await orgContract
     .connect(signers[1])
-    ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyOrg);
+  ["safeTransferFrom(address,address,uint256)"](signers[1].address, signers[0].address, 1 + totalSupplyOrg);
   await tx.wait(1);
   console.log("15: transferred orgId");
 

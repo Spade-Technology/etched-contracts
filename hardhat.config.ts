@@ -77,13 +77,13 @@ const config: ExtendedHardhatUserConfig = {
   networks: {
     ...(!!process.env.ETHEREUM_PRIVATE_KEYS
       ? {
-          hardhat: {
-            accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
-              privateKey: el,
-              balance: (100n * 10n ** 18n).toString(),
-            })),
-          },
-        }
+        hardhat: {
+          accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
+            privateKey: el,
+            balance: (100n * 10n ** 18n).toString(),
+          })),
+        },
+      }
       : {}),
 
     localhost: {
@@ -93,7 +93,7 @@ const config: ExtendedHardhatUserConfig = {
     tenderly: {
       url: `https://rpc.vnet.tenderly.co/devnet/etched/${process.env.TENDERLY_KEY}`,
       accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
-      
+
     },
 
     ethereum: {
@@ -130,7 +130,8 @@ const config: ExtendedHardhatUserConfig = {
       url: "https://base-goerli.gateway.tenderly.co/" + process.env.TENDERLY_NODE_ACCESS_KEY,
       accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")],
       chainId: 84531,
-      
+      blockGasLimit: 300_000_000,
+      allowUnlimitedContractSize: true
     }
   },
 
@@ -177,10 +178,10 @@ const config: ExtendedHardhatUserConfig = {
     runOnCompile: true,
     clear: true,
 
-    only: [":Organisations", ":Teams", ":Etches",  ":EtchENS"],
+    only: [":Organisations", ":Teams", ":Etches", ":EtchENS"],
     rename: (sourceName, contractName) => contractName == "EtchENS" ? "EtchENS" : ((contractName.at(-1) === "s") && (contractName.at(-2) === "e")) ? contractName.slice(0, -2) : contractName.slice(0, -1),
   },
-],
+  ],
 
   tenderly: {
     // Replace with project slug in Tenderly
