@@ -18,7 +18,8 @@ tdly.setup();
 
 // import "hardhat-contract-sizer";
 
-dotenv.config();
+// dotenv.config();
+dotenv.config({ path: "../../.env" });
 
 
 
@@ -183,9 +184,9 @@ const config: ExtendedHardhatUserConfig = {
 
   tenderly: {
     // Replace with project slug in Tenderly
-    project: "vdao",
+    project: "EtchProj",
     // Replace with your Tenderly username
-    username: "Brieyla",
+    username: "powdery_miser",
     // Perform contract verification in private mode
     privateVerification: true,
   },
