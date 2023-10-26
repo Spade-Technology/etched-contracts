@@ -184,6 +184,7 @@ export function handleEtchMetadataUpdated(event: EtchMetadataUpdated): void {
 
   etch.ipfsCid = event.params.ipfsCid;
   etch.documentName = event.params.documentName;
+  etch.description = event.params.description;
 
   etch.save();
 }

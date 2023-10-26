@@ -170,6 +170,7 @@ export function CommandMenu() {
   useEffect(() => {
     if (!isLoading) currentSearch[1](currentSearch[0]);
   });
+  // these are some changes
 
   return (
     <article className="">
