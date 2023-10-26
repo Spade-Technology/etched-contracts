@@ -705,6 +705,11 @@
         "internalType": "string",
         "name": "newDocumentName",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "newDescription",
+        "type": "string"
       }
     ],
     "name": "updateMetadata",

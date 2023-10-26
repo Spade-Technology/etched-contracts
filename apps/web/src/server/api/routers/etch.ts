@@ -86,6 +86,7 @@ export const etchRouter = createTRPCRouter({
     .input(
       z.object({
         fileName: z.string(),
+        description: z.string(),
         etchId: z.string(),
         ipfsCid: z.string(),
         blockchainSignature: z.string(),
@@ -94,7 +95,7 @@ export const etchRouter = createTRPCRouter({
     )
     .mutation(
       async ({
-        input: { etchId, fileName, ipfsCid, blockchainSignature, blockchainMessage },
+        input: { etchId, fileName, ipfsCid, description, blockchainSignature, blockchainMessage },
         ctx: {
           session: { address },
         },
@@ -102,7 +103,7 @@ export const etchRouter = createTRPCRouter({
         const calldata = encodeFunctionData({
           abi: EtchABI,
           functionName: "setMetadata",
-          args: [etchId, fileName, "", ipfsCid],
+          args: [etchId, fileName, description, ipfsCid],
         });
 
         const tx = await walletClient.writeContract({
@@ -131,6 +132,7 @@ export const etchRouter = createTRPCRouter({
     .input(
       z.object({
         fileName: z.string(),
+        description: z.string(),
         etchId: z.string(),
         blockchainSignature: z.string(),
         blockchainMessage: z.string(),
@@ -138,7 +140,7 @@ export const etchRouter = createTRPCRouter({
     )
     .mutation(
       async ({
-        input: { etchId, fileName, blockchainSignature, blockchainMessage },
+        input: { etchId, fileName, description, blockchainSignature, blockchainMessage },
         ctx: {
           session: { address },
         },
@@ -146,7 +148,7 @@ export const etchRouter = createTRPCRouter({
         const calldata = encodeFunctionData({
           abi: EtchABI,
           functionName: "updateMetadata",
-          args: [etchId, fileName],
+          args: [etchId, fileName, description],
         });
 
         const tx = await walletClient.writeContract({
