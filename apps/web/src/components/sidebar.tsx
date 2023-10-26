@@ -76,12 +76,12 @@ export const SideBar = () => {
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
 
                   <div
-                    className={`absolute left-20 z-50 ml-3 w-[100px] items-center group-hover:flex ${
-                      tooltip === title ? "flex lg:hidden" : "hidden"
+                    className={`absolute left-20 z-50 ml-3 flex w-[100px] items-center duration-300 group-hover:flex ${
+                      tooltip === title ? "visible scale-100 opacity-100 lg:hidden" : "invisible scale-50 opacity-0"
                     }`}
                   >
-                    <div className="-mr-2 h-3 w-3 rotate-45 bg-primary"></div>
-                    <div className="z-10 flex w-fit bg-primary p-2 text-white shadow-lg"> {title}</div>
+                    <div className={`-mr-2 h-3 w-3 rotate-45 bg-primary`}></div>
+                    <div className={`shado s z-10 flex w-fit bg-primary p-2 text-white shadow-lg`}> {title}</div>
                   </div>
                 </Link>
               </li>
