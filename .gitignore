@@ -7,3 +7,4 @@ typechain-types/
 coverage
 contracts-exposed
 .DS_Store
+.turbo
