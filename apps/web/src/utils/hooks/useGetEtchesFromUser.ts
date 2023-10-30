@@ -9,6 +9,7 @@ const EtchFragment = graphql(`
     tokenId
     createdAt
     documentName
+    description
 
     ownership {
       id
