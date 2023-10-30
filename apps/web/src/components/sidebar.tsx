@@ -47,7 +47,7 @@ export const SideBar = () => {
 
   const pages = [
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
-    { url: "/dashboard", title: "Etch Library", Icon: Icons.etchLibrary },
+    { url: "/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
     { url: "/dashboard", title: "Marketplace", Icon: Icons.marketplace },
     { url: "/dashboard", title: "Community", Icon: Icons.community },
     { url: "/settings", title: "Settings", Icon: Icons.settings },

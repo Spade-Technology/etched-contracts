@@ -1,0 +1,195 @@
+import { GoodIcon } from "@/components/icons/good";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Icons } from "@/components/ui/icons";
+import React, { useEffect, useRef, useState } from "react";
+
+interface props {
+  sort: string;
+  setSort: React.Dispatch<string>;
+  filter: string;
+  setFilter: React.Dispatch<string>;
+}
+
+export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
+  const [width, setWidth] = useState(0);
+  const [FilterWidth, setFilterWidth] = useState(0);
+
+  const sortList = ["Latest first", "File type", "Oldest fist", "Alphabetically"];
+  const filterList = ["Private", "Public", "Tom Robins", "Ariana Gordon", "Tom Robins", "Ariana Gordon"];
+
+  const ref: React.MutableRefObject<any> = useRef();
+  const filterRef: React.MutableRefObject<any> = useRef();
+
+  useEffect(() => {
+    setWidth(ref.current?.clientWidth);
+    setFilterWidth(filterRef.current?.clientWidth);
+    window.addEventListener("resize", () => {
+      setFilterWidth(filterRef.current?.clientWidth);
+      setWidth(ref.current?.clientWidth);
+    });
+
+    return () => {
+      window.removeEventListener("resize", () => {
+        setWidth(0);
+      });
+    };
+  }, [sort, filter]);
+
+  return (
+    <header className="justify- flex gap-5">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            ref={ref}
+            variant={"ghost"}
+            className="flex h-[42px] w-fit gap-2 border-none bg-transparent bg-white text-base font-medium text-muted-foreground shadow"
+          >
+            Sort by:<span className="text-base font-semibold text-foreground">{sort || sortList[0]}</span>
+            <Icons.dropdownIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent style={{ width: `${width}px` }} className={"px-2 py-2.5"}>
+          <DropdownMenuGroup>
+            {sortList.map((item, idx) => {
+              return (
+                <DropdownMenuItem
+                  key={idx}
+                  onClick={() => setSort(item)}
+                  className={`flex cursor-default items-center justify-between gap-[7px] rounded-sm p-2 text-base capitalize text-muted-foreground  hover:bg-accent ${
+                    filter === item ? "font-semibold" : "font-medium"
+                  }`}
+                  textValue="Jim Carlos"
+                >
+                  {item}
+                  <GoodIcon className={sort === item ? "" : "hidden"} />
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            ref={filterRef}
+            variant={"ghost"}
+            className="flex h-[42px] w-fit gap-2 border-none bg-transparent bg-white text-base font-medium text-muted-foreground shadow"
+          >
+            Filter:<span className="text-base font-semibold text-foreground">{filter || "All"}</span>
+            <Icons.dropdownIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          style={{ left: `${-FilterWidth / 2}px` }}
+          className={"!absolute !w-[237px] rounded-none px-2 py-2.5"}
+        >
+          <DropdownMenuGroup>
+            {filterList.map(
+              (item, idx) =>
+                idx < 2 && (
+                  <DropdownMenuItem
+                    key={idx}
+                    onClick={() => setFilter(item)}
+                    className={`flex cursor-default items-center justify-between gap-[7px] rounded-sm px-2 py-1 text-base capitalize text-muted-foreground  hover:bg-accent ${
+                      filter === item ? "font-semibold" : "font-medium"
+                    }`}
+                    textValue="Jim Carlos"
+                  >
+                    {item}
+                    <GoodIcon className={filter === item ? "" : "hidden"} />
+                  </DropdownMenuItem>
+                )
+            )}
+            <section className={` flex cursor-default items-center justify-between px-2 py-1 text-base  text-muted-foreground`}>
+              Shared with {">"}
+            </section>
+            {filterList.map(
+              (item, idx) =>
+                idx > 1 && (
+                  <DropdownMenuItem
+                    key={idx}
+                    onClick={() => setFilter(item)}
+                    className={`flex cursor-default items-center justify-between gap-[7px] rounded-sm px-2 py-2 text-sm font-medium capitalize  text-muted-foreground hover:bg-accent `}
+                    textValue="Jim Carlos"
+                  >
+                    <div className=" flex items-center justify-center gap-1">
+                      <div
+                        className={` flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white ${
+                          idx % 2 === 0 ? "bg-indigo-400 " : "bg-emerald-300"
+                        }`}
+                      >
+                        {item.substring(0, 1)}
+                      </div>
+                      {item}
+                    </div>
+                    <GoodIcon className={filter === item ? "" : "hidden"} />
+                  </DropdownMenuItem>
+                )
+            )}
+
+            <DropdownMenuItem
+              className={`flex cursor-pointer items-center justify-between px-2 py-1 text-base font-medium text-primary`}
+              textValue="Jim Carlos"
+            >
+              Clear all filters
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <aside className="ml-auto flex h-[42px] w-6/12 items-center justify-between gap-[13px] bg-white px-[18px] py-[11px] shadow lg:w-[423px]">
+        <Icons.search className="h-5 w-5" />
+        <input
+          type="text"
+          placeholder="Search by file or folder name"
+          className="h-full w-full bg-inherit text-base font-normal tracking-tight text-muted-foreground focus:outline-none"
+        />
+      </aside>
+    </header>
+  );
+};
+
+export const FoldersDialog = () => {
+  const folders =
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus modi non. Molestiae amet nostrum quae vel aliquam voluptatum, cumque esse ducimus ex labore sunt. Nisi fuga rem quam quisquam.";
+  return (
+    <main className="">
+      <div className="mb-4 text-xl font-bold text-muted-foreground">Folders</div>
+      <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 2xl:grid-cols-5 ">
+        {folders.split("").map((item, idx) => {
+          const prop = { title: "Client custom...", idx };
+          if (idx < 40) {
+            return <Folder {...prop} />;
+          }
+        })}
+      </section>
+    </main>
+  );
+};
+
+interface Folder {
+  title: string;
+  idx: number;
+}
+
+export const Folder = ({ title, idx }: Folder) => {
+  return (
+    <main key={idx} className="flex h-[44px] w-full items-center justify-around gap-[17px] rounded-lg bg-accent px-[12px]">
+      <div className="flex items-center justify-center">
+        <Icons.folder className="h-[18px] w-6" />
+      </div>
+      <div className="ClientCustom h-5 w-[136px] font-['Quicksand'] text-base font-medium text-neutral-500">{title}</div>
+      <div className="flex items-center justify-center">
+        <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
+      </div>{" "}
+    </main>
+  );
+};

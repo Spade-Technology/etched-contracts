@@ -75,11 +75,13 @@ export const EditOrgDialog = ({
   modifyOrgData,
   openEditOrgModal,
   setOpenEditOrgModal,
+  organisations,
 }: {
   children?: React.ReactNode;
   modifyOrgData: any;
   openEditOrgModal: boolean;
   setOpenEditOrgModal: any;
+  organisations: Partial<Organisation>[];
 }) => {
   const [orgName, setOrgName] = useState(modifyOrgData?.orgName || "");
   const [orgMembers, setOrgMembers] = useState<user[] | any>(modifyOrgData?.orgMembers || []);
@@ -88,15 +90,6 @@ export const EditOrgDialog = ({
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
   const { mutateAsync } = api.team.createTeam.useMutation();
-
-  const loggedInAddress = useLoggedInAddress();
-
-  const [{ data, fetching }, refetch] = useQuery({
-    query: ORGANISATIONS_QUERY,
-    variables: { address: loggedInAddress.toLowerCase() },
-  });
-
-  const organisations: Partial<Organisation>[] = data ? data.organisations : [];
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -172,7 +165,15 @@ export const EditOrgDialog = ({
     }
   };
 
-  const props = { orgName, setDeleteTeam, transferOwnership, setOpenEditOrgModal, setTransferOwnership, setOrgName };
+  const props = {
+    orgName,
+    setDeleteTeam,
+    transferOwnership,
+    setOpenEditOrgModal,
+    setTransferOwnership,
+    setOrgName,
+    organisations,
+  };
 
   return (
     <>
@@ -219,13 +220,13 @@ export const EditOrgDialog = ({
               </div>
               <DialogDescription>
                 <form onSubmit={() => onSubmit()}>
-                  <Label className="font-semibold">Team Name</Label>
+                  <Label className="font-semibold">Organization Name</Label>
                   <Input
                     disabled={isLoading}
                     id="text"
                     placeholder="Name your team"
                     className="col-span-3 mb-7 capitalize"
-                    value={modifyOrgData?.teamName}
+                    value={modifyOrgData?.orgName}
                     // onChange={(e) => setOrgName(e.target.value)}
                   />
                   <Label className="font-semibold">Invite users</Label>
@@ -352,6 +353,7 @@ type confirm = {
   setTransferOwnership: any;
   transferOwnership: boolean;
   setOrgName: any;
+  organisations: Partial<Organisation[]>;
 };
 
 const ConfirmDelectDialog: React.FC<confirm> = ({ orgName, setDeleteTeam, setOpenEditOrgModal }) => {
@@ -393,7 +395,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
   transferOwnership,
   setTransferOwnership,
   setOrgName,
-  setOpenEditOrgModal,
+  organisations,
 }) => {
   const [ownerData, setOwnerData] = useState<user[]>([]);
 
@@ -412,7 +414,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
         <form onSubmit={transfer}>
           <Label className="font-semibold">Transfer to</Label>
           <InputDropdownTwo
-            data={users}
+            data={organisations}
             type={"singleSelect"}
             roleData={[]}
             placeholder="ex: Prolific Inc."

@@ -72,8 +72,6 @@ export const SidebarDialog = () => {
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);
   const [openTeamModal, setOpenTeamModal] = useState(false);
-  const [openEditOrgModal, setOpenEditOrgModal] = useState(false);
-  const [openEditTeamModal, setOpenEditTeamModal] = useState(false);
   const [accordion, setAccordion] = useState("");
 
   const loggedInAddress = useLoggedInAddress();
@@ -87,8 +85,6 @@ export const ManageDialog = () => {
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
-  // const results = organisations.filter(( item) => teams.some(({ name }) =>  === item.ownership.organisation.name));
-
   const props = {
     accordion,
     setAccordion,
@@ -96,23 +92,15 @@ export const ManageDialog = () => {
     setOpenOrgModal,
     openTeamModal,
     setOpenTeamModal,
-    openEditOrgModal,
-    setOpenEditOrgModal,
-    openEditTeamModal,
-    setOpenEditTeamModal,
     organisations,
     fetching,
   };
-  console.log(teams);
-  console.log(organisations);
 
   return (
     <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-5 lg:pl-[60px]">
       {/*------------- Modals & More -------------*/}
       <CreateTeamDialog {...props} />
       <CreateOrgDialog {...props} />
-      <EditTeamDialog {...props} modifyTeamData={modifyTeamData} />
-      <EditOrgDialog {...props} modifyOrgData={modifyOrgData} />
 
       <header className="flex gap-5">
         {buttons.map(({ name }, idx) => {
@@ -146,8 +134,7 @@ export const OrgDialog = ({
   team,
   accordion,
   setAccordion,
-  setOpenEditOrgModal,
-  setOpenEditTeamModal,
+  organisations,
 }: {
   id: string;
   orgId: string;
@@ -159,8 +146,11 @@ export const OrgDialog = ({
   setAccordion: any;
   setOpenEditOrgModal: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenEditTeamModal: any;
+  organisations: user[];
 }) => {
   const [height, setHeight] = useState(0);
+  const [openEditOrgModal, setOpenEditOrgModal] = useState(false);
+  const [openEditTeamModal, setOpenEditTeamModal] = useState(false);
   const ref = useRef<HTMLInputElement | any>(null);
 
   const openAccordion = () => {
@@ -193,6 +183,14 @@ export const OrgDialog = ({
     };
   }, [accordion]);
 
+  const props = {
+    openEditOrgModal,
+    setOpenEditOrgModal,
+    openEditTeamModal,
+    setOpenEditTeamModal,
+    organisations,
+  };
+
   return (
     <article
       key={name}
@@ -200,6 +198,17 @@ export const OrgDialog = ({
         accordion === name ? " pb-10" : ""
       }`}
     >
+      {/*------------- Modals & More -------------*/}
+      <EditTeamDialog {...props} modifyTeamData={modifyTeamData} />
+      <EditOrgDialog
+        {...props}
+        modifyOrgData={{
+          orgName: name,
+          teamName: "",
+          orgMembers: members,
+        }}
+      />
+
       <header onClick={openAccordion} className="flex h-[105px] cursor-pointer items-center">
         <div className="mr-4 text-xl font-bold capitalize text-foreground">{name}</div>
         <div className="mr-[27px] text-sm font-medium text-muted-foreground">{orgId}</div>
@@ -240,15 +249,17 @@ export const OrgDialog = ({
                   <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
                 </div>
                 <section className="flex gap-[53px]">
-                  <div>
-                    <div className="mt-4 flex flex-col gap-2">
+                  <div className="mt-2.5">
+                    <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
+                    <div className="mt-[14px] flex flex-col gap-2">
                       {members.map(({ name }) => {
                         return <div className=" text-sm font-medium text-neutral-500">{name}</div>;
                       })}
                     </div>
                   </div>
-                  <div>
-                    <div className="mt-4 flex flex-col gap-2">
+                  <div className="mt-2.5">
+                    <div className=" text-base font-bold tracking-tight text-neutral-700">Access</div>
+                    <div className="mt-[14px] flex flex-col gap-2">
                       {members.map(({ role }) => {
                         return <div className=" text-sm font-medium text-neutral-500">{role}</div>;
                       })}
