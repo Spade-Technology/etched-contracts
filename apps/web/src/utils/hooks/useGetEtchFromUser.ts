@@ -8,6 +8,8 @@ const FullEtchFragment = graphql(`
     tokenId
     createdAt
     documentName
+    description
+
     ipfsCid
     ownership {
       id
