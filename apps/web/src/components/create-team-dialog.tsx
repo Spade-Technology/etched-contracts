@@ -47,7 +47,7 @@ export const users: user[] = [
   {
     id: "0",
     name: "ex: tom12.etched",
-    role: "Owner",
+    role: "read only",
   },
   {
     id: "1",
@@ -57,7 +57,7 @@ export const users: user[] = [
   {
     id: "2",
     name: "Sophia5678.etched",
-    role: "Owner",
+    role: "read only",
   },
   {
     id: "3",

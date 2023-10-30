@@ -7,7 +7,7 @@ import { TeamSelector } from "./team-selector";
 
 export const DashboardHeader = () => {
   return (
-    <div className="sticky top-0 flex h-16 w-full items-center justify-between bg-white px-6 shadow-etched-1">
+    <div className="sticky top-0 flex h-16 w-full items-center justify-between bg-white px-6 shadow">
       <CreateEtchButton />
       <CommandMenu />
 
