@@ -632,6 +632,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "input",
+        "type": "string"
+      }
+    ],
+    "name": "$toLowerCase",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "ret0",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "__hh_exposed_bytecode_marker",
     "outputs": [
