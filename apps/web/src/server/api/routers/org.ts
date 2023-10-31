@@ -24,11 +24,55 @@ export const orgRouter = createTRPCRouter({
           session: { address },
         },
       }) => {
-        // we need to send two calls, one to create the etch and get the etch id, and then another to set Metadata
         const calldata = encodeFunctionData({
           abi: OrgABI,
           functionName: "createOrganisation",
           args: [address, orgName, orgMembers],
+        });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Org,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
+
+  renameOrg: protectedProcedure
+    .input(
+      z.object({
+        orgId: z.number(),
+        orgName: z.string(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { orgName, orgId, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: OrgABI,
+          functionName: "renameOrganisation",
+          args: [orgId, orgName],
         });
 
         const tx = await walletClient.writeContract({
