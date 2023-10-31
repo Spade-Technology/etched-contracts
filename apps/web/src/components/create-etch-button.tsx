@@ -98,6 +98,7 @@ export const CreateEtchButton = () => {
         etchId: etchId.toString(),
         fileName: data.etchTitle,
         ipfsCid,
+        description: data.etchDescription,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });

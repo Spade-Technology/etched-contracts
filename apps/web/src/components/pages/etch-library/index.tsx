@@ -12,6 +12,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
+import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { ChevronRightIcon, FileIcon } from "@radix-ui/react-icons";
 import { FileLockIcon, HashIcon, Loader2Icon } from "lucide-react";
@@ -37,9 +38,10 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
   const [width, setWidth] = useState(0);
   const [FilterWidth, setFilterWidth] = useState(0);
   const currentSearch = useState("");
+  const { isLoading, etches } = useSearchGQL(currentSearch[0]);
 
   const loggedInAddress = useLoggedInAddress();
-  const { isLoading, etches, error } = useGetEtchesFromUser(loggedInAddress.toLowerCase());
+  // const { isLoading, etches, error } = useGetEtchesFromUser(loggedInAddress.toLowerCase());
   console.log(etches);
 
   const sortList = ["Latest first", "File type", "Oldest fist", "Alphabetically"];
@@ -63,7 +65,10 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
     };
   }, [sort, filter]);
 
-  const searchFilter = etches.filter(({ documentName }) => documentName.toLowerCase().includes(currentSearch[0].toLowerCase()));
+  // dirty fix to refresh the search once the data is loaded
+  useEffect(() => {
+    if (!isLoading) currentSearch[1](currentSearch[0]);
+  });
 
   return (
     <header className="justify- flex gap-5">
@@ -187,26 +192,34 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
           value={currentSearch[0]}
         />
         <CommandList className="max-h-[400px]">
-          {/* <CommandGroup> */}
-          <main className={currentSearch[0] && searchFilter ? "flex flex-col gap-3 p-5" : ""}>
-            {currentSearch[0] &&
-              searchFilter.map(({ tokenId, documentName }) => {
-                return (
-                  <Link
-                    className="group flex w-full items-center gap-3 rounded-md bg-muted px-3 py-2.5 text-muted-foreground duration-300 hover:bg-primary hover:text-white"
-                    href={`/dashboard/etches/${tokenId}`}
-                  >
-                    <div className="flex h-6 w-6 items-center justify-center rounded-md border-[1px] border-muted-foreground bg-white  group-hover:border-white group-hover:bg-transparent">
-                      <HashIcon className="h-4 w-4" />
-                    </div>
-                    <div className="text-lg ">{documentName}</div>
-                    <ChevronRightIcon className="ml-auto text-xl" />
-                  </Link>
-                );
-              })}
-          </main>
-          {/* </CommandGroup> */}
-          {currentSearch[0] && searchFilter.length < 1 ? <CommandEmpty>No results found.</CommandEmpty> : ""}
+          {isLoading ? (
+            <>
+              <Loader2Icon className="mx-auto my-4 animate-spin" />
+              <CommandSeparator />
+            </>
+          ) : (
+            <div className='p-3'>
+              {currentSearch[0] && etches.length > 0 &&
+                etches.map(({ tokenId, documentName }) => {
+                  return (
+                    <Link
+                      className="group flex w-full items-center gap-3 rounded-md bg-muted px-3 py-2.5 text-muted-foreground duration-300 mb-4 hover:bg-primary hover:text-white"
+                      href={`/dashboard/etches/${tokenId}`}
+                    >
+                      <div className="flex h-6 w-6 items-center justify-center rounded-md border-[1px] border-muted-foreground bg-white  group-hover:border-white group-hover:bg-transparent">
+                        <HashIcon className="h-4 w-4" />
+                      </div>
+                      <div className="text-lg ">{documentName}</div>
+                      <ChevronRightIcon className="ml-auto text-xl" />
+                    </Link>
+                  );
+                })}
+            </div>
+          )}
+          {currentSearch[0] && etches.length < 1 && !isLoading ? <>
+          <CommandEmpty>No results found.</CommandEmpty>
+          </> : ''}
+          
         </CommandList>
         <div className={currentSearch[0] ? "mt-5 h-[1px] w-full  bg-muted " : "hidden"} />
 
