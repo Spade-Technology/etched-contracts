@@ -65,7 +65,7 @@ export const CreateOrgDialog = ({
   const [orgName, setOrgName] = useState("");
   const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
   const [orgData, setOrgData] = useState<FormData | any>({});
-  const { mutateAsync ,isLoading} = api.org.createOrg.useMutation();
+  const { data, mutateAsync, isLoading } = api.org.createOrg.useMutation();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -77,24 +77,6 @@ export const CreateOrgDialog = ({
   });
 
   const onSubmit = async (data: FormData) => {
-    // setIsLoading(true);
-    // if (orgMembers.length > 0) {
-    //   setOrgData({ orgName, orgMembers });
-
-    //   setTimeout(() => {
-    //     setIsLoading(false);
-    //   }, 2000);
-    // } else {
-    //   toast({
-    //     title: "Something went wrong",
-    //     description: "Please try again",
-    //     variant: "destructive",
-    //   });
-    //   setTimeout(() => {
-    //     setIsLoading(false);
-    //   }, 2000);
-    // }
-
     try {
       await mutateAsync({
         orgName: orgName,
@@ -107,7 +89,9 @@ export const CreateOrgDialog = ({
         description: "successfull",
         variant: "success",
       });
-      setOpenOrgModal(false);
+      console.log(data);
+
+      // setOpenOrgModal(false);
     } catch (e) {
       console.log(e);
       toast({

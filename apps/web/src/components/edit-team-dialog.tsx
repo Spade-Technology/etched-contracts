@@ -1,15 +1,9 @@
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { api } from "@/utils/api";
-import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useQuery } from "urql";
 import * as z from "zod";
 import { Button } from "./ui/button";
 import { graphql } from "@/gql";
 import { toast } from "./ui/use-toast";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { Organisation } from "@/gql/graphql";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
@@ -60,62 +54,41 @@ export type user = {
   role: string;
 };
 
-const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
-  query Organisations($address: String!) {
-    organisations(
-      where: { or: [{ ownership_: { owner: $address } }, { permissions_: { wallet: $address, permissionLevel_gt: 0 } }] }
-    ) {
-      orgId
-      id
-      name
-    }
-  }
-`);
-
 export const EditTeamDialog = ({
   children,
-  modifyTeamData,
+  id,
+  teamId,
+  name,
+  members,
+  date,
   openEditTeamModal,
   setOpenEditTeamModal,
+  organisations,
+  ownership,
 }: {
   children?: React.ReactNode;
-  modifyTeamData: any;
+  id: string;
+  teamId: string;
+  name: string;
+  members: string;
+  date: string;
   openEditTeamModal: boolean;
-  setOpenEditTeamModal: any;
+  setOpenEditTeamModal: React.Dispatch<boolean>;
+  organisations: Partial<Organisation | any>;
+  ownership: any;
 }) => {
-  const [teamName, setTeamName] = useState(modifyTeamData?.teamName || "");
-  const [teamMembers, setTeamMembers] = useState<user[] | any>(modifyTeamData?.teamMembers || []);
-  const [teamOrganisation, setTeamOrganisation] = useState<string>(modifyTeamData?.teamOrganisation || "");
+  const [teamName, setTeamName] = useState(name || "");
+  const [teamMembers, setTeamMembers] = useState<user[] | any>(members || []);
+  const [teamOrganisation, setTeamOrganisation] = useState<string>(ownership?.organisation.name || "");
   const [teamData, setTeamData] = useState<FormData | any>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [deleteTeam, setDeleteTeam] = useState({ state: false, confirm: false });
-  const [transferOwnership, setTransferOwnership] = useState({ state: false, confirm: false });
-  const { mutateAsync } = api.team.createTeam.useMutation();
+  const [deleteTeam, setDeleteTeam] = useState(false);
+  const [transferOwnership, setTransferOwnership] = useState(false);
 
-  const loggedInAddress = useLoggedInAddress();
-
-  const [{ data, fetching }, refetch] = useQuery({
-    query: ORGANISATIONS_QUERY,
-    variables: { address: loggedInAddress.toLowerCase() },
-  });
-
-  const organisations: Partial<Organisation>[] = data ? data.organisations : [];
-
-  const form = useForm<FormData>({
-    // resolver: zodResolver(formSchema),
-
-    defaultValues: {
-      teamName,
-      teamMembers,
-      teamOrganisation,
-    },
-  });
-
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = (e: any) => {
+    e.preventDefault();
     setIsLoading(true);
-    console.log(teamOrganisation);
-
-    if (teamMembers.length > 0 && data.teamOrganisation && teamName) {
+    if (teamMembers.length > 0 && teamOrganisation && teamName) {
       setTeamData({ teamOrganisation, teamName, teamMembers });
       setTimeout(() => {
         setIsLoading(false);
@@ -130,32 +103,7 @@ export const EditTeamDialog = ({
         setIsLoading(false);
       }, 1000);
     }
-
-    // try {
-    //   await mutateAsync({
-    //     teamName: data.teamName,
-    //     teamMembers: data.teamMembers,
-    //     owningOrg: data.teamOrganisation,
-    //     blockchainSignature: localStorage.getItem("blockchainSignature")!,
-    //     blockchainMessage: localStorage.getItem("blockchainMessage")!,
-    //   });
-    //   toast({
-    //     title: "Team created",
-    //     description: "Your team has been created",
-    //     variant: "success",
-    //   });
-    //   // setOpenEditTeamModal(false);
-    // } catch (e) {
-    //   console.log(e);
-    //   toast({
-    //     title: "Something went wrong",
-    //     description: "Please try again",
-    //     variant: "destructive",
-    //   });
-    // }
   };
-
-  const formValidate = (errors: any) => console.error(errors);
 
   const editUserRole = ({ id, item }: { id: string; item: string }) => {
     const user = teamMembers?.find((profile: any) => profile.id === id);
@@ -170,19 +118,19 @@ export const EditTeamDialog = ({
 
   const chooseOption = (idx: any) => {
     if (idx > 0) {
-      setDeleteTeam({ ...deleteTeam, state: true });
+      setDeleteTeam(true);
     } else {
-      setTransferOwnership({ ...transferOwnership, state: true });
+      setTransferOwnership(true);
     }
   };
 
-  const props = { teamName, setDeleteTeam, transferOwnership, setOpenEditTeamModal, setTransferOwnership, setTeamOrganisation };
+  const props = { teamName, setDeleteTeam, transferOwnership, setOpenEditTeamModal, setTransferOwnership, setTeamOrganisation, organisations };
 
   return (
     <>
       <Dialog open={openEditTeamModal} onOpenChange={() => setOpenEditTeamModal(!openEditTeamModal)}>
         <DialogContent className={"max-w-[440px]"}>
-          {!teamData.teamName && !deleteTeam.state && !transferOwnership.state ? (
+          {!teamData.teamName && !deleteTeam && !transferOwnership ? (
             // EDIT TEAM FORM
             <>
               <div className="flex justify-between">
@@ -192,7 +140,7 @@ export const EditTeamDialog = ({
                     <div
                       style={{ backdropFilter: "blur(50px)" }}
                       className={`${
-                        modifyTeamData?.teamName ? "" : "hidden"
+                        name ? "" : "hidden"
                       } absolute right-4 top-4 z-50 flex h-[29px] w-[29px] items-center justify-center rounded-full duration-300 hover:bg-[#D3FBE8]`}
                     >
                       <BarIcon className="h-[21px] w-[5px]" />
@@ -222,99 +170,97 @@ export const EditTeamDialog = ({
                 </DropdownMenu>
               </div>
               <DialogDescription>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit, formValidate)}>
-                    <Label className="font-semibold">Team Name</Label>
-                    <Input
-                      disabled={isLoading}
-                      id="text"
-                      placeholder="Name your team"
-                      className="col-span-3 mb-7"
-                      value={teamName}
-                      onChange={(e) => setTeamName(e.target.value)}
-                    />
-                    <Label className="font-semibold">Invite users</Label>
-                    <InputDropdownTwo
-                      placeholder="ex: astrew.etched"
-                      data={users}
-                      roleData={roleData}
-                      type={"multiSelect"}
-                      selectedItems={teamMembers}
-                      setSelectedItems={setTeamMembers}
-                    />
+                <form onSubmit={onSubmit}>
+                  <Label className="font-semibold">Team Name</Label>
+                  <Input
+                    disabled={isLoading}
+                    id="text"
+                    placeholder="Name your team"
+                    className="col-span-3 mb-7"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                  />
+                  <Label className="font-semibold">Invite users</Label>
+                  <InputDropdownTwo
+                    placeholder="ex: astrew.etched"
+                    data={users}
+                    roleData={roleData}
+                    type={"multiSelect"}
+                    selectedItems={teamMembers}
+                    setSelectedItems={setTeamMembers}
+                  />
 
-                    <section>
-                      {teamMembers.length > 0 && (
-                        <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
-                          {teamMembers.map(({ id, name, role }) => {
-                            return (
-                              <section key={id} className="flex items-center justify-between">
-                                <div
-                                  // onClick={() => inviteUser({ id, name, role })}
-                                  className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
-                                >
-                                  {name}
-                                </div>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant={"ghost"}
-                                      className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
-                                    >
-                                      {role} <Icons.dropdownIcon />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent className=" items-start p-1">
-                                    <DropdownMenuGroup>
-                                      {[...roleData, "Remove access"].map((item, idx) => {
-                                        return (
-                                          <DropdownMenuItem
-                                            key={idx}
-                                            onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeAccess(id))}
-                                            className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
-                                              idx < 2
-                                                ? "hover:bg-accent"
-                                                : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
-                                            }`}
-                                            textValue="Jim Carlos"
-                                          >
-                                            <GoodIcon className={role === item ? "" : "hidden"} />
-                                            {item}
-                                          </DropdownMenuItem>
-                                        );
-                                      })}
-                                    </DropdownMenuGroup>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </section>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </section>
+                  <section>
+                    {teamMembers.length > 0 && (
+                      <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
+                        {teamMembers.map(({ id, name, role }) => {
+                          return (
+                            <section key={id} className="flex items-center justify-between">
+                              <div
+                                // onClick={() => inviteUser({ id, name, role })}
+                                className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                              >
+                                {name}
+                              </div>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant={"ghost"}
+                                    className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
+                                  >
+                                    {role} <Icons.dropdownIcon />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className=" items-start p-1">
+                                  <DropdownMenuGroup>
+                                    {[...roleData, "Remove access"].map((item, idx) => {
+                                      return (
+                                        <DropdownMenuItem
+                                          key={idx}
+                                          onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeAccess(id))}
+                                          className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
+                                            idx < 2
+                                              ? "hover:bg-accent"
+                                              : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                                          }`}
+                                          textValue="Jim Carlos"
+                                        >
+                                          <GoodIcon className={role === item ? "" : "hidden"} />
+                                          {item}
+                                        </DropdownMenuItem>
+                                      );
+                                    })}
+                                  </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </section>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </section>
 
-                    <footer className="mt-10 flex items-center justify-end gap-5">
-                      <div
-                        onClick={() => setOpenEditTeamModal(false)}
-                        className="cursor-pointer text-sm font-semibold hover:text-foreground"
+                  <footer className="mt-10 flex items-center justify-end gap-5">
+                    <div
+                      onClick={() => setOpenEditTeamModal(false)}
+                      className="cursor-pointer text-sm font-semibold hover:text-foreground"
+                    >
+                      Cancel
+                    </div>
+                    <div>
+                      <Button
+                        isLoading={isLoading}
+                        type="submit"
+                        className={`${teamMembers.length < 1 ? " pointer-events-noe cursor-not-allowed" : ""}`}
                       >
-                        Cancel
-                      </div>
-                      <div>
-                        <Button
-                          isLoading={isLoading}
-                          type="submit"
-                          className={`${teamMembers.length < 1 ? " pointer-events-noe cursor-not-allowed" : ""}`}
-                        >
-                          Done
-                        </Button>
-                      </div>
-                    </footer>
-                  </form>
-                </Form>
+                        Done
+                      </Button>
+                    </div>
+                  </footer>
+                </form>
               </DialogDescription>
             </>
-          ) : teamData.teamName && !deleteTeam.state && !transferOwnership.state ? (
+          ) : teamData.teamName && !deleteTeam && !transferOwnership ? (
             // INVITED USERS
             <>
               <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
@@ -340,9 +286,9 @@ export const EditTeamDialog = ({
                 </div>
               </DialogDescription>
             </>
-          ) : deleteTeam.state ? (
+          ) : deleteTeam ? (
             <ConfirmDelectDialog {...props} />
-          ) : transferOwnership.state ? (
+          ) : transferOwnership ? (
             <TransferOwnershipDialog {...props} />
           ) : (
             ""
@@ -360,6 +306,7 @@ type confirm = {
   setTransferOwnership: any;
   transferOwnership: any;
   setTeamOrganisation: any;
+  organisations: Partial<Organisation | any>;
 };
 
 const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOpenEditTeamModal }) => {
@@ -395,13 +342,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
   );
 };
 
-const TransferOwnershipDialog: React.FC<confirm> = ({
-  teamName,
-  transferOwnership,
-  setTransferOwnership,
-  setTeamOrganisation,
-  setOpenEditTeamModal,
-}) => {
+const TransferOwnershipDialog: React.FC<confirm> = ({ setTransferOwnership, setTeamOrganisation,organisations }) => {
   const [owner, setOwner] = useState("individual");
   const [ownerData, setOwnerData] = useState<user[]>([]);
 
@@ -409,9 +350,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
     e.preventDefault();
     const item: user | any = ownerData.find((idx) => idx.name);
     setTeamOrganisation(item.name);
-    console.log(item.name);
-
-    setTransferOwnership({ state: false });
+    setTransferOwnership(false);
   };
 
   return (
@@ -459,7 +398,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
               {" "}
               <Label className="font-semibold">Organization Name</Label>
               <InputDropdownTwo
-                data={users}
+                data={organisations}
                 type={"singleSelect"}
                 roleData={[]}
                 placeholder="ex: Prolific Inc."
@@ -470,7 +409,10 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
           )}
 
           <footer className="mt-10 flex items-center justify-end gap-5">
-            <div onClick={() => transfer()} className="cursor-pointer text-sm font-semibold hover:text-foreground">
+            <div
+              onClick={() => setTransferOwnership(false)}
+              className="cursor-pointer text-sm font-semibold hover:text-foreground"
+            >
               Cancel
             </div>
             <div>
