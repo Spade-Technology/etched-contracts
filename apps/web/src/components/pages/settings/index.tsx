@@ -7,10 +7,11 @@ import { users as teamMembers } from "./../../create-team-dialog";
 import { EditOrgDialog, user } from "@/components/edit-org-dialog";
 import { EditTeamDialog } from "@/components/edit-team-dialog";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { Organisation } from "@/gql/graphql";
+import { Organisation, Wallet } from "@/gql/graphql";
 import { graphql } from "@/gql";
 import { useQuery } from "urql";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
 
 const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
   query Organisations($address: String!) {
@@ -23,18 +24,6 @@ const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
     }
   }
 `);
-
-const modifyTeamData = {
-  teamOrganisation: "None",
-  teamName: "spade tech",
-  teamMembers: teamMembers,
-};
-
-const modifyOrgData = {
-  orgName: "SpaceX",
-  teamName: "spade tech",
-  orgMembers: users,
-};
 
 export const SidebarDialog = () => {
   const [activeTab, setActiveTab] = useState<string>("Manage");
@@ -69,11 +58,34 @@ export const SidebarDialog = () => {
   );
 };
 
+const org_members: user[] = [
+  {
+    id: "0",
+    name: "ex: tom12.etched",
+    role: "admin",
+  },
+  {
+    id: "1",
+    name: "Benjamin.etched",
+    role: "member",
+  },
+  {
+    id: "2",
+    name: "Sophia5678.etched",
+    role: "admin",
+  },
+  {
+    id: "3",
+    name: "Olivia3456.etched",
+    role: "Read & Write",
+  },
+];
+
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);
   const [openTeamModal, setOpenTeamModal] = useState(false);
   const [accordion, setAccordion] = useState("");
-
+  const { wallets } = useSearchGQL(".");
   const loggedInAddress = useLoggedInAddress();
   const [{ data, fetching }, refetch] = useQuery({
     query: ORGANISATIONS_QUERY,
@@ -82,8 +94,12 @@ export const ManageDialog = () => {
   const organisations = data ? data.organisations : [];
 
   const { isLoading, teams } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
-
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
+
+  const users = wallets.map(({ id, etchENS }: Partial<Wallet | any>) => {
+    const idx = etchENS[0];
+    return { ...idx, id };
+  });
 
   const props = {
     accordion,
@@ -94,6 +110,8 @@ export const ManageDialog = () => {
     setOpenTeamModal,
     organisations,
     fetching,
+    users,
+    org_members,
   };
 
   return (
@@ -118,7 +136,7 @@ export const ManageDialog = () => {
 
       {organisations?.map(({ id, orgId, name }, idx) => {
         const team = teams?.filter(({ ownership }) => ownership.organisation.name === name);
-        const prop = { ...props, id, orgId, name, date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: users, team };
+        const prop = { ...props, id, orgId, name, date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: org_members, team };
         return <OrgDialog {...prop} />;
       })}
     </article>
@@ -193,6 +211,7 @@ const OrgDialog = ({
     name,
     orgId,
     team,
+    members,
   };
 
   return (

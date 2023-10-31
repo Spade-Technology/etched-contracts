@@ -1,0 +1,3 @@
+[submodule "apps/sol"]
+	path = apps/sol
+	url = https://github.com/Spade-Technology/solidity-etched.git

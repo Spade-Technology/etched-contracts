@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 import { graphql } from "@/gql";
 import { toast } from "./ui/use-toast";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { Organisation } from "@/gql/graphql";
+import { Organisation, Wallet } from "@/gql/graphql";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { InputDropdownTwo } from "./ui/input-dropdown";
@@ -21,34 +21,12 @@ import { BarIcon } from "./icons/bar";
 import { TransferIcon } from "./icons/transfer";
 import { DeleteIcon } from "./icons/delete";
 import { roleData } from "./create-org-dialog";
+import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
 
 const formSchema = z.object({
   orgName: z.string(),
   orgMembers: z.array(z.string()),
 });
-
-const users: user[] | any = [
-  {
-    id: "0",
-    name: "ex: tom12.etched",
-    role: "member",
-  },
-  {
-    id: "1",
-    name: "Benjamin.etched",
-    role: "admin",
-  },
-  {
-    id: "2",
-    name: "Sophia5678.etched",
-    role: "member",
-  },
-  {
-    id: "3",
-    name: "Olivia3456.etched",
-    role: "member",
-  },
-];
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -76,40 +54,29 @@ export const EditOrgDialog = ({
   id,
   name,
   orgId,
+  members,
 }: {
   children?: React.ReactNode;
   id: string;
   name: string;
   orgId: string;
+  members: user[];
   openEditOrgModal: boolean;
   setOpenEditOrgModal: any;
   organisations: Partial<Organisation>[];
 }) => {
+  const { wallets } = useSearchGQL(".");
+  const users = wallets.map(({ id, etchENS }: Partial<Wallet | any>) => {
+    const idx = etchENS[0];
+    return { ...idx, id };
+  });
+
   const [orgName, setOrgName] = useState(name || "");
-  const [orgMembers, setOrgMembers] = useState<user[] | any>(users || []);
+  const [orgMembers, setOrgMembers] = useState<user[] | any>(members || []);
   const [orgData, setOrgData] = useState<FormData | any>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
-
-  const onSubmit = () => {
-    setIsLoading(true);
-    if (orgMembers.length > 0 && orgName) {
-      setOrgData({ orgName, orgMembers });
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    }
-  };
 
   const editUserRole = ({ id, item }: { id: string; item: string }) => {
     const user = orgMembers?.find((profile: any) => profile.id === id);
@@ -127,6 +94,25 @@ export const EditOrgDialog = ({
       setDeleteTeam(true);
     } else {
       setTransferOwnership(true);
+    }
+  };
+
+  const onSubmit = () => {
+    setIsLoading(true);
+    if (orgMembers.length > 0 && orgName) {
+      setOrgData({ orgName, orgMembers });
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    } else {
+      toast({
+        title: "Something went wrong",
+        description: "Please try again",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
