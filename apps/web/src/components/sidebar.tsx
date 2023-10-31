@@ -69,7 +69,7 @@ export const SideBar = () => {
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
-                  className={url === path ? activeClassName : sideBarElementCn}
+                  className={path.includes(url) ? activeClassName : sideBarElementCn}
                   href={url}
                 >
                   <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />

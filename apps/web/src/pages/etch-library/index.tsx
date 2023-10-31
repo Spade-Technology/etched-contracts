@@ -1,5 +1,5 @@
 import { PageBoilerplate } from "@/components/page-boilerplate";
-import { FoldersDialog, HeaderDialog } from "@/components/pages/etch-library";
+import { FoldersDialog,FilesDialog, HeaderDialog } from "@/components/pages/etch-library";
 import React, { useState } from "react";
 
 export default function index() {
@@ -13,7 +13,8 @@ export default function index() {
       <section className="mt-[19px]">
         <HeaderDialog {...props} />
 
-        <main className="mt-[19px] bg-white px-6 py-[34px] shadow">
+        <main className="mt-[19px] flex flex-col gap-4 bg-white px-6 py-[34px] shadow">
+          <FilesDialog />
           <FoldersDialog />
         </main>
       </section>

@@ -1,5 +1,7 @@
 import { GoodIcon } from "@/components/icons/good";
+import { LogoAnimated } from "@/components/icons/logo-long-animated";
 import { Button } from "@/components/ui/button";
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandList, CommandSeparator } from "@/components/ui/command";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { ChevronRightIcon, FileIcon } from "@radix-ui/react-icons";
+import { FileLockIcon, HashIcon, Loader2Icon } from "lucide-react";
+import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
 interface props {
@@ -17,9 +25,22 @@ interface props {
   setFilter: React.Dispatch<string>;
 }
 
+interface Folder {
+  title: string;
+  idx: number;
+}
+
+const options = ["Move to >", "Rename", "Share", "Delete"];
+
 export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
+  const [openSearch, setOpenSearch] = useState(false);
   const [width, setWidth] = useState(0);
   const [FilterWidth, setFilterWidth] = useState(0);
+  const currentSearch = useState("");
+
+  const loggedInAddress = useLoggedInAddress();
+  const { isLoading, etches, error } = useGetEtchesFromUser(loggedInAddress.toLowerCase());
+  console.log(etches);
 
   const sortList = ["Latest first", "File type", "Oldest fist", "Alphabetically"];
   const filterList = ["Private", "Public", "Tom Robins", "Ariana Gordon", "Tom Robins", "Ariana Gordon"];
@@ -41,6 +62,8 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
       });
     };
   }, [sort, filter]);
+
+  const searchFilter = etches.filter(({ documentName }) => documentName.toLowerCase().includes(currentSearch[0].toLowerCase()));
 
   return (
     <header className="justify- flex gap-5">
@@ -145,7 +168,10 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <aside className="ml-auto flex h-[42px] w-6/12 items-center justify-between gap-[13px] bg-white px-[18px] py-[11px] shadow lg:w-[423px]">
+      <aside
+        onClick={() => setOpenSearch(true)}
+        className="ml-auto flex h-[42px] w-6/12 cursor-pointer items-center justify-between gap-[13px] bg-white px-[18px] py-[11px] shadow lg:w-[423px]"
+      >
         <Icons.search className="h-5 w-5" />
         <input
           type="text"
@@ -153,7 +179,96 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter }: props) => {
           className="h-full w-full bg-inherit text-base font-normal tracking-tight text-muted-foreground focus:outline-none"
         />
       </aside>
+
+      <CommandDialog open={openSearch} onOpenChange={setOpenSearch}>
+        <CommandInput
+          placeholder="Type a command or search..."
+          onValueChange={(value) => currentSearch[1](value)}
+          value={currentSearch[0]}
+        />
+        <CommandList className="max-h-[400px]">
+          {/* <CommandGroup> */}
+          <main className={currentSearch[0] && searchFilter ? "flex flex-col gap-3 p-5" : ""}>
+            {currentSearch[0] &&
+              searchFilter.map(({ tokenId, documentName }) => {
+                return (
+                  <Link
+                    className="group flex w-full items-center gap-3 rounded-md bg-muted px-3 py-2.5 text-muted-foreground duration-300 hover:bg-primary hover:text-white"
+                    href={`/dashboard/etches/${tokenId}`}
+                  >
+                    <div className="flex h-6 w-6 items-center justify-center rounded-md border-[1px] border-muted-foreground bg-white  group-hover:border-white group-hover:bg-transparent">
+                      <HashIcon className="h-4 w-4" />
+                    </div>
+                    <div className="text-lg ">{documentName}</div>
+                    <ChevronRightIcon className="ml-auto text-xl" />
+                  </Link>
+                );
+              })}
+          </main>
+          {/* </CommandGroup> */}
+          {currentSearch[0] && searchFilter.length < 1 ? <CommandEmpty>No results found.</CommandEmpty> : ""}
+        </CommandList>
+        <div className={currentSearch[0] ? "mt-5 h-[1px] w-full  bg-muted " : "hidden"} />
+
+        <footer className="flex items-center justify-end gap-3 p-5">
+          <div className=" text-sm text-muted-foreground">Search by</div>
+          <LogoAnimated className="max-w-[100px]" />
+        </footer>
+      </CommandDialog>
     </header>
+  );
+};
+
+export const FilesDialog = () => {
+  const files =
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus modi non. Molestiae amet nostrum quae vel aliquam voluptatum, cumque esse ducimus ex labore sunt. Nisi fuga rem quam quisquam.";
+
+  return (
+    <main className="">
+      {/* <FileLockIcon /> */}
+      <div className="mb-4 text-xl font-bold text-muted-foreground">Files</div>
+      <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
+        {files.split("").map((item, idx) => {
+          const prop = { title: "Client custom", idx };
+          if (idx < 10) {
+            return <File {...prop} />;
+          }
+        })}
+      </section>
+    </main>
+  );
+};
+
+const File = ({ title, idx }: Folder) => {
+  return (
+    <main key={idx} className="flex h-[44px] w-full items-center gap-[17px] rounded-lg bg-accent px-[12px]">
+      <div className="flex items-center justify-center">
+        <FileLockIcon className="h-[18px] w-6" />
+      </div>
+      <div className="truncate text-base font-medium text-neutral-500">{title}</div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="ml-auto flex items-center justify-center">
+            <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="mr-[194px] w-[209px] px-2.5 py-1.5 shadow-etched-1">
+          <DropdownMenuGroup>
+            {options.map((item, idx) => {
+              return (
+                <DropdownMenuItem
+                  key={idx}
+                  className="cursor-default rounded-sm px-2.5 py-1 text-base font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  {item}
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </main>
   );
 };
 
@@ -163,10 +278,10 @@ export const FoldersDialog = () => {
   return (
     <main className="">
       <div className="mb-4 text-xl font-bold text-muted-foreground">Folders</div>
-      <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 2xl:grid-cols-5 ">
+      <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
         {folders.split("").map((item, idx) => {
-          const prop = { title: "Client custom...", idx };
-          if (idx < 40) {
+          const prop = { title: "Client custom", idx };
+          if (idx < 10) {
             return <Folder {...prop} />;
           }
         })}
@@ -175,21 +290,35 @@ export const FoldersDialog = () => {
   );
 };
 
-interface Folder {
-  title: string;
-  idx: number;
-}
-
-export const Folder = ({ title, idx }: Folder) => {
+const Folder = ({ title, idx }: Folder) => {
   return (
-    <main key={idx} className="flex h-[44px] w-full items-center justify-around gap-[17px] rounded-lg bg-accent px-[12px]">
+    <main key={idx} className="flex h-[44px] w-full items-center gap-[17px] rounded-lg bg-accent px-[12px]">
       <div className="flex items-center justify-center">
         <Icons.folder className="h-[18px] w-6" />
       </div>
-      <div className="ClientCustom h-5 w-[136px] font-['Quicksand'] text-base font-medium text-neutral-500">{title}</div>
-      <div className="flex items-center justify-center">
-        <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
-      </div>{" "}
+      <div className=" truncate text-base font-medium text-neutral-500">{title}</div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="ml-auto flex items-center justify-center">
+            <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="mr-[194px] w-[209px] px-2.5 py-1.5 shadow-etched-1">
+          <DropdownMenuGroup>
+            {options.map((item, idx) => {
+              return (
+                <DropdownMenuItem
+                  key={idx}
+                  className="cursor-default rounded-sm px-2.5 py-1 text-base font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  {item}
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </main>
   );
 };

@@ -27,7 +27,7 @@ const formSchema = z.object({
   orgMembers: z.array(z.string()),
 });
 
-const users: user[] = [
+const users: user[] | any = [
   {
     id: "0",
     name: "ex: tom12.etched",
@@ -36,7 +36,7 @@ const users: user[] = [
   {
     id: "1",
     name: "Benjamin.etched",
-    role: "member",
+    role: "admin",
   },
   {
     id: "2",
@@ -52,58 +52,48 @@ const users: user[] = [
 
 type FormData = z.infer<typeof formSchema>;
 
+type confirm = {
+  orgName: string;
+  setDeleteTeam: any;
+  setOpenEditOrgModal: any;
+  setTransferOwnership: any;
+  transferOwnership: boolean;
+  setOrgName: any;
+  organisations: Partial<Organisation[]>;
+};
+
 export type user = {
   id?: string;
   name?: string;
   role?: string;
 };
 
-const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
-  query Organisations($address: String!) {
-    organisations(
-      where: { or: [{ ownership_: { owner: $address } }, { permissions_: { wallet: $address, permissionLevel_gt: 0 } }] }
-    ) {
-      orgId
-      id
-      name
-    }
-  }
-`);
-
 export const EditOrgDialog = ({
   children,
-  modifyOrgData,
   openEditOrgModal,
   setOpenEditOrgModal,
   organisations,
+  id,
+  name,
+  orgId,
 }: {
   children?: React.ReactNode;
-  modifyOrgData: any;
+  id: string;
+  name: string;
+  orgId: string;
   openEditOrgModal: boolean;
   setOpenEditOrgModal: any;
   organisations: Partial<Organisation>[];
 }) => {
-  const [orgName, setOrgName] = useState(modifyOrgData?.orgName || "");
-  const [orgMembers, setOrgMembers] = useState<user[] | any>(modifyOrgData?.orgMembers || []);
+  const [orgName, setOrgName] = useState(name || "");
+  const [orgMembers, setOrgMembers] = useState<user[] | any>(users || []);
   const [orgData, setOrgData] = useState<FormData | any>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
-  const { mutateAsync } = api.team.createTeam.useMutation();
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-
-    defaultValues: {
-      orgName,
-      orgMembers,
-    },
-  });
-
-  const onSubmit = async () => {
+  const onSubmit = () => {
     setIsLoading(true);
-    console.log(orgName);
-
     if (orgMembers.length > 0 && orgName) {
       setOrgData({ orgName, orgMembers });
       setTimeout(() => {
@@ -119,32 +109,7 @@ export const EditOrgDialog = ({
         setIsLoading(false);
       }, 1000);
     }
-
-    // try {
-    //   await mutateAsync({
-    //     orgName: data.orgName,
-    //     orgMembers: data.orgMembers,
-    //     owningOrg: data.orgName,
-    //     blockchainSignature: localStorage.getItem("blockchainSignature")!,
-    //     blockchainMessage: localStorage.getItem("blockchainMessage")!,
-    //   });
-    //   toast({
-    //     title: "Team created",
-    //     description: "Your team has been created",
-    //     variant: "success",
-    //   });
-    //   // setOpenEditOrgModal(false);
-    // } catch (e) {
-    //   console.log(e);
-    //   toast({
-    //     title: "Something went wrong",
-    //     description: "Please try again",
-    //     variant: "destructive",
-    //   });
-    // }
   };
-
-  const formValidate = (errors: any) => console.error(errors);
 
   const editUserRole = ({ id, item }: { id: string; item: string }) => {
     const user = orgMembers?.find((profile: any) => profile.id === id);
@@ -189,7 +154,7 @@ export const EditOrgDialog = ({
                     <div
                       style={{ backdropFilter: "blur(50px)" }}
                       className={`${
-                        modifyOrgData?.orgName ? "" : "hidden"
+                        name ? "" : "hidden"
                       } absolute right-4 top-4 z-50 flex h-[29px] w-[29px] items-center justify-center rounded-full duration-300 hover:bg-[#D3FBE8]`}
                     >
                       <BarIcon className="h-[21px] w-[5px]" />
@@ -226,7 +191,7 @@ export const EditOrgDialog = ({
                     id="text"
                     placeholder="Name your team"
                     className="col-span-3 mb-7 capitalize"
-                    value={modifyOrgData?.orgName}
+                    value={name}
                     // onChange={(e) => setOrgName(e.target.value)}
                   />
                   <Label className="font-semibold">Invite users</Label>
@@ -313,7 +278,7 @@ export const EditOrgDialog = ({
             // INVITED USERS
             <>
               <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
-                {orgData.orgName} is now owner of Team {modifyOrgData?.teamName} 🎉
+                {orgData.orgName} is now owner of Team {orgData.orgName} 🎉
               </DialogTitle>
               <DialogDescription>
                 <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
@@ -344,16 +309,6 @@ export const EditOrgDialog = ({
       </Dialog>
     </>
   );
-};
-
-type confirm = {
-  orgName: string;
-  setDeleteTeam: any;
-  setOpenEditOrgModal: any;
-  setTransferOwnership: any;
-  transferOwnership: boolean;
-  setOrgName: any;
-  organisations: Partial<Organisation[]>;
 };
 
 const ConfirmDelectDialog: React.FC<confirm> = ({ orgName, setDeleteTeam, setOpenEditOrgModal }) => {
@@ -390,13 +345,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ orgName, setDeleteTeam, setOpe
   );
 };
 
-const TransferOwnershipDialog: React.FC<confirm> = ({
-  orgName,
-  transferOwnership,
-  setTransferOwnership,
-  setOrgName,
-  organisations,
-}) => {
+const TransferOwnershipDialog: React.FC<confirm> = ({ setTransferOwnership, setOrgName, organisations }) => {
   const [ownerData, setOwnerData] = useState<user[]>([]);
 
   const transfer = (e: any) => {

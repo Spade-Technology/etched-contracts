@@ -125,7 +125,7 @@ export const ManageDialog = () => {
   );
 };
 
-export const OrgDialog = ({
+const OrgDialog = ({
   id,
   name,
   orgId,
@@ -144,7 +144,7 @@ export const OrgDialog = ({
   team: any[];
   accordion: string;
   setAccordion: any;
-  setOpenEditOrgModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenEditOrgModal: React.Dispatch<boolean>;
   setOpenEditTeamModal: any;
   organisations: user[];
 }) => {
@@ -189,6 +189,10 @@ export const OrgDialog = ({
     openEditTeamModal,
     setOpenEditTeamModal,
     organisations,
+    id,
+    name,
+    orgId,
+    team,
   };
 
   return (
@@ -199,15 +203,7 @@ export const OrgDialog = ({
       }`}
     >
       {/*------------- Modals & More -------------*/}
-      <EditTeamDialog {...props} modifyTeamData={modifyTeamData} />
-      <EditOrgDialog
-        {...props}
-        modifyOrgData={{
-          orgName: name,
-          teamName: "",
-          orgMembers: members,
-        }}
-      />
+      <EditOrgDialog {...props} />
 
       <header onClick={openAccordion} className="flex h-[105px] cursor-pointer items-center">
         <div className="mr-4 text-xl font-bold capitalize text-foreground">{name}</div>
@@ -238,43 +234,107 @@ export const OrgDialog = ({
         </section>
 
         <section className="mt-10 flex flex-col gap-5">
-          {team?.map(({ id, teamId, name }: { id: string; name: string; teamId: string; date: string; members: user[] }) => {
-            const members = teamMembers;
-            const date = "Created on 12th Oct. 2023, 12:30:14 UTC";
-            return (
-              <article className="w-fit rounded-2xl bg-accent p-4">
-                <div className="flex justify-between">
-                  <div className="text-base font-bold capitalize text-neutral-700">Team: {name}</div>
-                  {/* {console.log(teams)} */}
-                  <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
-                </div>
-                <section className="flex gap-[53px]">
-                  <div className="mt-2.5">
-                    <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
-                    <div className="mt-[14px] flex flex-col gap-2">
-                      {members.map(({ name }) => {
-                        return <div className=" text-sm font-medium text-neutral-500">{name}</div>;
-                      })}
-                    </div>
-                  </div>
-                  <div className="mt-2.5">
-                    <div className=" text-base font-bold tracking-tight text-neutral-700">Access</div>
-                    <div className="mt-[14px] flex flex-col gap-2">
-                      {members.map(({ role }) => {
-                        return <div className=" text-sm font-medium text-neutral-500">{role}</div>;
-                      })}
-                    </div>
-                  </div>
-                </section>
-                <div className="mt-7 flex justify-between text-xs font-medium text-neutral-400">
-                  <div>{date}</div>
-                  <div>{teamId}</div>
-                </div>
-              </article>
-            );
-          })}
+          {team?.map(
+            ({
+              id,
+              teamId,
+              name,
+              ownership,
+            }: {
+              id: string;
+              name: string;
+              teamId: string;
+              date: string;
+              members: user[];
+              ownership: Partial<Organisation>;
+            }) => {
+              const members = teamMembers;
+              const date = "Created on 12th Oct. 2023, 12:30:14 UTC";
+              const props = {
+                id,
+                teamId,
+                name,
+                members,
+                date,
+                setOpenEditTeamModal,
+                openEditTeamModal,
+                organisations,
+                ownership,
+              };
+              return <TeamDialog {...props} />;
+            }
+          )}
         </section>
       </main>
+    </article>
+  );
+};
+
+const TeamDialog = ({
+  id,
+  teamId,
+  name,
+  members,
+  date,
+  ownership,
+  openEditTeamModal,
+  setOpenEditTeamModal,
+  organisations,
+}: {
+  id: string;
+  teamId: string;
+  name: string;
+  members: user[];
+  date: string;
+  ownership: any;
+  openEditTeamModal: boolean;
+  setOpenEditTeamModal: React.Dispatch<boolean>;
+  organisations: Partial<Organisation | any>;
+}) => {
+  const props = {
+    id,
+    teamId,
+    name,
+    members,
+    date,
+    openEditTeamModal,
+    setOpenEditTeamModal,
+    organisations,
+    ownership,
+  };
+
+  return (
+    <article className="w-fit rounded-2xl bg-accent p-4">
+      {/*------------- Modals & More -------------*/}
+      <EditTeamDialog {...props} />
+
+      <div className="flex justify-between">
+        <div className="text-base font-bold capitalize text-neutral-700">Team: {name}</div>
+        {/* {console.log(teams)} */}
+        <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
+      </div>
+      <section className="flex gap-[53px]">
+        <div className="mt-2.5">
+          <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
+          <div className="mt-[14px] flex flex-col gap-2">
+            {members.map(({ name }) => {
+              return <div className=" text-sm font-medium text-neutral-500">{name}</div>;
+            })}
+          </div>
+        </div>
+        <div className="mt-2.5">
+          <div className=" text-base font-bold tracking-tight text-neutral-700">Access</div>
+          <div className="mt-[14px] flex flex-col gap-2">
+            {members.map(({ role }) => {
+              return <div className=" text-sm font-medium text-neutral-500">{role}</div>;
+            })}
+          </div>
+        </div>
+      </section>
+      <div className="mt-7 flex justify-between text-xs font-medium text-neutral-400">
+        <div>{date}</div>
+        <div>{teamId}</div>
+      </div>
     </article>
   );
 };
