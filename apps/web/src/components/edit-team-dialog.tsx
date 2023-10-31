@@ -14,35 +14,13 @@ import { GoodIcon } from "./icons/good";
 import { BarIcon } from "./icons/bar";
 import { TransferIcon } from "./icons/transfer";
 import { DeleteIcon } from "./icons/delete";
+import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
 
 const formSchema = z.object({
   teamName: z.string(),
   teamMembers: z.array(z.string()),
   teamOrganisation: z.string(),
 });
-
-const users: user[] = [
-  {
-    id: "0",
-    name: "ex: tom12.etched",
-    role: "member",
-  },
-  {
-    id: "1",
-    name: "Benjamin.etched",
-    role: "member",
-  },
-  {
-    id: "2",
-    name: "Sophia5678.etched",
-    role: "member",
-  },
-  {
-    id: "3",
-    name: "Olivia3456.etched",
-    role: "member",
-  },
-];
 
 const roleData = ["read only", "read & write"];
 
@@ -84,6 +62,31 @@ export const EditTeamDialog = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
+  const { wallets } = useSearchGQL(".");
+
+  const users = wallets.map(({ id, etchENS }: Partial<Wallet | any>) => {
+    const idx = etchENS[0];
+    return { ...idx, id };
+  });
+
+  const editUserRole = ({ id, item }: { id: string; item: string }) => {
+    const user = teamMembers?.find((profile: any) => profile.id === id);
+    if (user) user.role = item;
+    setTeamMembers([...teamMembers]);
+  };
+
+  const removeAccess = (id: string) => {
+    const members = teamMembers?.filter((profile: any) => profile.id !== id);
+    setTeamMembers(members);
+  };
+
+  const chooseOption = (idx: any) => {
+    if (idx > 0) {
+      setDeleteTeam(true);
+    } else {
+      setTransferOwnership(true);
+    }
+  };
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -105,26 +108,15 @@ export const EditTeamDialog = ({
     }
   };
 
-  const editUserRole = ({ id, item }: { id: string; item: string }) => {
-    const user = teamMembers?.find((profile: any) => profile.id === id);
-    if (user) user.role = item;
-    setTeamMembers([...teamMembers]);
+  const props = {
+    teamName,
+    setDeleteTeam,
+    transferOwnership,
+    setOpenEditTeamModal,
+    setTransferOwnership,
+    setTeamOrganisation,
+    organisations,
   };
-
-  const removeAccess = (id: string) => {
-    const members = teamMembers?.filter((profile: any) => profile.id !== id);
-    setTeamMembers(members);
-  };
-
-  const chooseOption = (idx: any) => {
-    if (idx > 0) {
-      setDeleteTeam(true);
-    } else {
-      setTransferOwnership(true);
-    }
-  };
-
-  const props = { teamName, setDeleteTeam, transferOwnership, setOpenEditTeamModal, setTransferOwnership, setTeamOrganisation, organisations };
 
   return (
     <>
@@ -342,7 +334,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
   );
 };
 
-const TransferOwnershipDialog: React.FC<confirm> = ({ setTransferOwnership, setTeamOrganisation,organisations }) => {
+const TransferOwnershipDialog: React.FC<confirm> = ({ setTransferOwnership, setTeamOrganisation, organisations }) => {
   const [owner, setOwner] = useState("individual");
   const [ownerData, setOwnerData] = useState<user[]>([]);
 
