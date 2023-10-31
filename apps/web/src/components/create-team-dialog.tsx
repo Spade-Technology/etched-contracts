@@ -72,12 +72,14 @@ export const CreateTeamDialog = ({
   setOpenTeamModal,
   organisations,
   fetching,
+  users,
 }: {
   children?: React.ReactNode;
   openTeamModal?: boolean | any;
   setOpenTeamModal?: any;
   organisations?: Partial<Organisation>[];
   fetching?: boolean | any;
+  users: user[];
 }) => {
   const [teamName, setTeamName] = useState("");
   const [roleData, setRoleData] = useState(["read only", "read & write"]);
@@ -96,18 +98,6 @@ export const CreateTeamDialog = ({
   });
 
   const onSubmit = async (data: FormData) => {
-    // if (teamMembers.length > 0 && data.teamOrganisation && teamName) {
-    //   setTeamData({ teamOrganisation: data.teamOrganisation, teamName, teamMembers });
-
-    // } else {
-    //   toast({
-    //     title: "Something went wrong",
-    //     description: "Please try again",
-    //     variant: "destructive",
-    //   });
-
-    // }
-
     const members: string[] = teamMembers.map(({ name }) => name);
     console.log(members);
 

@@ -14,6 +14,8 @@ import { InputDropdownTwo } from "./ui/input-dropdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Icons } from "./ui/icons";
 import { GoodIcon } from "./icons/good";
+import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
+import { Etch, Wallet } from "@/gql/graphql";
 
 const formSchema = z.object({
   orgName: z.string(),
@@ -30,37 +32,16 @@ type user = {
 
 export const roleData = ["member", "admin"];
 
-export const users: user[] = [
-  {
-    id: "0",
-    name: "ex: tom12.etched",
-    role: "member",
-  },
-  {
-    id: "1",
-    name: "Benjamin.etched",
-    role: "admin",
-  },
-  {
-    id: "2",
-    name: "Sophia5678.etched",
-    role: "member",
-  },
-  {
-    id: "3",
-    name: "Olivia3456.etched",
-    role: "admin",
-  },
-];
-
 export const CreateOrgDialog = ({
   children,
   openOrgModal,
   setOpenOrgModal,
+  users,
 }: {
   children?: React.ReactNode;
   openOrgModal?: boolean;
   setOpenOrgModal?: any;
+  users: user[];
 }) => {
   const [orgName, setOrgName] = useState("");
   const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
