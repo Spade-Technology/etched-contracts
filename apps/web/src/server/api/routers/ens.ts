@@ -39,7 +39,11 @@ export const ensRouter = createTRPCRouter({
         })
         .catch(formatError);
 
-      if (typeof tx === "object" && "error" in tx) throw new TRPCError({ code: "BAD_REQUEST", message: tx.message });
+      if (typeof tx === "object" && "error" in tx) {
+        console.error("Error tx: ", tx);
+        console.error("Error _error: ", tx._error);
+        throw new TRPCError({ code: "BAD_REQUEST", message: tx.message });
+      }
 
       await waitForTransaction({
         hash: tx,

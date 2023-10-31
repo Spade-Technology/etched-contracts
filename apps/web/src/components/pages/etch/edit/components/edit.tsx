@@ -18,6 +18,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { api } from "@/utils/api";
+import { Textarea } from "@/components/ui/textarea";
 dayjs.extend(relativeTime);
 
 type EditProps = {
@@ -29,6 +31,25 @@ type EditProps = {
 const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
   const [owner, setOwner] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [documentName, setDocumentName] = useState(etch?.documentName || "");
+  const [description, setDescription] = useState(etch?.description || "");
+  const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.updateMetadata.useMutation();
+
+  const saveHandler = async () => {
+    try {
+      await updateAsync({
+        etchId: etch?.tokenId.toString(),
+        fileName: documentName || etch?.documentName || "",
+        description: description || etch?.description || "",
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    setEdit(false);
+  };
 
   return (
     <div
@@ -46,7 +67,12 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
           {edit ? (
             <div className=" w-full">
               <div>{etch?.documentName}</div>
-              <Input defaultValue={etch?.documentName} className="w-full bg-[#F3F5F5]" />
+              <Input
+                defaultValue={etch?.documentName}
+                onChange={(e) => setDocumentName(e.target.value)}
+                disabled={updateLoading}
+                className="w-full bg-[#F3F5F5]"
+              />
             </div>
           ) : (
             <div className="flex justify-between">
@@ -132,16 +158,14 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
         <div>
           <div className="pt-5 text-base">Description </div>
           {edit ? (
-            <textarea
-              className="h-44 w-full rounded-[6px] border-[1px] border-[#6D6D6D] p-4 outline-none"
-              placeholder="Lorem ipsum dolor sit amet consectetur. Eu morbi bibendum purus lectus et tellus sed enim. Elit commodo laoreet molestie consectetur lectus ultricies enim elit. Massa lacus porttitor at ultrices.tur lectus ultricies ornare et loreitor at "
+            <Textarea
+              defaultValue={etch?.description || ""}
+              onChange={(e) => setDescription(e.target.value)}
+              disabled={updateLoading}
+              className="mb-5 w-full bg-[#F3F5F5]"
             />
           ) : (
-            <div className="max-w-[400px] pt-1 text-base font-normal text-[#E2E2E2]">
-              Lorem ipsum dolor sit amet consectetur. Eu morbi bibendum purus lectus et tellus sed enim. Vulputate aenean massa
-              ultrices arcu pharetra ornare et lorem. Elit commodo laoreet molestie consectetur lectus ultricies enim elit. Massa
-              lacus porttitor at ultrices.tur lectus ultricies ornare et loreitor at.
-            </div>
+            <div className="mb-5 max-w-[400px] pt-1 text-base font-normal text-[#E2E2E2]">{etch?.description}</div>
           )}
         </div>
 
@@ -167,7 +191,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
                 Cancel
               </Button>
 
-              <Button className="rounded-lg">Save Changes</Button>
+              <Button className="rounded-lg" onClick={saveHandler} isLoading={updateLoading}>
+                Save Changes
+              </Button>
             </div>
           </div>
         )}
