@@ -1,20 +1,20 @@
 {
   "optimism-goerli": {
     "Etch": {
-      "address": "0x4A0A1AFC7b0eCc5A11ee462940A9CDd34484157A",
-      "startBlock": 11575796
+      "address": "0x067FDD5F5f91C1Ad976c71660a779FDD2FAFf1bf",
+      "startBlock": 11752461
     },
     "Team": {
-      "address": "0x3fA36c6D77A6034eF448ba819c54D9E9f1F0091e",
-      "startBlock": 11575796
+      "address": "0x46a90186DFE310C4891879Acf031cf23AA1AC809",
+      "startBlock": 11752461
     },
     "Organisation": {
-      "address": "0xd68fa46952bC848f8675a89383c5B074e1E22E40",
-      "startBlock": 11575796
+      "address": "0x492AF97C1A3bc2A010cf88fD926116F94878c382",
+      "startBlock": 11752461
     },
     "EtchENS": {
-      "address": "0x36232aC9D83941A888F46d528e7C5922AA604087",
-      "startBlock": 11575796
+      "address": "0x99a81376C3176AD80A0ADE114c894Fa6d52b75ff",
+      "startBlock": 11752461
     }
   }
 }
