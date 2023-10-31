@@ -25,7 +25,6 @@ export const teamRouter = createTRPCRouter({
           session: { address },
         },
       }) => {
-        // we need to send two calls, one to create the etch and get the etch id, and then another to set Metadata
         let calldata;
         if (owningOrg === "None")
           calldata = encodeFunctionData({
@@ -39,6 +38,52 @@ export const teamRouter = createTRPCRouter({
             functionName: "createTeamForOrganisation",
             args: [owningOrg, teamName, teamMembers],
           });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Team,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
+
+  renameTeam: protectedProcedure
+    .input(
+      z.object({
+        teamId: z.number(),
+        teamName: z.string(),
+        owningOrg: z.string(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { teamName, teamId, owningOrg, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: TeamABI,
+          functionName: "renameTeam",
+          args: [teamId, teamName],
+        });
 
         const tx = await walletClient.writeContract({
           address: contracts.Team,
