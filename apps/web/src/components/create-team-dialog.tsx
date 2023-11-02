@@ -9,7 +9,6 @@ import { Button } from "./ui/button";
 import { SelectValue } from "@radix-ui/react-select";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger } from "./ui/select";
 import { toast } from "./ui/use-toast";
-import { Organisation } from "@/gql/graphql";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { UsersInputDropdown } from "./ui/input-dropdown";
@@ -18,6 +17,8 @@ import { Icons } from "./ui/icons";
 import { GoodIcon } from "./icons/good";
 import { teamUser } from "@/types";
 import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
 
 const formSchema = z.object({
   teamName: z.string(),
@@ -38,15 +39,16 @@ const roleData = ["read", "read & write"];
 export const CreateTeamDialog = ({
   openTeamModal,
   setOpenTeamModal,
-  organisations,
 }: {
   openTeamModal?: boolean | any;
   setOpenTeamModal?: any;
-  organisations?: Partial<Organisation>[];
 }) => {
   const [teamName, setTeamName] = useState("");
+  const [open, setOpen] = useState(false);
   const [teamMembers, setTeamMembers] = useState<teamUser[]>([]);
   const { mutateAsync, isLoading } = api.team.createTeam.useMutation();
+  const loggedInAddress = useLoggedInAddress();
+  const { organisations } = useGetOrgsFromUser(loggedInAddress.toLowerCase());
 
   const [creationDone, setCreationDone] = useState(false);
 
@@ -105,15 +107,16 @@ export const CreateTeamDialog = ({
 
   useEffect(() => {
     document.addEventListener("create-team", () => {
-      setOpenTeamModal(true);
+      setOpen(true);
     });
   }, []);
 
   return (
     <Dialog
-      open={openTeamModal}
+      open={openTeamModal || open}
       onOpenChange={() => {
-        setOpenTeamModal(!openTeamModal);
+        if (setOpenTeamModal) setOpenTeamModal(!openTeamModal);
+        setOpen(false);
         setCreationDone(false);
       }}
     >
