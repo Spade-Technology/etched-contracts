@@ -34,6 +34,8 @@ export const roleData = ["member", "admin"];
 export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModal?: boolean; setOpenOrgModal?: any }) => {
   const [orgName, setOrgName] = useState("");
   const [orgMembers, setOrgMembers] = useState<orgUser[]>([]);
+  const [open, setOpen] = useState(false);
+
   const { mutateAsync, isLoading } = api.org.createOrg.useMutation();
 
   const [creationDone, setCreationDone] = useState(false);
@@ -88,15 +90,16 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
 
   useEffect(() => {
     document.addEventListener("create-org", () => {
-      setOpenOrgModal(true);
+      setOpen(true);
     });
   }, []);
 
   return (
     <Dialog
-      open={openOrgModal}
+      open={openOrgModal || open}
       onOpenChange={() => {
-        setOpenOrgModal(!openOrgModal);
+        if (setOpenOrgModal) setOpenOrgModal(!openOrgModal);
+        setOpen(false);
         setCreationDone(false);
       }}
     >
