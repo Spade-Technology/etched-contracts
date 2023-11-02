@@ -85,7 +85,7 @@ export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);
   const [openTeamModal, setOpenTeamModal] = useState(false);
   const [accordion, setAccordion] = useState("");
-  const { wallets } = useSearchGQL(".");
+  const { wallets } = useSearchGQL("");
   const loggedInAddress = useLoggedInAddress();
   const [{ data, fetching }, refetch] = useQuery({
     query: ORGANISATIONS_QUERY,
