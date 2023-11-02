@@ -179,7 +179,11 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
 
                   <footer className="mt-10 flex items-center justify-end gap-5">
                     <div
-                      onClick={() => setOpenOrgModal(false)}
+                      onClick={() => {
+                        if (setOpenOrgModal) setOpenOrgModal(!openOrgModal);
+                        setOpen(false);
+                        setCreationDone(false);
+                      }}
                       className="cursor-pointer text-sm font-semibold hover:text-foreground"
                     >
                       Cancel

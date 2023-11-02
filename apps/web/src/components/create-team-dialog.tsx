@@ -107,7 +107,7 @@ export const CreateTeamDialog = ({
 
   useEffect(() => {
     document.addEventListener("create-team", () => {
-      setOpen(true);
+      if (!open) setOpen(true);
     });
   }, []);
 
@@ -230,7 +230,11 @@ export const CreateTeamDialog = ({
 
                   <footer className="mt-10 flex items-center justify-end gap-5">
                     <div
-                      onClick={() => setOpenTeamModal(false)}
+                      onClick={() => {
+                        if (setOpenTeamModal) setOpenTeamModal(!openTeamModal);
+                        setOpen(false);
+                        setCreationDone(false);
+                      }}
                       className="cursor-pointer text-sm font-semibold hover:text-foreground"
                     >
                       Cancel
