@@ -3,20 +3,8 @@ import { TeamPermission } from "@/gql/graphql";
 import { teamUser } from "@/types";
 import { useEffect } from "react";
 import { useQuery } from "urql";
+import { removeDuplicatesByField } from "../common";
 
-function removeDuplicatesById(arr: any[]): any[] {
-  const uniqueIds = new Set<number>();
-  const uniqueObjects: any[] = [];
-
-  for (const obj of arr) {
-    if (!uniqueIds.has(obj.id)) {
-      uniqueIds.add(obj.id);
-      uniqueObjects.push(obj);
-    }
-  }
-
-  return uniqueObjects;
-}
 const userPermissions: {
   0: string;
   1: string;
@@ -99,5 +87,5 @@ export const useGetTeamsFromUser = (userId?: string) => {
     .map((team) => team.ownership.organisation?.name ?? team.ownership.organisation?.orgId ?? "Sole Team")
     .filter((org, index, self) => self.indexOf(org) === index);
 
-  return { teams: removeDuplicatesById(teams), uniqueOrgs: Organisations, isLoading: fetching, error, refetch };
+  return { teams: removeDuplicatesByField(teams, "id"), uniqueOrgs: Organisations, isLoading: fetching, error, refetch };
 };
