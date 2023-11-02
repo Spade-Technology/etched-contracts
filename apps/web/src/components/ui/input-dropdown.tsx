@@ -13,9 +13,10 @@ import { Button } from "./button";
 import ProfileCard from "./profile-card";
 import { SearchInput } from "./search-input";
 import { cn } from "@/lib/utils";
-import { string } from "zod";
 import { GoodIcon } from "../icons/good";
-import { user } from "../create-team-dialog";
+import { useGetUsers } from "@/utils/hooks/useGetUsers";
+import { orgUser } from "@/types";
+import { Organisation } from "@/gql/graphql";
 
 type InputDropdownProps = {
   data: {
@@ -86,28 +87,101 @@ const InputDropdown = ({ data, selectedItems, setSelectedItems }: InputDropdownP
   );
 };
 
-type InputDropdownTwoProps = {
-  data: {
-    id: string;
-    name: string;
-    role: string;
-  }[];
-  type: string;
+type UsersInputDropdownProps = {
+  type?: string;
   placeholder: string;
   roleData: string[];
   selectedItems: any;
   setSelectedItems: Dispatch<SetStateAction<any[]>>;
 };
 
-const InputDropdownTwo = ({ data, roleData, type, placeholder, selectedItems, setSelectedItems }: InputDropdownTwoProps) => {
+type OrgInputDropdownProps = {
+  type?: string;
+  placeholder: string;
+  selectedItems: any;
+  setSelectedItems: Dispatch<SetStateAction<any[]>>;
+  orgs: Organisation[];
+};
+
+const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, orgs }: OrgInputDropdownProps) => {
+  const ref: React.MutableRefObject<HTMLElement> | any = useRef();
+  const [input, setInput] = useState({ value: "", placeholder });
+  const [openDropdown, setOpenDropdown] = useState(false);
+
+  const addData = ({ id, name, orgId }: Organisation) => {
+    setOpenDropdown(false);
+    const found = selectedItems.find((selected: any) => selected.id === id);
+    if (!found) {
+      if (type === "singleSelect") {
+        setSelectedItems([{ id, name, orgId }]);
+      } else {
+        setSelectedItems([...selectedItems, { id, name, orgId }]);
+      }
+      setInput({ ...input, placeholder: name || "" });
+    }
+  };
+
+  // CLOSE DROPDOWN FUNCTION
+  useEffect(() => {
+    const closeModal = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setOpenDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", closeModal);
+  }, [ref]);
+
+  return (
+    <DropdownMenu>
+      <div className="relative flex justify-between rounded-lg border-[1px] border-[#6D6D6D]">
+        <main ref={ref}>
+          <SearchInput
+            type="text"
+            placeholder={input.placeholder}
+            value={input.value}
+            onClick={() => setOpenDropdown(true)}
+            onChange={(e) => setInput({ ...input, value: e.target.value })}
+            className="border-none p-3 outline-none"
+          />
+          <div
+            className={`${openDropdown && orgs.length > 0 ? "" : "-z-50 hidden opacity-0"} ${cn(
+              "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
+            )}`}
+          >
+            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+              {orgs.map(({ id, name, orgId }) => {
+                const isSelected = selectedItems.find((item: any) => item.name === name);
+                return (
+                  <div
+                    key={id}
+                    onClick={() => addData({ id, name, orgId } as Organisation)}
+                    className={`${
+                      isSelected ? "pointer-events-none" : ""
+                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
+                  >
+                    {name}
+                    <div className="flex items-center gap-1">
+                      <GoodIcon className={`${isSelected ? "" : "invisible"}`} />
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          </div>
+        </main>
+      </div>
+    </DropdownMenu>
+  );
+};
+
+const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSelectedItems }: UsersInputDropdownProps) => {
   const ref: React.MutableRefObject<HTMLElement> | any = useRef();
   const [input, setInput] = useState({ value: "", placeholder });
   const [role, setRole] = useState<string | any>(roleData[0]);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const { wallets: users } = useGetUsers(input?.value || "");
 
-  const users = data.filter(({ name }) => name.toLocaleLowerCase().includes(input.value.toLocaleLowerCase()));
-
-  const addData = ({ id, name, role }: user) => {
+  const addData = ({ id, name, role }: orgUser) => {
     setOpenDropdown(false);
     const found = selectedItems.find((selected: any) => selected.id === id);
     if (!found) {
@@ -153,14 +227,13 @@ const InputDropdownTwo = ({ data, roleData, type, placeholder, selectedItems, se
                 return (
                   <div
                     key={id}
-                    onClick={() => addData({ id, name, role })}
+                    onClick={() => addData({ id, name, role } as orgUser)}
                     className={`${
                       isSelected ? "pointer-events-none" : ""
                     } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
                   >
                     {name}
                     <div className="flex items-center gap-1">
-                      {/* {+id * name.length} */}
                       <GoodIcon className={`${isSelected ? "" : "invisible"}`} />
                     </div>
                   </div>
@@ -201,4 +274,4 @@ const InputDropdownTwo = ({ data, roleData, type, placeholder, selectedItems, se
 };
 
 export default InputDropdown;
-export { InputDropdownTwo };
+export { UsersInputDropdown, OrgInputDropdown };

@@ -6,9 +6,9 @@ dataSources:
     name: Etch
     network: base-testnet
     source:
-      address: "0x067FDD5F5f91C1Ad976c71660a779FDD2FAFf1bf"
+      address: "0xc7cAd7ea8c70c86deBdef7f6CfD3fF9e8D27741e"
       abi: Etch
-      startBlock: 11752461
+      startBlock: 11844031
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -52,9 +52,9 @@ dataSources:
     name: Team
     network: base-testnet
     source:
-      address: "0x46a90186DFE310C4891879Acf031cf23AA1AC809"
+      address: "0x8Da5a6BE480fc960e50F7eefee0d5B6588b4E6fc"
       abi: Team
-      startBlock: 11752461
+      startBlock: 11844031
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -93,9 +93,9 @@ dataSources:
     name: Organisation
     network: base-testnet
     source:
-      address: "0x492AF97C1A3bc2A010cf88fD926116F94878c382"
+      address: "0xB0a930e475152d1d5A8Bc296b0b69E8E90699e8f"
       abi: Organisation
-      startBlock: 11752461
+      startBlock: 11844031
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -131,9 +131,9 @@ dataSources:
     name: EtchENS
     network: base-testnet
     source:
-      address: "0x99a81376C3176AD80A0ADE114c894Fa6d52b75ff"
+      address: "0x3E989BF94f32605d72142de7F16613E058FdBf82"
       abi: EtchENS
-      startBlock: 11752461
+      startBlock: 11844031
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

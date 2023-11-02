@@ -10,43 +10,33 @@ import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
-import { InputDropdownTwo } from "./ui/input-dropdown";
+import { UsersInputDropdown } from "./ui/input-dropdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Icons } from "./ui/icons";
 import { GoodIcon } from "./icons/good";
-import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
-import { Etch, Wallet } from "@/gql/graphql";
+import { orgUser } from "@/types";
 
 const formSchema = z.object({
   orgName: z.string(),
-  orgMembers: z.array(z.string()),
+  orgMembers: z.array(
+    z.object({
+      id: z.string(), // wallet address
+      name: z.string(),
+      role: z.enum(["none", "member", "admin"]),
+    })
+  ),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-type user = {
-  id?: string;
-  name?: string;
-  role?: string;
-};
-
 export const roleData = ["member", "admin"];
 
-export const CreateOrgDialog = ({
-  children,
-  openOrgModal,
-  setOpenOrgModal,
-  users,
-}: {
-  children?: React.ReactNode;
-  openOrgModal?: boolean;
-  setOpenOrgModal?: any;
-  users: user[];
-}) => {
+export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModal?: boolean; setOpenOrgModal?: any }) => {
   const [orgName, setOrgName] = useState("");
-  const [orgMembers, setOrgMembers] = useState<user[] | any>([]);
-  const [orgData, setOrgData] = useState<FormData | any>({});
-  const { data, mutateAsync, isLoading } = api.org.createOrg.useMutation();
+  const [orgMembers, setOrgMembers] = useState<orgUser[]>([]);
+  const { mutateAsync, isLoading } = api.org.createOrg.useMutation();
+
+  const [creationDone, setCreationDone] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -61,7 +51,7 @@ export const CreateOrgDialog = ({
     try {
       await mutateAsync({
         orgName: orgName,
-        orgMembers: [],
+        orgMembers,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
@@ -70,11 +60,13 @@ export const CreateOrgDialog = ({
         description: "successfull",
         variant: "success",
       });
-      console.log(data);
 
-      // setOpenOrgModal(false);
+      // cleanup after done
+      setOrgMembers([]);
+      setOrgName("");
+      setCreationDone(true);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       toast({
         title: "Something went wrong",
         description: "Please try again",
@@ -83,7 +75,7 @@ export const CreateOrgDialog = ({
     }
   };
 
-  const editUserRole = ({ id, item }: { id: string; item: string }) => {
+  const editUserRole = ({ id, item }: { id: string; item: "none" | "member" | "admin" }) => {
     const user = orgMembers?.find((profile: any) => profile.id === id);
     if (user) user.role = item;
     setOrgMembers([...orgMembers]);
@@ -101,12 +93,16 @@ export const CreateOrgDialog = ({
   }, []);
 
   return (
-    <Dialog open={openOrgModal} onOpenChange={() => setOpenOrgModal(!openOrgModal)}>
+    <Dialog
+      open={openOrgModal}
+      onOpenChange={() => {
+        setOpenOrgModal(!openOrgModal);
+        setCreationDone(false);
+      }}
+    >
       <DialogContent className={"max-w-[440px]"}>
-        {!orgData.orgName ? (
-          // INVITE USER FORM
+        {!creationDone ? (
           <>
-            {" "}
             <DialogTitle className="text-base text-primary">New Organization</DialogTitle>
             <DialogDescription>
               <Form {...form}>
@@ -121,9 +117,8 @@ export const CreateOrgDialog = ({
                     onChange={(e) => setOrgName(e.target.value)}
                   />
                   <Label className="font-semibold">Invite users</Label>
-                  <InputDropdownTwo
+                  <UsersInputDropdown
                     placeholder="ex: astrew.etched"
-                    data={users}
                     roleData={roleData}
                     selectedItems={orgMembers}
                     setSelectedItems={setOrgMembers}
@@ -156,6 +151,7 @@ export const CreateOrgDialog = ({
                                     return (
                                       <DropdownMenuItem
                                         key={idx}
+                                        // @ts-ignore
                                         onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeAccess(id))}
                                         className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
                                           idx < 2
@@ -200,24 +196,25 @@ export const CreateOrgDialog = ({
             </DialogDescription>
           </>
         ) : (
-          // INVITED USERS
           <>
             <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
-              New Organization {orgData.orgName} has been created! 🎉
+              New Organization {orgName} has been created! 🎉
             </DialogTitle>
-            <DialogDescription>
-              <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
-                <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
-                {orgData?.orgMembers?.map(({ id, name, role }: user) => {
-                  return (
-                    <section key={id} className="flex items-center justify-between ">
-                      <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
-                      <div className="">{role}</div>
-                    </section>
-                  );
-                })}
-              </div>
-            </DialogDescription>
+            {!!orgMembers.length && (
+              <DialogDescription>
+                <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
+                  <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
+                  {orgMembers?.map(({ id, name, role }: orgUser) => {
+                    return (
+                      <section key={id} className="flex items-center justify-between ">
+                        <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
+                        <div className="">{role}</div>
+                      </section>
+                    );
+                  })}
+                </div>
+              </DialogDescription>
+            )}
           </>
         )}
       </DialogContent>

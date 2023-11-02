@@ -1,29 +1,17 @@
-import { CreateOrgDialog, users } from "@/components/create-org-dialog";
+import { CreateOrgDialog } from "@/components/create-org-dialog";
 import { CreateTeamDialog } from "@/components/create-team-dialog";
 import { EditButton } from "@/components/ui/edit-button";
 import { Icons } from "@/components/ui/icons";
 import React, { useEffect, useRef, useState } from "react";
-import { users as teamMembers } from "./../../create-team-dialog";
-import { EditOrgDialog, user } from "@/components/edit-org-dialog";
+import { EditOrgDialog } from "@/components/edit-org-dialog";
 import { EditTeamDialog } from "@/components/edit-team-dialog";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { Organisation, Wallet } from "@/gql/graphql";
-import { graphql } from "@/gql";
-import { useQuery } from "urql";
-import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
-import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
+import { Organisation } from "@/gql/graphql";
 
-const ORGANISATIONS_QUERY = graphql(/* GraphQL */ `
-  query Organisations($address: String!) {
-    organisations(
-      where: { or: [{ ownership_: { owner: $address } }, { permissions_: { wallet: $address, permissionLevel_gt: 0 } }] }
-    ) {
-      orgId
-      id
-      name
-    }
-  }
-`);
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useGetMembersFromOrg } from "@/utils/hooks/useGetMembersFromOrg";
+import { teamUser } from "@/types";
+import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
 
 export const SidebarDialog = () => {
   const [activeTab, setActiveTab] = useState<string>("Manage");
@@ -58,67 +46,22 @@ export const SidebarDialog = () => {
   );
 };
 
-const org_members: user[] = [
-  {
-    id: "0",
-    name: "ex: tom12.etched",
-    role: "admin",
-  },
-  {
-    id: "1",
-    name: "Benjamin.etched",
-    role: "member",
-  },
-  {
-    id: "2",
-    name: "Sophia5678.etched",
-    role: "admin",
-  },
-  {
-    id: "3",
-    name: "Olivia3456.etched",
-    role: "Read & Write",
-  },
-];
-
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);
   const [openTeamModal, setOpenTeamModal] = useState(false);
   const [accordion, setAccordion] = useState("");
-  const { wallets } = useSearchGQL(".");
   const loggedInAddress = useLoggedInAddress();
-  const [{ data, fetching }, refetch] = useQuery({
-    query: ORGANISATIONS_QUERY,
-    variables: { address: loggedInAddress.toLowerCase() },
-  });
-  const organisations = data ? data.organisations : [];
+  const { organisations } = useGetOrgsFromUser(loggedInAddress.toLowerCase());
 
-  const { isLoading, teams } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
+  const { teams } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
+
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
-
-  const users = wallets.map(({ id, etchENS }: Partial<Wallet | any>) => {
-    const idx = etchENS[0];
-    return { ...idx, id };
-  });
-
-  const props = {
-    accordion,
-    setAccordion,
-    openOrgModal,
-    setOpenOrgModal,
-    openTeamModal,
-    setOpenTeamModal,
-    organisations,
-    fetching,
-    users,
-    org_members,
-  };
 
   return (
     <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-5 lg:pl-[60px]">
       {/*------------- Modals & More -------------*/}
-      <CreateTeamDialog {...props} />
-      <CreateOrgDialog {...props} />
+      <CreateTeamDialog openTeamModal={openTeamModal} setOpenTeamModal={setOpenTeamModal} organisations={organisations} />
+      <CreateOrgDialog openOrgModal={openOrgModal} setOpenOrgModal={setOpenOrgModal} />
 
       <header className="flex gap-5">
         {buttons.map(({ name }, idx) => {
@@ -134,9 +77,17 @@ export const ManageDialog = () => {
         })}
       </header>
 
-      {organisations?.map(({ id, orgId, name }, idx) => {
-        const team = teams?.filter(({ ownership }) => ownership.organisation.name === name);
-        const prop = { ...props, id, orgId, name, date: "Created on 12th Oct. 2023, 12:30:14 UTC", members: org_members, team };
+      {organisations?.map(({ id, orgId, name, createdAt }) => {
+        const prop = {
+          id,
+          orgId,
+          name,
+          date: new Date(+createdAt * 1000).toDateString(),
+          teams: teams?.filter(({ ownership }) => ownership?.organisation?.name === name),
+          accordion,
+          setAccordion,
+          organisations,
+        };
         return <OrgDialog {...prop} />;
       })}
     </article>
@@ -148,28 +99,29 @@ const OrgDialog = ({
   name,
   orgId,
   date,
-  members,
-  team,
+  teams,
   accordion,
   setAccordion,
   organisations,
 }: {
   id: string;
   orgId: string;
-  name: string;
+  name?: string | null | undefined;
   date: string;
-  members: user[];
-  team: any[];
+  teams: any[];
   accordion: string;
   setAccordion: any;
-  setOpenEditOrgModal: React.Dispatch<boolean>;
-  setOpenEditTeamModal: any;
-  organisations: user[];
+  organisations: {
+    orgId: any;
+    id: string;
+    name?: string | null | undefined;
+  }[];
 }) => {
   const [height, setHeight] = useState(0);
   const [openEditOrgModal, setOpenEditOrgModal] = useState(false);
   const [openEditTeamModal, setOpenEditTeamModal] = useState(false);
   const ref = useRef<HTMLInputElement | any>(null);
+  const { members, isLoading } = useGetMembersFromOrg(id);
 
   const openAccordion = () => {
     if (accordion !== name) {
@@ -201,19 +153,18 @@ const OrgDialog = ({
     };
   }, [accordion]);
 
-  const props = {
-    openEditOrgModal,
-    setOpenEditOrgModal,
-    openEditTeamModal,
-    setOpenEditTeamModal,
-    organisations,
-    id,
-    name,
-    orgId,
-    team,
-    members,
-  };
-
+  if (isLoading) {
+    return (
+      <article
+        key={name}
+        className={`h-fit w-full bg-white px-10 shadow-[0px_7.11111px_35.55556px_5.33333px_rgba(0,0,0,0.10)] ${
+          accordion === name ? " pb-10" : ""
+        }`}
+      >
+        Loading...
+      </article>
+    );
+  }
   return (
     <article
       key={name}
@@ -222,7 +173,14 @@ const OrgDialog = ({
       }`}
     >
       {/*------------- Modals & More -------------*/}
-      <EditOrgDialog {...props} />
+      <EditOrgDialog
+        openEditOrgModal={openEditOrgModal}
+        setOpenEditOrgModal={setOpenEditOrgModal}
+        id={id}
+        name={name || ""}
+        orgId={orgId}
+        members={members}
+      />
 
       <header onClick={openAccordion} className="flex h-[105px] cursor-pointer items-center">
         <div className="mr-4 text-xl font-bold capitalize text-foreground">{name}</div>
@@ -253,28 +211,28 @@ const OrgDialog = ({
         </section>
 
         <section className="mt-10 flex flex-col gap-5">
-          {team?.map(
+          {teams?.map(
             ({
               id,
               teamId,
               name,
               ownership,
+              members,
+              createdAt,
             }: {
               id: string;
               name: string;
               teamId: string;
-              date: string;
-              members: user[];
+              createdAt: string;
               ownership: Partial<Organisation>;
+              members: teamUser[];
             }) => {
-              const members = teamMembers;
-              const date = "Created on 12th Oct. 2023, 12:30:14 UTC";
               const props = {
                 id,
                 teamId,
                 name,
                 members,
-                date,
+                date: new Date(+createdAt * 1000).toDateString(),
                 setOpenEditTeamModal,
                 openEditTeamModal,
                 organisations,
@@ -303,7 +261,7 @@ const TeamDialog = ({
   id: string;
   teamId: string;
   name: string;
-  members: user[];
+  members: teamUser[];
   date: string;
   ownership: any;
   openEditTeamModal: boolean;
@@ -329,7 +287,6 @@ const TeamDialog = ({
 
       <div className="flex justify-between">
         <div className="text-base font-bold capitalize text-neutral-700">Team: {name}</div>
-        {/* {console.log(teams)} */}
         <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
       </div>
       <section className="flex gap-[53px]">

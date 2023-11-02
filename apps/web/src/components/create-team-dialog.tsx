@@ -4,88 +4,51 @@ import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { useQuery } from "urql";
 import * as z from "zod";
 import { Button } from "./ui/button";
 import { SelectValue } from "@radix-ui/react-select";
-import { graphql } from "@/gql";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger } from "./ui/select";
 import { toast } from "./ui/use-toast";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { Organisation } from "@/gql/graphql";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
-import { InputDropdownTwo } from "./ui/input-dropdown";
+import { UsersInputDropdown } from "./ui/input-dropdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Icons } from "./ui/icons";
 import { GoodIcon } from "./icons/good";
-import { BarIcon } from "./icons/bar";
-import { TransferIcon } from "./icons/transfer";
-import { DeleteIcon } from "./icons/delete";
+import { teamUser } from "@/types";
+import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
 
 const formSchema = z.object({
   teamName: z.string(),
-  teamMembers: z.array(z.string()),
+  teamMembers: z.array(
+    z.object({
+      id: z.string(), // wallet address
+      name: z.string(),
+      role: z.enum(["none", "read", "readWrite"]),
+    })
+  ),
   teamOrganisation: z.string(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-type user = {
-  id: string;
-  name: string;
-  role: string;
-};
-
-type datatype = {
-  teamOrganisation: string;
-  teamName: string;
-  teamMembers: user[];
-};
-
-export const users: user[] = [
-  {
-    id: "0",
-    name: "ex: tom12.etched",
-    role: "read only",
-  },
-  {
-    id: "1",
-    name: "Benjamin.etched",
-    role: "Read & Write",
-  },
-  {
-    id: "2",
-    name: "Sophia5678.etched",
-    role: "read only",
-  },
-  {
-    id: "3",
-    name: "Olivia3456.etched",
-    role: "Read & Write",
-  },
-];
+const roleData = ["read", "read & write"];
 
 export const CreateTeamDialog = ({
-  children,
   openTeamModal,
   setOpenTeamModal,
   organisations,
-  fetching,
-  users,
 }: {
-  children?: React.ReactNode;
   openTeamModal?: boolean | any;
   setOpenTeamModal?: any;
   organisations?: Partial<Organisation>[];
-  fetching?: boolean | any;
-  users: user[];
 }) => {
   const [teamName, setTeamName] = useState("");
-  const [roleData, setRoleData] = useState(["read only", "read & write"]);
-  const [teamMembers, setTeamMembers] = useState<user[]>([]);
-  const [teamData, setTeamData] = useState<datatype | any>({});
+  const [teamMembers, setTeamMembers] = useState<teamUser[]>([]);
   const { mutateAsync, isLoading } = api.team.createTeam.useMutation();
+
+  const [creationDone, setCreationDone] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -98,13 +61,14 @@ export const CreateTeamDialog = ({
   });
 
   const onSubmit = async (data: FormData) => {
-    const members: string[] = teamMembers.map(({ name }) => name);
-    console.log(members);
-
     try {
       await mutateAsync({
         teamName: teamName,
-        teamMembers: [],
+        teamMembers: teamMembers.map(({ id, name, role }) => ({
+          id,
+          name,
+          role: removeAmpersandAndtransformToCamelCase(role),
+        })) as teamUser[],
         owningOrg: data.teamOrganisation,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
@@ -114,7 +78,10 @@ export const CreateTeamDialog = ({
         description: "Your team has been created",
         variant: "success",
       });
-      setOpenTeamModal(false);
+
+      // cleanup after done
+      setTeamName("");
+      setCreationDone(true);
     } catch (e) {
       console.log(e);
       toast({
@@ -125,7 +92,7 @@ export const CreateTeamDialog = ({
     }
   };
 
-  const editUserRole = ({ id, item }: { id: string; item: string }) => {
+  const editUserRole = ({ id, item }: { id: string; item: "none" | "read" | "readWrite" }) => {
     const user = teamMembers?.find((profile: any) => profile.id === id);
     if (user) user.role = item;
     setTeamMembers([...teamMembers]);
@@ -143,153 +110,152 @@ export const CreateTeamDialog = ({
   }, []);
 
   return (
-    <>
-      {/* {console.log(organisations)} */}
-      <Dialog open={openTeamModal} onOpenChange={() => setOpenTeamModal(!openTeamModal)}>
-        <DialogContent className={"max-w-[440px]"}>
-          {!teamData.teamName ? (
-            // INVITE USER FORM
-            <>
-              <DialogTitle className="text-base text-primary">New Team</DialogTitle>
-              <DialogDescription>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <Label className="font-semibold">Select Organization</Label>
-                    <FormField
-                      control={form.control}
-                      name="teamOrganisation"
-                      render={({ field }: { field: FieldValues }) => (
-                        <FormItem className="mb-7">
-                          <FormControl>
-                            {/* {console.log()} */}
-                            <Select {...field} onValueChange={(e: any) => field.onChange(e)}>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectItem value="None">No Organisation</SelectItem>
-                                  <SelectSeparator className="SelectSeparator" />
-                                  {!fetching &&
-                                    organisations?.[0]?.id &&
-                                    organisations.map(
-                                      (org, index) =>
-                                        org.orgId && (
-                                          <div key={index}>
-                                            <SelectItem key={index} value={org.orgId}>
-                                              {org.name ?? org.id}
-                                            </SelectItem>
-                                          </div>
-                                        )
-                                    )}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <Label className="font-semibold">Team Name</Label>
-                    <Input
-                      disabled={isLoading}
-                      id="text"
-                      placeholder="Name your team"
-                      className="col-span-3 mb-7"
-                      value={teamName}
-                      onChange={(e) => setTeamName(e.target.value)}
-                    />
-                    <Label className="font-semibold">Invite users</Label>
-                    <InputDropdownTwo
-                      data={users}
-                      placeholder="ex: astrew.etched"
-                      type={"multiSelect"}
-                      roleData={roleData}
-                      selectedItems={teamMembers}
-                      setSelectedItems={setTeamMembers}
-                    />
+    <Dialog
+      open={openTeamModal}
+      onOpenChange={() => {
+        setOpenTeamModal(!openTeamModal);
+        setCreationDone(false);
+      }}
+    >
+      <DialogContent className={"max-w-[440px]"}>
+        {!creationDone ? (
+          <>
+            <DialogTitle className="text-base text-primary">New Team</DialogTitle>
+            <DialogDescription>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <Label className="font-semibold">Select Organization</Label>
+                  <FormField
+                    control={form.control}
+                    name="teamOrganisation"
+                    render={({ field }: { field: FieldValues }) => (
+                      <FormItem className="mb-7">
+                        <FormControl>
+                          <Select {...field} onValueChange={(e: any) => field.onChange(e)}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="None">No Organisation</SelectItem>
+                                <SelectSeparator className="SelectSeparator" />
+                                {organisations?.map(
+                                  (org, index) =>
+                                    org.orgId && (
+                                      <div key={index}>
+                                        <SelectItem key={index} value={org.orgId}>
+                                          {org.name ?? org.id}
+                                        </SelectItem>
+                                      </div>
+                                    )
+                                )}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Label className="font-semibold">Team Name</Label>
+                  <Input
+                    disabled={isLoading}
+                    id="text"
+                    placeholder="Name your team"
+                    className="col-span-3 mb-7"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                  />
+                  <Label className="font-semibold">Invite users</Label>
+                  <UsersInputDropdown
+                    placeholder="ex: astrew.etched"
+                    type={"multiSelect"}
+                    roleData={roleData}
+                    selectedItems={teamMembers}
+                    setSelectedItems={setTeamMembers}
+                  />
 
-                    <section>
-                      {teamMembers.length > 0 && (
-                        <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
-                          {teamMembers.map(({ id, name, role }) => {
-                            return (
-                              <section className="flex items-center justify-between">
-                                <div
-                                  key={id}
-                                  // onClick={() => inviteUser({ id, name, role })}
-                                  className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
-                                >
-                                  {name}
-                                </div>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant={"ghost"}
-                                      className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
-                                    >
-                                      {role} <Icons.dropdownIcon />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent className=" items-start p-1">
-                                    <DropdownMenuGroup>
-                                      {[...roleData, "Remove access"].map((item, idx) => {
-                                        return (
-                                          <DropdownMenuItem
-                                            key={idx}
-                                            onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeAccess(id))}
-                                            className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
-                                              idx < 2
-                                                ? "hover:bg-accent"
-                                                : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
-                                            }`}
-                                            textValue="Jim Carlos"
-                                          >
-                                            <GoodIcon className={role === item ? "" : "hidden"} />
-                                            {item}
-                                          </DropdownMenuItem>
-                                        );
-                                      })}
-                                    </DropdownMenuGroup>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </section>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </section>
+                  <section>
+                    {teamMembers.length > 0 && (
+                      <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
+                        {teamMembers.map(({ id, name, role }) => {
+                          return (
+                            <section className="flex items-center justify-between">
+                              <div
+                                key={id}
+                                className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                              >
+                                {name}
+                              </div>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant={"ghost"}
+                                    className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
+                                  >
+                                    {role} <Icons.dropdownIcon />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className=" items-start p-1">
+                                  <DropdownMenuGroup>
+                                    {[...roleData, "Remove access"].map((item, idx) => {
+                                      return (
+                                        <DropdownMenuItem
+                                          key={idx}
+                                          // @ts-ignore
+                                          onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeAccess(id))}
+                                          className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
+                                            idx < 2
+                                              ? "hover:bg-accent"
+                                              : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                                          }`}
+                                          textValue="Jim Carlos"
+                                        >
+                                          <GoodIcon className={role === item ? "" : "hidden"} />
+                                          {item}
+                                        </DropdownMenuItem>
+                                      );
+                                    })}
+                                  </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </section>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </section>
 
-                    <footer className="mt-10 flex items-center justify-end gap-5">
-                      <div
-                        onClick={() => setOpenTeamModal(false)}
-                        className="cursor-pointer text-sm font-semibold hover:text-foreground"
+                  <footer className="mt-10 flex items-center justify-end gap-5">
+                    <div
+                      onClick={() => setOpenTeamModal(false)}
+                      className="cursor-pointer text-sm font-semibold hover:text-foreground"
+                    >
+                      Cancel
+                    </div>
+                    <div>
+                      <Button
+                        isLoading={isLoading}
+                        type="submit"
+                        className={`${teamMembers.length < 1 ? " pointer-events-noe cursor-not-allowed" : ""}`}
                       >
-                        Cancel
-                      </div>
-                      <div>
-                        <Button
-                          isLoading={isLoading}
-                          type="submit"
-                          className={`${teamMembers.length < 1 ? " pointer-events-noe cursor-not-allowed" : ""}`}
-                        >
-                          Done
-                        </Button>
-                      </div>
-                    </footer>
-                  </form>
-                </Form>
-              </DialogDescription>
-            </>
-          ) : teamData.teamName ? (
-            // INVITED USERS
-            <>
-              <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
-                New Team {teamData.teamName} has been created! 🎉
-              </DialogTitle>
-              <DialogDescription>
+                        Done
+                      </Button>
+                    </div>
+                  </footer>
+                </form>
+              </Form>
+            </DialogDescription>
+          </>
+        ) : (
+          <>
+            <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
+              New Team {teamName} has been created! 🎉
+            </DialogTitle>
+            <DialogDescription>
+              {!!teamMembers?.length && (
                 <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
                   <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
-                  {teamData?.teamMembers?.map(({ id, name, role }: user) => {
+                  {teamMembers?.map(({ id, name, role }) => {
                     return (
                       <section key={id} className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
@@ -298,13 +264,11 @@ export const CreateTeamDialog = ({
                     );
                   })}
                 </div>
-              </DialogDescription>
-            </>
-          ) : (
-            ""
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
+              )}
+            </DialogDescription>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
