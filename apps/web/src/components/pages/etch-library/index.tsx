@@ -1,5 +1,6 @@
 import { GoodIcon } from "@/components/icons/good";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -190,8 +191,10 @@ export const FilesDialog = ({ files }: props) => {
 };
 
 const File = ({ documentName, id }: Etch) => {
+  const [openMoveModal, setopenMoveModal] = useState(false);
+
   return (
-    <main key={id} className="flex h-[44px] w-full items-center gap-[17px] rounded-lg bg-accent px-[12px]">
+    <main key={id} className="flex h-[44px] w-full items-center gap-[17px] rounded-lg bg-accent px-[12px] !font-body">
       <div className="flex items-center justify-center">
         <FileLockIcon className="h-[18px] w-6" />
       </div>
@@ -209,6 +212,7 @@ const File = ({ documentName, id }: Etch) => {
               return (
                 <DropdownMenuItem
                   key={idx}
+                  onClick={() => (idx < 1 ? setopenMoveModal(true) : console.log(""))}
                   className="cursor-default rounded-sm px-2.5 py-1 text-base font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 >
                   {item}
@@ -218,6 +222,56 @@ const File = ({ documentName, id }: Etch) => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={openMoveModal} onOpenChange={() => setopenMoveModal(!openMoveModal)}>
+        <DialogContent className={"max-w-[382px] font-body"}>
+          <DialogTitle className=" text-xl font-bold  text-neutral-500">Move “client custom z” folder</DialogTitle>
+          <DialogDescription>
+            <div className="flex items-center gap-3">
+              <div className="text-base font-medium text-neutral-500">Current Location:</div>
+              <div className="flex w-fit cursor-pointer items-center gap-2.5 rounded-lg border border-neutral-400 px-3 py-2">
+                <Icons.folder className="IconFolders relative h-[18px] w-6" />
+                <div className="ChipDesigns font-['Quicksand'] text-base font-medium text-neutral-500">Chip designs</div>
+              </div>
+            </div>
+            <div className="bo mt-5 text-base font-semibold text-primary">Choose location</div>
+            <div className="h-[0px] w-[121px] border-2 border-primary"></div>
+            <section className="mt-[14px] flex flex-col gap-3">
+              {[
+                "NexusLogix Solutions",
+                "CrestCore Analytics",
+                "StellarVista Technologies",
+                "Echelon Global Ventures",
+                "Amperex Innovations",
+              ].map((name, idx) => {
+                return (
+                  <div key={idx} className="flex cursor-pointer items-center gap-3">
+                    <Icons.folder className="h-[18px] w-6" />
+                    <div className="text-base font-medium text-neutral-500">{name}</div>
+                  </div>
+                );
+              })}
+            </section>
+            <footer className="mt-10 flex items-center justify-end gap-5">
+              <div
+                onClick={() => setopenMoveModal(false)}
+                className="cursor-pointer text-base font-semibold text-neutral-500 hover:text-foreground"
+              >
+                {" "}
+                Cancel
+              </div>
+              <div>
+                <Button
+                  onClick={() => setopenMoveModal(false)}
+                  className={`bg-neutral-500 text-base text-white shadow-[0px_4px_13px_0px_rgba(0,0,0,0.25)]`}
+                >
+                  Move
+                </Button>
+              </div>
+            </footer>
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 };
