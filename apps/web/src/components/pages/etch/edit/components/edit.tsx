@@ -51,6 +51,8 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
     setEdit(false);
   };
 
+  console.log(etch);
+
   return (
     <div
       className={` ${

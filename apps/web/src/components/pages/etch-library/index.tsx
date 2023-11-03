@@ -9,7 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
+import PropertiesDialog from "@/components/ui/properties";
 import { Etch } from "@/gql/graphql";
+import { useGetUniqueEtch } from "@/utils/hooks/useGetEtchFromUser";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { FileLockIcon } from "lucide-react";
@@ -30,7 +32,7 @@ interface fileTypes {
   id: string;
 }
 
-const options = ["Move to >", "Rename", "Share", "Delete"];
+const options = ["Move to >", "Rename", "Share", "Delete", "Properties"];
 
 export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, setSearchValue }: props) => {
   const [width, setWidth] = useState(0);
@@ -176,13 +178,14 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
 };
 
 export const FilesDialog = ({ files }: props) => {
+  console.log(files);
   return (
     <main className="">
       {/* <FileLockIcon /> */}
       <div className="mb-4 text-xl font-bold text-muted-foreground">Files</div>
       <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
-        {files.map(({ documentName, id }) => {
-          const prop = { documentName, id };
+        {files.map(({ documentName, tokenId }) => {
+          const prop = { documentName, tokenId };
           return <File {...prop} />;
         })}
       </section>
@@ -190,88 +193,102 @@ export const FilesDialog = ({ files }: props) => {
   );
 };
 
-const File = ({ documentName, id }: Etch) => {
-  const [openMoveModal, setopenMoveModal] = useState(false);
+const File = ({ documentName, tokenId }: Etch) => {
+  const [openMoveModal, setOpenMoveModal] = useState(false);
+  const [openPropertiesModal, setOpenPropertiesModal] = useState(false);
+  const { etch, isLoading, error } = useGetUniqueEtch(tokenId);
+  console.log(etch);
+  console.log(error);
+
+  const props = { etch, isLoading, openPropertiesModal, setOpenPropertiesModal };
 
   return (
-    <main key={id} className="flex h-[44px] w-full items-center gap-[17px] rounded-lg bg-accent px-[12px] !font-body">
-      <div className="flex items-center justify-center">
-        <FileLockIcon className="h-[18px] w-6" />
-      </div>
-      <div className="truncate text-base font-medium text-neutral-500">{documentName}</div>
+    <>
+      {/*------------- Modals & More -------------*/}
+      <PropertiesDialog {...props} />
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div className="ml-auto flex items-center justify-center">
-            <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="mr-[194px] w-[209px] px-2.5 py-1.5 shadow-etched-1">
-          <DropdownMenuGroup>
-            {options.map((item, idx) => {
-              return (
-                <DropdownMenuItem
-                  key={idx}
-                  onClick={() => (idx < 1 ? setopenMoveModal(true) : console.log(""))}
-                  className="cursor-default rounded-sm px-2.5 py-1 text-base font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                >
-                  {item}
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <main
+        key={tokenId} onClick={()=> setOpenPropertiesModal(true)}
+        className="flex h-[44px] w-full cursor-pointer items-center gap-[17px] rounded-lg bg-accent px-[12px] !font-body"
+      >
+        <div className="flex items-center justify-center">
+          <FileLockIcon className="h-[18px] w-6" />
+        </div>
+        <div className="w-full truncate text-base font-medium text-neutral-500">{documentName}</div>
 
-      <Dialog open={openMoveModal} onOpenChange={() => setopenMoveModal(!openMoveModal)}>
-        <DialogContent className={"max-w-[382px] font-body"}>
-          <DialogTitle className=" text-xl font-bold  text-neutral-500">Move “client custom z” folder</DialogTitle>
-          <DialogDescription>
-            <div className="flex items-center gap-3">
-              <div className="text-base font-medium text-neutral-500">Current Location:</div>
-              <div className="flex w-fit cursor-pointer items-center gap-2.5 rounded-lg border border-neutral-400 px-3 py-2">
-                <Icons.folder className="IconFolders relative h-[18px] w-6" />
-                <div className="ChipDesigns font-['Quicksand'] text-base font-medium text-neutral-500">Chip designs</div>
-              </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="ml-auto flex items-center justify-center">
+              <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
             </div>
-            <div className="bo mt-5 text-base font-semibold text-primary">Choose location</div>
-            <div className="h-[0px] w-[121px] border-2 border-primary"></div>
-            <section className="mt-[14px] flex flex-col gap-3">
-              {[
-                "NexusLogix Solutions",
-                "CrestCore Analytics",
-                "StellarVista Technologies",
-                "Echelon Global Ventures",
-                "Amperex Innovations",
-              ].map((name, idx) => {
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="mr-[194px] w-[209px] px-2.5 py-1.5 shadow-etched-1">
+            <DropdownMenuGroup>
+              {options.map((item, idx) => {
                 return (
-                  <div key={idx} className="flex cursor-pointer items-center gap-3">
-                    <Icons.folder className="h-[18px] w-6" />
-                    <div className="text-base font-medium text-neutral-500">{name}</div>
-                  </div>
+                  <DropdownMenuItem
+                    key={idx}
+                    onClick={() => (idx < 1 ? setOpenMoveModal(true) : idx > 3 ? setOpenPropertiesModal(true) : console.log(""))}
+                    className="cursor-default rounded-sm px-2.5 py-1 text-base font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  >
+                    {item}
+                  </DropdownMenuItem>
                 );
               })}
-            </section>
-            <footer className="mt-10 flex items-center justify-end gap-5">
-              <div
-                onClick={() => setopenMoveModal(false)}
-                className="cursor-pointer text-base font-semibold text-neutral-500 hover:text-foreground"
-              >
-                {" "}
-                Cancel
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Dialog open={openMoveModal} onOpenChange={() => setOpenMoveModal(!openMoveModal)}>
+          <DialogContent className={"max-w-[382px] font-body"}>
+            <DialogTitle className=" text-xl font-bold  text-neutral-500">Move “client custom z” folder</DialogTitle>
+            <DialogDescription>
+              <div className="flex items-center gap-3">
+                <div className="text-base font-medium text-neutral-500">Current Location:</div>
+                <div className="flex w-fit cursor-pointer items-center gap-2.5 rounded-lg border border-neutral-400 px-3 py-2">
+                  <Icons.folder className="IconFolders relative h-[18px] w-6" />
+                  <div className="ChipDesigns font-['Quicksand'] text-base font-medium text-neutral-500">Chip designs</div>
+                </div>
               </div>
-              <div>
-                <Button
-                  onClick={() => setopenMoveModal(false)}
-                  className={`bg-neutral-500 text-base text-white shadow-[0px_4px_13px_0px_rgba(0,0,0,0.25)]`}
+              <div className="bo mt-5 text-base font-semibold text-primary">Choose location</div>
+              <div className="h-[0px] w-[121px] border-2 border-primary"></div>
+              <section className="mt-[14px] flex flex-col gap-3">
+                {[
+                  "NexusLogix Solutions",
+                  "CrestCore Analytics",
+                  "StellarVista Technologies",
+                  "Echelon Global Ventures",
+                  "Amperex Innovations",
+                ].map((name, idx) => {
+                  return (
+                    <div key={idx} className="flex cursor-pointer items-center gap-3">
+                      <Icons.folder className="h-[18px] w-6" />
+                      <div className="text-base font-medium text-neutral-500">{name}</div>
+                    </div>
+                  );
+                })}
+              </section>
+              <footer className="mt-10 flex items-center justify-end gap-5">
+                <div
+                  onClick={() => setOpenMoveModal(false)}
+                  className="cursor-pointer text-base font-semibold text-neutral-500 hover:text-foreground"
                 >
-                  Move
-                </Button>
-              </div>
-            </footer>
-          </DialogDescription>
-        </DialogContent>
-      </Dialog>
-    </main>
+                  {" "}
+                  Cancel
+                </div>
+                <div>
+                  <Button
+                    onClick={() => setOpenMoveModal(false)}
+                    className={`bg-neutral-500 text-base text-white shadow-[0px_4px_13px_0px_rgba(0,0,0,0.25)]`}
+                  >
+                    Move
+                  </Button>
+                </div>
+              </footer>
+            </DialogDescription>
+          </DialogContent>
+        </Dialog>
+      </main>
+    </>
   );
 };
