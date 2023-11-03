@@ -44,6 +44,7 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
     setSelectedImg(image);
+console.log(image);
 
     return {};
   };
