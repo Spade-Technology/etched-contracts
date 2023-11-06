@@ -208,17 +208,18 @@ const File = ({ documentName, tokenId }: Etch) => {
       <PropertiesDialog {...props} />
 
       <main
-        key={tokenId} onClick={()=> setOpenPropertiesModal(true)}
+        key={tokenId}
+        onClick={() => setOpenPropertiesModal(true)}
         className="flex h-[44px] w-full cursor-pointer items-center gap-[17px] rounded-lg bg-accent px-[12px] !font-body"
       >
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-end">
           <FileLockIcon className="h-[18px] w-6" />
         </div>
         <div className="w-full truncate text-base font-medium text-neutral-500">{documentName}</div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="ml-auto flex items-center justify-center">
+            <div className="ml-auto flex h-full w-7 items-center  justify-center ">
               <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
             </div>
           </DropdownMenuTrigger>
