@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./dialog";
 import { Etch } from "@/gql/graphql";
 import { formatUserFromWallet } from "@/utils/hooks/address";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 interface types {
   etch?: Partial<Etch | any>;
@@ -12,6 +13,8 @@ interface types {
 
 export default function PropertiesDialog({ etch, isLoading, openPropertiesModal, setOpenPropertiesModal }: types) {
   const [activeTab, setActiveTab] = useState("General");
+  const [shake, setShake] = useState(false);
+  const ref: React.MutableRefObject<HTMLElement> | any = useRef();
 
   const data = [
     { name: "Filename:", value: etch?.documentName },
@@ -42,55 +45,86 @@ export default function PropertiesDialog({ etch, isLoading, openPropertiesModal,
     { address: "0x3234...5678", name: "louis.etched", role: "editor", img: "/icons/dashboard/placeholder3.svg" },
   ];
 
+  // CLOSE DROPDOWN USEEFFECT
+  useEffect(() => {
+    const closeModal = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setShake(true);
+      }
+    };
+    document.addEventListener("mousedown", closeModal);
+  }, [ref]);
+
+  useEffect(() => {
+    const count = setTimeout(() => {
+      if (shake) {
+        setShake(false);
+      }
+    }, 900);
+
+    return () => {
+      clearTimeout(count);
+    };
+  }, [shake]);
+
   return (
-    <Dialog open={openPropertiesModal} onOpenChange={() => setOpenPropertiesModal(false)}>
-      <DialogContent className={"max-w-[440px]"}>
-        <DialogTitle className="text-xl text-primary">Properties</DialogTitle>
-        <DialogDescription className="">
-          <header className="flex text-base capitalize text-foreground">
-            <div
-              onClick={() => setActiveTab("General")}
-              className={`cursor-pointer duration-300 ${activeTab === "General" ? "bg-accent" : ""} p-3`}
-            >
-              general
-            </div>
-            <div
-              onClick={() => setActiveTab("Permissions")}
-              className={`cursor-pointer p-3 duration-300 ${activeTab === "General" ? "" : "bg-accent"}`}
-            >
-              permissions
-            </div>
-          </header>
-          {activeTab === "General" && (
-            <section className="flex flex-col bg-accent">
-              {data.map(({ name, value }) => {
-                return (
-                  <main className="grid grid-cols-12 px-3 py-3">
-                    <div className="col-span-4">{name}</div>
-                    <div className="col-span-8 text-base text-foreground">{value}</div>
-                  </main>
-                );
-              })}
-            </section>
-          )}
-          {activeTab === "Permissions" && (
-            <section className="flex flex-col gap-4 bg-accent p-3 pt-4">
-              {permissions.map(({ name, address, role, img }) => {
-                return (
-                  <main className=" flex items-center gap-3">
-                    <img src={img} alt="" className="h-10 w-10" />
-                    <div className="">
-                      <div className="text-lg text-foreground">{name}</div>
-                      <div className="text-base">{address}</div>
-                    </div>
-                    <div className="ml-auto text-lg font-light capitalize text-muted-foreground">{role}</div>
-                  </main>
-                );
-              })}
-            </section>
-          )}
-        </DialogDescription>
-      </DialogContent>
-    </Dialog>
+    // <main open={!openPropertiesModal} onOpenChange={() => setOpenPropertiesModal(false)}>
+    <main
+      ref={ref}
+      className={`${
+        shake ? "shake" : ""
+      } fixed right-10 top-[160px] grid w-[380px] gap-4 border bg-background p-6 shadow-lg duration-200 focus:ring-0 ${
+        openPropertiesModal ? "visible z-50 translate-x-0" : "invisible z-0 translate-x-full"
+      }`}
+    >
+      <header className="text-xl font-semibold leading-none tracking-tight text-primary">File Properties</header>
+      <Cross2Icon onClick={() => setOpenPropertiesModal(false)} className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer" />
+
+      <section className="text-sm font-semibold text-muted-foreground">
+        <header className="flex text-base capitalize text-foreground">
+          <div
+            onClick={() => setActiveTab("General")}
+            className={`cursor-pointer duration-300 ${activeTab === "General" ? "bg-accent" : ""} p-3`}
+          >
+            general
+          </div>
+          <div
+            onClick={() => setActiveTab("Permissions")}
+            className={`cursor-pointer p-3 duration-300 ${activeTab === "General" ? "" : "bg-accent"}`}
+          >
+            permissions
+          </div>
+        </header>
+        {activeTab === "General" && (
+          <section className="flex flex-col bg-accent">
+            {data.map(({ name, value }) => {
+              return (
+                <main className="grid grid-cols-12 px-3 py-3">
+                  <div className="col-span-4">{name}</div>
+                  <div className="col-span-8 text-base text-foreground">{value}</div>
+                </main>
+              );
+            })}
+          </section>
+        )}
+        {activeTab === "Permissions" && (
+          <section className="flex flex-col gap-4 bg-accent p-3 pt-4">
+            {permissions.map(({ name, address, role, img }) => {
+              return (
+                <main className=" flex items-center gap-3">
+                  <img src={img} alt="" className="h-10 w-10" />
+                  <div className="">
+                    <div className="w-[170px] truncate text-lg text-foreground">{name}</div>
+                    <div className="text-base">{address}</div>
+                  </div>
+                  <div className="ml-auto text-lg font-light capitalize text-muted-foreground">{role}</div>
+                </main>
+              );
+            })}
+          </section>
+        )}
+      </section>
+    </main>
+    // </main>
   );
 }
