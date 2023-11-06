@@ -85,6 +85,17 @@ const config: ExtendedHardhatUserConfig = {
         },
       }
       : {}),
+    ganache: {
+      url: "http://127.0.0.1:7545", // replace with your Ganache URL
+      accounts: [
+        '0xfe5612bd957cc56a7c2de5a1ad92c81c2be38b802e39bb054a74c9209195fc3d',
+        '0xd45910fc2cfbecb0a7de45567f37d7dab90c3b7b4d5a1b9c05d510d2667b4bff'
+        // replace with your account private keys
+      ],
+      chainId: 1337, // replace with your chainId
+      blockGasLimit: 300_000_000,
+      allowUnlimitedContractSize: true
+    },
 
     localhost: {
       url: "http://127.0.0.1:8545",
