@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./dialog";
 import { Etch } from "@/gql/graphql";
 import { formatUserFromWallet } from "@/utils/hooks/address";
@@ -67,20 +67,44 @@ export default function PropertiesDialog({ etch, isLoading, openPropertiesModal,
     };
   }, [shake]);
 
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const onMouseDown = useCallback(
+    (event: any) => {
+      const onMouseMove = (event: MouseEvent) => {
+        position.x += event.movementX;
+        position.y += event.movementY;
+        const element = ref.current;
+        if (element) {
+          element.style.transform = `translate(${position.x}px, ${position.y}px)`;
+        }
+        setPosition(position);
+      };
+      const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      };
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    },
+    [position, setPosition, ref]
+  );
+
   return (
     // <main open={!openPropertiesModal} onOpenChange={() => setOpenPropertiesModal(false)}>
     <main
       ref={ref}
+      onMouseDown={onMouseDown}
       className={`${
         shake ? "shake" : ""
-      } fixed right-10 top-[160px] grid w-[380px] gap-4 border bg-background p-6 shadow-lg duration-200 focus:ring-0 ${
+      } fixed right-10 top-[160px] grid w-[380px] cursor-grabbing gap-4 border bg-background p-6 shadow-2xl duration-200 focus:ring-0 ${
         openPropertiesModal ? "visible z-50 translate-x-0" : "invisible z-0 translate-x-full"
       }`}
     >
       <header className="text-xl font-semibold leading-none tracking-tight text-primary">File Properties</header>
       <Cross2Icon onClick={() => setOpenPropertiesModal(false)} className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer" />
 
-      <section className="text-sm font-semibold text-muted-foreground">
+      <section className="cursor-default text-sm font-semibold text-muted-foreground">
         <header className="flex text-base capitalize text-foreground">
           <div
             onClick={() => setActiveTab("General")}
