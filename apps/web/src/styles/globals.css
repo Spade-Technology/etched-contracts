@@ -4,6 +4,15 @@
 
 @import url("./campton.css");
 
+@font-face {
+  font-family: "Quicksand";
+  src: url("/fonts/quicksand//Quicksand-Regular.ttf");
+
+  font-style: normal;
+  font-display: swap;
+}
+
+
 @layer base {
   :root {
     --background: hsla(0, 0%, 100%, 1);

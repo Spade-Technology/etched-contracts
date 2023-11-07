@@ -173,11 +173,11 @@ export function CommandMenu() {
   // these are some changes
 
   return (
-    <div className="w-full">
+    <article className="">
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="mx-auto flex w-full max-w-[50%] cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500"
+        className="mx-auto flex w-fit cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500 max-[950px]:hidden"
       >
         <SearchIcon className="h-full scale-150" />
         Type a Command, or use {bsrtct("⌘K")}
@@ -271,6 +271,6 @@ export function CommandMenu() {
           ))}
         </CommandList>
       </CommandDialog>
-    </div>
+    </article>
   );
 }

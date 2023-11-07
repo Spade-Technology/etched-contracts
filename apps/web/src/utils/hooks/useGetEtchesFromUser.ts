@@ -1,7 +1,8 @@
 import { graphql } from "@/gql";
 import { useContext, useEffect } from "react";
-import { useClient, useQuery, useSubscription } from "urql";
+import { useQuery } from "urql";
 import { refetchContext } from "../urql";
+import { removeDuplicatesByField } from "../common";
 
 const EtchFragment = graphql(`
   fragment EtchFragment on Etch {
@@ -80,7 +81,6 @@ export const useGetEtchesFromUser = (userId?: string) => {
   useEffect(() => setRefetchEtches(refetch), [operation]);
 
   if (!etchesData) return { etches: [], isLoading: fetching, error };
-
   const etches = [
     ...etchesData.etches,
     ...etchesData.teams.flatMap((team: any) => team.managedEtches.map((etch: any) => etch.etch)),
@@ -89,5 +89,5 @@ export const useGetEtchesFromUser = (userId?: string) => {
     ),
   ];
 
-  return { etches, isLoading: fetching, error, refetch };
+  return { etches: removeDuplicatesByField(etches, "id"), isLoading: fetching, error, refetch };
 };

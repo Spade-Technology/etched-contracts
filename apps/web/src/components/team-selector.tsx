@@ -39,6 +39,7 @@ export const TeamSelector = ({
   const loggedInAddress = useLoggedInAddress();
 
   const { isLoading, error, teams, uniqueOrgs } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
+  // console.log(teams);
 
   const behalfOf = teams
     .map((team) => ({
@@ -74,7 +75,8 @@ export const TeamSelector = ({
       <SelectTrigger className={className}>
         <div
           className={
-            "justify-cente mr-4 flex " + (horizontal ? "flex-row items-center justify-center gap-4" : "flex-col items-start")
+            "mr-4 flex h-fit justify-center " +
+            (horizontal ? "flex-row items-center justify-center gap-1" : "flex-col items-start")
           }
         >
           <span className="whitespace-nowrap text-sm font-semibold text-gray-800">{selectedBehalfOf.name}</span>

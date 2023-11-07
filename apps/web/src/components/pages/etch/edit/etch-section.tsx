@@ -6,8 +6,6 @@ import Edit from "./components/edit";
 import { Etch } from "@/gql/graphql";
 
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
-import { currentChain } from "@/utils/wagmi";
-import { currentNetwork } from "@/contracts";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
 import { Loader2Icon } from "lucide-react";
@@ -37,8 +35,6 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
       if (e.errorKind == "Validation") alert("You are not authorized to view this document");
       else alert("Something went wrong");
     });
-
-    console.log("Nope");
 
     if (!decryptedArrayBuffer) return;
 
@@ -79,9 +75,9 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
         </div>
         <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
       </div>
-      <Comments />
+      <Comments etchId={etch?.tokenId} />
 
-      <AddUser show={openAddUser} setShow={setOpenAddUser} />
+      <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
     </div>
   );
 };
