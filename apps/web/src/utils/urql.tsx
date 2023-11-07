@@ -34,6 +34,7 @@ export const refetchContext = createContext({
 
   addOperation: (operations: operation): string => "",
   setOperation: (key: string, operations: Partial<operation>): string => "",
+  clearOperations: () => {},
   operations: {} as Record<string, operation>,
 });
 
@@ -91,6 +92,10 @@ export const RefetchProvider = ({ children }: any) => {
           })
         );
       return key;
+    },
+    clearOperations: () => {
+      setState({ ...state, operations: {} });
+      localStorage.removeItem("operations-history");
     },
 
     setAny: (key: string, value: any) => setState({ ...state, [key]: value }),
