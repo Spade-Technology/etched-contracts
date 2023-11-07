@@ -1,49 +1,39 @@
+import { GoodIcon } from "@/components/icons/good";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTitle, DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
-import { InputDropdownTwo } from "@/components/ui/input-dropdown";
+import { UsersInputDropdown } from "@/components/ui/input-dropdown";
 import { Label } from "@/components/ui/label";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
 
-type user = {
-  id: string;
-  name: string;
-  role: string;
-};
-
-type inviteUsers = {
-  state: boolean;
-  name: string;
-  users: user[];
-};
-
-export default function NewOrg() {
+function NewTeam() {
   const [openModal, setOpenModal] = useState(false);
   const [orgName, setOrgName] = useState("");
-  const [selectedProfiles, setSelectedProfiles] = useState<user[]>([]);
-  const [inviteUsers, setInviteUsers] = useState<inviteUsers>({ state: false, name: "", users: [] });
+  const [roleData, setRoleData] = useState(["read only", "read & write"]);
+  const [selectedProfiles, setSelectedProfiles] = useState([]);
+  const [inviteUsers, setInviteUsers] = useState({ state: false, name: "", users: [] });
 
-  const users: user[] = [
+  const users = [
     {
-      id: "0",
+      id: 0,
       name: "ex: tom12.etched",
       role: "member",
     },
     {
-      id: "1",
+      id: 1,
       name: "Benjamin.etched",
       role: "member",
     },
     {
-      id: "2",
+      id: 2,
       name: "Sophia5678.etched",
       role: "member",
     },
     {
-      id: "3",
+      id: 3,
       name: "Olivia3456.etched",
       role: "member",
     },
@@ -51,20 +41,26 @@ export default function NewOrg() {
 
   const editUserRole = ({ id, item }: { id: string; item: string }) => {
     const user = selectedProfiles?.find((profile: any) => profile.id === id);
-    if (user) user.role = item;
+    user.role = item;
     setSelectedProfiles([...selectedProfiles]);
   };
 
   return (
     <>
+      <div
+        onClick={() => setOpenModal(true)}
+        className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[23px] py-2.5 text-sm font-semibold text-white max-xs:gap-1 max-xs:px-4 md:px-[30px] md:py-[15px] md:text-lg"
+      >
+        Create New Team
+      </div>
       <Dialog open={openModal} onOpenChange={(x) => setOpenModal(x)}>
         <DialogContent className="max-w-[440px]">
           {!inviteUsers.state ? (
             // INVITE USER FORM
             <>
-              <DialogTitle className="text-base text-primary">New Organization</DialogTitle>
+              <DialogTitle className="text-base text-primary">New Team</DialogTitle>
               <DialogDescription>
-                <Label className="font-semibold">Organization Name</Label>
+                <Label className="font-semibold">Select Organization</Label>
                 <Input
                   id="text"
                   placeholder="Name your organization"
@@ -72,9 +68,23 @@ export default function NewOrg() {
                   value={orgName}
                   onChange={(e) => setOrgName(e.target.value)}
                 />
+                <Label className="font-semibold">Team Name</Label>
+                <Input
+                  id="text"
+                  placeholder="Name your team"
+                  className="col-span-3 mb-7"
+                  value={orgName}
+                  onChange={(e) => setOrgName(e.target.value)}
+                />
                 <Label className="font-semibold">Invite users</Label>
-                <InputDropdownTwo data={users} selectedItems={selectedProfiles} setSelectedItems={setSelectedProfiles} />
-                {selectedProfiles.length > 0 ? (
+                <UsersInputDropdown
+                  data={users}
+                  roleData={roleData}
+                  selectedItems={selectedProfiles}
+                  setSelectedItems={setSelectedProfiles}
+                />
+
+                {selectedProfiles.length > 0 && (
                   <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                     {selectedProfiles.map(({ id, name, role }) => {
                       return (
@@ -95,16 +105,17 @@ export default function NewOrg() {
                                 {role} <Icons.dropdownIcon />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className=" items-start">
+                            <DropdownMenuContent className=" items-start p-1">
                               <DropdownMenuGroup>
-                                {["member", "admin"].map((item, idx) => {
+                                {roleData.map((item, idx) => {
                                   return (
                                     <DropdownMenuItem
                                       key={idx}
                                       onClick={() => editUserRole({ id, item })}
-                                      className="cursor-default"
+                                      className="flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  hover:bg-accent"
                                       textValue="Jim Carlos"
                                     >
+                                      <GoodIcon className={role === item ? "" : "hidden"} />
                                       {item}
                                     </DropdownMenuItem>
                                   );
@@ -116,8 +127,6 @@ export default function NewOrg() {
                       );
                     })}
                   </div>
-                ) : (
-                  ""
                 )}
                 <footer className="mt-10 flex items-center justify-end gap-5">
                   <div onClick={() => setOpenModal(false)} className="cursor-pointer text-sm font-semibold hover:text-foreground">
