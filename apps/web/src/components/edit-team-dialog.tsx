@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
-import { Organisation } from "@/gql/graphql";
+import { Organisation, TeamOwnership } from "@/gql/graphql";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { OrgInputDropdown, UsersInputDropdown } from "./ui/input-dropdown";
@@ -16,6 +16,7 @@ import { teamUser } from "@/types";
 import { api } from "@/utils/api";
 import { findUserDifferences } from "@/utils/user";
 import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 const roleData = ["read", "read & write"];
 
@@ -34,11 +35,11 @@ export const EditTeamDialog = ({
   openEditTeamModal: boolean;
   setOpenEditTeamModal: React.Dispatch<boolean>;
   organisations: Partial<Organisation | any>;
-  ownership: any;
+  ownership: TeamOwnership;
 }) => {
   const [teamName, setTeamName] = useState(name || "");
   const [teamMembers, setTeamMembers] = useState<teamUser[]>(members);
-  const [teamOrganisation, setTeamOrganisation] = useState<string>(ownership?.organisation.name || "");
+  const [teamOrganisation, setTeamOrganisation] = useState<string>(ownership?.organisation?.name || "");
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
 
@@ -116,6 +117,7 @@ export const EditTeamDialog = ({
     setTeamOrganisation,
     organisations,
     teamId,
+    ownership,
   };
 
   return (
@@ -307,6 +309,7 @@ type confirm = {
   transferOwnership: any;
   setTeamOrganisation: any;
   organisations: Partial<Organisation | any>;
+  ownership: TeamOwnership;
 };
 
 const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOpenEditTeamModal }) => {
@@ -342,22 +345,48 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
   );
 };
 
-const TransferOwnershipDialog: React.FC<confirm> = ({ setTransferOwnership, teamId, organisations, setOpenEditTeamModal }) => {
+const TransferOwnershipDialog: React.FC<confirm> = ({
+  setTransferOwnership,
+  teamId,
+  organisations,
+  setOpenEditTeamModal,
+  ownership,
+}) => {
   const [owner, setOwner] = useState("individual");
   const [newOrg, setNewOrg] = useState<Organisation[]>([]);
-  const { mutateAsync: transferPermissionToOrganisationAsync, isLoading } =
-    api.team.transferPermissionToOrganisation.useMutation();
+  const [newIndiv, setNewIndiv] = useState<teamUser[]>([]);
+  const { mutateAsync: transferToOrganisationAsync, isLoading: isTransferToOrgLoading } =
+    api.team.transferToOrganisation.useMutation();
+  const { mutateAsync: transferToIndividualAsync, isLoading: isTransferToIndivLoading2 } =
+    api.team.transferToIndividual.useMutation();
+  const isLoading = isTransferToOrgLoading || isTransferToIndivLoading2;
+  const from = useLoggedInAddress();
 
   const transfer = async (e: any) => {
     e.preventDefault();
     if (owner === "organization" && newOrg.length) {
       const { orgId } = newOrg[0] as Organisation;
 
-      await transferPermissionToOrganisationAsync({
+      await transferToOrganisationAsync({
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
         teamId: +teamId,
         orgId: +orgId,
+      });
+      toast({
+        title: "team Updated",
+        description: "successfull",
+        variant: "success",
+      });
+    } else if (owner === "individual" && newIndiv.length) {
+      const { id } = newIndiv[0] as teamUser;
+
+      await transferToIndividualAsync({
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+        teamId: +teamId,
+        to: id,
+        from,
       });
       toast({
         title: "team Updated",
@@ -407,8 +436,8 @@ const TransferOwnershipDialog: React.FC<confirm> = ({ setTransferOwnership, team
                 type={"singleSelect"}
                 roleData={[]}
                 placeholder={"ex: astrew.etched"}
-                selectedItems={newOrg}
-                setSelectedItems={setNewOrg}
+                selectedItems={newIndiv}
+                setSelectedItems={setNewIndiv}
               />
             </>
           )}
@@ -434,7 +463,11 @@ const TransferOwnershipDialog: React.FC<confirm> = ({ setTransferOwnership, team
               Cancel
             </div>
             <div>
-              <Button isLoading={isLoading} type="submit" className={`${newOrg.length < 1 ? " cursor-not-allowed" : ""}`}>
+              <Button
+                isLoading={isLoading}
+                type="submit"
+                className={`${newOrg.length < 1 && newIndiv.length < 1 ? " cursor-not-allowed" : ""}`}
+              >
                 Done
               </Button>
             </div>

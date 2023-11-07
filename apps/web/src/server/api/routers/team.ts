@@ -6,7 +6,7 @@ import { Address, encodeFunctionData, keccak256 } from "viem";
 import { z } from "zod";
 import TeamABI from "@/contracts/abi/Teams.json";
 
-const userPermissions = {
+const teamPermissions = {
   none: 0,
   read: 1,
   readWrite: 2,
@@ -41,13 +41,13 @@ export const teamRouter = createTRPCRouter({
           calldata = encodeFunctionData({
             abi: TeamABI,
             functionName: "createTeam",
-            args: [address, teamName, teamMembers.map(({ id, role }) => ({ user: id, permission: userPermissions[role] }))],
+            args: [address, teamName, teamMembers.map(({ id, role }) => ({ user: id, permission: teamPermissions[role] }))],
           });
         else
           calldata = encodeFunctionData({
             abi: TeamABI,
             functionName: "createTeamForOrganisation",
-            args: [owningOrg, teamName, teamMembers.map(({ id, role }) => ({ user: id, permission: userPermissions[role] }))],
+            args: [owningOrg, teamName, teamMembers.map(({ id, role }) => ({ user: id, permission: teamPermissions[role] }))],
           });
 
         const tx = await walletClient.writeContract({
@@ -142,7 +142,7 @@ export const teamRouter = createTRPCRouter({
         const calldata = encodeFunctionData({
           abi: TeamABI,
           functionName: "setPermissionBulk",
-          args: [teamId, teamMembers.map(({ id, role }) => ({ user: id, permission: userPermissions[role] }))],
+          args: [teamId, teamMembers.map(({ id, role }) => ({ user: id, permission: teamPermissions[role] }))],
         });
 
         const tx = await walletClient.writeContract({
@@ -168,7 +168,7 @@ export const teamRouter = createTRPCRouter({
       }
     ),
 
-  transferPermissionToOrganisation: protectedProcedure
+  transferToOrganisation: protectedProcedure
     .input(
       z.object({
         teamId: z.number(),
@@ -188,6 +188,52 @@ export const teamRouter = createTRPCRouter({
           abi: TeamABI,
           functionName: "transferToOrganisation",
           args: [teamId, orgId],
+        });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Team,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
+
+  transferToIndividual: protectedProcedure
+    .input(
+      z.object({
+        to: z.string(),
+        from: z.string().optional(),
+        teamId: z.number(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { to, from, teamId, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: TeamABI,
+          functionName: "safeTransferFrom",
+          args: [from, to, teamId],
         });
 
         const tx = await walletClient.writeContract({

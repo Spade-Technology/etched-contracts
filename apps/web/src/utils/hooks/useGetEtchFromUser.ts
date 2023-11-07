@@ -44,9 +44,14 @@ const FullEtchFragment = graphql(`
       }
       wallet {
         id
+        etchENS {
+          id
+          name
+        }
       }
       team {
         id
+        name
       }
       permissionLevel
     }

@@ -158,4 +158,49 @@ export const orgRouter = createTRPCRouter({
         return { tx };
       }
     ),
+  transferOwnership: protectedProcedure
+    .input(
+      z.object({
+        to: z.string(),
+        from: z.string(),
+        orgId: z.number(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { orgId, from, to, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: OrgABI,
+          functionName: "safeTransferFrom",
+          args: [from, to, orgId],
+        });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Org,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
 });
