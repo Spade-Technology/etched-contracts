@@ -1,4 +1,4 @@
-import { log } from "matchstick-as";
+import { log } from 'matchstick-as';
 import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
@@ -10,7 +10,7 @@ import {
   OwnershipTransferred as OwnershipTransferredEvent,
   TeamPermissionsUpdated,
   Transfer as TransferEvent,
-} from "../generated/Etch/Etch";
+} from '../generated/Etch/Etch';
 
 import {
   EtchApproval,
@@ -19,18 +19,17 @@ import {
   EtchCreated,
   EtchTransferedToTeam,
   EtchPermissionsUpdated,
-
   EtchOwnershipTransferred,
   EtchTransfer,
   Etch,
   EtchOwnership,
   EtchPermission,
   EtchTeamPermissionsUpdated,
-} from "../generated/schema";
-import { getOrCreateWallet } from "./wallet";
-import { BigInt } from "@graphprotocol/graph-ts";
+} from '../generated/schema';
+import { getOrCreateWallet } from './wallet';
+import { BigInt } from '@graphprotocol/graph-ts';
 
-import { EID, ETID, getEtchId, getTeamId } from "./utils";
+import { EID, ETID, getEtchId, getTeamId } from './utils';
 
 enum EtchPermissionLevel {
   None = 0,
@@ -208,7 +207,7 @@ export function handleTransfer(event: TransferEvent): void {
   let etchOwnership = EtchOwnership.load(ownershipId);
   if (etchOwnership == null) etchOwnership = new EtchOwnership(ownershipId);
 
-  etchOwnership.unset("team");
+  etchOwnership.unset('team');
   etchOwnership.owner = event.params.to;
   etchOwnership.etch = getEtchId(EID.Etch, event.params.tokenId);
 
