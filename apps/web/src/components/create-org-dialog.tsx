@@ -90,7 +90,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
 
   useEffect(() => {
     document.addEventListener("create-org", () => {
-      setOpen(true);
+      if (!setOpenOrgModal) setOpen(true);
     });
   }, []);
 
