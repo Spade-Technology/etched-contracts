@@ -19,13 +19,14 @@ import { useRouter } from "next/router";
 import { Icons } from "./ui/icons";
 import { LogoAnimated } from "./icons/logo-long-animated";
 import Link from "next/link";
+import { useState } from "react";
 
 const sideBarElementCn =
-  "cursor-pointer flex flex-col items-center justify-center rounded-lg px-3 py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700";
+  "cursor-pointer flex flex-col max-lg:mx-auto items-center justify-center rounded-lg max-lg:px-5 px-3 max-lg:w-fit py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700";
 
 const activeClassName =
   sideBarElementCn +
-  "cursor-pointer !bg-primary-foreground !text-primary before:absolute before:left-0 before:h-20 before:w-8 before:-translate-x-1/2 before:rounded-full before:bg-primary";
+  "cursor-pointer !bg-primary-foreground  !text-primary before:absolute before:left-0 before:h-20 before:w-8 before:-translate-x-1/2 before:rounded-full lg:before:bg-primary";
 
 enum activePage {
   DASHBOARD,
@@ -38,65 +39,59 @@ enum activePage {
 export const SideBar = () => {
   const { data } = useSession();
   const router = useRouter();
+  const [tooltip, setTooltip] = useState("");
 
   const loggedInAddress = useLoggedInAddress();
 
   const path = router.asPath;
-  const active = path.startsWith("/dashboard")
-    ? path.includes("/settings")
-      ? activePage.SETTINGS
-      : path.includes("/etchLibrary")
-      ? activePage.ETCH_LIBRARY
-      : path.includes("/marketplace")
-      ? activePage.MARKETPLACE
-      : path.includes("community")
-      ? activePage.COMMUNITY
-      : activePage.DASHBOARD
-    : activePage.DASHBOARD;
+
+  const pages = [
+    { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
+    { url: "/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
+    { url: "/dashboard", title: "Marketplace", Icon: Icons.marketplace },
+    { url: "/dashboard", title: "Community", Icon: Icons.community },
+    { url: "/settings", title: "Settings", Icon: Icons.settings },
+  ];
 
   return (
-    <aside id="sidebar" className="left-0 top-0 z-40 h-screen w-52 transition-transform" aria-label="Sidebar">
-      <div className="flex h-full flex-col overflow-y-auto  py-4 dark:border-slate-700 dark:bg-slate-900">
-        <div className="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white">
-          <LogoAnimated className="mx-auto" />
-        </div>
+    <aside
+      id="sidebar"
+      className="sticky left-0 top-0 z-40 h-screen w-fit px-3 transition-transform lg:w-52"
+      aria-label="Sidebar"
+    >
+      <div className="flex h-full flex-col overflow-y-auto pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
+        <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
 
         <ul className="my-auto space-y-2 text-sm font-medium">
-          <li>
-            <Link className={active === activePage.DASHBOARD ? activeClassName : sideBarElementCn} href={"/dashboard/"}>
-              <Icons.dashboard color={active === activePage.DASHBOARD ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
-              <span className="mt-2 whitespace-nowrap">Dashboard</span>
-            </Link>
-          </li>
-          <li>
-            <a className={active === activePage.ETCH_LIBRARY ? activeClassName : sideBarElementCn}>
-              <Icons.etchLibrary color={active === activePage.ETCH_LIBRARY ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
-              <span className="mt-2 whitespace-nowrap">Etch Library</span>
-            </a>
-          </li>
-          <li>
-            <a className={active === activePage.MARKETPLACE ? activeClassName : sideBarElementCn}>
-              <Icons.marketplace color={active === activePage.MARKETPLACE ? "#097B45" : "#9C9C9C"} />
-              <span className="mt-2 whitespace-nowrap">Marketplace</span>
-            </a>
-          </li>
-          <li>
-            <a className={active === activePage.COMMUNITY ? activeClassName : sideBarElementCn}>
-              <Icons.community color={active === activePage.COMMUNITY ? "#097B45" : "#9C9C9C"} />
-              <span className="mt-2 whitespace-nowrap">Community</span>
-            </a>
-          </li>
-          <li>
-            <a className={active === activePage.SETTINGS ? activeClassName : sideBarElementCn}>
-              <Icons.settings color={active === activePage.SETTINGS ? "#097B45" : "#9C9C9C"} />{" "}
-              <span className="mt-2 whitespace-nowrap">Settings</span>
-            </a>
-          </li>
+          {pages.map(({ url, title, Icon }) => {
+            return (
+              <li key={title}>
+                <Link
+                  onMouseOver={() => setTooltip(title)}
+                  onMouseOut={() => setTooltip("")}
+                  className={path.includes(url) ? activeClassName : sideBarElementCn}
+                  href={url}
+                >
+                  <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
+                  <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
+
+                  <div
+                    className={`absolute left-20 z-50 ml-3 flex w-[100px] items-center duration-300 group-hover:flex ${
+                      tooltip === title ? "visible scale-100 opacity-100 lg:hidden" : "invisible scale-50 opacity-0"
+                    }`}
+                  >
+                    <div className={`-mr-2 h-3 w-3 rotate-45 bg-primary`}></div>
+                    <div className={`shado s z-10 flex w-fit bg-primary p-2 text-white shadow-lg`}> {title}</div>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
-        <div className="mt-auto flex">
+        <div className="mt-auto">
           <UserSettings>
-            <div className="flex w-full justify-between rounded-lg px-3 py-2 hover:bg-slate-100">
-              <span className="my-auto text-sm font-medium text-black dark:text-white">
+            <div className="max-lg flex w-full cursor-pointer justify-center rounded-lg py-2 hover:bg-slate-100 lg:justify-between lg:px-3">
+              <span className="my-auto text-sm font-medium text-black dark:text-white max-lg:hidden">
                 {loggedInAddress ? shortenAddress({ address: loggedInAddress ?? "" }) : "Loading..."}
               </span>
               <svg
@@ -108,7 +103,7 @@ export const SideBar = () => {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                className="h-12 w-12 rounded-lg px-3 py-2 text-black hover:bg-slate-200"
+                className=" h-12 w-12 rounded-lg py-2 text-black lg:px-3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 // className="lucide lucide-more-horizontal"
@@ -129,7 +124,7 @@ function UserSettings({ children }: { children: React.ReactNode }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="ml-3 w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
