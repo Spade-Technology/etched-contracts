@@ -20,16 +20,23 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
+function enableBeforeUnload() {
+  window.onbeforeunload = function (e) {
+    return "Discard changes?";
+  };
+}
+function disableBeforeUnload() {
+  window.onbeforeunload = null;
+}
+
 export const useCreateEtch = () => {
   const { mutateAsync: mintAsync, isLoading: mintLoading } = api.etch.mintEtch.useMutation();
   const { mutateAsync: encryptAsync, isLoading: encryptLoading } = api.etch.uploadAndEncrypt.useMutation();
   const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.setMetadata.useMutation();
-  const { startUpload, isUploading } = useUploadThing("EtchUpload", {
-    onUploadProgress: (progress) => setStatus(`Uploading file... (${progress}%)`),
-  });
-  const { addOperation, setOperation } = useContext(refetchContext);
+  const { startUpload, isUploading } = useUploadThing("EtchUpload");
+  const { addOperation, setOperation, refetchEtches } = useContext(refetchContext);
   const { regenerateAuthSig } = useSignIn();
-  const [status, setStatus] = useState("");
+  const [etchCreated, setEtchCreated] = useState("");
 
   const onSubmit = async (data: FormData): Promise<void> => {
     const opId = addOperation({
@@ -37,7 +44,10 @@ export const useCreateEtch = () => {
       status: "Uploading file",
       progress: 0,
       statusType: "loading",
+      timestamp: Date.now(),
     });
+
+    enableBeforeUnload();
 
     try {
       const uploaded = await startUpload([data.etchFile]);
@@ -64,6 +74,8 @@ export const useCreateEtch = () => {
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
+
+      setEtchCreated(data.etchTitle);
 
       if (!uploaded || !uploaded[0]) {
         toast({
@@ -107,14 +119,13 @@ export const useCreateEtch = () => {
         progress: 100,
         statusType: "success",
       });
-      dispatchEvent(new CustomEvent("refresh-etches"));
+      refetchEtches();
       toast({
         title: "Etch created",
         description: "Your etch has been created",
         variant: "success",
       });
-
-      setStatus("");
+      disableBeforeUnload();
     } catch (e: any) {
       console.error(e);
       toast({
@@ -128,10 +139,11 @@ export const useCreateEtch = () => {
         statusType: "error",
         error: (e.message || e.code || "Unknown error") as string,
       });
+      disableBeforeUnload();
     }
   };
 
   const isLoading: boolean = mintLoading || updateLoading || encryptLoading || isUploading;
 
-  return { onSubmit, isLoading };
+  return { onSubmit, isLoading, etchCreated, setEtchCreated };
 };

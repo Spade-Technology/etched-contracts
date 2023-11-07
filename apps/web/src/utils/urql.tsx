@@ -1,17 +1,21 @@
 import { withUrqlClient } from "next-urql";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { cacheExchange } from "@urql/exchange-graphcache";
 
 import { fetchExchange } from "urql";
 import { devtoolsExchange } from "@urql/devtools";
 
-type operation = {
+type operationInput = {
   name: string;
   status: string;
   progress: number;
   error?: string;
   statusType: "loading" | "success" | "error";
 };
+
+type operation = {
+  timestamp: number;
+} & operationInput;
 
 export const refetchContext = createContext({
   refetchEtches: () => {},
@@ -55,14 +59,14 @@ export const RefetchProvider = ({ children }: any) => {
 
     setRefetchOrganisations: (refetchOrganisations: () => void) => setState({ ...state, refetchOrganisations }),
 
-    addOperation: (operations: operation): string => {
+    addOperation: (operation: operationInput): string => {
       const key = Math.random().toString(36).substring(7);
-      console.log("aze");
-      console.log({ ...state.operations }, operations);
-      setState({ ...state, operations: { ...state.operations, [key]: operations } });
+
+      setState({ ...state, operations: { ...state.operations, [key]: { ...operation, timestamp: Date.now() } } });
+
       return key;
     },
-    setOperation: (key: string, operation: Partial<operation>): string => {
+    setOperation: (key: string, operation: Partial<operationInput>): string => {
       setState({
         ...state,
         operations: {
@@ -70,14 +74,36 @@ export const RefetchProvider = ({ children }: any) => {
           [key]: {
             ...state.operations[key],
             ...operation,
+            timestamp: Date.now(),
           } as operation,
         },
       });
+      if (operation.statusType === "success" || operation.statusType === "error")
+        localStorage.setItem(
+          "operations-history",
+          JSON.stringify({
+            ...state.operations,
+            [key]: {
+              ...state.operations[key],
+              ...operation,
+              timestamp: Date.now(),
+            } as operation,
+          })
+        );
       return key;
     },
 
     setAny: (key: string, value: any) => setState({ ...state, [key]: value }),
   };
+
+  useEffect(() => {
+    setState({
+      ...state,
+      operations: Object.entries(JSON.parse(localStorage.getItem("operations-history") || "{}") as Record<string, operation>)
+        .filter(([key, el]) => el.timestamp > Date.now() - 1000 * 60 * 60 * 24)
+        .reduce((acc, [key, el]) => ({ ...acc, [key]: el }), {}),
+    });
+  }, []);
 
   return <refetchContext.Provider value={{ ...mutations, ...state }}>{children}</refetchContext.Provider>;
 };
