@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker';
 const { BigNumber } = require("ethers");
+const util = require('util')
+
 
 // We import Chai to use its asserting functions here.
 const { expect, assert } = require("chai");
@@ -24,10 +26,14 @@ describe("Entity Manager ...", () => {
   let Entity;
   let entityContract;
   let signers;
-  let owner;
-  let juniorUser;
-  let baseOrgId;
-  let baseTeamId;
+  let team1Owner;
+  let team1User;
+  let team2Owner;
+  let team2User;
+  let arrOrgs: Array<Number> = [];
+  let arrTeams: Array<Number> = [];
+  let arrFolders: Array<Number> = [];
+  //not worried about files right now
 
   // `beforeEach` will run before each test, re-deploying the contract every
   // time. It receives a callback, which can be async.
@@ -35,39 +41,25 @@ describe("Entity Manager ...", () => {
     // Get the ContractFactory and Signers here.
 
     signers = await ethers.getSigners();
-    owner = signers[0];
-    juniorUser = signers[1];
+    team1Owner = signers[0];
+    team1User = signers[1];
+    team2Owner = signers[2];
+    team2User = signers[3];
+
+
     Entity = await ethers.getContractFactory("EntityManager");
     entityContract = await Entity.deploy();
     await entityContract.deployed();
 
-    const createOrg = await entityContract.createOrganization(`Org: ${faker.company.name()}`, 0);
-    // console.dir(createOrg);
-    let getCount = await entityContract.getTotalSupply();
-    baseOrgId = parseInt(getCount.toString());
+    const org1 = await buildOrg(entityContract, team1Owner, team1User);
+    const org2 = await buildOrg(entityContract, team1Owner, team1User);
 
-    const createTeam = await entityContract.createTeam(baseOrgId, `Team: ${faker.company.name()}`, 0);
-    getCount = await entityContract.getTotalSupply();
-    baseTeamId = parseInt(getCount.toString());
+    console.log(util.inspect(org1, { showHidden: false, depth: null, colors: true }))
+    console.log(util.inspect(org2, { showHidden: false, depth: null, colors: true }))
 
-    //Nest folders with random permissions
-    let prevParentId = baseTeamId;
-    const availablePerms = [0, 1, 2, 4, 8, 16]
-    let permPosition;
-    for (let i = 0; i < 10; i++) {
-      await entityContract.createFolder(prevParentId, `Team: ${faker.company.name()}`, 0);
-      permPosition = Math.floor(Math.random() * availablePerms.length);
-      console.log('CUR PERM: ', availablePerms[permPosition])
-      await entityContract.setUserPermissionsForEntity(prevParentId, juniorUser.address, availablePerms[permPosition]);
-      prevParentId = await entityContract.getTotalSupply();
-    }
+    // console.log(await entityContract.walkUpPermissionsTreeAndToggle(7, team1Owner.address, { _curPerms: 0, _totalChecks: 0 }));
+    // console.log(await entityContract.walkUpPermissionsTreeAndToggle(17, team1User.address, { _curPerms: 0, _totalChecks: 0 }));
 
-    // console.log(await entityContract.getUserPermissionsForEntity(4, juniorUser.address));
-    // console.log(await entityContract.getUserPermissionsForEntity(5, juniorUser.address));
-    // console.log(await entityContract.getUserPermissionsForEntity(6, juniorUser.address));
-    // console.log(await entityContract.getUserPermissionsForEntity(7, juniorUser.address));
-    console.log(await entityContract.walkUpPermissionsTreeAndToggle(7, juniorUser.address, { _curPerms: 0, _totalChecks: 0, _maxWalk: -1 }));
-    console.log(await entityContract.walkUpPermissionsTreeAndToggle(7, owner.address, { _curPerms: 0, _totalChecks: 0, _maxWalk: -1 }));
 
 
     // const ownerOfOrg = await entityContract.connect(signers[0]).ownerOf(getCount)
@@ -81,9 +73,8 @@ describe("Entity Manager ...", () => {
 
   // DEPLOYMENT SECTION
   describe("Deployment", () => {
-    it("Deployer should equal owner", async () => {
-      console.dir(`BaseOrg: ${baseOrgId}`);
-      console.dir(`BaseTeam: ${baseTeamId}`);
+    it("Just a generic test...", async () => {
+      console.log('...test stuff here...')
     });
 
   });
@@ -91,4 +82,47 @@ describe("Entity Manager ...", () => {
   //ADMIN ONLY FUNCTIONS
   describe("Owner Only", () => {
   });
+
+
+  //REUSABLE FUNCTION(S)
+  const buildOrg = async (entityContract: typeof ethers.Contract, signOwner, signUser, perms={}) => {
+    let org = { name: `Org: ${faker.company.name()}` };
+    await entityContract.connect(signOwner).createOrganization(org.name, 0);
+    org.id = parseInt((await entityContract.getTotalSupply()).toString());
+    org.teams = [await buildTeam(entityContract, signOwner, signUser, org.id)];
+    //walk perms
+    return org;
+  }
+
+  const buildTeam = async (entityContract: typeof ethers.Contract, signOwner, signUser, orgId, perms = {}) => {
+    let team = { name: `Team: ${faker.company.name()}` };
+    await entityContract.connect(signOwner).createTeam(orgId, team.name, 0);
+    team.id = parseInt((await entityContract.getTotalSupply()).toString());
+    team.folders = await buildFolders(entityContract, signOwner, signUser, team.id, 10);
+    //walk perms
+    return team;
+  }
+
+  const buildFolders = async (entityContract: typeof ethers.Contract, signOwner, signUser, teamId, numFolders, perms = {}) => {
+    let folders = [];
+    const availablePerms = [0, 1, 2, 4, 8, 16];
+    let permPosition;
+    let prevParentId;
+    prevParentId = teamId;
+    entityContract.connect(signOwner);
+    for (let i = 0; i < numFolders; i++) {
+      const curFolder = { name: `Folder: ${faker.company.name()}` };
+      await entityContract.createFolder(prevParentId, curFolder.name, 0);
+      curFolder.id = parseInt((await entityContract.getTotalSupply()).toString());
+      permPosition = Math.floor(Math.random() * availablePerms.length);
+      curFolder.permissions = { [signUser.address]: availablePerms[permPosition] }
+      console.log('CUR PERM: ', curFolder.permissions)
+      await entityContract.setUserPermissionsForEntity(prevParentId, signUser.address, availablePerms[permPosition]);
+      //walk perms
+      folders.push(curFolder);
+      prevParentId = await entityContract.getTotalSupply();
+    }
+
+    return folders;
+  }
 });

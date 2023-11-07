@@ -34,7 +34,6 @@ abstract contract IEntityManager is IERC721 {
         //Only using because of "pass by ref"
         uint8 _curPerms;
         uint256 _totalChecks;
-        uint256 _maxWalk;
     }
 
     struct SShareMeta {

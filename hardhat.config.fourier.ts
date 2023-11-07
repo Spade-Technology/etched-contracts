@@ -78,10 +78,10 @@ const config: ExtendedHardhatUserConfig = {
     ...(!!process.env.ETHEREUM_PRIVATE_KEYS
       ? {
         hardhat: {
-          accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
-            privateKey: el,
-            balance: (100n * 10n ** 18n).toString(),
-          })),
+          // accounts: [...((process.env.ETHEREUM_PRIVATE_KEYS?.split(",") as string[]) || "")].map((el) => ({
+          //   privateKey: el,
+          //   balance: (100n * 10n ** 18n).toString(),
+          // })),
         },
       }
       : {}),

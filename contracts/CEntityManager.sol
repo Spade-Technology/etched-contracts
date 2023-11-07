@@ -56,12 +56,6 @@ contract EntityManager is ERC721, IEntityManager {
             "Entity does not exist.  Broken parent/child chain."
         );
 
-        //Return if we've exceeded max walk
-        if(_tPerms._maxWalk > 0){
-            // require(_tPerms._totalChecks <= _tPerms._maxWalk, "This check exceeds the max depth!");
-            return _tPerms._curPerms;
-        }
-
         //increment count
         _tPerms._totalChecks += 1;
 
