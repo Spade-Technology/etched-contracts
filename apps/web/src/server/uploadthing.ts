@@ -9,14 +9,17 @@ const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" }); 
 // FileRouter for your app, can contain multiple FileRoutes
 export const fileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  EtchUpload: f(["video", "image", "pdf", "audio", "application/zip", "text"])
+  EtchUpload: f({
+    image: {
+      maxFileCount: 50,
+      maxFileSize: "128MB",
+    },
+  })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req, res }) => {
       return {};
     })
-    .onUploadComplete(async ({ metadata, file }) => {
-      console.log("file url", file.url);
-    }),
+    .onUploadComplete(async ({ metadata, file }) => {}),
 } satisfies FileRouter;
 
 export type fileRouter = typeof fileRouter;

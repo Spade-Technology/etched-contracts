@@ -24,8 +24,6 @@ const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boo
 
     const authSig = await regenerateAuthSig();
 
-    console.log(etch?.ipfsCid);
-
     const decryptedArrayBuffer = await LitJsSdk.decryptFromIpfs({
       authSig,
       ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
