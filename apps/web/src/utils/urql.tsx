@@ -5,6 +5,14 @@ import { cacheExchange } from "@urql/exchange-graphcache";
 import { fetchExchange } from "urql";
 import { devtoolsExchange } from "@urql/devtools";
 
+type operation = {
+  name: string;
+  status: string;
+  progress: number;
+  error?: string;
+  statusType: "loading" | "success" | "error";
+};
+
 export const refetchContext = createContext({
   refetchEtches: () => {},
   setRefetchEtches: (refetchEtches: () => void) => {},
@@ -19,26 +27,59 @@ export const refetchContext = createContext({
   setRefetchOrganisations: (refetchOrganisatisns: () => void) => {},
 
   setAny: (key: string, value: any) => {},
+
+  addOperation: (operations: operation): string => "",
+  setOperation: (key: string, operations: Partial<operation>): string => "",
+  operations: {} as Record<string, operation>,
 });
 
 export const RefetchProvider = ({ children }: any) => {
   const [state, setState] = useState({
     refetchEtches: () => {},
-    setRefetchEtches: (refetchEtches: () => void) => setState({ ...state, refetchEtches }),
 
     refetchTeams: () => {},
-    setRefetchTeams: (refetchTeams: () => void) => setState({ ...state, refetchTeams }),
 
     refetchTeamEtches: () => {},
-    setRefetchTeamEtches: (refetchTeamEtches: () => void) => setState({ ...state, refetchTeamEtches }),
 
     refetchOrganisations: () => {},
-    setRefetchOrganisations: (refetchOrganisations: () => void) => setState({ ...state, refetchOrganisations }),
 
-    setAny: (key: string, value: any) => setState({ ...state, [key]: value }),
+    operations: {} as Record<string, operation>,
   });
 
-  return <refetchContext.Provider value={state}>{children}</refetchContext.Provider>;
+  const mutations = {
+    setRefetchEtches: (refetchEtches: () => void) => setState({ ...state, refetchEtches }),
+
+    setRefetchTeams: (refetchTeams: () => void) => setState({ ...state, refetchTeams }),
+
+    setRefetchTeamEtches: (refetchTeamEtches: () => void) => setState({ ...state, refetchTeamEtches }),
+
+    setRefetchOrganisations: (refetchOrganisations: () => void) => setState({ ...state, refetchOrganisations }),
+
+    addOperation: (operations: operation): string => {
+      const key = Math.random().toString(36).substring(7);
+      console.log("aze");
+      console.log({ ...state.operations }, operations);
+      setState({ ...state, operations: { ...state.operations, [key]: operations } });
+      return key;
+    },
+    setOperation: (key: string, operation: Partial<operation>): string => {
+      setState({
+        ...state,
+        operations: {
+          ...state.operations,
+          [key]: {
+            ...state.operations[key],
+            ...operation,
+          } as operation,
+        },
+      });
+      return key;
+    },
+
+    setAny: (key: string, value: any) => setState({ ...state, [key]: value }),
+  };
+
+  return <refetchContext.Provider value={{ ...mutations, ...state }}>{children}</refetchContext.Provider>;
 };
 
 export const withUrql = (index: any) =>
