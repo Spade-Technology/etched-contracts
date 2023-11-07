@@ -48,8 +48,8 @@ export const SideBar = () => {
   const pages = [
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
     { url: "/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
-    { url: "/dashboard", title: "Marketplace", Icon: Icons.marketplace },
-    { url: "/dashboard", title: "Community", Icon: Icons.community },
+    { url: "/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
+    { url: "/ommunity", title: "Community", Icon: Icons.community, disabled: true },
     { url: "/settings", title: "Settings", Icon: Icons.settings },
   ];
 
@@ -63,14 +63,14 @@ export const SideBar = () => {
         <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
 
         <ul className="my-auto space-y-2 text-sm font-medium">
-          {pages.map(({ url, title, Icon }) => {
+          {pages.map(({ url, title, Icon, disabled }) => {
             return (
               <li key={title}>
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
                   className={path.includes(url) ? activeClassName : sideBarElementCn}
-                  href={url}
+                  href={disabled ? "#" : url}
                 >
                   <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
