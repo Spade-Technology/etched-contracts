@@ -107,7 +107,7 @@ export const CreateTeamDialog = ({
 
   useEffect(() => {
     document.addEventListener("create-team", () => {
-      if (!open) setOpen(true);
+      if (!setOpenTeamModal) setOpen(true);
     });
   }, []);
 

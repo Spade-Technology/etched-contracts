@@ -28,6 +28,9 @@ const TeamFragment = graphql(`
         name
         orgId
       }
+      owner {
+        id
+      }
     }
     permissions {
       permissionLevel

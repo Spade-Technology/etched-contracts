@@ -17,6 +17,7 @@ import { DeleteIcon } from "./icons/delete";
 import { roleData } from "./create-org-dialog";
 import { orgUser } from "@/types";
 import { findUserDifferences } from "@/utils/user";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 const formSchema = z.object({
   orgName: z.string(),
@@ -33,7 +34,7 @@ type confirmDelete = {
   deleteOrg: any;
 };
 type confirmTransferOwnership = {
-  id: string;
+  orgId: string;
   orgName: string;
   setOpenEditOrgModal: any;
   setTransferOwnership: any;
@@ -304,7 +305,7 @@ export const EditOrgDialog = ({
 
           {transferOwnership && (
             <TransferOwnershipDialog
-              id={id}
+              orgId={orgId}
               orgName={name}
               setOpenEditOrgModal={setOpenEditOrgModal}
               setTransferOwnership={setTransferOwnership}
@@ -351,15 +352,28 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
   );
 };
 
-const TransferOwnershipDialog: React.FC<confirmTransferOwnership> = ({ setTransferOwnership }) => {
+const TransferOwnershipDialog: React.FC<confirmTransferOwnership> = ({ setTransferOwnership, orgId, setOpenEditOrgModal }) => {
   const [ownerData, setOwnerData] = useState<orgUser[]>([]);
+  const { mutateAsync: transferOwnershipAsync, isLoading } = api.org.transferOwnership.useMutation();
+  const from = useLoggedInAddress();
 
-  const transfer = (e: any) => {
+  const transfer = async (e: any) => {
     e.preventDefault();
-    const item: orgUser | any = ownerData.find((idx) => idx.name);
-
-    console.log(item.name);
-    setTransferOwnership(false);
+    if (ownerData[0]?.id) {
+      await transferOwnershipAsync({
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+        from,
+        orgId: +orgId,
+        to: ownerData[0].id,
+      });
+      toast({
+        title: "org Updated",
+        description: "successfull",
+        variant: "success",
+      });
+      setOpenEditOrgModal(false);
+    }
   };
 
   return (
@@ -384,7 +398,7 @@ const TransferOwnershipDialog: React.FC<confirmTransferOwnership> = ({ setTransf
               Cancel
             </div>
             <div>
-              <Button isLoading={false} type="submit" className={`${ownerData.length < 1 ? " cursor-not-allowed" : ""}`}>
+              <Button isLoading={isLoading} type="submit" className={`${ownerData.length < 1 ? " cursor-not-allowed" : ""}`}>
                 Done
               </Button>
             </div>
