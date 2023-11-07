@@ -81,7 +81,6 @@ export const useGetEtchesFromUser = (userId?: string) => {
   useEffect(() => setRefetchEtches(refetch), [operation]);
 
   if (!etchesData) return { etches: [], isLoading: fetching, error };
-
   const etches = [
     ...etchesData.etches,
     ...etchesData.teams.flatMap((team: any) => team.managedEtches.map((etch: any) => etch.etch)),

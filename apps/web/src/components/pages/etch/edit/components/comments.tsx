@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { api } from "@/utils/api";
+import { useSignIn } from "@/utils/hooks/useSignIn";
 import Image from "next/image";
 import Placeholder from "public/icons/dashboard/placeholder2.svg";
 import { useState } from "react";
@@ -28,10 +29,16 @@ const Comment = ({ image, userName, description, commentedAt }: CommentProps) =>
   );
 };
 
-const Comments = () => {
+const Comments = ({ etchId }: { etchId: string }) => {
   const [enableSubmit, setEnableSubmit] = useState<boolean>(false);
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState<string[]>([])
+  const [comments, setComments] = useState<string[]>([]);
+  const { regenerateAuthSig } = useSignIn();
+
+  const { mutateAsync: encryptAsync, isLoading: encryptLoading } = api.etch.uploadAndEncryptString.useMutation();
+  const { mutateAsync: commentOnEtchAsync, isLoading: commentOnEtchLoading } = api.etch.commentOnEtch.useMutation();
+
+  const isLoading = encryptLoading || commentOnEtchLoading;
 
   const handleComment = (evt: any) => {
     const input = evt.target.value;
@@ -42,13 +49,27 @@ const Comments = () => {
     }
   };
 
-  const addComment = () => {
-    if(newComment) {
-      setComments([...comments, newComment])
-      setNewComment("")
-      setEnableSubmit(false)
+  const addComment = async () => {
+    if (newComment) {
+      const authSig = await regenerateAuthSig();
+
+      const { ipfsCid } = await encryptAsync({
+        etchId,
+        authSig,
+        str: newComment,
+      });
+
+      await commentOnEtchAsync({
+        etchId,
+        ipfsCid,
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+      });
+
+      setNewComment("");
+      setEnableSubmit(false);
     }
-  }
+  };
 
   return (
     <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
@@ -56,9 +77,9 @@ const Comments = () => {
 
       <div className=" py-5">
         <div className="flex justify-start gap-3">
-          <div className="flex gap-1 cursor-pointer">
-          <Image src={Placeholder} alt="placeholder" className="my-auto" />
-          <Icons.dropdownIcon className="my-auto mt-4" />
+          <div className="flex cursor-pointer gap-1">
+            <Image src={Placeholder} alt="placeholder" className="my-auto" />
+            <Icons.dropdownIcon className="my-auto mt-4" />
           </div>
           <Input placeholder="Add a comment" value={newComment} onClick={() => setEnableSubmit(true)} onChange={handleComment} />
         </div>
@@ -75,7 +96,7 @@ const Comments = () => {
                 Cancel
               </Button>
 
-              <Button className="rounded-lg" disabled={!newComment} onClick={addComment}>
+              <Button className="rounded-lg" disabled={!newComment} onClick={addComment} isLoading={isLoading}>
                 Submit
               </Button>
             </div>
@@ -83,19 +104,13 @@ const Comments = () => {
         )}
       </div>
 
-{
-  comments && comments.length > 0 && comments.map((comment, idx) => {
-    return(
-      <Comment
-        image={Placeholder}
-        userName="justing45.etched"
-        description={comment}
-        commentedAt="Just now"
-        key={idx}
-      />
-    )
-  })
-}
+      {comments &&
+        comments.length > 0 &&
+        comments.map((comment, idx) => {
+          return (
+            <Comment image={Placeholder} userName="justing45.etched" description={comment} commentedAt="Just now" key={idx} />
+          );
+        })}
       <Comment
         image={Placeholder}
         userName="justing45.etched"

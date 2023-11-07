@@ -181,47 +181,193 @@ export const etchRouter = createTRPCRouter({
         authSig: z.any(),
       })
     )
+    .mutation(async ({ input: { fileUrl, etchId, authSig } }) => {
+      await lit.connect();
+
+      const file = await fetch(fileUrl).then((res) => res.blob());
+
+      const ipfsCid = await LitJsSdk.encryptToIpfs({
+        authSig,
+        file,
+        chain: camelCaseNetwork,
+
+        infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
+        infuraSecretKey: process.env.INFURA_API_SECRET as string,
+
+        litNodeClient: lit.client as any,
+
+        evmContractConditions: defaultAccessControlConditions({ etchId }),
+      }).catch((err) => {
+        console.log(err);
+        console.log(err.stack);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+      });
+
+      return { ipfsCid };
+    }),
+  uploadAndEncryptString: protectedProcedure
+    .input(
+      z.object({
+        str: z.string(),
+        etchId: z.string(),
+        authSig: z.any(),
+      })
+    )
+    .mutation(async ({ input: { str, etchId, authSig } }) => {
+      await lit.connect();
+
+      const ipfsCid = await LitJsSdk.encryptToIpfs({
+        authSig,
+        string: str,
+        chain: camelCaseNetwork,
+
+        infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
+        infuraSecretKey: process.env.INFURA_API_SECRET as string,
+
+        litNodeClient: lit.client as any,
+
+        evmContractConditions: defaultAccessControlConditions({ etchId }),
+      }).catch((err) => {
+        console.log(err);
+        console.log(err.stack);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+      });
+
+      return { ipfsCid };
+    }),
+  commentOnEtch: protectedProcedure
+    .input(
+      z.object({
+        ipfsCid: z.string(),
+        etchId: z.string(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
     .mutation(
       async ({
-        input: { fileUrl, etchId, authSig },
+        input: { etchId, ipfsCid, blockchainSignature, blockchainMessage },
         ctx: {
           session: { address },
         },
       }) => {
-        await lit.connect();
-
-        const file = await fetch(fileUrl).then((res) => res.blob());
-
-        const ipfsCid = await LitJsSdk.encryptToIpfs({
-          authSig,
-          file,
-          chain: camelCaseNetwork,
-
-          infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
-          infuraSecretKey: process.env.INFURA_API_SECRET as string,
-
-          litNodeClient: lit.client as any,
-
-          evmContractConditions: defaultAccessControlConditions({ etchId }),
-        }).catch((err) => {
-          console.log(err);
-          console.log(err.stack);
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+        const calldata = encodeFunctionData({
+          abi: EtchABI,
+          functionName: "commentOnEtch",
+          args: [etchId, ipfsCid],
         });
 
-        const decryptedArrayBuffer = await LitJsSdk.decryptFromIpfs({
-          authSig,
-          ipfsCid: ipfsCid, // This is returned from the above encryption
-          litNodeClient: lit.client as any,
-        }).catch((e) => {
-          console.log(e);
-          if (e.errorKind == "Validation") alert("You are not authorized to view this document");
-          else alert("Something went wrong");
+        const tx = await walletClient.writeContract({
+          address: contracts.Etch,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
         });
 
-        console.log(decryptedArrayBuffer);
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
 
-        return { ipfsCid };
+        return { tx };
+      }
+    ),
+
+  transferToTeam: protectedProcedure
+    .input(
+      z.object({
+        teamId: z.number(),
+        tokenId: z.number(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { tokenId, teamId, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: EtchABI,
+          functionName: "transferToTeam",
+          args: [tokenId, teamId],
+        });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Etch,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
+
+  transferToIndividual: protectedProcedure
+    .input(
+      z.object({
+        to: z.string(),
+        from: z.string().optional(),
+        tokenId: z.number(),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { to, from, tokenId, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: EtchABI,
+          functionName: "safeTransferFrom",
+          args: [from, to, tokenId],
+        });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Etch,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
       }
     ),
 });
