@@ -20,6 +20,7 @@ module.exports = {
       },
       fontFamily: {
         campton: ["Campton", "sans-serif"],
+        body: ["Quicksand", "sans-serif"],
       },
       colors: {
         border: "var(--border)",
