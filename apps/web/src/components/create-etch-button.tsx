@@ -41,10 +41,9 @@ export const CreateEtchButton = () => {
 
   const [state, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [etchCreated, setEtchCreated] = useState("");
   const { refetchEtches } = useContext(refetchContext);
 
-  const { onSubmit, isLoading } = useCreateEtch();
+  const { onSubmit, isLoading, etchCreated, setEtchCreated } = useCreateEtch();
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({
