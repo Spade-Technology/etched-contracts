@@ -38,7 +38,7 @@ export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { refetchEtches } = useContext(refetchContext);
 
-  const { onSubmit, isLoading, etchCreated, setEtchCreated, uploadProgress } = useCreateEtch();
+  const { onSubmit, isUploading: isLoading, etchCreated, setEtchCreated, uploadProgress } = useCreateEtch();
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({
@@ -88,14 +88,31 @@ export const CreateEtchButton = () => {
           {etchCreated ? (
             <>
               <div className="flex flex-col items-center gap-8">
-                <h1 className="text-center text-3xl text-primary">Congratulations on your Etch! 🎉</h1>
+                <h1 className="text-center text-3xl text-primary">Congratulations on your Etch{files.length && "es"}! 🎉</h1>
                 <div className="text-center text-slate-500">
-                  Your Etch <span className="text-primary">{etchCreated}</span> has been created. You can view it on the dashboard
+                  {files.length > 1 ? (
+                    <>
+                      Your <span className="font-semibold text-primary">{etchCreated} Etches</span>
+                    </>
+                  ) : (
+                    "Your Etch"
+                  )}{" "}
+                  {files.length > 1 ? "have" : "has"} been created. You can view {files.length > 1 ? "them" : "it"} on the
+                  dashboard
                 </div>
                 <div className="flex gap-8">
-                  <Button onClick={() => setEtchCreated("")}>Create a new Etch</Button>
+                  <Button
+                    onClick={() => {
+                      setEtchCreated(0);
+                      setFiles([]);
+                    }}
+                  >
+                    Create a new Etch
+                  </Button>
                   <AlertDialogCancel
                     onClick={() => {
+                      setEtchCreated(0);
+                      setFiles([]);
                       refetchEtches();
                       setIsOpen(false);
                     }}
@@ -135,7 +152,10 @@ export const CreateEtchButton = () => {
                           {files.length} File{files.length === 1 ? "" : "s"} Selected |{" "}
                           {(files.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024).toFixed(2)} MB total
                         </div>
-                        <span className="cursor-pointer hover:underline" onClick={() => setFiles([])}>
+                        <span
+                          className={!isLoading && files.length ? "cursor-pointer hover:underline" : "opacity-50"}
+                          onClick={() => setFiles([])}
+                        >
                           clear
                         </span>
                       </div>
@@ -148,7 +168,7 @@ export const CreateEtchButton = () => {
                                 {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
                               </span>
                               {isLoading ? (
-                                <span> {uploadProgress}% </span>
+                                <span className="text-white opacity-50"> {uploadProgress}% </span>
                               ) : (
                                 <span className="text-white opacity-50">
                                   {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB

@@ -32,7 +32,7 @@ export const useCreateEtch = () => {
   });
   const { addOperation, setOperation, refetchEtches } = useContext(refetchContext);
   const { regenerateAuthSig } = useSignIn();
-  const [etchCreated, setEtchCreated] = useState("");
+  const [etchCreated, setEtchCreated] = useState(0);
 
   const onSubmit = async (data: FormData[]): Promise<void> => {
     enableBeforeUnload();
@@ -74,7 +74,7 @@ export const useCreateEtch = () => {
         statusType: "loading",
       });
 
-      setEtchCreated(data.length + " etch" + (data.length > 1 ? "es" : ""));
+      setEtchCreated(data.length);
 
       await bulkMintEtch({
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
@@ -126,5 +126,5 @@ export const useCreateEtch = () => {
 
   const isLoading: boolean = isMintLoading || isUploading;
 
-  return { onSubmit, isLoading, etchCreated, setEtchCreated, uploadProgress };
+  return { onSubmit, isLoading, isUploading, etchCreated, setEtchCreated, uploadProgress };
 };
