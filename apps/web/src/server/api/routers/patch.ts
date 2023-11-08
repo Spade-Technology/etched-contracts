@@ -2,10 +2,12 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { env } from "@/env.mjs";
 import { currentNetwork } from "@/contracts";
-import { hashMessage, keccak256 } from "viem";
+import { Address, encodeAbiParameters, encodeFunctionData, getContract, hashMessage, keccak256, toBytes } from "viem";
 import { SiweMessage } from "siwe";
 import { currentChain, walletClientToProviderAndSigner } from "@/utils/wagmi";
-import { walletClient } from "@/server/web3";
+
+import { publicClient, walletClient } from "@/server/web3";
+import { PATCH_FACTORY_ABI, PATCH_FACTORY_ADDRESS } from "@/contracts/patchwallet/factory";
 
 const getBaseAccountAddress = async ({
   baseProvider,
@@ -16,6 +18,9 @@ const getBaseAccountAddress = async ({
   userId: string;
   access_token: string;
 }) => {
+  const patchId = baseProvider + ":" + userId;
+  const salt = keccak256(toBytes(patchId + `:kernel-account`));
+
   const result = await fetch(`${env.PATCHWALLET_BASE_URL}/resolver`, {
     method: "POST",
     headers: {
@@ -23,13 +28,26 @@ const getBaseAccountAddress = async ({
       Authorization: `Bearer ${access_token}`,
     },
     body: JSON.stringify({
-      userIds: baseProvider + ":" + userId,
+      userIds: patchId,
     }),
   });
 
   if (result.status !== 200) throw new Error(`Failed to get base account address for user ${userId}`);
 
   const data = await result.json();
+
+  const addressFromApi = data.users[0].accountAddress;
+
+  const factory = getContract({
+    abi: PATCH_FACTORY_ABI,
+    address: PATCH_FACTORY_ADDRESS,
+    publicClient,
+  });
+
+  const addressFromFactory = await factory.read.getAccountAddress([salt]);
+
+  // don't match if the provider is "etched", but works if "test"
+  console.log({ addressFromApi, addressFromFactory });
 
   return data.users[0].accountAddress;
 };
@@ -64,31 +82,9 @@ const signMessageUsingPatchWallet = async ({
   userId: string;
   message: string;
 }) => {
-  const address = await getBaseAccountAddress({ access_token, baseProvider: baseProvider, userId });
-
-  console.log({
-    user: baseProvider + ":" + userId,
-    address: address,
-  });
-
-  const preparedMessage = {
-    domain: "localhost:3000",
-    address: address,
-    version: "1",
-    chainId: 1,
-    expirationTime: new Date(Date.now() + 60 * 60 * 24 * 7 * 1000).toISOString(),
-    uri: "http://localhost:3000/",
-  };
-  console.log(preparedMessage);
-  const _siwe = new SiweMessage(preparedMessage);
-  console.log(_siwe);
-  const siwe = _siwe.prepareMessage();
-
-  console.log(siwe);
-
   const body = JSON.stringify({
     userId: baseProvider + ":" + userId,
-    string: siwe,
+    string: message,
   });
 
   const result = await fetch(`${env.PATCHWALLET_BASE_URL}/kernel/sign`, {
@@ -103,30 +99,35 @@ const signMessageUsingPatchWallet = async ({
 
   const _signature = await result.json();
 
-  // check signature validity
-
-  console.log(
-    await _siwe
-      .verify(
-        {
-          signature: _signature.signature,
-        },
-        {
-          provider: walletClientToProviderAndSigner(walletClient, currentChain).provider,
-        }
-      )
-      .catch((e) => {
-        console.log("we should not be here");
-        console.log(e);
-        return { success: false };
-      })
-  );
-
   if (result.status !== 200) throw new Error(`Failed to sign message for user ${userId}`);
 
-  const data = await result.json();
+  // check signature validity
 
-  return { hash: data.hash, signature: data.signature };
+  // THIS WON'T WORK Because the signature hasn't been wrapped by EIP6492
+  const address = await getBaseAccountAddress({ access_token, baseProvider: baseProvider, userId });
+
+  const patchId = baseProvider + ":" + userId;
+  const salt = keccak256(toBytes(patchId + `:kernel-account`));
+
+  console.log("Encoding function data...");
+  const factoryCreationCalldata = encodeFunctionData({
+    functionName: "createAccount",
+    abi: PATCH_FACTORY_ABI,
+    args: [salt],
+  }) as `0x${string}`;
+
+  const signature_6492_account_not_created =
+    encodeAbiParameters(
+      [
+        { type: "address", name: "create2Factory" },
+        { type: "bytes", name: "factoryCalldata" },
+        { type: "bytes", name: "signature" },
+      ],
+      [PATCH_FACTORY_ADDRESS, factoryCreationCalldata, _signature.signature as `0x${string}`]
+      // the "MagicBytes" are used to detect 6492 signatures. They consist of 64 Characters (32 bytes) that say "6492"
+    ) + "6492".repeat(16);
+
+  return { hash: _signature.hash, signature: signature_6492_account_not_created };
 };
 
 export const patchRouter = createTRPCRouter({
