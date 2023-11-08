@@ -121,27 +121,53 @@
 @keyframes shake {
   10%,
   90% {
-    margin-left: 2px;
-    margin-top: 2px;
+    margin-left: 1.5px;
+    margin-top: 1.5px;
     /* transform: translate(-1px, 0, 0); */
   }
 
   20%,
   80% {
-    margin-right: 2px;
-    /* transform: translate3d(2px, 0, 0); */
+    margin-right: 1.5px;
+    /* transform: translate3d(1.5px, 0, 0); */
   }
 
   30%,
   50%,
   70% {
-    margin-left: 2px;
+    margin-left: 1.5px;
     /* transform: translate3d(-4px, 0, 0); */
   }
 
   40%,
   60% {
-    margin-bottom: 2px;
+    margin-bottom: 1.5px;
     /* transform: translate3d(4px, 0, 0); */
+  }
+}
+
+.skeleto {
+  min-height: 20px;
+  border-radius: 4px;
+}
+
+.skeleto {
+  /* background-color: #e2e5e7; */
+  background: linear-gradient(to right, rgba(168, 41, 41, 0.2) 8%, rgba(107, 12, 12, 0.3) 18%, rgba(130, 130, 130, 0.2) 33%);
+  /* background-size: 20px 10px; */
+  background: rgba(130, 130, 130, 0.2);
+  background-repeat: no-repeat;
+  /* background-position: left 40px top 2px; */
+  animation: shin 1s ease infinite;
+  background-size: 800px 100px;
+  animation: shine 2s infinite ease-out;
+}
+
+@keyframes shine {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
   }
 }

@@ -57,11 +57,6 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
-      toast({
-        title: "org created",
-        description: "successfull",
-        variant: "success",
-      });
 
       // cleanup after done
       setOrgMembers([]);

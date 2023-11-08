@@ -179,6 +179,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
 
 export const FilesDialog = ({ files }: props) => {
   console.log(files);
+  const [activeModals, setActiveModals] = useState({ current: "", list: [] });
   return (
     <main className="">
       {/* <FileLockIcon /> */}
@@ -188,19 +189,32 @@ export const FilesDialog = ({ files }: props) => {
           const prop = { documentName, tokenId };
           return <File {...prop} />;
         })}
+        {["3", "4"].map((id) => {
+          const prop = { documentName: "twitter leaks file", tokenId: id, activeModals, setActiveModals };
+          return <File {...prop} />;
+        })}
       </section>
     </main>
   );
 };
 
-const File = ({ documentName, tokenId }: Etch) => {
+const File = ({ documentName, tokenId, activeModals, setActiveModals }: Etch) => {
   const [openMoveModal, setOpenMoveModal] = useState(false);
   const [openPropertiesModal, setOpenPropertiesModal] = useState(false);
   const { etch, isLoading, error } = useGetUniqueEtch(tokenId);
   console.log(etch);
   console.log(error);
 
-  const props = { etch, isLoading, openPropertiesModal, setOpenPropertiesModal };
+  const propertyModal = () => {
+    setOpenPropertiesModal(true);
+    const list = activeModals.list;
+    const modal = list.find((name: string) => name === etch?.documentName);
+    if (!modal) {
+      setActiveModals({ list: [...list, etch?.documentName], current: etch?.documentName });
+    }
+  };
+
+  const props = { etch, isLoading, openPropertiesModal, setOpenPropertiesModal, activeModals, setActiveModals };
 
   return (
     <>
@@ -209,7 +223,7 @@ const File = ({ documentName, tokenId }: Etch) => {
 
       <main
         key={tokenId}
-        onClick={() => setOpenPropertiesModal(true)}
+        onClick={propertyModal}
         className="flex h-[44px] w-full cursor-pointer items-center gap-[17px] rounded-lg bg-accent px-[12px] !font-body"
       >
         <div className="flex items-center justify-end">
@@ -229,7 +243,7 @@ const File = ({ documentName, tokenId }: Etch) => {
                 return (
                   <DropdownMenuItem
                     key={idx}
-                    onClick={() => (idx < 1 ? setOpenMoveModal(true) : idx > 3 ? setOpenPropertiesModal(true) : console.log(""))}
+                    onClick={() => (idx < 1 ? setOpenMoveModal(true) : idx > 3 ? propertyModal() : console.log(""))}
                     className="cursor-default rounded-sm px-2.5 py-1 text-base font-semibold text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   >
                     {item}
