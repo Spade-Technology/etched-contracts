@@ -17,9 +17,9 @@ import { Label } from "./ui/label";
 
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
+import { EditIcon, Trash2 } from "lucide-react";
+import { useDropzone } from "react-dropzone";
 import { TeamSelector } from "./team-selector";
-import Dropzone, { useDropzone } from "react-dropzone";
-import { EditIcon, Trash2, Trash2Icon } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
 
