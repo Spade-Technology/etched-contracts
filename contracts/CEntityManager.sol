@@ -30,7 +30,7 @@ contract EntityManager is ERC721, IEntityManager {
         uint256 _entityId,
         address _user,
         uint256[] memory _permissions
-    ) public returns (bool) {
+    ) public view returns (bool) {
         //NOTE:  A "org/team" at any level is just a "folder/group" with individual permissions set
         //get permission
         uint8 curPerm = entities[_entityId].userPermissions[_user];
@@ -179,16 +179,18 @@ contract EntityManager is ERC721, IEntityManager {
         string memory _name,
         uint8 _basePerms
     ) public override {
+        // console.log("createOrg: ", msg.sender);
         totalSupply.increment();
         uint256 newTokenId = totalSupply.current();
         _safeMint(msg.sender, newTokenId);
         entities[newTokenId].parentId = 0;
         entities[newTokenId].name = _name;
         entities[newTokenId].tokenId = newTokenId;
+        entities[newTokenId].basePermissions = _basePerms;
         entities[newTokenId].entityType = ImmutableType.Organization;
 
-        console.log("CREATED TEAM:");
-        console.log(newTokenId);
+        // console.log("CREATED TEAM:");
+        // console.log(newTokenId);
     }
 
     function createTeam(
@@ -201,13 +203,14 @@ contract EntityManager is ERC721, IEntityManager {
             entities[_parentId].entityType == ImmutableType.Organization,
             "You may only add a Team to an Organization!"
         );
-
+        // console.log("createTeam: ", msg.sender);
         totalSupply.increment();
         uint256 newTokenId = totalSupply.current();
         _safeMint(msg.sender, newTokenId);
         entities[newTokenId].parentId = _parentId;
         entities[newTokenId].name = _name;
         entities[newTokenId].tokenId = newTokenId;
+        entities[newTokenId].basePermissions = _basePerms;
         entities[newTokenId].entityType = ImmutableType.Team;
 
         //Append to parent
@@ -228,19 +231,21 @@ contract EntityManager is ERC721, IEntityManager {
             "You can't store a folder inside a file!"
         );
 
+        // console.log("createFolder: ", msg.sender);
         totalSupply.increment();
         uint256 newTokenId = totalSupply.current();
         _safeMint(msg.sender, newTokenId);
         entities[newTokenId].parentId = _parentId; //0 for root folder
         entities[newTokenId].name = _name;
         entities[newTokenId].tokenId = newTokenId;
+        entities[newTokenId].basePermissions = _basePerms;
         entities[newTokenId].entityType = ImmutableType.Folder;
 
         //Append to parent
         entities[_parentId].children.push(newTokenId);
 
-        console.log("CREATED FOLDER:");
-        console.log(newTokenId);
+        // console.log("CREATED FOLDER:");
+        // console.log(newTokenId);
     }
 
     function createFile(
@@ -264,8 +269,8 @@ contract EntityManager is ERC721, IEntityManager {
         //Append to parent
         entities[_parentId].children.push(newTokenId);
 
-        console.log("CREATED FILE:");
-        console.log(newTokenId);
+        // console.log("CREATED FILE:");
+        // console.log(newTokenId);
     }
 
     function createShare(
@@ -274,7 +279,7 @@ contract EntityManager is ERC721, IEntityManager {
         uint256 _externalOrgOrTeamId, //Optional (//NOTE: Should probably force this to be a TEAM or ORG on initial share)
         uint8 _filterPermissionsFromOriginalOwner //combo of entityperm/shareperm
     ) public {
-        require(_exists(_existingEntityId), "Share target doesn't exist!");
+        require(_exists(_existingEntityId), "Share source doesn't exist!");
         require(
             entities[_existingEntityId].entityType == ImmutableType.Folder ||
                 entities[_existingEntityId].entityType == ImmutableType.File,
@@ -282,9 +287,9 @@ contract EntityManager is ERC721, IEntityManager {
         );
         require(
             _exists(_externalOrgOrTeamId) &&
-                (entities[_existingEntityId].entityType ==
+                (entities[_externalOrgOrTeamId].entityType ==
                     ImmutableType.Organization ||
-                    entities[_existingEntityId].entityType ==
+                    entities[_externalOrgOrTeamId].entityType ==
                     ImmutableType.Team),
             "You may only share with Organizations or Teams!"
         );
@@ -293,6 +298,7 @@ contract EntityManager is ERC721, IEntityManager {
         totalSupply.increment();
         uint256 newShareId = totalSupply.current();
         _safeMint(msg.sender, newShareId);
+        //CONSIDER: Might want to walk `ownerOf` to ultimate Org owner...
         _transfer(msg.sender, ownerOf(_externalOrgOrTeamId), newShareId);
         entities[newShareId].parentId = _externalOrgOrTeamId; //NOTE: Should be intended ORG or TEAM `tokenId`
         entities[newShareId].basePermissions = PERM_CAN_READ; //Could be any sum of PERM_* constants
