@@ -16,7 +16,9 @@ import { cn } from "@/lib/utils";
 import { GoodIcon } from "../icons/good";
 import { useGetUsers } from "@/utils/hooks/useGetUsers";
 import { orgUser } from "@/types";
-import { Organisation } from "@/gql/graphql";
+import { Organisation, Team } from "@/gql/graphql";
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 type InputDropdownProps = {
   data: {
@@ -103,6 +105,14 @@ type OrgInputDropdownProps = {
   orgs: Organisation[];
 };
 
+type teamInputDropdownProps = {
+  type?: string;
+  placeholder: string;
+  roleData: string[];
+  selectedItems: any;
+  setSelectedItems: Dispatch<SetStateAction<any[]>>;
+};
+
 const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, orgs }: OrgInputDropdownProps) => {
   const ref: React.MutableRefObject<HTMLElement> | any = useRef();
   const [input, setInput] = useState({ value: "", placeholder });
@@ -169,6 +179,106 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
             </section>
           </div>
         </main>
+      </div>
+    </DropdownMenu>
+  );
+};
+const TeamInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, roleData }: teamInputDropdownProps) => {
+  const ref: React.MutableRefObject<HTMLElement> | any = useRef();
+  const [input, setInput] = useState({ value: "", placeholder });
+  const [role, setRole] = useState<string | any>(roleData[0]);
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const from = useLoggedInAddress();
+
+  const { teams } = useGetTeamsFromUser(from);
+
+  const addData = ({ id, name, teamId, role }: { id: string; name: string; teamId: string; role: string }) => {
+    setOpenDropdown(false);
+    const found = selectedItems.find((selected: any) => selected.id === id);
+    if (!found) {
+      if (type === "singleSelect") {
+        setSelectedItems([{ id, name, teamId, role }]);
+      } else {
+        setSelectedItems([...selectedItems, { id, name, teamId, role }]);
+      }
+      setInput({ ...input, placeholder: name || "" });
+    }
+  };
+
+  // CLOSE DROPDOWN FUNCTION
+  useEffect(() => {
+    const closeModal = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setOpenDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", closeModal);
+  }, [ref]);
+
+  return (
+    <DropdownMenu>
+      <div className="relative flex justify-between rounded-lg border-[1px] border-[#6D6D6D]">
+        <main ref={ref}>
+          <SearchInput
+            type="text"
+            placeholder={input.placeholder}
+            value={input.value}
+            onClick={() => setOpenDropdown(true)}
+            onChange={(e) => setInput({ ...input, value: e.target.value })}
+            className="border-none p-3 outline-none"
+          />
+          <div
+            className={`${openDropdown && teams.length > 0 ? "" : "-z-50 hidden opacity-0"} ${cn(
+              "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
+            )}`}
+          >
+            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+              {teams.map(({ id, name, teamId }) => {
+                const isSelected = selectedItems.find((item: any) => item.name === name);
+                return (
+                  <div
+                    key={id}
+                    onClick={() => addData({ id, name, teamId, role })}
+                    className={`${
+                      isSelected ? "pointer-events-none" : ""
+                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
+                  >
+                    {name}
+                    <div className="flex items-center gap-1">
+                      <GoodIcon className={`${isSelected ? "" : "invisible"}`} />
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          </div>
+        </main>
+
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant={"ghost"}
+            className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
+          >
+            {role} <Icons.dropdownIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className={roleData.length > 0 ? " items-start" : "hidden"}>
+          <DropdownMenuGroup>
+            {roleData.map((item, idx) => {
+              return (
+                <DropdownMenuItem
+                  key={idx}
+                  onClick={() => setRole(item)}
+                  className="flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  hover:bg-accent"
+                  textValue="Jim Carlos"
+                >
+                  <GoodIcon className={role === item ? "" : "hidden"} />
+                  {item}
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
       </div>
     </DropdownMenu>
   );
@@ -274,4 +384,4 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
 };
 
 export default InputDropdown;
-export { UsersInputDropdown, OrgInputDropdown };
+export { UsersInputDropdown, OrgInputDropdown, TeamInputDropdown };
