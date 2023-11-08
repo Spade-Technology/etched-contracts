@@ -1,12 +1,22 @@
 import { camelCaseNetwork, contracts } from "@/contracts";
 import { lit } from "@/lit";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { publicClient, walletClient } from "@/server/web3";
+import { generateServerAuthSig, publicClient, walletClient } from "@/server/web3";
 import { defaultAccessControlConditions } from "@/utils/accessControlConditions";
 import EtchABI from "@abis/Etches.json";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { TRPCError } from "@trpc/server";
-import { Address, decodeEventLog, encodeFunctionData, encodePacked, keccak256 } from "viem";
+import {
+  Address,
+  concat,
+  decodeEventLog,
+  encodeFunctionData,
+  encodePacked,
+  hashMessage,
+  keccak256,
+  stringToBytes,
+  toBytes,
+} from "viem";
 import { z } from "zod";
 const random = require("random-bigint");
 
@@ -51,7 +61,7 @@ export const etchRouter = createTRPCRouter({
             const file = await fetch(url).then((res) => res.blob());
 
             const ipfsCid = await LitJsSdk.encryptToIpfs({
-              authSig,
+              authSig: await generateServerAuthSig(),
               file,
               chain: camelCaseNetwork,
 
@@ -96,6 +106,8 @@ export const etchRouter = createTRPCRouter({
           ],
           abi: EtchABI,
         });
+
+        console.log(tx1);
 
         const transactionResult = await publicClient.waitForTransactionReceipt({
           hash: tx1,
