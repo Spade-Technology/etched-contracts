@@ -51,14 +51,16 @@ export const useSignIn = () => {
 
       const walletClient = await getWalletClient({ chainId: Number(currentNetworkId!) });
       let blockchainSignature;
-      if (isPatchWallet)
+      if (isPatchWallet) {
+        if (!userId) throw new Error("No user ID provided");
         blockchainSignature = (
           await generatePatchSignature({
             message: keccak256(blockchainMessage),
             userId: userId,
+            erc6492: true,
           })
         ).signature;
-      else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
+      } else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
 
       console.log("BLOCKCHAIN SIGNATURE GENERATED");
 
@@ -66,6 +68,7 @@ export const useSignIn = () => {
       await signIn("credentials", {
         message: authSig.signedMessage,
         signature: authSig.sig,
+        derivedVia: authSig.derivedVia,
         blockchainMessage,
         blockchainSignature,
         redirect: false,
@@ -84,25 +87,21 @@ export const useSignIn = () => {
     _expiration?: string,
     {
       addressOverride,
-      chainIdOverride,
 
       isPatchWallet,
       patchUserId,
-      patchBaseProvider,
     }: {
       addressOverride?: string;
-      chainIdOverride?: number;
 
       isPatchWallet?: boolean;
       patchUserId?: string;
-      patchBaseProvider?: string;
     } = {}
   ) => {
     if (isPatchWallet && !addressOverride)
       addressOverride = (
         await getUserFromId({
           userId: patchUserId!,
-          baseProvider: patchBaseProvider ?? env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+          baseProvider: env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
         })
       ).eoa;
 
@@ -139,13 +138,14 @@ export const useSignIn = () => {
     let signedResult: string | undefined;
     console.log({ isPatchWallet });
     if (isPatchWallet) {
+      if (!patchUserId) throw new Error("No user ID provided");
       const patchSignatureResult = await generatePatchSignature({
-        userId,
+        userId: patchUserId,
         message: body,
+        erc6492: true,
       });
       signedResult = patchSignatureResult.signature;
-      console.log("Patch signature result:");
-      console.log({ body: hashMessage(body), hash: patchSignatureResult.hash });
+      console.log("Patch signature result:", signedResult);
       console.log("-----------------------------------");
     } else signedResult = await signMessageAsync({ message: body });
 
@@ -153,7 +153,7 @@ export const useSignIn = () => {
 
     let authSig = {
       sig: signedResult,
-      derivedVia: "web3.eth.personal.sign",
+      derivedVia: isPatchWallet ? "EIP1271" : "web3.eth.personal.sign",
       signedMessage: body,
       address: addressOverride ?? address,
     };
