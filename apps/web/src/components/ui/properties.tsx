@@ -11,10 +11,20 @@ interface types {
   setOpenPropertiesModal: React.Dispatch<boolean>;
 }
 
-export default function PropertiesDialog({ etch, isLoading, openPropertiesModal, setOpenPropertiesModal }: types) {
+export default function PropertiesDialog({
+  etch,
+  isLoading,
+  openPropertiesModal,
+  setOpenPropertiesModal,
+  activeModals,
+  setActiveModals,
+}: types) {
+  const ref: React.MutableRefObject<HTMLElement> | any = useRef();
+
+  const [windowWidth, setWindowWidth] = useState(0);
   const [activeTab, setActiveTab] = useState("General");
   const [shake, setShake] = useState(false);
-  const ref: React.MutableRefObject<HTMLElement> | any = useRef();
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const data = [
     { name: "Filename:", value: etch?.documentName },
@@ -45,30 +55,12 @@ export default function PropertiesDialog({ etch, isLoading, openPropertiesModal,
     { address: "0x3234...5678", name: "louis.etched", role: "editor", img: "/icons/dashboard/placeholder3.svg" },
   ];
 
-  // CLOSE DROPDOWN USEEFFECT
-  useEffect(() => {
-    const closeModal = (event: any) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        setShake(true);
-      }
-    };
-    document.addEventListener("mousedown", closeModal);
-  }, [ref]);
+  // const modalIndex = activeModals.list.find((item: string, idx: number) => {
+  //   if (item === data[0]?.value) return item + idx;
+  // });
+  // console.log(activeModals.list);
 
-  useEffect(() => {
-    const count = setTimeout(() => {
-      if (shake) {
-        setShake(false);
-      }
-    }, 900);
-
-    return () => {
-      clearTimeout(count);
-    };
-  }, [shake]);
-
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
+  // Drag modal function
   const onMouseDown = useCallback(
     (event: any) => {
       const onMouseMove = (event: MouseEvent) => {
@@ -90,20 +82,56 @@ export default function PropertiesDialog({ etch, isLoading, openPropertiesModal,
     [position, setPosition, ref]
   );
 
+  useEffect(() => {
+    const responsive = () => {
+      if (ref?.current?.getBoundingClientRect().x < 1) {
+        setPosition({ ...position, x: -50 });
+        ref.current.style.transform = `translate(${-50}px, ${position.y}px)`;
+      }
+    };
+    window.addEventListener("resize", responsive);
+  }, []);
+
+  //SHAKE ANIMATION USEEFFECT
+  useEffect(() => {
+    const shakeAnime = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setShake(true);
+      }
+    };
+    document.addEventListener("mousedown", shakeAnime);
+  }, [ref]);
+
+  useEffect(() => {
+    const count = setTimeout(() => {
+      if (shake) {
+        setShake(false);
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(count);
+    };
+  }, [shake]);
+
   return (
-    // <main open={!openPropertiesModal} onOpenChange={() => setOpenPropertiesModal(false)}>
     <main
       ref={ref}
       onMouseDown={onMouseDown}
-      className={`${
-        shake ? "shake" : ""
+      onClick={() => setActiveModals({ ...activeModals, current: data[0]?.value })}
+      className={`${shake && activeModals.current === data[0]?.value ? "shake" : ""} ${
+        activeModals.current === data[0]?.value ? "z-50" : "z-20"
       } fixed right-10 top-[160px] grid w-[380px] cursor-grabbing gap-4 border bg-background p-6 shadow-2xl duration-200 focus:ring-0 ${
-        openPropertiesModal ? "visible z-50 translate-x-0" : "invisible z-0 translate-x-full"
+        openPropertiesModal ? "visible translate-x-0" : "invisible z-0 !translate-x-full"
       }`}
     >
-      <header className="text-xl font-semibold leading-none tracking-tight text-primary">File Properties</header>
-      <Cross2Icon onClick={() => setOpenPropertiesModal(false)} className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer" />
-
+      <Cross2Icon
+        onClick={() => {
+          setOpenPropertiesModal(false);
+          setPosition({ x: 0, y: 0 });
+        }}
+        className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer"
+      />
       <section className="cursor-default text-sm font-semibold text-muted-foreground">
         <header className="flex text-base capitalize text-foreground">
           <div
@@ -149,6 +177,5 @@ export default function PropertiesDialog({ etch, isLoading, openPropertiesModal,
         )}
       </section>
     </main>
-    // </main>
   );
 }
