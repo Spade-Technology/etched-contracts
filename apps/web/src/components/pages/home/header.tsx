@@ -36,7 +36,7 @@ const Header = ({ setShowWaitlist }: Props) => {
             </div>
 
             <div
-              // onClick={() => router.push("/authentication")}
+              // onClick={() => router.push("/auth")}
               className="m-auto  cursor-pointer rounded-2xl bg-[#E3FFF2] px-5 py-2 text-lg font-medium text-[#097B45]"
             >
               Create/Sign In
@@ -45,7 +45,7 @@ const Header = ({ setShowWaitlist }: Props) => {
         </div>
       </div>
       <div
-        // onClick={() => router.push("/authentication")}
+        // onClick={() => router.push("/auth")}
         onClick={() => setShowWaitlist(true)}
         className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[23px] py-2.5 text-sm font-semibold text-white max-xs:gap-1 max-xs:px-4 md:px-[30px] md:py-[15px] md:text-lg"
       >

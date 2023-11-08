@@ -62,7 +62,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
         </div>
 
         <div
-          // onClick={() => router.push("/authentication")}
+          // onClick={() => router.push("/auth")}
           onClick={() => setShowWaitlist(true)}
           className="flex w-fit cursor-pointer items-center gap-[21px] rounded-[52.293px] bg-white px-[39px] py-[19px] font-campton font-semibold text-black shadow-[0px_2.80141px_11.20565px_0px_rgba(20,20,43,0.10)] max-xs:px-5 max-xs:py-2"
         >
