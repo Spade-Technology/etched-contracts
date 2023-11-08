@@ -23,6 +23,9 @@ import { useUploadThing } from "@/utils/uploadthing";
 import { TeamSelector, getSelectedTeam } from "./team-selector";
 import { toast } from "./ui/use-toast";
 import { refetchContext } from "@/utils/urql";
+import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
+
+const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
 
 const formSchema = z.object({
   etchTitle: z.string(),
@@ -33,21 +36,14 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
-
 export const CreateEtchButton = () => {
   const [fileBlobUrl, setFileBlobUrl] = React.useState<string>("");
-  const { mutateAsync: mintAsync, isLoading: mintLoading } = api.etch.mintEtch.useMutation();
-  const { mutateAsync: encryptAsync, isLoading: encryptLoading } = api.etch.uploadAndEncrypt.useMutation();
-  const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.setMetadata.useMutation();
-  const { regenerateAuthSig } = useSignIn();
+
   const [state, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [etchCreated, setEtchCreated] = useState("");
   const { refetchEtches } = useContext(refetchContext);
-  const { startUpload, isUploading } = useUploadThing("EtchUpload", {
-    onUploadProgress: (progress) => setStatus(`Uploading file... (${progress}%)`),
-  });
+
+  const { onSubmit, isLoading, etchCreated, setEtchCreated } = useCreateEtch();
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({
@@ -61,69 +57,6 @@ export const CreateEtchButton = () => {
     },
   });
 
-  const onSubmit = async (data: FormData) => {
-    try {
-      setStatus("generating signatures...");
-      const authSig = await regenerateAuthSig();
-
-      setStatus("minting etch...");
-      const etchId = await mintAsync({
-        fileName: data.etchTitle,
-        fileDescription: data.etchDescription,
-
-        team: getSelectedTeam().id,
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-      });
-
-      setStatus("Uploading file... (0%)");
-      const uploaded = await startUpload([data.etchFile]);
-
-      if (!uploaded || !uploaded[0])
-        return toast({
-          title: "Upload failed",
-          description: "Please try again",
-          variant: "destructive",
-        });
-
-      setStatus("encrypting & uploading file to IPFS...");
-      const { ipfsCid } = await encryptAsync({
-        etchId: etchId.toString(),
-        fileUrl: uploaded[0].fileUrl,
-        authSig,
-      });
-
-      setStatus("updating metadata...");
-      await updateAsync({
-        etchId: etchId.toString(),
-        fileName: data.etchTitle,
-        ipfsCid,
-        description: data.etchDescription,
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-      });
-
-      setStatus("refreshing etches...");
-      dispatchEvent(new CustomEvent("refresh-etches"));
-      toast({
-        title: "Etch created",
-        description: "Your etch has been created",
-        variant: "success",
-      });
-
-      setEtchCreated(data.etchTitle);
-      setStatus("");
-    } catch (e) {
-      console.log(e);
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
-      setStatus("");
-    }
-  };
-
   useEffect(() => {
     if (iframeRef.current)
       iframeRef.current.onload = () =>
@@ -136,8 +69,6 @@ export const CreateEtchButton = () => {
       setIsOpen(true);
     });
   }, []);
-
-  const isLoading = mintLoading || updateLoading || encryptLoading || isUploading;
 
   return (
     <AlertDialog open={isOpen}>

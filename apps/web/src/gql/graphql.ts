@@ -5397,15 +5397,6 @@ export enum _SubgraphErrorPolicy_ {
   Deny = "deny",
 }
 
-export type OrganisationsQueryVariables = Exact<{
-  address: Scalars["String"]["input"];
-}>;
-
-export type OrganisationsQuery = {
-  __typename?: "Query";
-  organisations: Array<{ __typename?: "Organisation"; orgId: any; id: string; name?: string | null; createdAt: any }>;
-};
-
 export type FullEtchFragmentFragment = {
   __typename?: "Etch";
   id: string;
@@ -5426,8 +5417,8 @@ export type FullEtchFragmentFragment = {
     id: string;
     permissionLevel: number;
     etch: { __typename?: "Etch"; id: string; tokenId: any; createdAt: any; documentName: string; ipfsCid: string };
-    wallet?: { __typename?: "Wallet"; id: any } | null;
-    team?: { __typename?: "Team"; id: string } | null;
+    wallet?: { __typename?: "Wallet"; id: any; etchENS: Array<{ __typename?: "EtchENS"; id: string; name: string }> } | null;
+    team?: { __typename?: "Team"; id: string; name?: string | null } | null;
   }> | null;
   comments?: Array<{
     __typename?: "EtchCommentAdded";
@@ -5551,6 +5542,15 @@ export type OrgQuery = {
   } | null;
 };
 
+export type OrganisationsQueryVariables = Exact<{
+  address: Scalars["String"]["input"];
+}>;
+
+export type OrganisationsQuery = {
+  __typename?: "Query";
+  organisations: Array<{ __typename?: "Organisation"; orgId: any; id: string; name?: string | null; createdAt: any }>;
+};
+
 export type TeamFragmentFragment = {
   __typename?: "Team";
   id: string;
@@ -5561,6 +5561,7 @@ export type TeamFragmentFragment = {
     __typename?: "TeamOwnership";
     id: string;
     organisation?: { __typename?: "Organisation"; id: string; name?: string | null; orgId: any } | null;
+    owner?: { __typename?: "Wallet"; id: any } | null;
   };
   permissions?: Array<{
     __typename?: "TeamPermission";
@@ -5714,12 +5715,34 @@ export const FullEtchFragmentFragmentDoc = {
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "wallet" },
-                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }] },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "etchENS" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
                 },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "team" },
-                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }] },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
                 },
                 { kind: "Field", name: { kind: "Name", value: "permissionLevel" } },
               ],
@@ -5866,6 +5889,11 @@ export const TeamFragmentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "owner" },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }] },
+                },
               ],
             },
           },
@@ -5902,104 +5930,6 @@ export const TeamFragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<TeamFragmentFragment, unknown>;
-export const OrganisationsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "Organisations" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "address" } },
-          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "organisations" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "where" },
-                value: {
-                  kind: "ObjectValue",
-                  fields: [
-                    {
-                      kind: "ObjectField",
-                      name: { kind: "Name", value: "or" },
-                      value: {
-                        kind: "ListValue",
-                        values: [
-                          {
-                            kind: "ObjectValue",
-                            fields: [
-                              {
-                                kind: "ObjectField",
-                                name: { kind: "Name", value: "ownership_" },
-                                value: {
-                                  kind: "ObjectValue",
-                                  fields: [
-                                    {
-                                      kind: "ObjectField",
-                                      name: { kind: "Name", value: "owner" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "address" } },
-                                    },
-                                  ],
-                                },
-                              },
-                            ],
-                          },
-                          {
-                            kind: "ObjectValue",
-                            fields: [
-                              {
-                                kind: "ObjectField",
-                                name: { kind: "Name", value: "permissions_" },
-                                value: {
-                                  kind: "ObjectValue",
-                                  fields: [
-                                    {
-                                      kind: "ObjectField",
-                                      name: { kind: "Name", value: "wallet" },
-                                      value: { kind: "Variable", name: { kind: "Name", value: "address" } },
-                                    },
-                                    {
-                                      kind: "ObjectField",
-                                      name: { kind: "Name", value: "permissionLevel_gt" },
-                                      value: { kind: "IntValue", value: "0" },
-                                    },
-                                  ],
-                                },
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "orgId" } },
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<OrganisationsQuery, OrganisationsQueryVariables>;
 export const EtchDocument = {
   kind: "Document",
   definitions: [
@@ -6138,12 +6068,34 @@ export const EtchDocument = {
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "wallet" },
-                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }] },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "etchENS" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
                 },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "team" },
-                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }] },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
                 },
                 { kind: "Field", name: { kind: "Name", value: "permissionLevel" } },
               ],
@@ -6764,6 +6716,104 @@ export const OrgDocument = {
     },
   ],
 } as unknown as DocumentNode<OrgQuery, OrgQueryVariables>;
+export const OrganisationsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Organisations" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "address" } },
+          type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "organisations" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "where" },
+                value: {
+                  kind: "ObjectValue",
+                  fields: [
+                    {
+                      kind: "ObjectField",
+                      name: { kind: "Name", value: "or" },
+                      value: {
+                        kind: "ListValue",
+                        values: [
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "ownership_" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "owner" },
+                                      value: { kind: "Variable", name: { kind: "Name", value: "address" } },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: "ObjectValue",
+                            fields: [
+                              {
+                                kind: "ObjectField",
+                                name: { kind: "Name", value: "permissions_" },
+                                value: {
+                                  kind: "ObjectValue",
+                                  fields: [
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "wallet" },
+                                      value: { kind: "Variable", name: { kind: "Name", value: "address" } },
+                                    },
+                                    {
+                                      kind: "ObjectField",
+                                      name: { kind: "Name", value: "permissionLevel_gt" },
+                                      value: { kind: "IntValue", value: "0" },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "orgId" } },
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OrganisationsQuery, OrganisationsQueryVariables>;
 export const TeamsDocument = {
   kind: "Document",
   definitions: [
@@ -6975,6 +7025,11 @@ export const TeamsDocument = {
                       { kind: "Field", name: { kind: "Name", value: "orgId" } },
                     ],
                   },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "owner" },
+                  selectionSet: { kind: "SelectionSet", selections: [{ kind: "Field", name: { kind: "Name", value: "id" } }] },
                 },
               ],
             },
