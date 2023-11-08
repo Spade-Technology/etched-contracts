@@ -1,9 +1,9 @@
-// import { DocsSidebarNav } from "@/components/dashboard-side-bar";
 import { PageBoilerplate } from "@/components/page-boilerplate";
 import EtchSection from "@/components/pages/etch/edit/etch-section";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetUniqueEtch } from "@/utils/hooks/useGetEtchFromUser";
+import { Etch } from "@/gql/graphql";
+import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
 import { Metadata } from "next";
 import { useRouter } from "next/router";
 
@@ -50,7 +50,7 @@ export default function DashboardPage() {
             </BreadcrumbItem>
           </Breadcrumb>
         </div>
-        {error ? <span>{error.message}</span> : <EtchSection etch={etch} isLoading={isLoading} />}
+        {error ? <span>{error.message}</span> : <EtchSection etch={etch as Etch} isLoading={isLoading} />}
       </div>
       <div className="flex flex-col items-center justify-center"></div>
     </PageBoilerplate>
