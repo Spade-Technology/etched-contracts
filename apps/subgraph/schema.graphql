@@ -9,7 +9,8 @@ type Wallet @entity {
   OrganisationApprovals: [OrganisationApproval!] @derivedFrom(field: "wallet")
   etchPermissions: [EtchPermission!] @derivedFrom(field: "wallet")
   teamPermissions: [TeamPermission!] @derivedFrom(field: "wallet")
-  OrganisationPermissions: [OrganisationPermission!] @derivedFrom(field: "wallet")
+  OrganisationPermissions: [OrganisationPermission!]
+    @derivedFrom(field: "wallet")
 
   etchENS: [EtchENS!]! @derivedFrom(field: "owner")
 }
@@ -29,7 +30,7 @@ type Etch @entity {
   documentName: String!
   description: String
 
-  createdAt: BigInt! 
+  createdAt: BigInt!
 }
 
 type Team @entity {
@@ -43,7 +44,7 @@ type Team @entity {
   transfers: [TeamTransfer!] @derivedFrom(field: "team")
   approvals: [TeamApproval!] @derivedFrom(field: "team")
 
-  createdAt: BigInt! 
+  createdAt: BigInt!
 }
 
 type Organisation @entity {
@@ -56,7 +57,7 @@ type Organisation @entity {
   transfers: [OrganisationTransfer!] @derivedFrom(field: "organisation")
   approvals: [OrganisationApproval!] @derivedFrom(field: "organisation")
 
-  createdAt: BigInt! 
+  createdAt: BigInt!
 }
 
 type EtchENS @entity {
@@ -153,6 +154,7 @@ type EtchCommentAdded @entity(immutable: true) {
   transactionHash: Bytes!
 
   etch: Etch!
+  owner: Wallet!
 }
 
 type EtchCreated @entity(immutable: true) {
@@ -298,19 +300,16 @@ type TeamTransferToOrganisation @entity(immutable: true) {
   organisation: Organisation!
 }
 
-
 type TeamRenamed @entity(immutable: true) {
   id: Bytes!
 
   newName: String! # string
-
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 
   team: Team!
 }
-
 
 ## ORGANISATION EVENTS ##
 
@@ -387,14 +386,12 @@ type OrganisationRenamed @entity(immutable: true) {
   id: Bytes!
 
   newName: String! # string
-
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 
   organisation: Organisation!
 }
-
 
 type EtchENSCreated @entity(immutable: true) {
   id: Bytes!

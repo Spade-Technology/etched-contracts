@@ -52,6 +52,7 @@ export function handleCommentAdded(event: CommentAddedEvent): void {
   entity.transactionHash = event.transaction.hash;
 
   entity.etch = getEtchId(EID.Etch, event.params.tokenId);
+  entity.owner = event.params.owner;
 
   entity.save();
 }
