@@ -53,13 +53,13 @@ export const useSignIn = () => {
       let blockchainSignature;
       if (isPatchWallet) {
         if (!userId) throw new Error("No user ID provided");
-        blockchainSignature = (
-          await generatePatchSignature({
-            message: keccak256(blockchainMessage),
-            userId: userId,
-            erc6492: true,
-          })
-        ).signature;
+        const _blockchainSignature = await generatePatchSignature({
+          message: keccak256(blockchainMessage),
+          userId: userId,
+          erc6492: true,
+        });
+
+        blockchainSignature = _blockchainSignature.signature;
       } else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
 
       console.log("BLOCKCHAIN SIGNATURE GENERATED");
@@ -68,6 +68,7 @@ export const useSignIn = () => {
       await signIn("credentials", {
         message: authSig.signedMessage,
         signature: authSig.sig,
+        userId: userId,
         derivedVia: authSig.derivedVia,
         blockchainMessage,
         blockchainSignature,
@@ -118,7 +119,7 @@ export const useSignIn = () => {
       .find((line: string) => line.startsWith("Expiration Time:"))
       .split(": ")[1];
 
-    // if (signature && new Date(expirationDateString) > new Date()) return signature;
+    if (signature && new Date(expirationDateString) > new Date()) return signature;
 
     // -- 1. prepare 'sign-in with ethereum' message
     const preparedMessage = {
@@ -142,7 +143,7 @@ export const useSignIn = () => {
       const patchSignatureResult = await generatePatchSignature({
         userId: patchUserId,
         message: body,
-        erc6492: true,
+        erc6492: false,
       });
       signedResult = patchSignatureResult.signature;
       console.log("Patch signature result:", signedResult);

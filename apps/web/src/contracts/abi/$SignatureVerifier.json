@@ -7,6 +7,28 @@
   {
     "inputs": [
       {
+        "internalType": "bytes",
+        "name": "error",
+        "type": "bytes"
+      }
+    ],
+    "name": "ERC1271Revert",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "error",
+        "type": "bytes"
+      }
+    ],
+    "name": "ERC6492DeployFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "uint256",
@@ -44,25 +66,6 @@
       }
     ],
     "name": "$getEthSignedMessageHash",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "ret0",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "$getMessageHash",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -136,7 +139,7 @@
         "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -20,17 +20,24 @@ export const generateServerAuthSig = async () => {
   const expiration_date = new Date(Date.now() + expiration_time * 1000);
   const expiration = expiration_date.toISOString();
 
+  console.log("azeaze");
+
   const preparedMessage = {
-    domain: globalThis.location.host,
-    address: (await walletClient.getAddresses())[0],
+    address: walletClient.account.address,
     version: "1",
     chainId: 1,
     expirationTime: expiration,
-    uri: globalThis.location.href,
+    domain: env.DOMAIN, // TODO: change this to env.NEXTAUTH_URL + "/"
+    uri: env.NEXTAUTH_URL + "/",
   };
 
+  console.log(preparedMessage);
+
   const message = new SiweMessage(preparedMessage);
+
   const body = message.prepareMessage();
+
+  console.log(body);
 
   const signedResult = await walletClient.signMessage({ message: body });
 
@@ -40,8 +47,10 @@ export const generateServerAuthSig = async () => {
     sig: signedResult,
     derivedVia: "web3.eth.personal.sign",
     signedMessage: body,
-    address: (await walletClient.getAddresses())[0],
+    address: walletClient.account.address,
   };
+
+  console.log(authSig);
 
   return authSig;
 };
