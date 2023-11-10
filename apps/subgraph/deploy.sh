@@ -40,9 +40,10 @@ if [[ $UPDATE == "p" || $UPDATE == "P" ]]; then
   VERSION=$( IFS='.'; echo "${array[*]}" )
 fi
 
-# write the new version to "./.version"
-echo "$VERSION" > ./.version
-# the format of the version is "major.minor.patch"
 
 # launch the graph command
 graph deploy --studio etched -l v$VERSION
+
+# write the new version to "./.version"
+echo "$VERSION" > ./.version
+# the format of the version is "major.minor.patch"

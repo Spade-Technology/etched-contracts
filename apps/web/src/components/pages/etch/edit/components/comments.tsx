@@ -9,6 +9,8 @@ import Placeholder from "public/icons/dashboard/placeholder2.svg";
 import { useEffect, useState } from "react";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { Etch, EtchCommentAdded } from "@/gql/graphql";
+import Avatar from "boring-avatars";
+import { PaperPlaneIcon } from "@radix-ui/react-icons";
 
 type CommentProps = {
   image: any;
@@ -114,30 +116,31 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
       <div className=" py-5">
         <div className="flex justify-start gap-3">
           <div className="flex cursor-pointer gap-1">
-            <Image src={Placeholder} alt="placeholder" className="my-auto" />
-            <Icons.dropdownIcon className="my-auto mt-4" />
+            {/* <Image src={Placeholder} alt="placeholder" className="my-auto" /> */}
+            {/* <Icons.dropdownIcon className="my-auto mt-4" /> */}
+            <Avatar size={40} name={owner} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
           </div>
-          <Input placeholder="Add a comment" value={newComment} onClick={() => setEnableSubmit(true)} onChange={handleComment} />
-        </div>
-        {enableSubmit && (
-          <div className="float-right py-5">
-            <div className="flex justify-start gap-5">
-              <Button
-                className="border-none bg-transparent text-[#6D6D6D]"
-                onClick={() => {
-                  setNewComment("");
-                  setEnableSubmit(false);
-                }}
-              >
-                Cancel
-              </Button>
+          <Input placeholder="Add a comment" value={newComment} onChange={handleComment} />
+          {newComment && (
+            <div className="float-right">
+              <div className="flex justify-start gap-5">
+                {/* <Button
+                  className="border-none bg-transparent text-[#6D6D6D]"
+                  disabled={!newComment}
+                  onClick={() => {
+                    setNewComment("");
+                  }}
+                >
+                  X
+                </Button> */}
 
-              <Button className="rounded-lg" disabled={!newComment} onClick={addComment} isLoading={isLoading}>
-                Submit
-              </Button>
+                <Button className="rounded-lg" disabled={!newComment} onClick={addComment} isLoading={isLoading}>
+                  <PaperPlaneIcon />
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {comments &&
