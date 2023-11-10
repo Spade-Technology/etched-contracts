@@ -17,7 +17,7 @@ export default function DashboardPage() {
 
   return (
     <PageBoilerplate>
-      <div className="flex flex-col items-center justify-center">
+      <div className="mb-64 flex flex-col items-center justify-center">
         <DataTable isLoading={isLoading} data={error ? [] : etches} />
       </div>
     </PageBoilerplate>

@@ -2,6 +2,28 @@
   {
     "inputs": [
       {
+        "internalType": "bytes",
+        "name": "error",
+        "type": "bytes"
+      }
+    ],
+    "name": "ERC1271Revert",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "error",
+        "type": "bytes"
+      }
+    ],
+    "name": "ERC6492DeployFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes",
@@ -49,7 +71,7 @@
         "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

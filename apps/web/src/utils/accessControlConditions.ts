@@ -38,19 +38,45 @@ interface ABIParams {
   type: string;
 }
 
-export const defaultAccessControlConditions = ({ etchId }: { etchId: string }): any[] => {
+export const defaultAccessControlConditionsUsingReadableID = ({ etchId }: { etchId: string }): any[] => {
+  const fn = "hasReadPermission";
   return [
     {
       conditionType: "evmContract",
 
       contractAddress: contracts.Etch,
 
-      functionName: "hasReadPermission",
-      method: "hasReadPermission",
+      functionName: fn,
+      method: fn,
       functionParams: [":userAddress", etchId],
       params: [":userAddress", etchId],
       parameters: [":userAddress", etchId],
-      functionAbi: EtchABI.find((abi) => abi.name === "hasReadPermission") as FunctionABI,
+      functionAbi: EtchABI.find((abi) => abi.name === fn) as FunctionABI,
+
+      chain: camelCaseNetwork,
+      returnValueTest: {
+        key: "",
+        comparator: "=",
+        value: "true",
+      },
+    },
+  ];
+};
+
+export const defaultAccessControlConditions = ({ etchUID }: { etchUID: string }): any[] => {
+  const fn = "hasReadPermissionUID";
+  return [
+    {
+      conditionType: "evmContract",
+
+      contractAddress: contracts.Etch,
+
+      functionName: fn,
+      method: fn,
+      functionParams: [":userAddress", etchUID],
+      params: [":userAddress", etchUID],
+      parameters: [":userAddress", etchUID],
+      functionAbi: EtchABI.find((abi) => abi.name === fn) as FunctionABI,
 
       chain: camelCaseNetwork,
       returnValueTest: {

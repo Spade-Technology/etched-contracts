@@ -5,6 +5,7 @@ const client = new LitJsSdk.LitNodeClient({
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
+  debug: false,
 });
 
 class Lit {

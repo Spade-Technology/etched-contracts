@@ -11,6 +11,28 @@
     "type": "constructor"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "error",
+        "type": "bytes"
+      }
+    ],
+    "name": "ERC1271Revert",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "error",
+        "type": "bytes"
+      }
+    ],
+    "name": "ERC6492DeployFailed",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -92,6 +114,12 @@
         "internalType": "struct IEtches.SComments",
         "name": "comment",
         "type": "tuple"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "CommentAdded",
@@ -772,22 +800,16 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "$getMessageHash",
+    "inputs": [],
+    "name": "MAX_ETCHES_PER_USER",
     "outputs": [
       {
-        "internalType": "bytes32",
-        "name": "ret0",
-        "type": "bytes32"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -922,7 +944,7 @@
         "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -936,6 +958,11 @@
         "internalType": "string",
         "name": "commentIpfsCid",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "commentOnEtch",
@@ -1085,11 +1112,59 @@
       },
       {
         "internalType": "uint256",
+        "name": "uid",
+        "type": "uint256"
+      }
+    ],
+    "name": "hasReadPermissionUID",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
     ],
     "name": "hasWritePermission",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "uid",
+        "type": "uint256"
+      }
+    ],
+    "name": "hasWritePermissionUID",
     "outputs": [
       {
         "internalType": "bool",
@@ -1285,6 +1360,11 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "uid",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "to",
         "type": "address"
@@ -1313,6 +1393,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "uid",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "teamId",
@@ -1434,6 +1519,36 @@
         "type": "uint256"
       },
       {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ITeams.userPermissions[]",
+        "name": "permissions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setIndividualPermissionsBulk",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
         "internalType": "string",
         "name": "documentName",
         "type": "string"
@@ -1473,6 +1588,36 @@
       }
     ],
     "name": "setTeamPermissions",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "teamId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IEtches.ExternalTeamPermission[]",
+        "name": "permissions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setTeamPermissionsBulk",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1641,6 +1786,25 @@
     "name": "transferToTeam",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "uid",
+        "type": "uint256"
+      }
+    ],
+    "name": "uidToEtch",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "etch",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

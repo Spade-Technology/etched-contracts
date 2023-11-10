@@ -18,33 +18,33 @@
     --foreground: hsla(222.2, 84%, 4.9%, 1);
     --skeleton: hsl(204, 9%, 90%);
 
-    --card: hsla(0, 0%, 100%, 1);
-    --card-foreground: hsla(222.2, 84%, 4.9%, 1);
+    --card: #ffffff;
+    --card-foreground: #020817;
 
-    --popover: hsla(0, 0%, 100%, 1);
-    --popover-foreground: hsla(222.2, 84%, 4.9%, 1);
+    --popover: #ffffff;
+    --popover-foreground: #020817;
 
-    --primary: hsla(152, 89%, 25%, 1);
-    --primary-foreground: hsla(152, 100%, 93%, 1);
+    --primary: #077844;
+    --primary-foreground: #dbffee;
 
-    --secondary: hsla(210, 40%, 96.1%, 1);
-    --secondary-foreground: hsla(222.2, 47.4%, 11.2%, 1);
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
 
-    --muted: hsla(210, 40%, 96.1%, 1);
-    --muted-foreground: hsla(215.4, 16.3%, 46.9%, 1);
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
 
-    --accent: hsla(210, 40%, 96.1%, 1);
-    --accent-foreground: hsla(222.2, 47.4%, 11.2%, 1);
+    --accent: #f1f5f9;
+    --accent-foreground: #0f172a;
 
-    --destructive: hsla(0, 84.2%, 60.2%, 1);
-    --destructive-foreground: hsla(210, 40%, 98%, 1);
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
 
-    --success: hsla(152, 89%, 25%, 1);
-    --success-foreground: hsla(152, 100%, 93%, 1);
+    --success: #077844;
+    --success-foreground: #dbffee;
 
-    --border: hsla(214.3, 31.8%, 91.4%, 1);
-    --input: hsla(214.3, 31.8%, 91.4%, 1);
-    --ring: hsla(222.2, 84%, 4.9%, 1);
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #020817;
 
     --radius: 0.5rem;
   }

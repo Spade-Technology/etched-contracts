@@ -18,6 +18,7 @@ import { Skeleton } from "./ui/skeleton";
 import { FileIcon } from "@radix-ui/react-icons";
 import { Label } from "./ui/label";
 import { Etch, Organisation, Team, Wallet } from "@/gql/graphql";
+import { useRouter } from "next/router";
 
 export const commands = [
   {
@@ -97,6 +98,7 @@ export const bsrtct = (shortcut: string) => {
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
   const currentSearch = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -206,6 +208,10 @@ export function CommandMenu() {
                       key={index}
                       className="flex justify-between"
                       // onSelect={() => handleAction(etch.action)}
+                      onSelect={() => {
+                        router.push("/dashboard/etches/" + etch.tokenId);
+                        setOpen(false);
+                      }}
                     >
                       {/* <FileIcon /> */}
                       {etch.documentName + " - " + etch.tokenId}
@@ -219,6 +225,10 @@ export function CommandMenu() {
                       key={index}
                       className="flex justify-between"
                       // onSelect={() => handleAction(team.action)}
+                      onSelect={() => {
+                        router.push("/dashboard/teams/" + team.id);
+                        setOpen(false);
+                      }}
                     >
                       {/* <Users2Icon /> */}
                       {team.name}
@@ -232,6 +242,10 @@ export function CommandMenu() {
                       key={index}
                       className="flex justify-between"
                       // onSelect={() => handleAction(team.action)}
+                      onSelect={() => {
+                        router.push("/dashboard/settings/");
+                        setOpen(false);
+                      }}
                     >
                       {/* <BriefcaseIcon /> */}
                       {organisation.name}
