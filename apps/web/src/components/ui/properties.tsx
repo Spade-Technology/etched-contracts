@@ -8,7 +8,9 @@ interface types {
   etch?: Partial<Etch | any>;
   isLoading: boolean;
   openPropertiesModal: boolean;
-  setOpenPropertiesModal: React.Dispatch<boolean>;
+  setOpenPropertiesModal: React.Dispatch<React.SetStateAction<boolean>>;
+  activeModals: any; // replace 'any' with the actual type of activeModals
+  setActiveModals: React.Dispatch<React.SetStateAction<any>>; // replace 'any' with the actual type of setActiveModals
 }
 
 export default function PropertiesDialog({

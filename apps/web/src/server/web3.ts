@@ -28,20 +28,26 @@ export const generateServerAuthSig = async () => {
     chainId: 1,
     expirationTime: expiration,
     domain: env.DOMAIN, // TODO: change this to env.NEXTAUTH_URL + "/"
-    uri: env.NEXTAUTH_URL + "/",
+    uri: "https://" + env.DOMAIN + "/",
   };
 
-  console.log(preparedMessage);
+  console.count();
 
   const message = new SiweMessage(preparedMessage);
 
+  console.count();
+
   const body = message.prepareMessage();
 
-  console.log(body);
+  console.count();
 
   const signedResult = await walletClient.signMessage({ message: body });
 
+  console.count();
+
   if (!signedResult) throw new Error("Unable to sign message");
+
+  console.count();
 
   let authSig = {
     sig: signedResult,
@@ -49,6 +55,8 @@ export const generateServerAuthSig = async () => {
     signedMessage: body,
     address: walletClient.account.address,
   };
+
+  console.count();
 
   console.log(authSig);
 

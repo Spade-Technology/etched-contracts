@@ -2,6 +2,7 @@
 
 type Wallet @entity {
   id: Bytes!
+  eoa: String!
   ownedEtches: [EtchOwnership!] @derivedFrom(field: "owner")
   ownedTeams: [TeamOwnership!] @derivedFrom(field: "owner")
   ownedorganisations: [OrganisationOwnership!] @derivedFrom(field: "owner")
@@ -9,8 +10,7 @@ type Wallet @entity {
   OrganisationApprovals: [OrganisationApproval!] @derivedFrom(field: "wallet")
   etchPermissions: [EtchPermission!] @derivedFrom(field: "wallet")
   teamPermissions: [TeamPermission!] @derivedFrom(field: "wallet")
-  OrganisationPermissions: [OrganisationPermission!]
-    @derivedFrom(field: "wallet")
+  OrganisationPermissions: [OrganisationPermission!] @derivedFrom(field: "wallet")
 
   etchENS: [EtchENS!]! @derivedFrom(field: "owner")
 }
