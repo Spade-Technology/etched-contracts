@@ -14,11 +14,13 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const etchId = router.query!.etch as string;
+  const etchId = !!globalThis.window && (window?.location?.pathname?.split("/").pop() as string);
 
+  // using window location because the query cannot be upheld, and the useRouter takes a few renders to initialize
   const { etch, isLoading, error } = useGetUniqueEtch(etchId);
 
-  if (!etchId || typeof etchId !== "string") return <div className="flex h-screen w-screen bg-white"> 404 </div>;
+  if (!(router.query!.etch as string) || typeof (router.query!.etch as string) !== "string")
+    return <div className="flex h-screen w-screen bg-white"> todo: add skeleton </div>;
 
   return (
     <PageBoilerplate>
