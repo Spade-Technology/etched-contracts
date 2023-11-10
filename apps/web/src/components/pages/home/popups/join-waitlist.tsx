@@ -23,7 +23,7 @@ const JoinWaitlist = ({ show, close }: WaitlistProps) => {
         </div>
 
         <div
-          // onClick={() => router.push("/authentication")}
+          // onClick={() => router.push("/auth")}
           onClick={close}
           className="mx-auto my-5 flex w-fit cursor-pointer gap-3 rounded-3xl bg-[#097B45] px-7 py-3  font-semibold text-white"
         >

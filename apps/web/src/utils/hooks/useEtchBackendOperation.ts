@@ -7,15 +7,10 @@ import { toast } from "@/components/ui/use-toast";
 import { useContext, useState } from "react";
 import { refetchContext } from "../urql";
 
-// const useOperation = () = {
-
-// }
-
 const formSchema = z.object({
-  etchTitle: z.string(),
-  etchDescription: z.string(),
-  etchFile: z.any(),
-  etchVisibility: z.boolean(),
+  name: z.string(),
+  description: z.string(),
+  file: z.any(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -30,52 +25,28 @@ function disableBeforeUnload() {
 }
 
 export const useCreateEtch = () => {
-  const { mutateAsync: mintAsync, isLoading: mintLoading } = api.etch.mintEtch.useMutation();
-  const { mutateAsync: encryptAsync, isLoading: encryptLoading } = api.etch.uploadAndEncrypt.useMutation();
-  const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.setMetadata.useMutation();
-  const { startUpload, isUploading } = useUploadThing("EtchUpload");
+  const { mutateAsync: bulkMintEtch, isLoading: isMintLoading } = api.etch.bulkMintEtch.useMutation();
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const { startUpload, isUploading } = useUploadThing("EtchUpload", {
+    onUploadProgress: (progress) => setUploadProgress(progress),
+  });
   const { addOperation, setOperation, refetchEtches } = useContext(refetchContext);
   const { regenerateAuthSig } = useSignIn();
-  const [etchCreated, setEtchCreated] = useState("");
+  const [etchCreated, setEtchCreated] = useState(0);
 
-  const onSubmit = async (data: FormData): Promise<void> => {
+  const onSubmit = async (data: FormData[]): Promise<void> => {
+    enableBeforeUnload();
+
     const opId = addOperation({
-      name: "Creation of " + data.etchTitle,
-      status: "Uploading file",
+      name: "Creation of " + data.length + " etch" + (data.length > 1 ? "es" : ""),
+      status: "Uploading files",
       progress: 0,
       statusType: "loading",
       timestamp: Date.now(),
     });
 
-    enableBeforeUnload();
-
     try {
-      const uploaded = await startUpload([data.etchFile]);
-
-      setOperation(opId, {
-        name: "Creation of " + data.etchTitle,
-        status: "Generating Signatures",
-        progress: 20,
-        statusType: "loading",
-      });
-      const authSig = await regenerateAuthSig();
-
-      setOperation(opId, {
-        name: "Creation of " + data.etchTitle,
-        status: "Minting Etch",
-        progress: 40,
-        statusType: "loading",
-      });
-      const etchId = await mintAsync({
-        fileName: data.etchTitle,
-        fileDescription: data.etchDescription,
-
-        team: getSelectedTeam().id,
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-      });
-
-      setEtchCreated(data.etchTitle);
+      const uploaded = await startUpload(data.map((d) => d.file));
 
       if (!uploaded || !uploaded[0]) {
         toast({
@@ -87,45 +58,53 @@ export const useCreateEtch = () => {
       }
 
       setOperation(opId, {
-        name: "Creation of " + data.etchTitle,
-        status: "Encrypting file",
-        progress: 60,
+        name: "Creation of " + data.length + " etch" + (data.length > 1 ? "es" : ""),
+        status: "Generating Signatures",
+        progress: 33,
         statusType: "loading",
       });
-      const { ipfsCid } = await encryptAsync({
-        etchId: etchId.toString(),
-        fileUrl: uploaded[0].fileUrl,
-        authSig,
-      });
+      const authSig = await regenerateAuthSig();
 
       setOperation(opId, {
-        name: "Creation of " + data.etchTitle,
-        status: "Setting metadata",
-        progress: 80,
+        name: "Creation of " + data.length + " etch" + (data.length > 1 ? "es" : ""),
+        status: "Minting Etch",
+        progress: 66,
         statusType: "loading",
       });
-      await updateAsync({
-        etchId: etchId.toString(),
-        fileName: data.etchTitle,
-        ipfsCid,
-        description: data.etchDescription,
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+
+      setEtchCreated(data.length);
+
+      await bulkMintEtch({
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        authSig,
+        team: getSelectedTeam().id,
+
+        files: data.map((d, i) => ({
+          name: d.name,
+          description: d.description,
+          url: uploaded?.[i]?.url || "",
+        })),
       });
 
       setOperation(opId, {
-        name: "Creation of " + data.etchTitle,
+        name: "Creation of " + data.length + " etch" + (data.length > 1 ? "es" : ""),
         status: "Done",
         progress: 100,
         statusType: "success",
       });
-      refetchEtches();
       toast({
         title: "Etch created",
-        description: "Your etch has been created",
+        description: "Your etch has been created, and will be visible shortly.",
         variant: "success",
       });
       disableBeforeUnload();
+
+      const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      await sleep(5000);
+
+      refetchEtches();
     } catch (e: any) {
       console.error(e);
       toast({
@@ -134,7 +113,7 @@ export const useCreateEtch = () => {
         variant: "destructive",
       });
       setOperation(opId, {
-        name: "Creation of " + data.etchTitle,
+        name: "Creation of " + data.length + " etch" + (data.length > 1 ? "es" : ""),
         status: "Something went wrong",
         statusType: "error",
         error: (e.message || e.code || "Unknown error") as string,
@@ -143,7 +122,7 @@ export const useCreateEtch = () => {
     }
   };
 
-  const isLoading: boolean = mintLoading || updateLoading || encryptLoading || isUploading;
+  const isLoading: boolean = isMintLoading || isUploading;
 
-  return { onSubmit, isLoading, etchCreated, setEtchCreated };
+  return { onSubmit, isLoading, isUploading, etchCreated, setEtchCreated, uploadProgress };
 };

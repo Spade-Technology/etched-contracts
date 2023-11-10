@@ -46,7 +46,7 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
         />
 
         <div
-          // onClick={() => router.push("/authentication")}
+          // onClick={() => router.push("/auth")}
           onClick={() => setShowWaitlist(email.length > 0 ? email : true)}
           className="flex cursor-pointer items-center gap-[10px] rounded-3xl bg-[#097B45] px-[30px] py-[15px] font-campton text-sm font-semibold text-white md:text-lg"
         >

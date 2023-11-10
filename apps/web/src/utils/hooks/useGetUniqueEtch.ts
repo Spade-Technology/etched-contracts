@@ -61,6 +61,14 @@ const FullEtchFragment = graphql(`
       commentId
       comment_commentIpfsCid
       comment_timestamp
+
+      owner {
+        id
+        etchENS {
+          id
+          name
+        }
+      }
     }
     transfers {
       id

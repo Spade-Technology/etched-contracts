@@ -7,9 +7,11 @@ import Footer from "@/components/ui/footer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
+import { env } from "@/env.mjs";
 import { api } from "@/utils/api";
 import emailjs from "@emailjs/browser";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import ForwardArrow from "public/icons/forward-arrow.svg";
 import { useState } from "react";
 
@@ -18,6 +20,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const { mutateAsync, isLoading } = api.user.subscribeToNewsletter.useMutation({});
+  const router = useRouter();
 
   const handleSubscribeToNewsletter = async () => {
     if (!email || !company)
@@ -71,6 +74,7 @@ export default function Home() {
   return (
     <div className="w-full overflow-hidden font-campton">
       <section className="mx-5 md:mx-10 xl:mx-24">
+        <Button onClick={() => router.push("/auth")}>Authenticate</Button>
         <Header setShowWaitlist={showWaitlistUsing} />
         <div className="mx-auto text-center align-middle ">
           <WaitlistDialog
