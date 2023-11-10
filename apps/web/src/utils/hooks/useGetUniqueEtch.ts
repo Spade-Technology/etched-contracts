@@ -1,6 +1,8 @@
 import { graphql } from "@/gql";
 import { Etch } from "@/gql/graphql";
+import { useContext, useEffect } from "react";
 import { useQuery } from "urql";
+import { refetchContext } from "../urql";
 
 const FullEtchFragment = graphql(`
   fragment FullEtchFragment on Etch {
@@ -94,10 +96,15 @@ const GET_UNIQUE_ETCH_QUERY = graphql(`
 `);
 
 export const useGetUniqueEtch = (etchId?: string) => {
-  const [{ data: etchData, fetching, error }] = useQuery({
+  const [{ data: etchData, fetching, error, operation }, reexecute] = useQuery({
     query: GET_UNIQUE_ETCH_QUERY,
     variables: { etchId },
   });
+
+  const refetch = () => reexecute({ requestPolicy: "cache-and-network" });
+
+  const { setRefetchEtch } = useContext(refetchContext);
+  useEffect(() => setRefetchEtch(refetch), [operation]);
 
   if (!etchData) return { etch: undefined, isLoading: fetching, error };
 
