@@ -11,10 +11,6 @@ interface Types {
   onClick: React.MouseEventHandler<HTMLInputElement>;
 }
 const SearchInput: React.FC<Types> = ({ className, type, placeholder, value, onChange, onClick, ...props }) => {
-  useEffect(() => {
-    console.log(value);
-  });
-
   return (
     <input
       type={type}
