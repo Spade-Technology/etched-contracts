@@ -12,6 +12,8 @@ export function removeDuplicatesByField(arr: any[], field: string): any[] {
   return uniqueObjects;
 }
 
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const teamPermissions = {
   none: 0,
   read: 1,
