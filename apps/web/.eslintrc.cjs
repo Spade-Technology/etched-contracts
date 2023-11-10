@@ -6,12 +6,7 @@ const config = {
 
     sourceType: "module",
   },
-  // plugins: ["@typescript-eslint"],
-  // extends: [
-  //   "next/core-web-vitals",
-  //   "plugin:@typescript-eslint/recommended-type-checked",
-  //   "plugin:@typescript-eslint/stylistic-type-checked",
-  // ],
+  extends: ["plugin:@next/next/recommended"],
   ignorePatterns: ["node_modules/", "**/node_modules/", "/**/node_modules/*", "out/", "dist/", "build/"],
 };
 
