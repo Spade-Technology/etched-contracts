@@ -24,6 +24,7 @@ import { TeamSelector, getSelectedTeam } from "./team-selector";
 import { toast } from "./ui/use-toast";
 import { refetchContext } from "@/utils/urql";
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
+import { Icons } from "./ui/icons";
 
 const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
 
@@ -73,22 +74,36 @@ export const CreateEtchButton = () => {
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="w-fit px-5 duration-500 hover:shadow-etched-1" onClick={() => setIsOpen(true)}>
+        <Button className="w-fit px-5 font-medium text-white duration-500 hover:shadow-etched-1" onClick={() => setIsOpen(true)}>
           + Create Etch
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className={"max-h-screen overflow-y-scroll lg:max-w-screen-lg"}>
+      <AlertDialogContent
+        className={`${etchCreated ? "max-w-[720px]" : "max-w-[686px] lg:max-w-[686px]"} max-h-screen py-8 font-body`}
+      >
         <div className="w-full">
           {etchCreated ? (
             <>
+              <img
+                onClick={() => setIsOpen(false)}
+                src="/icons/customModal/closeIcon.svg"
+                className="absolute right-7 top-7 h-6 w-6 cursor-pointer"
+                alt=""
+              />
               <div className="flex flex-col items-center gap-8">
-                <h1 className="text-center text-3xl text-primary">Congratulations on your Etch! 🎉</h1>
-                <div className="text-center text-slate-500">
+                <h1 className="text-center text-[32px] font-semibold text-primary">Congratulations on your Etch! 🎉</h1>
+                <div className="font-base text-center font-bold text-slate-500">
                   Your Etch <span className="text-primary">{etchCreated}</span> has been created. You can view it on the dashboard
                 </div>
                 <div className="flex gap-8">
-                  <Button onClick={() => setEtchCreated("")}>Create a new Etch</Button>
+                  <Button
+                    className="!font-base px-5 py-[11px] font-semibold text-white hover:shadow-lg"
+                    onClick={() => setEtchCreated("")}
+                  >
+                    Create a new Etch
+                  </Button>
                   <AlertDialogCancel
+                    className="font-base border-2 border-primary px-5 py-[11px] font-semibold text-primary hover:bg-primary hover:text-white"
                     onClick={() => {
                       refetchEtches();
                       setIsOpen(false);
@@ -106,7 +121,7 @@ export const CreateEtchButton = () => {
               </AlertDialogHeader>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className="mb-2 flex flex-col gap-2 md:flex-row">
+                  <div className="mb-2 grid grid-cols-2 gap-8 md:flex-row">
                     <div className="flex w-full flex-col gap-5">
                       <FormField
                         control={form.control}
@@ -178,10 +193,20 @@ export const CreateEtchButton = () => {
                         )}
                       />
                     </div>
-                    {fileBlobUrl && fileBlobUrl !== "UNSUPPORTED" && (
+                    {fileBlobUrl && fileBlobUrl !== "UNSUPPORTED" ? (
                       <div>
                         <Label>Preview</Label>
-                        <iframe src={fileBlobUrl} title="Preview" ref={iframeRef} className="border" />
+                        <iframe
+                          src={fileBlobUrl}
+                          title="Preview"
+                          ref={iframeRef}
+                          className="h-[416px] w-[295px] rounded-md border"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex h-[416px] w-[295px] flex-col items-center justify-center gap-5 rounded-md border border-neutral-500">
+                        <Icons.preview className=" h-12 w-12" />
+                        <div className="text-base font-medium text-neutral-400">Preview your files here</div>
                       </div>
                     )}
                   </div>
