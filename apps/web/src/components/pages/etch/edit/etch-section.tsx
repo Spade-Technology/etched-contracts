@@ -36,7 +36,6 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
     setSelectedImg(image);
-console.log(image);
 
     return {};
   };
@@ -44,6 +43,7 @@ console.log(image);
   useEffect(() => {
     if (etch?.ipfsCid) decrypt();
   }, [etch?.ipfsCid]);
+
   if (isLoading) return <div>Loading...</div>;
   return (
     <div>
