@@ -59,6 +59,10 @@ export const env = createEnv({
     PATCHWALLET_CLIENT_ID: z.string(),
     PATCHWALLET_CLIENT_SECRET: z.string(),
     PATCHWALLET_BASE_URL: z.string(),
+
+    // Lit
+    DOMAIN: z.string(),
+
     NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME: z.string(),
   },
 
@@ -121,7 +125,11 @@ export const env = createEnv({
     PATCHWALLET_CLIENT_ID: process.env.PATCHWALLET_CLIENT_ID,
     PATCHWALLET_CLIENT_SECRET: process.env.PATCHWALLET_CLIENT_SECRET,
     PATCHWALLET_BASE_URL: process.env.PATCHWALLET_BASE_URL,
+
     NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+
+    // Lit
+    DOMAIN: process.env.DOMAIN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

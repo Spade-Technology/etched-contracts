@@ -179,16 +179,23 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
         </div>
 
         <div>
-          <div className="pt-5 text-base">Description </div>
           {edit ? (
-            <Textarea
-              defaultValue={etch?.description || ""}
-              onChange={(e) => setDescription(e.target.value)}
-              disabled={updateLoading}
-              className="mb-5 w-full bg-[#F3F5F5]"
-            />
+            <>
+              <div className="pt-5 text-base">Description </div>
+              <Textarea
+                defaultValue={etch?.description || ""}
+                onChange={(e) => setDescription(e.target.value)}
+                disabled={updateLoading}
+                className="mb-5 w-full bg-[#F3F5F5]"
+              />
+            </>
           ) : (
-            <div className="mb-5 max-w-[400px] pt-1 text-base font-normal text-[#E2E2E2]">{etch?.description}</div>
+            etch?.description && (
+              <>
+                <div className="pt-5 text-base">Description </div>
+                <div className="mb-5 max-w-[400px] pt-1 text-base font-normal text-[#E2E2E2]">{etch?.description}</div>
+              </>
+            )
           )}
         </div>
 

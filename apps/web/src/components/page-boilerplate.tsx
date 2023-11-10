@@ -40,6 +40,6 @@ export const useVerifyAuth = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!session && status == "unauthenticated") router.push("/authentication");
+    if (!session && status == "unauthenticated") router.push("/auth");
   }, []);
 };

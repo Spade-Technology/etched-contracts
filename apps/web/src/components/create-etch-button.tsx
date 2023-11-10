@@ -7,23 +7,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { api } from "@/utils/api";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useContext, useEffect, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
 
-import { useSignIn } from "@/utils/hooks/useSignIn";
-import { useUploadThing } from "@/utils/uploadthing";
-import { TeamSelector, getSelectedTeam } from "./team-selector";
-import { toast } from "./ui/use-toast";
-import { refetchContext } from "@/utils/urql";
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
+import { refetchContext } from "@/utils/urql";
+import { EditIcon, Trash2 } from "lucide-react";
+import { useDropzone } from "react-dropzone";
+import { TeamSelector } from "./team-selector";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Input } from "./ui/input";
 
 const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
 
@@ -37,13 +35,10 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export const CreateEtchButton = () => {
-  const [fileBlobUrl, setFileBlobUrl] = React.useState<string>("");
-
-  const [state, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { refetchEtches } = useContext(refetchContext);
 
-  const { onSubmit, isLoading, etchCreated, setEtchCreated } = useCreateEtch();
+  const { onSubmit, isUploading: isLoading, etchCreated, setEtchCreated, uploadProgress } = useCreateEtch();
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({
@@ -57,12 +52,23 @@ export const CreateEtchButton = () => {
     },
   });
 
-  useEffect(() => {
-    if (iframeRef.current)
-      iframeRef.current.onload = () =>
-        iframeRef.current?.contentWindow?.document?.body &&
-        (iframeRef.current.contentWindow.document.body.style.backgroundColor = "transparent");
-  }, [fileBlobUrl]);
+  const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/*": [],
+    },
+    onDrop: (acceptedFiles: File[]) => {
+      setFiles([
+        ...files,
+        ...acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        ),
+      ]);
+    },
+  });
 
   useEffect(() => {
     document.addEventListener("create-etch", () => {
@@ -82,14 +88,31 @@ export const CreateEtchButton = () => {
           {etchCreated ? (
             <>
               <div className="flex flex-col items-center gap-8">
-                <h1 className="text-center text-3xl text-primary">Congratulations on your Etch! 🎉</h1>
+                <h1 className="text-center text-3xl text-primary">Congratulations on your Etch{files.length && "es"}! 🎉</h1>
                 <div className="text-center text-slate-500">
-                  Your Etch <span className="text-primary">{etchCreated}</span> has been created. You can view it on the dashboard
+                  {files.length > 1 ? (
+                    <>
+                      Your <span className="font-semibold text-primary">{etchCreated} Etches</span>
+                    </>
+                  ) : (
+                    "Your Etch"
+                  )}{" "}
+                  {files.length > 1 ? "have" : "has"} been created. You can view {files.length > 1 ? "them" : "it"} on the
+                  dashboard
                 </div>
                 <div className="flex gap-8">
-                  <Button onClick={() => setEtchCreated("")}>Create a new Etch</Button>
+                  <Button
+                    onClick={() => {
+                      setEtchCreated(0);
+                      setFiles([]);
+                    }}
+                  >
+                    Create a new Etch
+                  </Button>
                   <AlertDialogCancel
                     onClick={() => {
+                      setEtchCreated(0);
+                      setFiles([]);
                       refetchEtches();
                       setIsOpen(false);
                     }}
@@ -105,92 +128,142 @@ export const CreateEtchButton = () => {
                 <AlertDialogTitle>Create New Etch</AlertDialogTitle>
               </AlertDialogHeader>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className="mb-2 flex flex-col gap-2 md:flex-row">
-                    <div className="flex w-full flex-col gap-5">
-                      <FormField
-                        control={form.control}
-                        name="etchTitle"
-                        render={({ field }: { field: FieldValues }) => (
-                          <FormItem>
-                            <FormLabel>Public Etch Title</FormLabel>
-                            <FormControl>
-                              <Input disabled={isLoading} id="etchTitle" placeholder="Enter etch title" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <TeamSelector className=" " horizontal />
-                      <FormField
-                        control={form.control}
-                        name="etchDescription"
-                        render={({ field }: { field: FieldValues }) => (
-                          <FormItem>
-                            <FormLabel>Public Etch Description (currently not in use)</FormLabel>
-                            <FormControl>
-                              <Input disabled={isLoading} id="etchDescription" placeholder="Enter etch description" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="etchFile"
-                        render={({ field }: { field: FieldValues }) => (
-                          <FormItem>
-                            <FormLabel>Upload Etch</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="file"
-                                id="etchFile"
-                                multiple={false}
-                                disabled={isLoading}
-                                onChange={(event) => {
-                                  if (event.target.files?.[0]) {
-                                    field.onChange(event.target.files?.[0]);
-
-                                    if (previewFileTypes.includes(event.target.files?.[0].type.split("/").pop()!)) {
-                                      setFileBlobUrl(URL.createObjectURL(event.target.files?.[0]));
-                                    } else {
-                                      setFileBlobUrl("UNSUPPORTED");
-                                    }
-                                  }
-                                }}
-                              />
-                            </FormControl>
-                            <FormDescription>Etch File: Can be set to private through encryption</FormDescription>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="etchVisibility"
-                        render={({ field }: { field: FieldValues }) => (
-                          <FormItem className="flex flex-row items-center justify-between rounded-lg">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-base">Etch Visibility</FormLabel>
-                              <FormDescription>Choose whether your etch is public or private.</FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch disabled={isLoading} checked={field.value} onCheckedChange={field.onChange} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                <form>
+                  <div className="mt-8 flex gap-4">
+                    <div className="w-1/2 ">
+                      <section>
+                        <div
+                          {...getRootProps()}
+                          className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
+                        >
+                          <input {...getInputProps()} />
+                          <p>
+                            Drag 'n' drop some files here, or <span className="underline">click to select files</span>
+                          </p>
+                        </div>
+                      </section>
                     </div>
-                    {fileBlobUrl && fileBlobUrl !== "UNSUPPORTED" && (
-                      <div>
-                        <Label>Preview</Label>
-                        <iframe src={fileBlobUrl} title="Preview" ref={iframeRef} className="border" />
+                    <div className="h-[33vh] w-1/2 overflow-scroll">
+                      <Label>Create on Behalf of</Label>
+                      <TeamSelector className="w-full " horizontal />
+
+                      <div className="my-3 flex justify-between">
+                        <div>
+                          {files.length} File{files.length === 1 ? "" : "s"} Selected |{" "}
+                          {(files.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024).toFixed(2)} MB total
+                        </div>
+                        <span
+                          className={!isLoading && files.length ? "cursor-pointer hover:underline" : "opacity-50"}
+                          onClick={() => setFiles([])}
+                        >
+                          clear
+                        </span>
                       </div>
-                    )}
+                      <div className="mt-3 grid grid-cols-3 gap-4 overflow-scroll">
+                        {files.map((file, index) => (
+                          <div key={index} className="aspect-w-1 aspect-h-1 group relative">
+                            <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
+                            <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
+                              <span className="text-center text-sm text-white">
+                                {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+                              </span>
+                              {isLoading ? (
+                                <span className="text-white opacity-50"> {uploadProgress}% </span>
+                              ) : (
+                                <span className="text-white opacity-50">
+                                  {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB
+                                </span>
+                              )}
+                            </div>
+
+                            <Dialog>
+                              <DialogTrigger className="w-23 absolute left-0 top-0 m-2 flex  rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100">
+                                <EditIcon className="h-6 w-6" />
+                              </DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>
+                                    Edit {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+                                  </DialogTitle>
+                                  <DialogDescription className="mx-0 mt-4 flex flex-col gap-2 px-0">
+                                    <div>
+                                      <Label>File Name</Label>
+                                      <Input
+                                        defaultValue={(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+                                        onChange={(e) => {
+                                          setFiles(
+                                            files.map((el, i) => {
+                                              if (i === index) {
+                                                return Object.assign(el, {
+                                                  nameOverride: e.target.value + "." + el.name.split(".").pop(),
+                                                });
+                                              }
+                                              return el;
+                                            })
+                                          );
+                                        }}
+                                      />
+                                    </div>
+                                    <div>
+                                      <Label>Description</Label>
+                                      <Input
+                                        defaultValue={file.description}
+                                        onChange={(e) => {
+                                          setFiles(
+                                            files.map((el, i) => {
+                                              if (i === index) {
+                                                return Object.assign(el, {
+                                                  description: e.target.value,
+                                                });
+                                              }
+                                              return el;
+                                            })
+                                          );
+                                        }}
+                                      />
+                                    </div>
+                                    <div>
+                                      <Label>File Extension</Label>
+                                      <Input defaultValue={(file.nameOverride ?? file.name).split(".").pop()} readOnly />
+                                    </div>
+                                    <div>
+                                      <Label>File Size</Label>
+                                      <Input defaultValue={(file.size / 1024 / 1024).toFixed(2) + " MB"} readOnly />
+                                    </div>
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+
+                            <div
+                              className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                              onClick={() => setFiles(files.filter((_, i) => i !== index))}
+                            >
+                              <Trash2 className="h-6 w-6" href="" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <AlertDialogFooter>
+                  <AlertDialogFooter className="mt-4">
                     <AlertDialogCancel disabled={isLoading} onClick={() => setIsOpen(false)}>
                       Cancel
                     </AlertDialogCancel>
-                    <Button isLoading={isLoading} type="submit">
-                      {state === "" ? "Create Etch" : state}
+                    <Button
+                      isLoading={isLoading}
+                      disabled={files.length === 0}
+                      onClick={() =>
+                        onSubmit(
+                          files.map((file) => ({
+                            name: file.nameOverride ?? file.name,
+                            description: file.description ?? "",
+                            file,
+                          }))
+                        )
+                      }
+                    >
+                      {isLoading ? uploadProgress + " %" : "Create Etch"}
                     </Button>
                   </AlertDialogFooter>
                 </form>

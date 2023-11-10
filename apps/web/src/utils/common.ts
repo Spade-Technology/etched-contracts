@@ -11,3 +11,9 @@ export function removeDuplicatesByField(arr: any[], field: string): any[] {
 
   return uniqueObjects;
 }
+
+export const teamPermissions = {
+  none: 0,
+  read: 1,
+  readWrite: 2,
+};

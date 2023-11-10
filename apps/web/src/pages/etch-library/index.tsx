@@ -1,12 +1,21 @@
 import { PageBoilerplate } from "@/components/page-boilerplate";
-import { FoldersDialog,FilesDialog, HeaderDialog } from "@/components/pages/etch-library";
+import { FilesDialog, HeaderDialog } from "@/components/pages/etch-library";
+import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import React, { useState } from "react";
 
 export default function index() {
   const [sort, setSort] = useState("Latest first");
   const [filter, setFilter] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
-  const props = { sort, setSort, filter, setFilter };
+  const loggedInAddress = useLoggedInAddress();
+  const { isLoading, etches, error } = useGetEtchesFromUser(loggedInAddress.toLowerCase());
+  console.log(etches);
+
+  const files = etches.filter(({ documentName }) => documentName.toLowerCase().includes(searchValue.toLowerCase()));
+
+  const props = { sort, setSort, filter, setFilter, searchValue, setSearchValue, files };
 
   return (
     <PageBoilerplate>
@@ -14,8 +23,8 @@ export default function index() {
         <HeaderDialog {...props} />
 
         <main className="mt-[19px] flex flex-col gap-4 bg-white px-6 py-[34px] shadow">
-          <FilesDialog />
-          <FoldersDialog />
+          <FilesDialog {...props} />
+          {/* <FoldersDialog /> */}
         </main>
       </section>
     </PageBoilerplate>

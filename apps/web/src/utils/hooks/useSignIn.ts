@@ -1,20 +1,22 @@
 import { currentNetworkId, currentNode } from "@/contracts";
-import { useSession } from "@clerk/nextjs";
+import { useAuth, useSession } from "@clerk/nextjs";
 import { getWalletClient } from "@wagmi/core";
 import { signOut as _signOut, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { Address, encodeAbiParameters, keccak256, parseAbiParameters } from "viem";
+import { Address, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters } from "viem";
 import { useAccount, useBlockNumber, useSignMessage } from "wagmi";
 
 import { api } from "../api";
+import { env } from "@/env.mjs";
 
 export function signOut() {
   localStorage.clear();
+  // clear cookies
 
-  _signOut({ callbackUrl: "/authentication" });
+  _signOut({ callbackUrl: "/auth" });
 }
 
 export const useSignIn = () => {
@@ -24,7 +26,8 @@ export const useSignIn = () => {
 
   const { signMessageAsync } = useSignMessage();
   const { mutateAsync: generatePatchSignature } = api.patch.signMessageForPatchWallet.useMutation();
-  const { session } = useSession();
+  const { userId: _userId } = useAuth();
+  const userId = _userId?.toLowerCase();
   const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
 
   const logIn = async ({ isPatchWallet = false }: { isPatchWallet?: boolean }) => {
@@ -34,7 +37,12 @@ export const useSignIn = () => {
       setIsLoading(true);
       // Generate the message to be signed
 
-      const authSig = await regenerateAuthSig(undefined, { isPatchWallet, patchUserId: "business@lancedb.dev" });
+      console.log("Signing in...");
+
+      const authSig = await regenerateAuthSig(undefined, { isPatchWallet, patchUserId: userId || undefined });
+
+      // example
+      console.log("AUTH SIG GENERATED");
 
       const blockchainMessage = await encodeAbiParameters(parseAbiParameters("uint256 blockNumber, address nodeAddress"), [
         10000000000n,
@@ -43,19 +51,25 @@ export const useSignIn = () => {
 
       const walletClient = await getWalletClient({ chainId: Number(currentNetworkId!) });
       let blockchainSignature;
-      if (isPatchWallet)
-        blockchainSignature = (
-          await generatePatchSignature({
-            message: keccak256(blockchainMessage),
-            userId: "business@lancedb.dev",
-          })
-        ).signature;
-      else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
+      if (isPatchWallet) {
+        if (!userId) throw new Error("No user ID provided");
+        const _blockchainSignature = await generatePatchSignature({
+          message: keccak256(blockchainMessage),
+          userId: userId,
+          erc6492: true,
+        });
+
+        blockchainSignature = _blockchainSignature.signature;
+      } else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
+
+      console.log("BLOCKCHAIN SIGNATURE GENERATED");
 
       // Send the signature to the server to be verified, and sign in or sign up the user
       await signIn("credentials", {
         message: authSig.signedMessage,
         signature: authSig.sig,
+        userId: userId,
+        derivedVia: authSig.derivedVia,
         blockchainMessage,
         blockchainSignature,
         redirect: false,
@@ -74,27 +88,23 @@ export const useSignIn = () => {
     _expiration?: string,
     {
       addressOverride,
-      chainIdOverride,
 
       isPatchWallet,
       patchUserId,
-      patchBaseProvider,
     }: {
       addressOverride?: string;
-      chainIdOverride?: number;
 
       isPatchWallet?: boolean;
       patchUserId?: string;
-      patchBaseProvider?: string;
     } = {}
   ) => {
-    // if (isPatchWallet && !addressOverride)
-    //   addressOverride = (
-    //     await getUserFromId({
-    //       userId: patchUserId!,
-    //       baseProvider: patchBaseProvider ?? env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
-    //     })
-    //   ).eoa;
+    if (isPatchWallet && !addressOverride)
+      addressOverride = (
+        await getUserFromId({
+          userId: patchUserId!,
+          baseProvider: env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+        })
+      ).eoa;
 
     const expiration_time = 60 * 60 * 24 * 7; // 7 days
     const expiration_date = new Date(Date.now() + expiration_time * 1000);
@@ -121,29 +131,30 @@ export const useSignIn = () => {
       uri: globalThis.location.href,
     };
 
-    console.log(preparedMessage);
-
     const message = new SiweMessage(preparedMessage);
     const body = message.prepareMessage();
 
     // -- 2. sign the message
 
     let signedResult: string | undefined;
-    // if (isPatchWallet) {
-    //   const patchSignatureResult = await generatePatchSignature({
-    //     userId: "business@lancedb.dev",
-    //     message: body,
-    //   });
-    //   signedResult = patchSignatureResult.signature;
-    // } else
-    signedResult = await signMessageAsync({ message: body });
+    console.log({ isPatchWallet });
+    if (isPatchWallet) {
+      if (!patchUserId) throw new Error("No user ID provided");
+      const patchSignatureResult = await generatePatchSignature({
+        userId: patchUserId,
+        message: body,
+        erc6492: false,
+      });
+      signedResult = patchSignatureResult.signature;
+      console.log("Patch signature result:", signedResult);
+      console.log("-----------------------------------");
+    } else signedResult = await signMessageAsync({ message: body });
 
     if (!signedResult) throw new Error("Unable to sign message");
 
-    // -- 3. prepare auth message
     let authSig = {
       sig: signedResult,
-      derivedVia: "web3.eth.personal.sign",
+      derivedVia: isPatchWallet ? "EIP1271" : "web3.eth.personal.sign",
       signedMessage: body,
       address: addressOverride ?? address,
     };
