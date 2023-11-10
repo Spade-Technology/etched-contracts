@@ -22,6 +22,7 @@ import { useDropzone } from "react-dropzone";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
+import { Icons } from "./ui/icons";
 
 const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
 
@@ -138,36 +139,38 @@ export const CreateEtchButton = () => {
                       <section>
                         <div
                           {...getRootProps()}
-                          className="bg-primary-foreground-50 border-neutral-500 cursor-pointer flex h-[416px] w-[295px] flex-col items-center justify-center gap-5 rounded-md border border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
+                          className="bg-primary-foreground-50 flex h-[316px] w-[295px] cursor-pointer flex-col items-center justify-center gap-5 rounded-md border border-dashed border-neutral-500 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
                         >
                           <input {...getInputProps()} />
-                          <div className='text-base px-6 font-medium text-neutral-400 text-center'>
+                          <Icons.preview className="h-12 w-12" />
+                          <div className="px-6 text-center text-base font-medium text-neutral-400">
                             Drag 'n' drop some files here, or <span className="underline">click to select files</span>
                           </div>
                         </div>
                       </section>
                     </div>
-                    <div className="h-[33vh] w-1/2 overflow-scroll">
-                      <Label>Create on Behalf of</Label>
-                      <TeamSelector className="w-full " horizontal />
+                    <div className="w-full">
+                      <Label className="text-base font-semibold text-muted-foreground">Create on Behalf of</Label>
+                      <TeamSelector className="w-full mt-1" horizontal />
 
-                      <div className="my-3 flex justify-between">
-                        <div>
+                      <div className="mb-3 mt-8 flex justify-between">
+                        <div className='text-base font-semibold text-muted-foreground'>
                           {files.length} File{files.length === 1 ? "" : "s"} Selected |{" "}
                           {(files.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024).toFixed(2)} MB total
                         </div>
                         <span
-                          className={!isLoading && files.length ? "cursor-pointer hover:underline" : "opacity-50"}
+                          className={!isLoading && files.length ? "cursor-pointer text-base font-medium hover:underline" : "opacity-50 cursor-not-allowed"}
                           onClick={() => setFiles([])}
                         >
                           clear
                         </span>
                       </div>
-                      <div className="mt-3 grid grid-cols-3 gap-4 overflow-scroll">
+                   {files.length ?  <div className="mt-3 p-1 w-full bg-accent rounded-md border border-muted-foreground">
+                        <main className='custom-scrollbar h-[114px] overflow-y-auto p-1 flex flex-wrap gap-2'>
                         {files.map((file, index) => (
-                          <div key={index} className="aspect-w-1 aspect-h-1 group relative">
-                            <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
-                            <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
+                          <div key={index} className="h-[71px] w-[67px] group relative">
+                            <img src={file.preview} alt="Preview" className="rounded-lg object-cover h-full w-full shadow-lg" />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
                               <span className="text-center text-sm text-white">
                                 {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
                               </span>
@@ -246,8 +249,8 @@ export const CreateEtchButton = () => {
                               <Trash2 className="h-6 w-6" href="" />
                             </div>
                           </div>
-                        ))}
-                      </div>
+                        ))} </main>
+                      </div> : <></>}
                     </div>
                   </div>
                   <AlertDialogFooter className="mt-4">
