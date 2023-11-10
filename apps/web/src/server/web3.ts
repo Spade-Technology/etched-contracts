@@ -28,7 +28,7 @@ export const generateServerAuthSig = async () => {
     chainId: 1,
     expirationTime: expiration,
     domain: env.DOMAIN, // TODO: change this to env.NEXTAUTH_URL + "/"
-    uri: env.NEXTAUTH_URL + "/",
+    uri: env.DOMAIN,
   };
 
   console.log(preparedMessage);
