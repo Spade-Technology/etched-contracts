@@ -48,8 +48,6 @@ export const useCreateEtch = () => {
     try {
       const uploaded = await startUpload(data.map((d) => d.file));
 
-      console.log(uploaded);
-
       if (!uploaded || !uploaded[0]) {
         toast({
           title: "Upload failed",

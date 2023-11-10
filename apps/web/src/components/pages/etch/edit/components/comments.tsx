@@ -11,18 +11,20 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { Etch, EtchCommentAdded } from "@/gql/graphql";
 import Avatar from "boring-avatars";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import { shortenAddress } from "@/utils/hooks/address";
 
 type CommentProps = {
   image: any;
   userName: string;
   description: string;
   commentedAt: string;
+  addr: string;
 };
 
-const Comment = ({ image, userName, description, commentedAt }: CommentProps) => {
+const Comment = ({ image, userName, description, commentedAt, addr }: CommentProps) => {
   return (
     <div className="flex justify-start gap-3 py-5">
-      <Image src={image} alt="profile-pic" className="align-top" />
+      <Avatar size={40} name={addr} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
       <div>
         <div className="flex justify-start gap-3">
           <div>{userName}</div>
@@ -37,7 +39,10 @@ const Comment = ({ image, userName, description, commentedAt }: CommentProps) =>
 const Comments = ({ etch }: { etch: Partial<Etch> }) => {
   const [enableSubmit, setEnableSubmit] = useState<boolean>(false);
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState<{ comment: string; timestamp: number; owner: string }[]>([]);
+
+  const [comments, setComments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
+    {}
+  );
 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
@@ -92,33 +97,41 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
         ipfsCid: comment.comment_commentIpfsCid,
         litNodeClient: lit.client as any,
       })) as string;
+
       if (decryptedComment)
-        setComments((old) => [
+        setComments((old) => ({
           ...old,
-          {
+          [comment.commentId]: {
             comment: decryptedComment,
             timestamp: comment.comment_timestamp,
-            owner: comment.owner.etchENS[0]?.name || comment.owner.id,
+            addr: comment.owner.id,
+            owner: comment.owner.etchENS[0]?.name || shortenAddress({ address: comment.owner.id }),
           },
-        ]);
+        }));
     });
   };
 
   useEffect(() => {
-    setComments([]);
+    setComments({});
+
     decrypt(etch.comments || []);
   }, [etch.comments]);
 
   return (
     <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
-      <div className="text-xl font-semibold">{comments.length} Comments</div>
+      <div className="text-xl font-semibold">{Object.keys(comments).length} Comments</div>
 
       <div className=" py-5">
         <div className="flex justify-start gap-3">
           <div className="flex cursor-pointer gap-1">
             {/* <Image src={Placeholder} alt="placeholder" className="my-auto" /> */}
             {/* <Icons.dropdownIcon className="my-auto mt-4" /> */}
-            <Avatar size={40} name={owner} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
+            <Avatar
+              size={40}
+              name={owner.toLowerCase()}
+              variant="beam"
+              colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]}
+            />
           </div>
           <Input placeholder="Add a comment" value={newComment} onChange={handleComment} />
           {newComment && (
@@ -144,8 +157,8 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
       </div>
 
       {comments &&
-        comments.length > 0 &&
-        comments.map(({ comment, timestamp, owner }, idx) => {
+        Object.keys(comments).length > 0 &&
+        Object.values(comments).map(({ comment, timestamp, owner, addr }, idx) => {
           return (
             <Comment
               image={Placeholder}
@@ -153,6 +166,7 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
               description={comment}
               commentedAt={new Date(timestamp * 1000).toDateString()}
               key={idx}
+              addr={addr}
             />
           );
         })}

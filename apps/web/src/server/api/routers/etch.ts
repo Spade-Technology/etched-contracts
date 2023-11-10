@@ -2,7 +2,7 @@ import { camelCaseNetwork, contracts } from "@/contracts";
 import { lit } from "@/lit";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { generateServerAuthSig, publicClient, walletClient } from "@/server/web3";
-import { defaultAccessControlConditions } from "@/utils/accessControlConditions";
+import { defaultAccessControlConditions, defaultAccessControlConditionsUsingReadableID } from "@/utils/accessControlConditions";
 import { teamPermissions } from "@/utils/common";
 import EtchABI from "@abis/Etches.json";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
@@ -231,7 +231,7 @@ export const etchRouter = createTRPCRouter({
 
         litNodeClient: lit.client as any,
 
-        evmContractConditions: defaultAccessControlConditions({ etchId }),
+        evmContractConditions: defaultAccessControlConditionsUsingReadableID({ etchId }),
       }).catch((err) => {
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
       });
