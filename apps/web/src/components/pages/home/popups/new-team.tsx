@@ -6,15 +6,20 @@ import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { UsersInputDropdown } from "@/components/ui/input-dropdown";
 import { Label } from "@/components/ui/label";
+import { teamUser } from "@/types";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
 
 function NewTeam() {
   const [openModal, setOpenModal] = useState(false);
   const [orgName, setOrgName] = useState("");
-  const [roleData, setRoleData] = useState(["read only", "read & write"]);
-  const [selectedProfiles, setSelectedProfiles] = useState([]);
-  const [inviteUsers, setInviteUsers] = useState({ state: false, name: "", users: [] });
+  const [roleData, setRoleData] = useState<("none" | "read" | "readWrite")[]>(["read", "readWrite"]);
+  const [selectedProfiles, setSelectedProfiles] = useState<teamUser[]>([]);
+  const [inviteUsers, setInviteUsers] = useState<{ state: boolean; name: string; users: teamUser[] }>({
+    state: false,
+    name: "",
+    users: [],
+  });
 
   const users = [
     {
@@ -39,9 +44,11 @@ function NewTeam() {
     },
   ];
 
-  const editUserRole = ({ id, item }: { id: string; item: string }) => {
+  const editUserRole = ({ id, item }: { id: string; item: "none" | "read" | "readWrite" }) => {
     const user = selectedProfiles?.find((profile: any) => profile.id === id);
-    user.role = item;
+
+    if (user) user.role = item;
+
     setSelectedProfiles([...selectedProfiles]);
   };
 
@@ -77,12 +84,7 @@ function NewTeam() {
                   onChange={(e) => setOrgName(e.target.value)}
                 />
                 <Label className="font-semibold">Invite users</Label>
-                <UsersInputDropdown
-                  data={users}
-                  roleData={roleData}
-                  selectedItems={selectedProfiles}
-                  setSelectedItems={setSelectedProfiles}
-                />
+                <UsersInputDropdown roleData={roleData} selectedItems={selectedProfiles} setSelectedItems={setSelectedProfiles} />
 
                 {selectedProfiles.length > 0 && (
                   <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">

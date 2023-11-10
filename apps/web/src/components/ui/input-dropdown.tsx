@@ -15,7 +15,7 @@ import { SearchInput } from "./search-input";
 import { cn } from "@/lib/utils";
 import { GoodIcon } from "../icons/good";
 import { useGetUsers } from "@/utils/hooks/useGetUsers";
-import { orgUser } from "@/types";
+import { orgUser, teamUser } from "@/types";
 import { Organisation, Team } from "@/gql/graphql";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
@@ -89,17 +89,18 @@ const InputDropdown = ({ data, selectedItems, setSelectedItems }: InputDropdownP
   );
 };
 
-type UsersInputDropdownProps = {
-  type?: string;
-  placeholder: string;
+interface UsersInputDropdownProps {
+  //???????  data: { id: number; name: string; role: string }[]; ????????? @obi
   roleData: string[];
+  placeholder?: string;
   selectedItems: any;
-  setSelectedItems: Dispatch<SetStateAction<any[]>>;
-};
+  type?: string;
+  setSelectedItems: any;
+}
 
 type OrgInputDropdownProps = {
   type?: string;
-  placeholder: string;
+  placeholder?: string;
   selectedItems: any;
   setSelectedItems: Dispatch<SetStateAction<any[]>>;
   orgs: Organisation[];
@@ -107,7 +108,7 @@ type OrgInputDropdownProps = {
 
 type teamInputDropdownProps = {
   type?: string;
-  placeholder: string;
+  placeholder?: string;
   roleData: string[];
   selectedItems: any;
   setSelectedItems: Dispatch<SetStateAction<any[]>>;
@@ -147,7 +148,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
         <main ref={ref}>
           <SearchInput
             type="text"
-            placeholder={input.placeholder}
+            placeholder={input.placeholder ?? ""}
             value={input.value}
             onClick={() => setOpenDropdown(true)}
             onChange={(e) => setInput({ ...input, value: e.target.value })}

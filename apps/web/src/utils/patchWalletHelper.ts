@@ -1,8 +1,3 @@
-import { FACTORY_ADDRESS, PATCH_FACTORY_ABI } from "@/contracts/patchwallet/factory";
-import { KERNEL_ACCOUNT_SUFFIX } from "@/contracts/patchwallet/kernel";
-import { Contract, getDefaultProvider } from "ethers";
-
-import { id } from "ethers/lib/utils";
 import { Address } from "viem";
 
 const clientID = "demo-user-external";
