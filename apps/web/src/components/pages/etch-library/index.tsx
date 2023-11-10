@@ -11,7 +11,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 import PropertiesDialog from "@/components/ui/properties";
 import { Etch } from "@/gql/graphql";
-import { useGetUniqueEtch } from "@/utils/hooks/useGetEtchFromUser";
+import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { FileLockIcon } from "lucide-react";
@@ -185,20 +185,20 @@ export const FilesDialog = ({ files }: props) => {
       {/* <FileLockIcon /> */}
       <div className="mb-4 text-xl font-bold text-muted-foreground">Files</div>
       <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
-        {files.map(({ documentName, tokenId }) => {
-          const prop = { documentName, tokenId };
-          return <File {...prop} />;
-        })}
-        {["3", "4"].map((id) => {
-          const prop = { documentName: "twitter leaks file", tokenId: id, activeModals, setActiveModals };
-          return <File {...prop} />;
+        {files.map((file) => {
+          return <File {...file} key={file.tokenId} activeModals={activeModals} setActiveModals={setActiveModals} />;
         })}
       </section>
     </main>
   );
 };
 
-const File = ({ documentName, tokenId, activeModals, setActiveModals }: Etch) => {
+interface FileProps extends Etch {
+  activeModals: any; // replace 'any' with the actual type
+  setActiveModals: React.Dispatch<any>; // replace 'any' with the actual type
+}
+
+const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProps) => {
   const [openMoveModal, setOpenMoveModal] = useState(false);
   const [openPropertiesModal, setOpenPropertiesModal] = useState(false);
   const { etch, isLoading, error } = useGetUniqueEtch(tokenId);

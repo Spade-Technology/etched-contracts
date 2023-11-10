@@ -25,8 +25,9 @@ type UserProps = {
   etch: Etch;
 };
 
+//   Type '{ id: number; name: string; image: any; link: string; }' is not assignable to type 'ProfileProps'.
 export type ProfileProps = {
-  id: string;
+  id: number;
   name?: string;
   image?: any;
   link?: string;
