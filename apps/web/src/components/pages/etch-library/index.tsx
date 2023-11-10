@@ -11,8 +11,10 @@ import {
 import { Icons } from "@/components/ui/icons";
 import PropertiesDialog from "@/components/ui/properties";
 import { Etch } from "@/gql/graphql";
-import { useGetUniqueEtch } from "@/utils/hooks/useGetEtchFromUser";
+// import { useGetUniqueEtch } from "@/utils/hooks/useGetEtchFromUser";
+// useGetUniqueEtch
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
+import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { FileLockIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -25,6 +27,7 @@ interface props {
   searchValue: string;
   setSearchValue: React.Dispatch<string>;
   files: Etch[];
+  isLoading?: boolen;
 }
 
 interface fileTypes {
@@ -177,31 +180,34 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
   );
 };
 
-export const FilesDialog = ({ files }: props) => {
+export const FilesDialog = ({ files, isLoading }: props) => {
   console.log(files);
   const [activeModals, setActiveModals] = useState({ current: "", list: [] });
   return (
     <main className="">
-      <div className="mb-4 text-xl font-bold text-muted-foreground">Files</div>
+      <div className="mb-4 text-xl font-bold text-muted-foreground">
+        {!isLoading && files.length < 1 ? "Please create a file" : "Files"}
+      </div>
       <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
-        {files?.map(({ documentName, tokenId }) => {
-          const prop = { documentName, tokenId, activeModals, setActiveModals };
-          return <File {...prop} />;
-        })}
-        {skeletons.split("")?.map((item, index) => {
-          return (
-            <main
-              key={index}
-              className="flex h-[44px] w-full cursor-default items-center gap-[17px] rounded-lg bg-[rgba(0,0,0,.02)] px-[12px] !font-body"
-            >
-              {" "}
-              <div className="skeleton flex h-[18px] w-6 items-center justify-end bg-skeleton">
-                {/* <FileLockIcon className="h-[18px] w-6" /> */}
-              </div>
-              <div className="skeleton h-[20px]  w-full truncate bg-skeleton text-base font-medium text-muted-foreground"></div>
-            </main>
-          );
-        })}
+        {isLoading
+          ? skeletons.split("")?.map((item, index) => {
+              return (
+                <main
+                  key={index}
+                  className="flex h-[44px] w-full cursor-default items-center gap-[17px] rounded-lg bg-[rgba(0,0,0,.02)] px-[12px] !font-body"
+                >
+                  {" "}
+                  <div className="skeleton flex h-[18px] w-6 items-center justify-end bg-skeleton">
+                    {/* <FileLockIcon className="h-[18px] w-6" /> */}
+                  </div>
+                  <div className="skeleton h-[20px]  w-full truncate bg-skeleton text-base font-medium text-muted-foreground"></div>
+                </main>
+              );
+            })
+          : files?.map(({ documentName, tokenId }) => {
+              const prop = { documentName, tokenId, activeModals, setActiveModals };
+              return <File {...prop} />;
+            })}
       </section>
     </main>
   );
@@ -327,5 +333,4 @@ const File = ({
   );
 };
 
-const skeletons =
-  "Lorem ipsum dolor sit, amet consectetur";
+const skeletons = "Lorem ipsum dolor sit, amet consectetur";
