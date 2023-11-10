@@ -80,12 +80,10 @@ export const ManageDialog = () => {
 
       {organisations.length > 0 ||
         [1, 2, 3].map((item, idx) => (
-          <div key={idx} className="h-[105px] w-full bg-white px-10 shadow">
-            <div className="flex animate-pulse h-full items-center gap-5 ">
-              <div className="h-6 w-2/12 rounded-md bg-gray-300 "></div>
-              <div className="h-6 w-4/12 rounded-md bg-gray-300 "></div>
-              <div className="ml-auto h-6 w-4/12 rounded-md bg-gray-300 "></div>
-            </div>
+          <div key={idx} className="flex h-[105px] w-full items-center  gap-5 bg-white px-10 shadow">
+            <div className="skeleton h-6 w-2/12 rounded-md bg-skeleton "></div>
+            <div className="skeleton h-6 w-4/12 rounded-md bg-skeleton"></div>
+            <div className="skeleton ml-auto h-6 w-4/12 rounded-md bg-skeleton"></div>
           </div>
         ))}
 
