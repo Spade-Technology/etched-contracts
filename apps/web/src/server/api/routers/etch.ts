@@ -3,20 +3,11 @@ import { lit } from "@/lit";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { generateServerAuthSig, publicClient, walletClient } from "@/server/web3";
 import { defaultAccessControlConditions } from "@/utils/accessControlConditions";
+import { teamPermissions } from "@/utils/common";
 import EtchABI from "@abis/Etches.json";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { TRPCError } from "@trpc/server";
-import {
-  Address,
-  concat,
-  decodeEventLog,
-  encodeFunctionData,
-  encodePacked,
-  hashMessage,
-  keccak256,
-  stringToBytes,
-  toBytes,
-} from "viem";
+import { Address, decodeEventLog, encodeFunctionData, encodePacked, keccak256 } from "viem";
 import { z } from "zod";
 const random = require("random-bigint");
 
@@ -253,13 +244,14 @@ export const etchRouter = createTRPCRouter({
       z.object({
         ipfsCid: z.string(),
         etchId: z.string(),
+        owner: z.string(),
         blockchainSignature: z.string(),
         blockchainMessage: z.string(),
       })
     )
     .mutation(
       async ({
-        input: { etchId, ipfsCid, blockchainSignature, blockchainMessage },
+        input: { etchId, owner, ipfsCid, blockchainSignature, blockchainMessage },
         ctx: {
           session: { address },
         },
@@ -267,7 +259,7 @@ export const etchRouter = createTRPCRouter({
         const calldata = encodeFunctionData({
           abi: EtchABI,
           functionName: "commentOnEtch",
-          args: [etchId, ipfsCid],
+          args: [etchId, ipfsCid, owner],
         });
 
         const tx = await walletClient.writeContract({
@@ -359,6 +351,105 @@ export const etchRouter = createTRPCRouter({
           abi: EtchABI,
           functionName: "safeTransferFrom",
           args: [from, to, tokenId],
+        });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Etch,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
+  setIndividualPermissionsBulk: protectedProcedure
+    .input(
+      z.object({
+        etchId: z.number(),
+        users: z.array(
+          z.object({
+            id: z.string(), // wallet address
+            name: z.string(),
+            role: z.enum(["none", "read", "readWrite"]),
+          })
+        ),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { users, etchId, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: EtchABI,
+          functionName: "setIndividualPermissionsBulk",
+          args: [etchId, users.map(({ id, role }) => ({ user: id, permission: teamPermissions[role] }))],
+        });
+
+        const tx = await walletClient.writeContract({
+          address: contracts.Etch,
+          functionName: "delegateCallsToSelf",
+          args: [
+            [
+              blockchainMessage as Address,
+              keccak256(blockchainMessage as Address),
+              blockchainSignature as Address,
+              address as Address,
+            ],
+            [calldata],
+          ],
+          abi: EtchABI,
+        });
+
+        await publicClient.waitForTransactionReceipt({
+          hash: tx,
+        });
+
+        return { tx };
+      }
+    ),
+  setTeamPermissionsBulk: protectedProcedure
+    .input(
+      z.object({
+        etchId: z.number(),
+        teams: z.array(
+          z.object({
+            teamId: z.string(),
+            role: z.enum(["none", "read", "readWrite"]),
+          })
+        ),
+        blockchainSignature: z.string(),
+        blockchainMessage: z.string(),
+      })
+    )
+    .mutation(
+      async ({
+        input: { teams, etchId, blockchainMessage, blockchainSignature },
+        ctx: {
+          session: { address },
+        },
+      }) => {
+        const calldata = encodeFunctionData({
+          abi: EtchABI,
+          functionName: "setTeamPermissionsBulk",
+          args: [etchId, teams.map(({ teamId, role }) => ({ teamId, permission: teamPermissions[role] }))],
         });
 
         const tx = await walletClient.writeContract({

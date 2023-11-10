@@ -81,6 +81,12 @@
         "internalType": "struct IEtches.SComments",
         "name": "comment",
         "type": "tuple"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "CommentAdded",
@@ -309,6 +315,11 @@
         "internalType": "string",
         "name": "commentIpfsCid",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "commentOnEtch",
@@ -649,6 +660,36 @@
         "type": "uint256"
       },
       {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ITeams.userPermissions[]",
+        "name": "permissions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setIndividualPermissionsBulk",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
         "internalType": "string",
         "name": "documentName",
         "type": "string"
@@ -688,6 +729,36 @@
       }
     ],
     "name": "setTeamPermissions",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "teamId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IEtches.ExternalTeamPermission[]",
+        "name": "permissions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setTeamPermissionsBulk",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
