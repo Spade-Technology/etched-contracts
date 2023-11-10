@@ -51,7 +51,7 @@ export const ManageDialog = () => {
   const [openTeamModal, setOpenTeamModal] = useState(false);
   const [accordion, setAccordion] = useState("");
   const loggedInAddress = useLoggedInAddress();
-  const { organisations } = useGetOrgsFromUser(loggedInAddress.toLowerCase());
+  const { organisations, isLoading } = useGetOrgsFromUser(loggedInAddress.toLowerCase());
 
   const { teams } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
 
@@ -78,28 +78,27 @@ export const ManageDialog = () => {
         })}
       </header>
 
-      {organisations.length > 0 ||
-        [1, 2, 3].map((item, idx) => (
-          <div key={idx} className="flex h-[105px] w-full items-center  gap-5 bg-white px-10 shadow">
-            <div className="skeleton h-6 w-2/12 rounded-md bg-skeleton "></div>
-            <div className="skeleton h-6 w-4/12 rounded-md bg-skeleton"></div>
-            <div className="skeleton ml-auto h-6 w-4/12 rounded-md bg-skeleton"></div>
-          </div>
-        ))}
-
-      {organisations?.map(({ id, orgId, name, createdAt }) => {
-        const prop = {
-          id,
-          orgId,
-          name,
-          date: new Date(+createdAt * 1000).toDateString(),
-          teams: teams?.filter(({ ownership }) => ownership?.organisation?.name === name),
-          accordion,
-          setAccordion,
-          organisations,
-        };
-        return <OrgDialog {...prop} />;
-      })}
+      {isLoading ?
+          [1, 2, 3].map((item, idx) => (
+            <div key={idx} className="flex h-[105px] w-full items-center  gap-5 bg-white px-10 shadow">
+              <div className="skeleton h-6 w-2/12 rounded-md bg-skeleton "></div>
+              <div className="skeleton h-6 w-4/12 rounded-md bg-skeleton"></div>
+              <div className="skeleton ml-auto h-6 w-4/12 rounded-md bg-skeleton"></div>
+            </div>
+          ))
+        : organisations?.map(({ id, orgId, name, createdAt }) => {
+            const prop = {
+              id,
+              orgId,
+              name,
+              date: new Date(+createdAt * 1000).toDateString(),
+              teams: teams?.filter(({ ownership }) => ownership?.organisation?.name === name),
+              accordion,
+              setAccordion,
+              organisations,
+            };
+            return <OrgDialog {...prop} />;
+          })}
       <Teams
         name={"MySelf"}
         accordion={accordion}

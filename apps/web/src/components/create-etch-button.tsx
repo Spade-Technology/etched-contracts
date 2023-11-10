@@ -79,7 +79,7 @@ export const CreateEtchButton = () => {
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="w-fit px-5 font-medium text-white duration-500 hover:shadow-etched-1" onClick={() => setIsOpen(true)}>
+        <Button className="w-fit px-5 duration-500 hover:shadow-etched-1" onClick={() => setIsOpen(true)}>
           + Create Etch
         </Button>
       </AlertDialogTrigger>
@@ -89,14 +89,10 @@ export const CreateEtchButton = () => {
         <div className="w-full">
           {etchCreated ? (
             <>
-              <img
-                onClick={() => setIsOpen(false)}
-                src="/icons/customModal/closeIcon.svg"
-                className="absolute right-7 top-7 h-6 w-6 cursor-pointer"
-                alt=""
-              />
               <div className="flex flex-col items-center gap-8">
-                <h1 className="text-center text-3xl text-primary">Congratulations on your Etch{files.length && "es"}! 🎉</h1>
+                <h1 className="text-center text-[32px] font-semibold text-primary">
+                  Congratulations on your Etch{files.length && "es"}! 🎉
+                </h1>
                 <div className="text-center text-slate-500">
                   {files.length > 1 ? (
                     <>
@@ -118,7 +114,6 @@ export const CreateEtchButton = () => {
                     Create a new Etch
                   </Button>
                   <AlertDialogCancel
-                    className="font-base border-2 border-primary px-5 py-[11px] font-semibold text-primary hover:bg-primary hover:text-white"
                     onClick={() => {
                       setEtchCreated(0);
                       setFiles([]);
@@ -134,7 +129,7 @@ export const CreateEtchButton = () => {
           ) : (
             <>
               <AlertDialogHeader>
-                <AlertDialogTitle>Create New Etch</AlertDialogTitle>
+                <AlertDialogTitle className="text-[32px] font-semibold text-primary">Create New Etch</AlertDialogTitle>
               </AlertDialogHeader>
               <Form {...form}>
                 <form>
@@ -143,12 +138,12 @@ export const CreateEtchButton = () => {
                       <section>
                         <div
                           {...getRootProps()}
-                          className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
+                          className="bg-primary-foreground-50 border-neutral-500 cursor-pointer flex h-[416px] w-[295px] flex-col items-center justify-center gap-5 rounded-md border border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
                         >
                           <input {...getInputProps()} />
-                          <p>
+                          <div className='text-base px-6 font-medium text-neutral-400 text-center'>
                             Drag 'n' drop some files here, or <span className="underline">click to select files</span>
-                          </p>
+                          </div>
                         </div>
                       </section>
                     </div>
