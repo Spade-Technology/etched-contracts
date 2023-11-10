@@ -35,7 +35,7 @@ const GET_ETCHES_FROM_USER_ETCHES_QUERY = graphql(`
     etches(
       first: 1000
       orderBy: createdAt
-      where: { or: [{ ownership_: { owner: $userId } }, { permissions_: { wallet: $userId } }] }
+      where: { or: [{ ownership_: { owner: $userId } }, { permissions_: { wallet: $userId, permissionLevel_gt: 0 } }] }
     ) {
       id
       ...EtchFragment
@@ -52,6 +52,12 @@ const GET_ETCHES_FROM_USER_ETCHES_QUERY = graphql(`
           ...EtchFragment
         }
       }
+      externalEtches {
+        etch {
+          id
+          ...EtchFragment
+        }
+      }
     }
 
     organisations(where: { ownership_: { owner: $userId } }, first: 1000) {
@@ -63,6 +69,12 @@ const GET_ETCHES_FROM_USER_ETCHES_QUERY = graphql(`
           managedEtches {
             id
             etch {
+              ...EtchFragment
+            }
+          }
+          externalEtches {
+            etch {
+              id
               ...EtchFragment
             }
           }
@@ -86,9 +98,15 @@ export const useGetEtchesFromUser = (userId?: string) => {
   if (!etchesData) return { etches: [], isLoading: fetching, error };
   const etches = [
     ...etchesData.etches,
-    ...etchesData.teams.flatMap((team: any) => team.managedEtches.map((etch: any) => etch.etch)),
+    ...etchesData.teams.flatMap((team: any) => [
+      ...team.managedEtches.map((etch: any) => etch.etch),
+      ...team.externalEtches.map((etch: any) => etch.etch),
+    ]),
     ...etchesData.organisations.flatMap((org: any) =>
-      org.managedTeams.flatMap((team: any) => team.team.managedEtches.map((etch: any) => etch.etch))
+      org.managedTeams.flatMap((team: any) => [
+        ...team.team.managedEtches.map((etch: any) => etch.etch),
+        ...team.team.externalEtches.map((etch: any) => etch.etch),
+      ])
     ),
   ];
 

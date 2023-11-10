@@ -6,7 +6,7 @@ dataSources:
     name: Etch
     network: base-testnet
     source:
-      address: "0x527674E2828Eb6E6a6b9527843510428D0Db7090"
+      address: '0x527674E2828Eb6E6a6b9527843510428D0Db7090'
       abi: Etch
       startBlock: 12080400
     mapping:
@@ -31,7 +31,7 @@ dataSources:
           handler: handleApproval
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
-        - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256))
+        - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256),indexed address)
           handler: handleCommentAdded
         - event: EtchCreated(indexed uint256,indexed address,string,string)
           handler: handleEtchCreated
@@ -52,7 +52,7 @@ dataSources:
     name: Team
     network: base-testnet
     source:
-      address: "0x0473957B4B9019bb782CaF835d98A0f7C00c9613"
+      address: '0x0473957B4B9019bb782CaF835d98A0f7C00c9613'
       abi: Team
       startBlock: 12080400
     mapping:
@@ -93,7 +93,7 @@ dataSources:
     name: Organisation
     network: base-testnet
     source:
-      address: "0x2D369b2d749ec4542A128548daD236F1A6F8e9ab"
+      address: '0x2D369b2d749ec4542A128548daD236F1A6F8e9ab'
       abi: Organisation
       startBlock: 12080400
     mapping:
@@ -131,7 +131,7 @@ dataSources:
     name: EtchENS
     network: base-testnet
     source:
-      address: "0x6c5c14cEb33d58F17c083430c11D2dA4475C1b05"
+      address: '0x6c5c14cEb33d58F17c083430c11D2dA4475C1b05'
       abi: EtchENS
       startBlock: 12080400
     mapping:

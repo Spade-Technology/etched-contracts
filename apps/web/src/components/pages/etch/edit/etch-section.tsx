@@ -10,12 +10,10 @@ import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
 import { Loader2Icon } from "lucide-react";
 
-const EtchSection = ({ etch, isLoading }: { etch?: Partial<Etch>; isLoading: boolean }) => {
+const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
   const [selectedImg, setSelectedImg] = useState("");
   const { regenerateAuthSig } = useSignIn();
-
-  // const imagesList = [BgImage1, BgImage2, BgImage3, BgImage4, BgImage5, BgImage6];
 
   const decrypt = async () => {
     await lit.connect();
@@ -46,7 +44,7 @@ console.log(image);
   useEffect(() => {
     if (etch?.ipfsCid) decrypt();
   }, [etch?.ipfsCid]);
-
+  if (isLoading) return <div>Loading...</div>;
   return (
     <div>
       <div className="my-4 flex justify-between gap-4">
@@ -56,25 +54,11 @@ console.log(image);
           ) : (
             <Loader2Icon className="animate-spin" />
           )}
-          <div className="flex h-full w-full  justify-center gap-2 pt-4">
-            {/* {imagesList.map((image, idx) => {
-              return (
-                <Image
-                  height={112}
-                  width={108}
-                  key={idx}
-                  src={image}
-                  alt="bgImage"
-                  className={` ${image === selectedImg ? "rounded-md border-2 border-[#097B45]" : ""} cursor-pointer`}
-                  onClick={() => setSelectedImg(image)}
-                />
-              );
-            })} */}
-          </div>
+          <div className="flex h-full w-full  justify-center gap-2 pt-4"></div>
         </div>
         <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
       </div>
-      <Comments etchId={etch?.tokenId} />
+      <Comments etch={etch || {}} />
 
       <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
     </div>

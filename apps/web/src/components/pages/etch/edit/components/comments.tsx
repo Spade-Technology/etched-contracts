@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { lit } from "@/lit";
 import { api } from "@/utils/api";
-import { useSignIn } from "@/utils/hooks/useSignIn";
+import { useLoggedInAddress, useSignIn } from "@/utils/hooks/useSignIn";
 import Image from "next/image";
 import Placeholder from "public/icons/dashboard/placeholder2.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import { Etch, EtchCommentAdded } from "@/gql/graphql";
 
 type CommentProps = {
   image: any;
@@ -29,11 +32,13 @@ const Comment = ({ image, userName, description, commentedAt }: CommentProps) =>
   );
 };
 
-const Comments = ({ etchId }: { etchId: string }) => {
+const Comments = ({ etch }: { etch: Partial<Etch> }) => {
   const [enableSubmit, setEnableSubmit] = useState<boolean>(false);
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<{ comment: string; timestamp: number; owner: string }[]>([]);
+
   const { regenerateAuthSig } = useSignIn();
+  const owner = useLoggedInAddress();
 
   const { mutateAsync: encryptAsync, isLoading: encryptLoading } = api.etch.uploadAndEncryptString.useMutation();
   const { mutateAsync: commentOnEtchAsync, isLoading: commentOnEtchLoading } = api.etch.commentOnEtch.useMutation();
@@ -54,14 +59,15 @@ const Comments = ({ etchId }: { etchId: string }) => {
       const authSig = await regenerateAuthSig();
 
       const { ipfsCid } = await encryptAsync({
-        etchId,
+        etchId: etch.tokenId,
         authSig,
         str: newComment,
       });
 
       await commentOnEtchAsync({
-        etchId,
+        etchId: etch.tokenId,
         ipfsCid,
+        owner,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
@@ -71,9 +77,39 @@ const Comments = ({ etchId }: { etchId: string }) => {
     }
   };
 
+  const decrypt = async (comments: EtchCommentAdded[]) => {
+    await lit.connect();
+
+    if (!lit.client) return;
+
+    const authSig = await regenerateAuthSig();
+
+    comments.forEach(async (comment) => {
+      const decryptedComment = (await LitJsSdk.decryptFromIpfs({
+        authSig,
+        ipfsCid: comment.comment_commentIpfsCid,
+        litNodeClient: lit.client as any,
+      })) as string;
+      if (decryptedComment)
+        setComments((old) => [
+          ...old,
+          {
+            comment: decryptedComment,
+            timestamp: comment.comment_timestamp,
+            owner: comment.owner.etchENS[0]?.name || comment.owner.id,
+          },
+        ]);
+    });
+  };
+
+  useEffect(() => {
+    setComments([]);
+    decrypt(etch.comments || []);
+  }, [etch.comments]);
+
   return (
     <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
-      <div className="text-xl font-semibold">3 Comments</div>
+      <div className="text-xl font-semibold">{comments.length} Comments</div>
 
       <div className=" py-5">
         <div className="flex justify-start gap-3">
@@ -106,31 +142,17 @@ const Comments = ({ etchId }: { etchId: string }) => {
 
       {comments &&
         comments.length > 0 &&
-        comments.map((comment, idx) => {
+        comments.map(({ comment, timestamp, owner }, idx) => {
           return (
-            <Comment image={Placeholder} userName="justing45.etched" description={comment} commentedAt="Just now" key={idx} />
+            <Comment
+              image={Placeholder}
+              userName={owner}
+              description={comment}
+              commentedAt={new Date(timestamp * 1000).toDateString()}
+              key={idx}
+            />
           );
         })}
-      <Comment
-        image={Placeholder}
-        userName="justing45.etched"
-        description="Lorem ipsum dolor sit amet consectetur. Sit in urna ut massa. Facilisis ridiculus sit eget erat nulla. Vitae accumsan rhoncus nibh augue aliquam viverra in egestas. Fringilla ut in nam cras. Commodo dolor accumsan mi nunc enim. Ut congue blandit massa egestas justo netus velit. Donec adipiscing convallis ipsum volutpat. Bibendum orci turpis eget quis posuere morbi. In rhoncus mauris a sed quisque lorem. Eget."
-        commentedAt="3days ago"
-      />
-
-      <Comment
-        image={Placeholder}
-        userName="tomhq12.etched"
-        description="Lorem ipsum dolor sit amet consectetur. Sit in urna ut massa. Facilisis ridiculus sit eget erat nulla. Vitae accumsan rhoncus nibh augue aliquam viverra in egestas. Fringilla ut in nam cras. Commodo dolor accumsan mi nunc enim."
-        commentedAt="5days ago"
-      />
-
-      <Comment
-        image={Placeholder}
-        userName="serenam.etched"
-        description="Lorem ipsum dolor sit amet consectetur. Sit in urna ut massa. Facilisis ridiculus sit eget erat nulla. Vitae accumsan rhoncus nibh augue aliquam viverra in egestas. Fringilla ut in nam cras. Commodo dolor accumsan mi nunc enim. Ut congue blandit massa egestas justo netus velit. Donec adipiscing convallis ipsum volutpat. Bibendum orci turpis eget quis posuere morbi. In rhoncus mauris a sed quisque lorem. Eget."
-        commentedAt="aweek ago"
-      />
     </div>
   );
 };
