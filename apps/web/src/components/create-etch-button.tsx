@@ -253,15 +253,16 @@ export const CreateEtchButton = () => {
                     <Button
                       isLoading={isLoading}
                       disabled={files.length === 0}
-                      onClick={() =>
+                      onClick={(e) => {
+                        e.preventDefault();
                         onSubmit(
                           files.map((file) => ({
                             name: file.nameOverride ?? file.name,
                             description: file.description ?? "",
                             file,
                           }))
-                        )
-                      }
+                        );
+                      }}
                     >
                       {isLoading ? uploadProgress + " %" : "Create Etch"}
                     </Button>
