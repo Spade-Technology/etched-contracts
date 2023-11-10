@@ -163,6 +163,11 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 20,
+  });
+
   const router = useRouter();
 
   const table = useReactTable({
@@ -176,11 +181,13 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
   });
 

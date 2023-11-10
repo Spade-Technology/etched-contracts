@@ -5,12 +5,7 @@ import EtchABI from "@abis/Etches.json";
 import { Address, encodeFunctionData, keccak256 } from "viem";
 import { z } from "zod";
 import TeamABI from "@/contracts/abi/Teams.json";
-
-const teamPermissions = {
-  none: 0,
-  read: 1,
-  readWrite: 2,
-};
+import { teamPermissions } from "@/utils/common";
 
 export const teamRouter = createTRPCRouter({
   createTeam: protectedProcedure

@@ -57,12 +57,13 @@ export const ManageDialog = () => {
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
+  console.log(organisations);
+
   return (
     <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-5 lg:pl-[60px]">
       {/*------------- Modals & More -------------*/}
       <CreateTeamDialog openTeamModal={openTeamModal} setOpenTeamModal={setOpenTeamModal} />
       <CreateOrgDialog openOrgModal={openOrgModal} setOpenOrgModal={setOpenOrgModal} />
-
       <header className="flex gap-5">
         {buttons.map(({ name }, idx) => {
           return (
@@ -76,6 +77,17 @@ export const ManageDialog = () => {
           );
         })}
       </header>
+
+      {organisations.length > 0 ||
+        [1, 2, 3].map((item, idx) => (
+          <div key={idx} className="h-[105px] w-full bg-white px-10 shadow">
+            <div className="flex animate-pulse h-full items-center gap-5 ">
+              <div className="h-6 w-2/12 rounded-md bg-gray-300 "></div>
+              <div className="h-6 w-4/12 rounded-md bg-gray-300 "></div>
+              <div className="ml-auto h-6 w-4/12 rounded-md bg-gray-300 "></div>
+            </div>
+          </div>
+        ))}
 
       {organisations?.map(({ id, orgId, name, createdAt }) => {
         const prop = {
