@@ -25,15 +25,6 @@ import { Input } from "./ui/input";
 
 const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
 
-const formSchema = z.object({
-  etchTitle: z.string(),
-  etchDescription: z.string(),
-  etchFile: z.any(),
-  etchVisibility: z.boolean(),
-});
-
-type FormData = z.infer<typeof formSchema>;
-
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { refetchEtches } = useContext(refetchContext);
@@ -41,32 +32,35 @@ export const CreateEtchButton = () => {
   const { onSubmit, isUploading: isLoading, etchCreated, setEtchCreated, uploadProgress } = useCreateEtch();
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-
-    defaultValues: {
-      etchTitle: "",
-      etchDescription: "",
-      etchFile: null,
-      etchVisibility: false,
-    },
-  });
+  const form = useForm<FormData>({});
 
   const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
 
   const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 10,
     accept: {
       "image/*": [],
     },
     onDrop: (acceptedFiles: File[]) => {
-      setFiles([
+      const newFiles = [
         ...files,
         ...acceptedFiles.map((file) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
         ),
-      ]);
+      ];
+
+      if (newFiles.length > 10) alert("You cannot bulk upload more than 10 files at a time");
+      else
+        setFiles([
+          ...files,
+          ...acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          ),
+        ]);
     },
   });
 
