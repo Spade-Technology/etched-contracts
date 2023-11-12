@@ -31,23 +31,13 @@ export const generateServerAuthSig = async () => {
     uri: "https://" + env.DOMAIN + "/",
   };
 
-  console.count();
-
   const message = new SiweMessage(preparedMessage);
-
-  console.count();
 
   const body = message.prepareMessage();
 
-  console.count();
-
   const signedResult = await walletClient.signMessage({ message: body });
 
-  console.count();
-
   if (!signedResult) throw new Error("Unable to sign message");
-
-  console.count();
 
   let authSig = {
     sig: signedResult,
@@ -55,8 +45,6 @@ export const generateServerAuthSig = async () => {
     signedMessage: body,
     address: walletClient.account.address,
   };
-
-  console.count();
 
   console.log(authSig);
 
