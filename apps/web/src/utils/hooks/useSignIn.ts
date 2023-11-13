@@ -11,6 +11,7 @@ import { useAccount, useBlockNumber, useSignMessage } from "wagmi";
 
 import { api } from "../api";
 import { env } from "@/env.mjs";
+import { toast } from "@/components/ui/use-toast";
 
 export function signOut() {
   localStorage.clear();
@@ -65,7 +66,7 @@ export const useSignIn = () => {
       console.log("BLOCKCHAIN SIGNATURE GENERATED");
 
       // Send the signature to the server to be verified, and sign in or sign up the user
-      await signIn("credentials", {
+      const signedIn = await signIn("credentials", {
         message: authSig.signedMessage,
         signature: authSig.sig,
         userId: userId,
@@ -74,6 +75,15 @@ export const useSignIn = () => {
         blockchainSignature,
         redirect: false,
       });
+
+      if (!signedIn?.ok) {
+        toast({
+          title: "Error",
+          description: "Unable to sign in. Please try again later.",
+          variant: "destructive",
+        });
+        signOut();
+      }
 
       localStorage.setItem("blockchainSignature", blockchainSignature);
       localStorage.setItem("blockchainMessage", blockchainMessage);

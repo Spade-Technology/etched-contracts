@@ -1,3 +1,7 @@
-export { default } from "next-auth/middleware";
+import { authMiddleware } from "@clerk/nextjs";
 
-export const config = { matcher: ["/dashboard"] };
+export default authMiddleware({
+  publicRoutes: ["(.*)"],
+});
+
+export const config = {};
