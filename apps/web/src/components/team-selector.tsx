@@ -130,7 +130,7 @@ export const TeamSelector = ({
             className="flex w-full justify-start rounded-sm p-2"
             onClick={() => document.dispatchEvent(new CustomEvent("create-org"))}
           >
-            New Orgnisation
+            New Organisation
           </Button>
         </SelectGroup>
       </SelectContent>
