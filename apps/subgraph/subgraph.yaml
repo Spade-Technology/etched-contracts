@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Etch
-    network: base-testnet
+    network: optimism-goerli
     source:
-      address: '0x5B355D7cCEe63089954a90d07f913173AC1D9d38'
+      address: "0x678b3589B0A70606179e5CE20a938887a8F985cc"
       abi: Etch
-      startBlock: 12080400
+      startBlock: 17274381
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -50,11 +50,11 @@ dataSources:
       file: ./src/etch.ts
   - kind: ethereum
     name: Team
-    network: base-testnet
+    network: optimism-goerli
     source:
-      address: '0x867803bc003c01DB0262faD7F517dF2a10Fbc381'
+      address: "0x722E94D0Bda9CC2f0be07dB167AcF0eAA8138144"
       abi: Team
-      startBlock: 12080400
+      startBlock: 17274381
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -91,11 +91,11 @@ dataSources:
       file: ./src/team.ts
   - kind: ethereum
     name: Organisation
-    network: base-testnet
+    network: optimism-goerli
     source:
-      address: '0xE660B37E297dF16599D4248ADD44ad1EC56c97db'
+      address: "0x7d2C0AAE1F94D8F1aCdA6533F263761d246a8cAE"
       abi: Organisation
-      startBlock: 12080400
+      startBlock: 17274381
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -129,11 +129,11 @@ dataSources:
       file: ./src/organisation.ts
   - kind: ethereum
     name: EtchENS
-    network: base-testnet
+    network: optimism-goerli
     source:
-      address: '0xF365f0883630506748Efb640E88571216bA7C4Ba'
+      address: "0x458a79D2f98edb200B7eCfAB9De7fD37c14654aB"
       abi: EtchENS
-      startBlock: 12080400
+      startBlock: 17274381
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
