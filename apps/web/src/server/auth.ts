@@ -82,9 +82,9 @@ export async function verifySiweMessage(
 
       isValidSignature = callResponse.data === "0x01";
 
-      // Check for chainId to be 1
-      let invalidChainId = false;
-      if (siwe.chainId !== 1) invalidChainId = true;
+      // // Check for chainId to be 1
+      // let invalidChainId = false;
+      // if (siwe.chainId !== 1) invalidChainId = true;
 
       // Check for expiration (ISO 8601)
       const expirationDate = new Date(siwe.expirationTime || "");

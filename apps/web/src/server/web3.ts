@@ -1,3 +1,4 @@
+import { currentNetworkId } from "@/contracts";
 import { env } from "@/env.mjs";
 import { currentChain } from "@/utils/wagmi";
 import { SiweMessage } from "siwe";
@@ -25,7 +26,7 @@ export const generateServerAuthSig = async () => {
   const preparedMessage = {
     address: walletClient.account.address,
     version: "1",
-    chainId: 1,
+    chainId: currentNetworkId,
     expirationTime: expiration,
     domain: env.DOMAIN, // TODO: change this to env.NEXTAUTH_URL + "/"
     uri: "https://" + env.DOMAIN + "/",
