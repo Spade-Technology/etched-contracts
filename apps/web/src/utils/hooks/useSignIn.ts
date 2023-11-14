@@ -6,14 +6,12 @@ import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { Address, encodeAbiParameters, getContract, hashMessage, keccak256, parseAbiParameters } from "viem";
+import { Address, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters } from "viem";
 import { useAccount, useBlockNumber, useSignMessage } from "wagmi";
 
 import { api } from "../api";
 import { env } from "@/env.mjs";
 import { toast } from "@/components/ui/use-toast";
-import auth from "@/pages/api/auth/[...nextauth]";
-import { publicClient } from "../wagmi";
 
 export function signOut() {
   localStorage.clear();
@@ -29,7 +27,7 @@ export const useSignIn = () => {
 
   const { signMessageAsync } = useSignMessage();
   const { mutateAsync: generatePatchSignature } = api.patch.signMessageForPatchWallet.useMutation();
-  const { userId: _userId, isSignedIn } = useAuth();
+  const { userId: _userId } = useAuth();
   const userId = _userId?.toLowerCase();
   const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
 
@@ -110,18 +108,13 @@ export const useSignIn = () => {
       patchUserId?: string;
     } = {}
   ) => {
-    if (isPatchWallet === undefined) isPatchWallet = isSignedIn;
-
-    if (isPatchWallet) {
-      if (!patchUserId) patchUserId = userId;
-      if (!addressOverride)
-        addressOverride = (
-          await getUserFromId({
-            userId: patchUserId!,
-            baseProvider: env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
-          })
-        ).eoa;
-    }
+    if (isPatchWallet && !addressOverride)
+      addressOverride = (
+        await getUserFromId({
+          userId: patchUserId!,
+          baseProvider: env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+        })
+      ).eoa;
 
     const expiration_time = 60 * 60 * 24 * 7; // 7 days
     const expiration_date = new Date(Date.now() + expiration_time * 1000);
@@ -131,24 +124,22 @@ export const useSignIn = () => {
 
     // Example signature message: "localhost:3000 wants you to sign in with your Ethereum account:\n0x1cd4C1A65183472B4dA8023D40Bcf5e3D9171d49\n\n\nURI: http://localhost:3000/\nVersion: 1\nChain ID: 11155111\nNonce: TY8n8U10su60qKwyi\nIssued At: 2023-09-05T10:12:38.759Z\nExpiration Time: 2023-09-06T10:12:38.759Z"
 
-    // const expirationDateString = signature?.signedMessage
-    //   .split("\n")
-    //   .find((line: string) => line.startsWith("Expiration Time:"))
-    //   .split(": ")[1];
+    const expirationDateString = signature?.signedMessage
+      .split("\n")
+      .find((line: string) => line.startsWith("Expiration Time:"))
+      .split(": ")[1];
 
-    // if (signature && new Date(expirationDateString) > new Date()) return signature;
+    if (signature && new Date(expirationDateString) > new Date()) return signature;
 
     // -- 1. prepare 'sign-in with ethereum' message
     const preparedMessage = {
       domain: globalThis.location.host,
       address: addressOverride ?? address,
       version: "1",
-      chainId: currentNetworkId,
+      chainId: 1,
       expirationTime: expiration,
       uri: globalThis.location.href,
     };
-
-    console.log(isPatchWallet);
 
     const message = new SiweMessage(preparedMessage);
     const body = message.prepareMessage();
@@ -156,7 +147,6 @@ export const useSignIn = () => {
     // -- 2. sign the message
 
     let signedResult: string | undefined;
-    let hashedResult: string | undefined;
     console.log({ isPatchWallet });
     if (isPatchWallet) {
       if (!patchUserId) throw new Error("No user ID provided");
@@ -166,7 +156,6 @@ export const useSignIn = () => {
         erc6492: false,
       });
       signedResult = patchSignatureResult.signature;
-      hashedResult = patchSignatureResult.hash;
       console.log("Patch signature result:", signedResult);
       console.log("-----------------------------------");
     } else signedResult = await signMessageAsync({ message: body });
@@ -176,43 +165,9 @@ export const useSignIn = () => {
     let authSig = {
       sig: signedResult,
       derivedVia: isPatchWallet ? "EIP1271" : "web3.eth.personal.sign",
-      signedMessage: body, // hashedBody
-      address: (addressOverride ?? address)?.toLowerCase(),
+      signedMessage: body,
+      address: addressOverride ?? address,
     };
-
-    const walletContract = getContract({
-      abi: [
-        {
-          inputs: [
-            {
-              internalType: "bytes32",
-              name: "hash",
-              type: "bytes32",
-            },
-            {
-              internalType: "bytes",
-              name: "signature",
-              type: "bytes",
-            },
-          ],
-          name: "isValidSignature",
-          outputs: [
-            {
-              internalType: "bytes4",
-              name: "magicValue",
-              type: "bytes4",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-      ],
-      address: (addressOverride ?? address) as Address,
-      publicClient: publicClient({ chainId: currentNetworkId! }),
-    });
-
-    //  ERC1271_SUCCESS = 0x1626ba7e;
-    console.log(await walletContract.read.isValidSignature([hashedResult as `0x${string}`, signedResult as `0x${string}`]));
 
     if (authSig) localStorage.setItem("lit-auth-signature", JSON.stringify(authSig));
 
