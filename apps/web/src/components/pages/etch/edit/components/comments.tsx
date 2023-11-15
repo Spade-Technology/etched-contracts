@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { lit } from "@/lit";
-import { api } from "@/utils/api";
 import { useLoggedInAddress, useSignIn } from "@/utils/hooks/useSignIn";
-import Image from "next/image";
 import Placeholder from "public/icons/dashboard/placeholder2.svg";
 import { useEffect, useState } from "react";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
@@ -12,6 +9,7 @@ import { Etch, EtchCommentAdded } from "@/gql/graphql";
 import Avatar from "boring-avatars";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { shortenAddress } from "@/utils/hooks/address";
+import { useCommentEtch } from "@/utils/hooks/useCommentBackendOperation";
 
 type CommentProps = {
   image: any;
@@ -37,20 +35,13 @@ const Comment = ({ image, userName, description, commentedAt, addr }: CommentPro
 };
 
 const Comments = ({ etch }: { etch: Partial<Etch> }) => {
-  const [enableSubmit, setEnableSubmit] = useState<boolean>(false);
-  const [newComment, setNewComment] = useState("");
-
   const [comments, setComments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
     {}
   );
+  const { addComment, isLoading, newComment, setNewComment } = useCommentEtch(etch?.documentName, etch.tokenId);
 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
-
-  const { mutateAsync: encryptAsync, isLoading: encryptLoading } = api.etch.uploadAndEncryptString.useMutation();
-  const { mutateAsync: commentOnEtchAsync, isLoading: commentOnEtchLoading } = api.etch.commentOnEtch.useMutation();
-
-  const isLoading = encryptLoading || commentOnEtchLoading;
 
   const handleComment = (evt: any) => {
     const input = evt.target.value;
@@ -58,29 +49,6 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
       setNewComment(input);
     } else {
       setNewComment("");
-    }
-  };
-
-  const addComment = async () => {
-    if (newComment) {
-      const authSig = await regenerateAuthSig();
-
-      const { ipfsCid } = await encryptAsync({
-        etchId: etch.tokenId,
-        authSig,
-        str: newComment,
-      });
-
-      await commentOnEtchAsync({
-        etchId: etch.tokenId,
-        ipfsCid,
-        owner,
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-      });
-
-      setNewComment("");
-      setEnableSubmit(false);
     }
   };
 
@@ -112,8 +80,6 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
   };
 
   useEffect(() => {
-    setComments({});
-
     decrypt(etch.comments || []);
   }, [etch.comments]);
 

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface Types {
   className: string;
   type: string;
-  placeholder: string;
+  placeholder?: string;
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClick: React.MouseEventHandler<HTMLInputElement>;

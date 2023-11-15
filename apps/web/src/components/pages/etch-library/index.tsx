@@ -11,8 +11,12 @@ import {
 import { Icons } from "@/components/ui/icons";
 import PropertiesDialog from "@/components/ui/properties";
 import { Etch } from "@/gql/graphql";
+<<<<<<< HEAD
 // import { useGetUniqueEtch } from "@/utils/hooks/useGetEtchFromUser";
 // useGetUniqueEtch
+=======
+import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
+>>>>>>> 7f45a57a4e5a20c0fab8e38da17ddb5c1ee7eb6d
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
@@ -189,6 +193,7 @@ export const FilesDialog = ({ files, isLoading }: props) => {
         {!isLoading && files.length < 1 ? "Please create a file" : "Files"}
       </div>
       <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
+<<<<<<< HEAD
         {isLoading
           ? skeletons.split("")?.map((item, index) => {
               return (
@@ -208,11 +213,17 @@ export const FilesDialog = ({ files, isLoading }: props) => {
               const prop = { documentName, tokenId, activeModals, setActiveModals };
               return <File {...prop} />;
             })}
+=======
+        {files.map((file) => {
+          return <File {...file} key={file.tokenId} activeModals={activeModals} setActiveModals={setActiveModals} />;
+        })}
+>>>>>>> 7f45a57a4e5a20c0fab8e38da17ddb5c1ee7eb6d
       </section>
     </main>
   );
 };
 
+<<<<<<< HEAD
 const File = ({
   documentName,
   tokenId,
@@ -224,6 +235,14 @@ const File = ({
   activeModals: any;
   setActiveModals: React.Dispatch<any>;
 }) => {
+=======
+interface FileProps extends Etch {
+  activeModals: any; // replace 'any' with the actual type
+  setActiveModals: React.Dispatch<any>; // replace 'any' with the actual type
+}
+
+const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProps) => {
+>>>>>>> 7f45a57a4e5a20c0fab8e38da17ddb5c1ee7eb6d
   const [openMoveModal, setOpenMoveModal] = useState(false);
   const [openPropertiesModal, setOpenPropertiesModal] = useState(false);
   const { etch, isLoading, error } = useGetUniqueEtch(tokenId);
