@@ -8,9 +8,9 @@ interface types {
   etch?: Partial<Etch | any>;
   isLoading: boolean;
   openPropertiesModal: boolean;
-  setOpenPropertiesModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenPropertiesModal: React.Dispatch<boolean>;
   activeModals: any; // replace 'any' with the actual type of activeModals
-  setActiveModals: React.Dispatch<React.SetStateAction<any>>; // replace 'any' with the actual type of setActiveModals
+  setActiveModals: React.Dispatch<any>; // replace 'any' with the actual type of setActiveModals
 }
 
 export default function PropertiesDialog({
@@ -23,7 +23,6 @@ export default function PropertiesDialog({
 }: types) {
   const ref: React.MutableRefObject<HTMLElement> | any = useRef();
 
-  const [windowWidth, setWindowWidth] = useState(0);
   const [activeTab, setActiveTab] = useState("General");
   const [shake, setShake] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -57,19 +56,15 @@ export default function PropertiesDialog({
     { address: "0x3234...5678", name: "louis.etched", role: "editor", img: "/icons/dashboard/placeholder3.svg" },
   ];
 
-  // const modalIndex = activeModals.list.find((item: string, idx: number) => {
-  //   if (item === data[0]?.value) return item + idx;
-  // });
-  // console.log(activeModals.list);
-
   // Drag modal function
   const onMouseDown = useCallback(
     (event: any) => {
       const onMouseMove = (event: MouseEvent) => {
-        position.x += event.movementX;
-        position.y += event.movementY;
-        const element = ref.current;
-        if (element) {
+          const element = ref.current;
+        if (element && element.contains(event.target)) {
+          position.x += event.movementX;
+          position.y += event.movementY;
+
           element.style.transform = `translate(${position.x}px, ${position.y}px)`;
         }
         setPosition(position);

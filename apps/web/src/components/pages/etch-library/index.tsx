@@ -11,15 +11,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 import PropertiesDialog from "@/components/ui/properties";
 import { Etch } from "@/gql/graphql";
-<<<<<<< HEAD
-// import { useGetUniqueEtch } from "@/utils/hooks/useGetEtchFromUser";
-// useGetUniqueEtch
-=======
 import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
->>>>>>> 7f45a57a4e5a20c0fab8e38da17ddb5c1ee7eb6d
-import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
-import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { FileLockIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -31,7 +23,7 @@ interface props {
   searchValue: string;
   setSearchValue: React.Dispatch<string>;
   files: Etch[];
-  isLoading?: boolen;
+  isLoading: boolean;
 }
 
 interface fileTypes {
@@ -187,13 +179,14 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
 export const FilesDialog = ({ files, isLoading }: props) => {
   console.log(files);
   const [activeModals, setActiveModals] = useState({ current: "", list: [] });
+  const skeletons = "Lorem ipsum dolor sit, amet";
   return (
     <main className="">
+      {/* <FileLockIcon /> */}
       <div className="mb-4 text-xl font-bold text-muted-foreground">
-        {!isLoading && files.length < 1 ? "Please create a file" : "Files"}
+        {!isLoading && files.length < 1 ? "Please create a file/Etch" : "Files"}
       </div>
       <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
-<<<<<<< HEAD
         {isLoading
           ? skeletons.split("")?.map((item, index) => {
               return (
@@ -209,40 +202,20 @@ export const FilesDialog = ({ files, isLoading }: props) => {
                 </main>
               );
             })
-          : files?.map(({ documentName, tokenId }) => {
-              const prop = { documentName, tokenId, activeModals, setActiveModals };
-              return <File {...prop} />;
+          : files.map((file) => {
+              return <File {...file} key={file.tokenId} activeModals={activeModals} setActiveModals={setActiveModals} />;
             })}
-=======
-        {files.map((file) => {
-          return <File {...file} key={file.tokenId} activeModals={activeModals} setActiveModals={setActiveModals} />;
-        })}
->>>>>>> 7f45a57a4e5a20c0fab8e38da17ddb5c1ee7eb6d
       </section>
     </main>
   );
 };
 
-<<<<<<< HEAD
-const File = ({
-  documentName,
-  tokenId,
-  activeModals,
-  setActiveModals,
-}: {
-  documentName: string | any;
-  tokenId: string;
-  activeModals: any;
-  setActiveModals: React.Dispatch<any>;
-}) => {
-=======
 interface FileProps extends Etch {
   activeModals: any; // replace 'any' with the actual type
   setActiveModals: React.Dispatch<any>; // replace 'any' with the actual type
 }
 
 const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProps) => {
->>>>>>> 7f45a57a4e5a20c0fab8e38da17ddb5c1ee7eb6d
   const [openMoveModal, setOpenMoveModal] = useState(false);
   const [openPropertiesModal, setOpenPropertiesModal] = useState(false);
   const { etch, isLoading, error } = useGetUniqueEtch(tokenId);
@@ -261,7 +234,7 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
   const props = { etch, isLoading, openPropertiesModal, setOpenPropertiesModal, activeModals, setActiveModals };
 
   return (
-    <article key={tokenId}>
+    <>
       {/*------------- Modals & More -------------*/}
       <PropertiesDialog {...props} />
 
@@ -273,7 +246,7 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
         <div className="flex items-center justify-end">
           <FileLockIcon className="h-[18px] w-6" />
         </div>
-        <div className="w-full truncate text-base font-medium text-muted-foreground">{documentName}</div>
+        <div className="w-full truncate text-base font-medium text-neutral-500">{documentName}</div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -300,13 +273,13 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
 
         <Dialog open={openMoveModal} onOpenChange={() => setOpenMoveModal(!openMoveModal)}>
           <DialogContent className={"max-w-[382px] font-body"}>
-            <DialogTitle className=" text-xl font-bold  text-muted-foreground">Move “client custom z” folder</DialogTitle>
+            <DialogTitle className=" text-xl font-bold  text-neutral-500">Move “client custom z” folder</DialogTitle>
             <DialogDescription>
               <div className="flex items-center gap-3">
-                <div className="text-base font-medium text-muted-foreground">Current Location:</div>
+                <div className="text-base font-medium text-neutral-500">Current Location:</div>
                 <div className="flex w-fit cursor-pointer items-center gap-2.5 rounded-lg border border-neutral-400 px-3 py-2">
                   <Icons.folder className="IconFolders relative h-[18px] w-6" />
-                  <div className="ChipDesigns font-['Quicksand'] text-base font-medium text-muted-foreground">Chip designs</div>
+                  <div className="ChipDesigns font-['Quicksand'] text-base font-medium text-neutral-500">Chip designs</div>
                 </div>
               </div>
               <div className="bo mt-5 text-base font-semibold text-primary">Choose location</div>
@@ -322,7 +295,7 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
                   return (
                     <div key={idx} className="flex cursor-pointer items-center gap-3">
                       <Icons.folder className="h-[18px] w-6" />
-                      <div className="text-base font-medium text-muted-foreground">{name}</div>
+                      <div className="text-base font-medium text-neutral-500">{name}</div>
                     </div>
                   );
                 })}
@@ -330,7 +303,7 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
               <footer className="mt-10 flex items-center justify-end gap-5">
                 <div
                   onClick={() => setOpenMoveModal(false)}
-                  className="cursor-pointer text-base font-semibold text-muted-foreground hover:text-foreground"
+                  className="cursor-pointer text-base font-semibold text-neutral-500 hover:text-foreground"
                 >
                   {" "}
                   Cancel
@@ -338,7 +311,7 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
                 <div>
                   <Button
                     onClick={() => setOpenMoveModal(false)}
-                    className={`bg-muted-foreground text-base text-white shadow-[0px_4px_13px_0px_rgba(0,0,0,0.25)]`}
+                    className={`bg-neutral-500 text-base text-white shadow-[0px_4px_13px_0px_rgba(0,0,0,0.25)]`}
                   >
                     Move
                   </Button>
@@ -348,8 +321,6 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
           </DialogContent>
         </Dialog>
       </main>
-    </article>
+    </>
   );
 };
-
-const skeletons = "Lorem ipsum dolor sit, amet consectetur";
