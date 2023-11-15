@@ -21,6 +21,9 @@ export const refetchContext = createContext({
   refetchEtches: () => {},
   setRefetchEtches: (refetchEtches: () => void) => {},
 
+  refetchEtch: () => {},
+  setRefetchEtch: (refetchEtch: () => void) => {},
+
   refetchTeamEtches: () => {},
   setRefetchTeamEtches: (refetchEtches: () => void) => {},
 
@@ -42,6 +45,8 @@ export const RefetchProvider = ({ children }: any) => {
   const [state, setState] = useState({
     refetchEtches: () => {},
 
+    refetchEtch: () => {},
+
     refetchTeams: () => {},
 
     refetchTeamEtches: () => {},
@@ -53,6 +58,8 @@ export const RefetchProvider = ({ children }: any) => {
 
   const mutations = {
     setRefetchEtches: (refetchEtches: () => void) => setState({ ...state, refetchEtches }),
+
+    setRefetchEtch: (refetchEtch: () => void) => setState({ ...state, refetchEtch }),
 
     setRefetchTeams: (refetchTeams: () => void) => setState({ ...state, refetchTeams }),
 
