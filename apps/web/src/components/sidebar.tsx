@@ -49,7 +49,7 @@ export const SideBar = () => {
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
     { url: "/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
     { url: "/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
-    { url: "/ommunity", title: "Community", Icon: Icons.community, disabled: true },
+    { url: "/community", title: "Community", Icon: Icons.community, disabled: true },
     { url: "/settings", title: "Settings", Icon: Icons.settings },
   ];
 

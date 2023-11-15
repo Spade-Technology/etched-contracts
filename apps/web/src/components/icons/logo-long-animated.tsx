@@ -107,3 +107,14 @@ export const LogoAnimated = ({ className }: { className?: string }) => {
     </div>
   );
 };
+
+export const Logo = () => {
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 16.4152L18.5848 0L21.8679 3.71697L3.28303 20.1321L0 16.4152Z" fill="#097B45" />
+      <path d="M6.56607 23.8491L25.1509 7.43393L28.4339 11.1509L9.8491 27.5661L6.56607 23.8491Z" fill="#097B45" />
+      <path d="M13.1321 31.283L31.717 14.8679L35 18.5848L16.4152 35L13.1321 31.283Z" fill="#097B45" />
+      <path d="M23.8491 28.4339L7.43393 9.8491L11.1509 6.56607L27.5661 25.1509L23.8491 28.4339Z" fill="#097B45" />
+    </svg>
+  );
+};
