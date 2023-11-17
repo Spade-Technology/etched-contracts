@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, keccak256, toBytes, toHex } from "viem";
 
 const clientID = "demo-user-external";
 const clientSecret = "k^yf57yg27MKo2SnuzwX";
@@ -30,3 +30,6 @@ export async function getBaseAccountAddress(baseProvider: string, userId: string
 
   return data.users[0].accountAddress;
 }
+
+export const prepareMessageForLitHashing = (message: string) =>
+  keccak256(toBytes(toHex(toBytes(message)).slice(2).toLowerCase()));

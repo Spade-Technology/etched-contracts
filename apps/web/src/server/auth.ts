@@ -2,16 +2,14 @@ import { IncomingMessage } from "http";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
 import { prisma } from "@/server/db";
-import { Address, concat, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters, toBytes } from "viem";
+import { Address, concat, encodeAbiParameters, hashMessage, parseAbiParameters } from "viem";
 import { publicClient } from "./web3";
-import { call } from "viem/_types/actions/public/call";
 
 import { env } from "@/env.mjs";
-import { createERC6492Signature, getAccessToken, getBaseAccountAddress } from "./patch";
-import { currentNode } from "@/contracts";
+import { createERC6492Signature } from "./patch";
+import { prepareMessageForLitHashing } from "@/utils/patchWalletHelper";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -48,8 +46,8 @@ export async function verifySiweMessage(
   if (process.env.NODE_ENV === "development") nextAuthHost = req.headers.host || "";
   else if (!nextAuthUrl) return null;
   else nextAuthHost = new URL(nextAuthUrl).host;
-
   let verified = { success: false };
+
   if (credentials?.signature.endsWith("6492".repeat(16)) || credentials?.derivedVia === "EIP1271") {
     let credentials6492 = {
       hash: hashMessage(credentials!.message),
@@ -61,7 +59,7 @@ export async function verifySiweMessage(
         userId: credentials?.userId,
         baseProvider: env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
         _signature: {
-          hash: hashMessage(credentials?.message),
+          hash: prepareMessageForLitHashing(credentials?.message),
           signature: credentials?.signature,
         },
       });
@@ -100,7 +98,7 @@ export async function verifySiweMessage(
     } catch (e) {
       console.log(e);
     }
-  } else
+  } else {
     verified = await siwe
       .verify({
         signature: credentials?.signature || "",
@@ -111,6 +109,7 @@ export async function verifySiweMessage(
         console.log(e);
         return { success: false };
       });
+  }
 
   if (verified.success) return siwe;
 
@@ -123,9 +122,6 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
       async authorize(credentials) {
         try {
           if (!credentials) return null;
-
-          console.log(credentials);
-
           // Verify the message
           const siwe = await verifySiweMessage(
             {
@@ -136,7 +132,6 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
             },
             req
           );
-
           // If the message is invalid, bad request
           if (!siwe) return null;
 
@@ -149,6 +144,7 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           // Return the user info
           return { id: siwe.address };
         } catch (e) {
+          console.error(e);
           return null;
         }
       },

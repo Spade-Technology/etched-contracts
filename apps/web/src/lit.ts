@@ -1,7 +1,7 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
 const client = new LitJsSdk.LitNodeClient({
-  network: "cayenne",
+  litNetwork: "serrano",
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,

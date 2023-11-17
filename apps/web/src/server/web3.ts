@@ -20,8 +20,6 @@ export const generateServerAuthSig = async () => {
   const expiration_date = new Date(Date.now() + expiration_time * 1000);
   const expiration = expiration_date.toISOString();
 
-  console.log("azeaze");
-
   const preparedMessage = {
     address: walletClient.account.address,
     version: "1",

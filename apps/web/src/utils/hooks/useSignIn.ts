@@ -1,17 +1,18 @@
 import { currentNetworkId, currentNode } from "@/contracts";
-import { useAuth, useSession } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { getWalletClient } from "@wagmi/core";
 import { signOut as _signOut, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { Address, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters } from "viem";
+import { Address, encodeAbiParameters, keccak256, parseAbiParameters } from "viem";
 import { useAccount, useBlockNumber, useSignMessage } from "wagmi";
 
 import { api } from "../api";
 import { env } from "@/env.mjs";
 import { toast } from "@/components/ui/use-toast";
+import { prepareMessageForLitHashing } from "../patchWalletHelper";
 
 export function signOut() {
   localStorage.clear();
@@ -49,7 +50,6 @@ export const useSignIn = () => {
         10000000000n,
         currentNode! as Address,
       ]);
-
       const walletClient = await getWalletClient({ chainId: Number(currentNetworkId!) });
       let blockchainSignature;
       if (isPatchWallet) {
@@ -142,30 +142,29 @@ export const useSignIn = () => {
     };
 
     const message = new SiweMessage(preparedMessage);
-    const body = message.prepareMessage();
+    const messageString = message.prepareMessage();
+    const hashBytes = prepareMessageForLitHashing(messageString);
 
     // -- 2. sign the message
 
     let signedResult: string | undefined;
-    console.log({ isPatchWallet });
+
     if (isPatchWallet) {
       if (!patchUserId) throw new Error("No user ID provided");
       const patchSignatureResult = await generatePatchSignature({
         userId: patchUserId,
-        message: body,
+        message: hashBytes,
         erc6492: false,
       });
       signedResult = patchSignatureResult.signature;
-      console.log("Patch signature result:", signedResult);
-      console.log("-----------------------------------");
-    } else signedResult = await signMessageAsync({ message: body });
+    } else signedResult = await signMessageAsync({ message: messageString });
 
     if (!signedResult) throw new Error("Unable to sign message");
 
     let authSig = {
       sig: signedResult,
       derivedVia: isPatchWallet ? "EIP1271" : "web3.eth.personal.sign",
-      signedMessage: body,
+      signedMessage: messageString,
       address: addressOverride ?? address,
     };
 
