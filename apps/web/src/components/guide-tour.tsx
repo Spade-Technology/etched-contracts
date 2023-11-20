@@ -3,79 +3,27 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Logo } from "./icons/logo-long-animated";
 import { Icons } from "./ui/icons";
 import { Checkbox } from "./ui/checkbox";
+import { Button } from "./ui/button";
 
 export default function GuideTour() {
-  const ref = useRef<HTMLElement | any>();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
   const [rate, setRate] = useState("");
   const [tip, setTip] = useState(0);
-  const [shake, setShake] = useState(false);
-
-  // Drag modal function
-  const onMouseDown = useCallback(
-    (event: any) => {
-      const onMouseMove = (event: MouseEvent) => {
-        const element = ref.current;
-        if (element && element.contains(event.target)) {
-          position.x += event.movementX;
-          position.y += event.movementY;
-
-          element.style.transform = `translate(${position.x}px, ${position.y}px)`;
-        }
-        setPosition(position);
-      };
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    },
-    [position, setPosition, ref]
-  );
 
   useEffect(() => {
     const viewedTips = JSON.parse(localStorage.getItem("viewedTips"));
     if (!viewedTips) {
       setOpenModal(true);
     }
-    const responsive = () => {
-      if (ref?.current?.getBoundingClientRect().x < 1) {
-        setPosition({ ...position, x: -50 });
-        ref.current.style.transform = `translate(${-50}px, ${position.y}px)`;
-      }
-    };
-    window.addEventListener("resize", responsive);
   }, []);
-
-  //SHAKE ANIMATION USEEFFECT
-  useEffect(() => {
-    const shakeAnime = (event: any) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        setShake(true);
-      }
-    };
-    document.addEventListener("mousedown", shakeAnime);
-  }, [ref]);
-
-  useEffect(() => {
-    const count = setTimeout(() => {
-      if (shake) {
-        setShake(false);
-      }
-    }, 500);
-
-    return () => {
-      clearTimeout(count);
-    };
-  }, [shake]);
 
   const buttonState = (name: string) =>
     name === "back" && tip === 0
       ? "!cursor-not-allowed opacity-70"
       : name === "next" && tip === tips.length - 1
-      ? "!cursor-not-allowed opacity-70"
+      ? "!cursor-not-allowed opacity-70 hidden"
+      : name === "close" && tip === tips.length - 1
+      ? "bg-primary text-white"
       : "";
 
   const onChangeTip = (name: string) => {
@@ -90,18 +38,20 @@ export default function GuideTour() {
   };
 
   return (
-    <article className="fixed left-0 top-0 z-50 flex h-[100vh] w-full items-center justify-center bg-transparent">
+    <article>
+      <section
+        className={`bg-background/80 fixed left-0 top-0 flex h-[100vh] w-full backdrop-blur-sm ${
+          openModal ? "z-[900]" : "invisible -z-50"
+        }`}
+      ></section>
       <main
-        ref={ref}
-        onMouseDown={onMouseDown}
-        className={`${shake ? "shake" : ""} w-[500px] cursor-grabbing gap-4 border bg-background shadow-2xl duration-200 ${
-          openModal ? "visible translate-x-0" : "invisible z-0 !translate-x-full"
+        className={`fixed left-[calc((100vw-500px)/2)] top-[calc((100vh-365px)/2)] w-[500px] cursor-grabbing gap-4 border bg-background drop-shadow-2xl duration-200 ${
+          openModal ? "visible z-[1000] translate-x-0" : "invisible z-0 !translate-x-full"
         }`}
       >
         <Cross2Icon
           onClick={() => {
             setOpenModal(false);
-            setPosition({ x: 0, y: 0 });
           }}
           className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer"
         />
@@ -117,7 +67,7 @@ export default function GuideTour() {
             <div className="">Interactive lesson available</div>
             <div className="ml-auto cursor-pointer text-base text-primary">Start learning</div>
           </section>
-          <section className="px-4 py-3">
+          <section className="flex h-[204px] flex-col px-4 py-3">
             {tips.map(({ title, description }, idx) => {
               if (idx === tip) {
                 return (
@@ -129,7 +79,7 @@ export default function GuideTour() {
               }
             })}
 
-            <div className="mt-3 flex items-center justify-end gap-3 py-3 text-foreground">
+            <div className="mt-auto flex items-center justify-end gap-3 py-3 text-foreground">
               <div className="mr-1">Did you find this tip helpful?</div>
               <Icons.like
                 onClick={() => setRate("like")}
@@ -155,7 +105,7 @@ export default function GuideTour() {
                   <div
                     key={idx}
                     onClick={() => onChangeTip(name)}
-                    className={`${idx === 1 ? "bg-primary text-white" : "bg-accent text-foreground"} ${buttonState(
+                    className={`${idx === 1 ? "bg-primary text-white" : "bg-accent text-foreground"} duration-300 ${buttonState(
                       name
                     )} text- cursor-pointer rounded-md border px-4 py-1 capitalize`}
                   >
