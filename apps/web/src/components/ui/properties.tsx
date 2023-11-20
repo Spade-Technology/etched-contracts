@@ -60,7 +60,7 @@ export default function PropertiesDialog({
   const onMouseDown = useCallback(
     (event: any) => {
       const onMouseMove = (event: MouseEvent) => {
-          const element = ref.current;
+        const element = ref.current;
         if (element && element.contains(event.target)) {
           position.x += event.movementX;
           position.y += event.movementY;
