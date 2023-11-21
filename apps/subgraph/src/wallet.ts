@@ -7,7 +7,7 @@ export const getOrCreateWallet = (address: Address): Wallet => {
   if (wallet == null) {
     wallet = new Wallet(address);
 
-    wallet.eoa = address.toString();
+    wallet.eoa = address.toHexString();
 
     wallet.save();
   }
