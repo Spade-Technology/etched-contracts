@@ -6,7 +6,7 @@ dataSources:
     name: Etch
     network: arbitrum-one
     source:
-      address: '0x1c761847751053b4F774E31029EEe4355C961759'
+      address: '0x1e413589C4933037f1b136dDE143346dCfC2bA63'
       abi: Etch
       startBlock: 152613300
     mapping:
@@ -52,7 +52,7 @@ dataSources:
     name: Team
     network: arbitrum-one
     source:
-      address: '0x70bbBb7B7D411fDC54baa2ecfF579f9842391cb5'
+      address: '0xb46B46c136F85Fbd6657B8DF47cAccd4F8065932'
       abi: Team
       startBlock: 152613300
     mapping:
@@ -93,7 +93,7 @@ dataSources:
     name: Organisation
     network: arbitrum-one
     source:
-      address: '0xEa1AA2C407Ed133b7552Ae18378D41c355A52FC0'
+      address: '0x4e3F5840956fCB276faB524B092Eec115eb116C4'
       abi: Organisation
       startBlock: 152613300
     mapping:
@@ -131,7 +131,7 @@ dataSources:
     name: EtchENS
     network: arbitrum-one
     source:
-      address: '0xA748D5d01E889cCdb47404a047fD737575f8D722'
+      address: '0x2B9786adeA8dd24cbb36036919884271Abb0dAbF'
       abi: EtchENS
       startBlock: 152613300
     mapping:
