@@ -52,6 +52,7 @@ export const etchRouter = createTRPCRouter({
             const file = await fetch(url).then((res) => res.blob());
 
             const ipfsCid = await LitJsSdk.encryptToIpfs({
+              // authSig: authSig,
               authSig: await generateServerAuthSig(),
               file,
               chain: camelCaseNetwork,
@@ -98,22 +99,26 @@ export const etchRouter = createTRPCRouter({
           abi: EtchABI,
         });
 
-        const transactionResult = await publicClient.waitForTransactionReceipt({
-          hash: tx1,
-        });
+        try {
+          const transactionResult = await publicClient.waitForTransactionReceipt({
+            hash: tx1,
+          });
 
-        if (!transactionResult.logs[0]) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Transaction failed" });
+          if (!transactionResult.logs[0]) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Transaction failed" });
 
-        const transferEvent = decodeEventLog({
-          abi: EtchABI,
-          eventName: "Transfer",
-          data: transactionResult.logs[0].data,
-          topics: transactionResult.logs[0].topics,
-        });
+          const transferEvent = decodeEventLog({
+            abi: EtchABI,
+            eventName: "Transfer",
+            data: transactionResult.logs[0].data,
+            topics: transactionResult.logs[0].topics,
+          });
 
-        const etchId = (transferEvent.args as any).tokenId;
+          const etchId = (transferEvent.args as any).tokenId;
 
-        return etchId;
+          return etchId;
+        } catch (e) {
+          return 0;
+        }
       }
     ),
 

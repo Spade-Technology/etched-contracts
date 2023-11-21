@@ -8,6 +8,8 @@ import ENSAbi from "@/contracts/abi/EtchENS.json";
 
 import { walletClient } from "@/server/web3";
 import { formatError } from "../nodeErrorFormatter";
+import { arbitrum } from "viem/chains";
+import { currentChain } from "@/utils/wagmi";
 
 export const ensRouter = createTRPCRouter({
   requestEtchedENS: protectedProcedure.input(z.object({ ens: z.string() })).mutation(
@@ -34,10 +36,13 @@ export const ensRouter = createTRPCRouter({
         .writeContract({
           address: contracts.ENS,
           abi: ENSAbi,
+          chain: currentChain,
           functionName: "safeMint",
           args: [address, ens],
         })
         .catch(formatError);
+
+      console.log(tx);
 
       if (typeof tx === "object" && "error" in tx) {
         console.error("Error tx: ", tx);

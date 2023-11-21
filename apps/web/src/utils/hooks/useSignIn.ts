@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { Address, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters } from "viem";
+import { Address, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters, toBytes, toHex } from "viem";
 import { useAccount, useBlockNumber, useSignMessage } from "wagmi";
 
 import { api } from "../api";
 import { env } from "@/env.mjs";
 import { toast } from "@/components/ui/use-toast";
+import { hashMessageForLit } from "@/lit";
 
 export function signOut() {
   localStorage.clear();
@@ -129,19 +130,22 @@ export const useSignIn = () => {
       .find((line: string) => line.startsWith("Expiration Time:"))
       .split(": ")[1];
 
+    // cache
     if (signature && new Date(expirationDateString) > new Date()) return signature;
 
     // -- 1. prepare 'sign-in with ethereum' message
     const preparedMessage = {
       domain: globalThis.location.host,
+      uri: globalThis.location.href,
       address: addressOverride ?? address,
       version: "1",
-      chainId: 1,
+      statement: "This message will allow both Lit MPC Protocol, and etched, to verify your identity.",
+      chainId: currentNetworkId,
       expirationTime: expiration,
-      uri: globalThis.location.href,
     };
 
     const message = new SiweMessage(preparedMessage);
+
     const body = message.prepareMessage();
 
     // -- 2. sign the message
@@ -152,7 +156,7 @@ export const useSignIn = () => {
       if (!patchUserId) throw new Error("No user ID provided");
       const patchSignatureResult = await generatePatchSignature({
         userId: patchUserId,
-        message: body,
+        message: hashMessageForLit(body),
         erc6492: false,
       });
       signedResult = patchSignatureResult.signature;
@@ -166,7 +170,7 @@ export const useSignIn = () => {
       sig: signedResult,
       derivedVia: isPatchWallet ? "EIP1271" : "web3.eth.personal.sign",
       signedMessage: body,
-      address: addressOverride ?? address,
+      address: (addressOverride ?? address)?.toLowerCase(),
     };
 
     if (authSig) localStorage.setItem("lit-auth-signature", JSON.stringify(authSig));
