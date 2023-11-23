@@ -4,6 +4,8 @@ import { Logo } from "./icons/logo-long-animated";
 import { Icons } from "./ui/icons";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
+import { Dialog, DialogContent } from "./ui/dialog";
+import { AlertDialog, AlertDialogContent } from "./ui/alert-dialog";
 
 export default function GuideTour() {
   const [openModal, setOpenModal] = useState(false);
@@ -17,13 +19,13 @@ export default function GuideTour() {
     }
   }, []);
 
-  const buttonState = (name: string) =>
+  const buttonState = (name: string, tipLastIndex: number) =>
     name === "back" && tip === 0
-      ? "!cursor-not-allowed opacity-70"
-      : name === "next" && tip === tips.length - 1
-      ? "!cursor-not-allowed opacity-70 hidden"
-      : name === "close" && tip === tips.length - 1
-      ? "bg-primary text-white"
+      ? "hidden"
+      : name === "next" && tip === tipLastIndex
+      ? "hidden"
+      : name === "close" && tip !== tipLastIndex
+      ? "hidden"
       : "";
 
   const onChangeTip = (name: string) => {
@@ -38,29 +40,20 @@ export default function GuideTour() {
   };
 
   return (
-    <article>
-      <section
-        className={`bg-background/80 fixed left-0 top-0 flex h-[100vh] w-full backdrop-blur-sm ${
-          openModal ? "z-[900]" : "invisible -z-50"
-        }`}
-      ></section>
-      <main
-        className={`fixed left-[calc((100vw-500px)/2)] top-[calc((100vh-365px)/2)] w-[500px] cursor-grabbing gap-4 border bg-background drop-shadow-2xl duration-200 ${
-          openModal ? "visible z-[1000] translate-x-0" : "invisible z-0 !translate-x-full"
-        }`}
-      >
-        <Cross2Icon
-          onClick={() => {
-            setOpenModal(false);
-          }}
-          className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer"
-        />
+    <AlertDialog
+      open={openModal}
+      onOpenChange={() => {
+        localStorage.setItem("viewedTips", JSON.stringify(true));
+        setOpenModal(!openModal);
+      }}
+    >
+      <AlertDialogContent className={" w-[500px] gap-4 border bg-background px-0 py-0 drop-shadow-2xl duration-200"}>
         <main className="cursor-default text-sm font-semibold text-muted-foreground">
           <header className="flex cursor-grabbing items-center gap-2 px-4 py-3 text-base text-foreground">
             <div className="h-6 w-6">
               <Logo />
             </div>
-            <div>Tip of the day</div>
+            <div>Wecome to Etched</div>
           </header>
           <section className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
             <Icons.info className="h-4 w-4" />
@@ -101,13 +94,17 @@ export default function GuideTour() {
             </div>
             <aside className="flex gap-3">
               {["back", "next", "close"].map((name, idx) => {
+                const tipLastIndex = tips.length - 1;
                 return (
                   <div
                     key={idx}
                     onClick={() => onChangeTip(name)}
                     className={`${idx === 1 ? "bg-primary text-white" : "bg-accent text-foreground"} duration-300 ${buttonState(
-                      name
-                    )} text- cursor-pointer rounded-md border px-4 py-1 capitalize`}
+                      name,
+                      tipLastIndex
+                    )} text- cursor-pointer rounded-md border px-4 py-1 capitalize ${
+                      name === "close" && "bg-primary text-white"
+                    }`}
                   >
                     {name}
                   </div>
@@ -116,8 +113,8 @@ export default function GuideTour() {
             </aside>
           </footer>
         </main>
-      </main>
-    </article>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
