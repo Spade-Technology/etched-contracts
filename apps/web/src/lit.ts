@@ -1,7 +1,8 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import { keccak256, toBytes, toHex } from "viem";
 
 const client = new LitJsSdk.LitNodeClient({
-  network: "cayenne",
+  litNetwork: "serrano",
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
@@ -24,3 +25,12 @@ class Lit {
 }
 
 export const lit = new Lit();
+
+// TODO: remove this when lit fixed the issue
+export const hashMessageForLit = (message: string): `0x${string}` => {
+  // From rust code
+  const hexMessage = toBytes(toHex(toBytes(message)).slice(2).toLowerCase());
+  const hash = keccak256(hexMessage);
+
+  return hash;
+};

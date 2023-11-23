@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
@@ -14,6 +14,8 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const [openAddUser, setOpenAddUser] = useState(false);
   const [selectedImg, setSelectedImg] = useState("");
   const { regenerateAuthSig } = useSignIn();
+
+  const viewerRef = useRef<HTMLImageElement>(null);
 
   const decrypt = async () => {
     await lit.connect();
@@ -50,11 +52,33 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
       <div className="my-4 flex justify-between gap-4">
         <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
           {selectedImg ? (
-            <Image src={selectedImg} height={564} width={684} alt="bgImage" className="col-span-2 mx-auto my-auto" />
+            <>
+              <Image
+                src={selectedImg}
+                height={564}
+                width={684}
+                alt="bgImage"
+                className="col-span-2 mx-auto my-auto"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              />
+
+              <audio
+                controls
+                className="col-span-2 mx-auto my-auto"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              >
+                <source src={selectedImg} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            </>
           ) : (
             <Loader2Icon className="animate-spin" />
           )}
-          <div className="flex h-full w-full  justify-center gap-2 pt-4"></div>
+          {/* <div className="flex h-full w-full  justify-center gap-2 pt-4"></div> */}
         </div>
         <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
       </div>
