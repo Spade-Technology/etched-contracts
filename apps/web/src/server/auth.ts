@@ -11,7 +11,8 @@ import { call } from "viem/_types/actions/public/call";
 
 import { env } from "@/env.mjs";
 import { createERC6492Signature, getAccessToken, getBaseAccountAddress } from "./patch";
-import { currentNode } from "@/contracts";
+import { currentNetworkId, currentNode } from "@/contracts";
+import { hashMessageForLit } from "@/lit";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -52,7 +53,7 @@ export async function verifySiweMessage(
   let verified = { success: false };
   if (credentials?.signature.endsWith("6492".repeat(16)) || credentials?.derivedVia === "EIP1271") {
     let credentials6492 = {
-      hash: hashMessage(credentials!.message),
+      hash: hashMessageForLit(credentials!.message),
       signature: credentials?.signature as Address,
     };
 
@@ -61,7 +62,7 @@ export async function verifySiweMessage(
         userId: credentials?.userId,
         baseProvider: env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
         _signature: {
-          hash: hashMessage(credentials?.message),
+          hash: hashMessageForLit(credentials?.message),
           signature: credentials?.signature,
         },
       });
@@ -84,7 +85,7 @@ export async function verifySiweMessage(
 
       // Check for chainId to be 1
       let invalidChainId = false;
-      if (siwe.chainId !== 1) invalidChainId = true;
+      if (siwe.chainId !== currentNetworkId) invalidChainId = true;
 
       // Check for expiration (ISO 8601)
       const expirationDate = new Date(siwe.expirationTime || "");
@@ -97,6 +98,7 @@ export async function verifySiweMessage(
       if (isNaN(signingDate.getTime()) || signingDate > new Date()) invalidSigningDate = true;
 
       verified = { success: isValidSignature && !expiredMessage && !invalidSigningDate && !invalidChainId };
+      console.log({ isValidSignature, expiredMessage, invalidSigningDate, invalidChainId });
     } catch (e) {
       console.log(e);
     }

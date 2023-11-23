@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
@@ -17,11 +17,12 @@ import { Label } from "./ui/label";
 
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
-import { EditIcon, Trash2 } from "lucide-react";
+import { EditIcon, FileAudioIcon, PauseCircleIcon, PlayCircleIcon, Trash2 } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
+import dayjs from "dayjs";
 
 const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
 
@@ -40,6 +41,7 @@ export const CreateEtchButton = () => {
     maxFiles: 10,
     accept: {
       "image/*": [],
+      "audio/*": [],
     },
     onDrop: (acceptedFiles: File[]) => {
       const newFiles = [
@@ -155,87 +157,7 @@ export const CreateEtchButton = () => {
                       </div>
                       <div className="mt-3 grid grid-cols-3 gap-4 overflow-scroll">
                         {files.map((file, index) => (
-                          <div key={index} className="aspect-w-1 aspect-h-1 group relative">
-                            <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
-                            <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
-                              <span className="text-center text-sm text-white">
-                                {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
-                              </span>
-                              {isLoading ? (
-                                <span className="text-white opacity-50"> {uploadProgress}% </span>
-                              ) : (
-                                <span className="text-white opacity-50">
-                                  {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB
-                                </span>
-                              )}
-                            </div>
-
-                            <Dialog>
-                              <DialogTrigger className="w-23 absolute left-0 top-0 m-2 flex  rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100">
-                                <EditIcon className="h-6 w-6" />
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>
-                                    Edit {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
-                                  </DialogTitle>
-                                  <DialogDescription className="mx-0 mt-4 flex flex-col gap-2 px-0">
-                                    <div>
-                                      <Label>File Name</Label>
-                                      <Input
-                                        defaultValue={(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
-                                        onChange={(e) => {
-                                          setFiles(
-                                            files.map((el, i) => {
-                                              if (i === index) {
-                                                return Object.assign(el, {
-                                                  nameOverride: e.target.value + "." + el.name.split(".").pop(),
-                                                });
-                                              }
-                                              return el;
-                                            })
-                                          );
-                                        }}
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label>Description</Label>
-                                      <Input
-                                        defaultValue={file.description}
-                                        onChange={(e) => {
-                                          setFiles(
-                                            files.map((el, i) => {
-                                              if (i === index) {
-                                                return Object.assign(el, {
-                                                  description: e.target.value,
-                                                });
-                                              }
-                                              return el;
-                                            })
-                                          );
-                                        }}
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label>File Extension</Label>
-                                      <Input defaultValue={(file.nameOverride ?? file.name).split(".").pop()} readOnly />
-                                    </div>
-                                    <div>
-                                      <Label>File Size</Label>
-                                      <Input defaultValue={(file.size / 1024 / 1024).toFixed(2) + " MB"} readOnly />
-                                    </div>
-                                  </DialogDescription>
-                                </DialogHeader>
-                              </DialogContent>
-                            </Dialog>
-
-                            <div
-                              className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                              onClick={() => setFiles(files.filter((_, i) => i !== index))}
-                            >
-                              <Trash2 className="h-6 w-6" href="" />
-                            </div>
-                          </div>
+                          <FilePreviewer file={file} index={index} isLoading={isLoading} setFiles={setFiles} files={files} />
                         ))}
                       </div>
                     </div>
@@ -268,5 +190,162 @@ export const CreateEtchButton = () => {
         </div>
       </AlertDialogContent>
     </AlertDialog>
+  );
+};
+
+type FilePreview = File & {
+  preview: string;
+  nameOverride?: string | undefined;
+  description?: string | undefined;
+};
+
+const FilePreviewer = ({
+  file,
+  uploadProgress,
+  index,
+  isLoading,
+  files,
+  setFiles,
+}: {
+  file: FilePreview;
+  uploadProgress?: number;
+  index: number;
+  isLoading?: boolean;
+  files: FilePreview[];
+  setFiles: React.Dispatch<React.SetStateAction<FilePreview[]>>;
+}) => {
+  const audioPreviewRef = useRef<HTMLAudioElement>(null);
+  const [paused, setPaused] = useState(true);
+  const [time, setTime] = useState(0);
+
+  // on audioPreviewRef initialization, update state at timeupdate
+  useEffect(() => {
+    if (audioPreviewRef?.current) {
+      audioPreviewRef.current.addEventListener("timeupdate", () => {
+        setTime(audioPreviewRef?.current?.currentTime ?? 0);
+      });
+    }
+  }, [audioPreviewRef?.current]);
+
+  return (
+    <div key={index} className="aspect-w-1 aspect-h-1 group relative">
+      {file.type.startsWith("image/") ? (
+        <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
+      ) : file.type.startsWith("audio/") ? (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <FileAudioIcon className="h-1/2 w-1/2 text-white" />
+          <audio className="rounded-lg shadow-lg" ref={audioPreviewRef}>
+            <source src={file.preview} type={file.type} />
+          </audio>
+        </div>
+      ) : file.type.startsWith("video/") ? (
+        <video className="rounded-lg shadow-lg">
+          <source src={file.preview} type={file.type} />
+        </video>
+      ) : null}
+      <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
+        <span className="text-center text-sm text-white">
+          {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+        </span>
+        {isLoading ? (
+          <span className="text-white opacity-50"> {uploadProgress}% </span>
+        ) : (
+          <span className="text-white opacity-50">
+            {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB
+          </span>
+        )}
+      </div>
+
+      <Dialog>
+        <DialogTrigger className="w-23 absolute left-0 top-0 m-2 flex  rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100">
+          <EditIcon className="h-6 w-6" />
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            <DialogDescription className="mx-0 mt-4 flex flex-col gap-2 px-0">
+              <div>
+                <Label>File Name</Label>
+                <Input
+                  defaultValue={(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+                  onChange={(e) => {
+                    setFiles(
+                      files.map((el, i) => {
+                        if (i === index) {
+                          return Object.assign(el, {
+                            nameOverride: e.target.value + "." + el.name.split(".").pop(),
+                          });
+                        }
+                        return el;
+                      })
+                    );
+                  }}
+                />
+              </div>
+              <div>
+                <Label>Description</Label>
+                <Input
+                  defaultValue={file.description}
+                  onChange={(e) => {
+                    setFiles(
+                      files.map((el, i) => {
+                        if (i === index) {
+                          return Object.assign(el, {
+                            description: e.target.value,
+                          });
+                        }
+                        return el;
+                      })
+                    );
+                  }}
+                />
+              </div>
+              <div>
+                <Label>File Extension</Label>
+                <Input defaultValue={(file.nameOverride ?? file.name).split(".").pop()} readOnly />
+              </div>
+              <div>
+                <Label>File Size</Label>
+                <Input defaultValue={(file.size / 1024 / 1024).toFixed(2) + " MB"} readOnly />
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+      {file.type.startsWith("audio/") && audioPreviewRef?.current && (
+        <div className="w-23 absolute bottom-0 right-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+          <span className="mr-2 text-white opacity-50">
+            {dayjs()
+              .hour(0)
+              .minute(0)
+              .second(time)
+              .format(time >= 3600 ? "HH:mm:ss" : "mm:ss")}
+          </span>
+          {audioPreviewRef?.current?.paused ? (
+            <PlayCircleIcon
+              className="h-6 w-6"
+              onClick={() => {
+                audioPreviewRef?.current?.play();
+                setPaused(audioPreviewRef?.current?.paused ?? false);
+              }}
+            />
+          ) : (
+            <PauseCircleIcon
+              className="h-6 w-6"
+              onClick={() => {
+                audioPreviewRef?.current?.pause();
+                setPaused(audioPreviewRef?.current?.paused ?? true);
+              }}
+            />
+          )}
+        </div>
+      )}
+      <div
+        className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"
+        onClick={() => setFiles(files.filter((_, i) => i !== index))}
+      >
+        <Trash2 className="h-6 w-6" href="" />
+      </div>
+    </div>
   );
 };
