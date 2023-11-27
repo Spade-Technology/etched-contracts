@@ -25,6 +25,7 @@ import { teamUser } from "@/types";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { toast } from "@/components/ui/use-toast";
 import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
+import { useUpdateEtch } from "@/utils/hooks/useUpdateEtchBackendOperation";
 
 dayjs.extend(relativeTime);
 
@@ -48,26 +49,7 @@ const userPermissions: {
 const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
   const [edit, setEdit] = useState(false);
   const [openTransferOwnerShipDialog, setOpenTransferOwnerShipDialog] = useState(false);
-  const [documentName, setDocumentName] = useState(etch?.documentName || "");
-  const [description, setDescription] = useState(etch?.description || "");
-  const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.updateMetadata.useMutation();
-
-  const saveHandler = async () => {
-    try {
-      await updateAsync({
-        etchId: etch?.tokenId.toString(),
-        fileName: documentName || etch?.documentName || "",
-        description: description || etch?.description || "",
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-
-    setEdit(false);
-  };
-
+  const { isLoading: updateLoading, setDescription, setDocumentName, updateEtch: saveHandler } = useUpdateEtch(setEdit, etch);
   return (
     <div
       className={` ${

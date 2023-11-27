@@ -2,7 +2,7 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { keccak256, toBytes, toHex } from "viem";
 
 const client = new LitJsSdk.LitNodeClient({
-  litNetwork: "serrano",
+  litNetwork: "jalapeno",
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
