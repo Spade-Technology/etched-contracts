@@ -12,6 +12,7 @@ import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useGetMembersFromOrg } from "@/utils/hooks/useGetMembersFromOrg";
 import { teamUser } from "@/types";
 import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
+import { shortenAddress } from "@/utils/common";
 
 export const SidebarDialog = () => {
   const [activeTab, setActiveTab] = useState<string>("Manage");
@@ -81,7 +82,7 @@ export const ManageDialog = () => {
       {organisations.length > 0 ||
         [1, 2, 3].map((item, idx) => (
           <div key={idx} className="h-[105px] w-full bg-white px-10 shadow">
-            <div className="flex animate-pulse h-full items-center gap-5 ">
+            <div className="flex h-full animate-pulse items-center gap-5 ">
               <div className="h-6 w-2/12 rounded-md bg-gray-300 "></div>
               <div className="h-6 w-4/12 rounded-md bg-gray-300 "></div>
               <div className="ml-auto h-6 w-4/12 rounded-md bg-gray-300 "></div>
@@ -214,8 +215,8 @@ const OrgDialog = ({
           <div>
             <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
             <div className="mt-4 flex flex-col gap-2">
-              {members.map(({ name }) => {
-                return <div className=" text-sm font-medium lowercase text-neutral-500">{name}</div>;
+              {members.map(({ name, id }) => {
+                return <div className=" text-sm font-medium lowercase text-neutral-500">{name || shortenAddress(id)}</div>;
               })}
             </div>
           </div>
@@ -413,8 +414,8 @@ const TeamDialog = ({
         <div className="mt-2.5">
           <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
           <div className="mt-[14px] flex flex-col gap-2">
-            {members.map(({ name }) => {
-              return <div className=" text-sm font-medium text-neutral-500">{name}</div>;
+            {members.map(({ name, id }) => {
+              return <div className=" text-sm font-medium text-neutral-500">{name || shortenAddress(id)}</div>;
             })}
           </div>
         </div>

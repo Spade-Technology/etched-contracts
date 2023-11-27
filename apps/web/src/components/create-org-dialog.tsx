@@ -15,6 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Icons } from "./ui/icons";
 import { GoodIcon } from "./icons/good";
 import { orgUser } from "@/types";
+import { shortenAddress } from "@/utils/common";
 
 const formSchema = z.object({
   orgName: z.string(),
@@ -132,7 +133,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                               // onClick={() => inviteUser({ id, name, role })}
                               className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                             >
-                              {name}
+                              {name || shortenAddress(id)}
                             </div>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>

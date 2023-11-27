@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { UsersInputDropdown } from "@/components/ui/input-dropdown";
 import { Label } from "@/components/ui/label";
 import { teamUser } from "@/types";
+import { shortenAddress } from "@/utils/common";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
 
@@ -96,7 +97,7 @@ function NewTeam() {
                             // onClick={() => inviteUser({ id, name, role })}
                             className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                           >
-                            {name}
+                            {name || shortenAddress(id)}
                           </div>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>

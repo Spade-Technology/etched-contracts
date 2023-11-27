@@ -19,6 +19,7 @@ import { orgUser, teamUser } from "@/types";
 import { Organisation, Team } from "@/gql/graphql";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { isValidEthereumAddress, shortenAddress } from "@/utils/common";
 
 type InputDropdownProps = {
   data: {
@@ -301,7 +302,7 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
       } else {
         setSelectedItems([...selectedItems, { id, name, role }]);
       }
-      setInput({ ...input, placeholder: name });
+      setInput({ ...input, placeholder: name || shortenAddress(id) });
     }
   };
 
@@ -314,6 +315,24 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
     };
     document.addEventListener("mousedown", closeModal);
   }, [ref]);
+
+  const DropDownItem = ({ id, name }: { id: string; name?: string }) => {
+    const isSelected = selectedItems.find((item: any) => item.id === id);
+    return (
+      <div
+        key={id}
+        onClick={() => addData({ id, name, role } as orgUser)}
+        className={`${
+          isSelected ? "pointer-events-none" : ""
+        } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
+      >
+        {name ? name : isSelected ? shortenAddress(id) : id}
+        <div className="flex items-center gap-1">
+          <GoodIcon className={`${isSelected ? "" : "invisible"}`} />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <DropdownMenu>
@@ -328,28 +347,18 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
             className="border-none p-3 outline-none"
           />
           <div
-            className={`${openDropdown && users.length > 0 ? "" : "-z-50 hidden opacity-0"} ${cn(
+            className={`${
+              openDropdown && (isValidEthereumAddress(input?.value) || users.length > 0) ? "" : "-z-50 hidden opacity-0"
+            } ${cn(
               "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
             )}`}
           >
             <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
-              {users.map(({ id, name }) => {
-                const isSelected = selectedItems.find((item: any) => item.name === name);
-                return (
-                  <div
-                    key={id}
-                    onClick={() => addData({ id, name, role } as orgUser)}
-                    className={`${
-                      isSelected ? "pointer-events-none" : ""
-                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
-                  >
-                    {name}
-                    <div className="flex items-center gap-1">
-                      <GoodIcon className={`${isSelected ? "" : "invisible"}`} />
-                    </div>
-                  </div>
-                );
-              })}
+              {!!users.length ? (
+                users.map(({ id, name }) => <DropDownItem id={id} name={name} />)
+              ) : (
+                <DropDownItem id={input?.value} name={""} />
+              )}
             </section>
           </div>
         </main>
