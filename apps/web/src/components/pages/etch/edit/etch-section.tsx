@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
@@ -11,6 +11,7 @@ import { lit } from "@/lit";
 import { Loader2Icon } from "lucide-react";
 import filetype from "magic-bytes.js";
 import { PDFViewer } from "@/components/pdf-viewer";
+import { VideoPlayer } from "@/components/VideoPlayer";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -70,18 +71,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
                 />
               )}
 
-              {!!fileType.startsWith("video/") && (
-                <video
-                  controls
-                  className="col-span-2 mx-auto my-auto"
-                  onError={(event) => {
-                    event.currentTarget.style.display = "none";
-                  }}
-                >
-                  <source src={etchFile} type={fileType} />
-                  Your browser does not support the audio element.
-                </video>
-              )}
+              {!!fileType.startsWith("video/") && <VideoPlayer url={etchFile} />}
 
               {!!fileType.startsWith("audio/") && (
                 <audio
