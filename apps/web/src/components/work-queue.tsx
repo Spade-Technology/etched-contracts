@@ -17,7 +17,7 @@ export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
       type="single"
       collapsible
       className={
-        "bottom-5 right-5 w-2/6 min-w-[24rem] rounded-sm bg-white p-3 shadow-etched-1 transition-opacity " +
+        "bottom-5 right-5 z-50 w-2/6 min-w-[24rem] rounded-sm bg-white p-3 shadow-etched-1 transition-opacity " +
         (Object.keys(operations).length > 0 ? "fixed opacity-100" : "hidden opacity-0")
       }
     >
