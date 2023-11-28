@@ -15,15 +15,14 @@ import { Label } from "./ui/label";
 
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
-import { EditIcon, EyeIcon, FileAudioIcon, FileTextIcon, PauseCircleIcon, PlayCircleIcon, Trash2 } from "lucide-react";
+import { EditIcon, EyeIcon, FileAudioIcon, FileTextIcon, PauseCircleIcon, PlayCircleIcon, Trash2, VideoIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
 import dayjs from "dayjs";
 import { PDFViewer } from "./pdf-viewer";
-
-const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
+import { VideoPlayer } from "./VideoPlayer";
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -216,7 +215,6 @@ const FilePreviewer = ({
   setFiles: React.Dispatch<React.SetStateAction<FilePreview[]>>;
 }) => {
   const audioPreviewRef = useRef<HTMLAudioElement>(null);
-  const videoPreviewRef = useRef<HTMLVideoElement>(null);
   const [time, setTime] = useState(0);
 
   // on audioPreviewRef initialization, update state at timeupdate
@@ -227,14 +225,6 @@ const FilePreviewer = ({
       });
     }
   }, [audioPreviewRef?.current]);
-
-  useEffect(() => {
-    if (videoPreviewRef?.current) {
-      videoPreviewRef.current.addEventListener("timeupdate", () => {
-        setTime(videoPreviewRef?.current?.currentTime ?? 0);
-      });
-    }
-  }, [videoPreviewRef?.current]);
 
   return (
     <div key={index} className="aspect-w-1 aspect-h-1 group relative">
@@ -249,9 +239,7 @@ const FilePreviewer = ({
         </div>
       ) : file.type.startsWith("video/") ? (
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
-          <video className="rounded-lg shadow-lg" ref={videoPreviewRef}>
-            <source src={file.preview} type={file.type} />
-          </video>
+          <VideoIcon className="h-1/2 w-1/2 text-white" />
         </div>
       ) : file.type.includes("pdf") ? (
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
@@ -354,31 +342,18 @@ const FilePreviewer = ({
         </div>
       )}
 
-      {file.type.startsWith("video/") && videoPreviewRef?.current && (
-        <div className="w-23 absolute bottom-0 right-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
-          <span className="mr-2 text-white opacity-50">
-            {dayjs()
-              .hour(0)
-              .minute(0)
-              .second(time)
-              .format(time >= 3600 ? "HH:mm:ss" : "mm:ss")}
-          </span>
-          {videoPreviewRef?.current?.paused ? (
-            <PlayCircleIcon
-              className="h-6 w-6"
-              onClick={() => {
-                videoPreviewRef?.current?.play();
-              }}
-            />
-          ) : (
-            <PauseCircleIcon
-              className="h-6 w-6"
-              onClick={() => {
-                videoPreviewRef?.current?.pause();
-              }}
-            />
-          )}
-        </div>
+      {file.type.startsWith("video/") && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <VideoPlayer url={file.preview} />
+          </DialogContent>
+        </Dialog>
       )}
 
       {file.type.includes("pdf") && (
