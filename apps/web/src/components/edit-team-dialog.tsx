@@ -13,9 +13,10 @@ import { BarIcon } from "./icons/bar";
 import { TransferIcon } from "./icons/transfer";
 import { DeleteIcon } from "./icons/delete";
 import { teamUser } from "@/types";
-import { shortenAddress } from "@/utils/common";
+
 import { useUpdateTeam } from "@/utils/hooks/useUpdateTeamBackendOperation";
 import { useTransferOwnershipTeam } from "@/utils/hooks/useTeamTransferOwnershipBackendOperation";
+import { shortenAddress } from "@/utils/hooks/address";
 
 const roleData = ["read", "read & write"];
 
@@ -158,7 +159,7 @@ export const EditTeamDialog = ({
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
-                                  {name || shortenAddress(id)}
+                                  {name || shortenAddress({ address: id })}
                                 </div>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>

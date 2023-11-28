@@ -3,7 +3,7 @@ import { EditButton } from "@/components/ui/edit-button";
 import { EditTeamDialog } from "@/components/edit-team-dialog";
 import { Organisation } from "@/gql/graphql";
 import { teamUser } from "@/types";
-import { shortenAddress } from "@/utils/common";
+import { shortenAddress } from "@/utils/hooks/address";
 
 export const TeamDialog = ({
   id,
@@ -52,7 +52,7 @@ export const TeamDialog = ({
           <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
           <div className="mt-[14px] flex flex-col gap-2">
             {members.map(({ name, id }) => {
-              return <div className=" text-sm font-medium text-neutral-500">{name || shortenAddress(id)}</div>;
+              return <div className=" text-sm font-medium text-neutral-500">{name || shortenAddress({ address: id })}</div>;
             })}
           </div>
         </div>

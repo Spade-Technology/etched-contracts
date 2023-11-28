@@ -19,7 +19,8 @@ import { orgUser, teamUser } from "@/types";
 import { Organisation, Team } from "@/gql/graphql";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { isValidEthereumAddress, shortenAddress } from "@/utils/common";
+import { isValidEthereumAddress } from "@/utils/common";
+import { shortenAddress } from "@/utils/hooks/address";
 
 type InputDropdownProps = {
   data: {
@@ -302,7 +303,7 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
       } else {
         setSelectedItems([...selectedItems, { id, name, role }]);
       }
-      setInput({ ...input, placeholder: name || shortenAddress(id) });
+      setInput({ ...input, placeholder: name || shortenAddress({ address: id }) });
     }
   };
 
@@ -326,7 +327,7 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
           isSelected ? "pointer-events-none" : ""
         } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
       >
-        {name ? name : isSelected ? shortenAddress(id) : id}
+        {name ? name : isSelected ? shortenAddress({ address: id }) : id}
         <div className="flex items-center gap-1">
           <GoodIcon className={`${isSelected ? "" : "invisible"}`} />
         </div>

@@ -16,9 +16,10 @@ import { TransferIcon } from "./icons/transfer";
 import { DeleteIcon } from "./icons/delete";
 import { roleData } from "./create-org-dialog";
 import { orgUser } from "@/types";
-import { shortenAddress } from "@/utils/common";
+
 import { useUpdateOrg } from "@/utils/hooks/useUpdateOrgBackendOperation";
 import { useTransferOwnershipOrg } from "@/utils/hooks/useOrgTransferOwnershipBackendOperation";
+import { shortenAddress } from "@/utils/hooks/address";
 
 const formSchema = z.object({
   orgName: z.string(),
@@ -175,7 +176,7 @@ export const EditOrgDialog = ({
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
-                                  {name || shortenAddress(id)}
+                                  {name || shortenAddress({ address: id })}
                                 </div>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
