@@ -5,8 +5,9 @@ import { EditOrgDialog } from "@/components/edit-org-dialog";
 import { Organisation } from "@/gql/graphql";
 import { useGetMembersFromOrg } from "@/utils/hooks/useGetMembersFromOrg";
 import { teamUser } from "@/types";
-import { shortenAddress } from "@/utils/common";
+
 import { TeamDialog } from "./TeamDialog";
+import { shortenAddress } from "@/utils/hooks/address";
 
 export const OrgDialog = ({
   id,
@@ -110,7 +111,9 @@ export const OrgDialog = ({
             <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
             <div className="mt-4 flex flex-col gap-2">
               {members.map(({ name, id }) => {
-                return <div className=" text-sm font-medium lowercase text-neutral-500">{name || shortenAddress(id)}</div>;
+                return (
+                  <div className=" text-sm font-medium lowercase text-neutral-500">{name || shortenAddress({ address: id })}</div>
+                );
               })}
             </div>
           </div>

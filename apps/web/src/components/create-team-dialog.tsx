@@ -19,7 +19,7 @@ import { teamUser } from "@/types";
 import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
-import { shortenAddress } from "@/utils/common";
+import { shortenAddress } from "@/utils/hooks/address";
 
 const formSchema = z.object({
   teamName: z.string(),
@@ -188,7 +188,7 @@ export const CreateTeamDialog = ({
                                 key={id}
                                 className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                               >
-                                {name || shortenAddress(id)}
+                                {name || shortenAddress({ address: id })}
                               </div>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
