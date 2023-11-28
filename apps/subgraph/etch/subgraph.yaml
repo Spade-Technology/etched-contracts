@@ -1,0 +1,63 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: EntityManager
+    network: base-testnet
+    source:
+      address: "0x188d6c6dca6276da47e335ee6b7f86410baa4c1f"
+      abi: EntityManager
+      startBlock: 12975374
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - CommentOnEntity
+        - EntityBasePermissionsChanged
+        - EntityBulkUserPermissionsChanged
+        - EntityCreated
+        - EntityIndividualUserPermissionsChanged
+        - EntityMetaChanged
+        - EntityMoved
+        - EntityShareMaxPermissionsChanged
+        - EntityTransferredToOrganization
+        - OrganizationTransferredToIndividual
+        - OwnershipTransferred
+        - Transfer
+      abis:
+        - name: EntityManager
+          file: ./abis/EntityManager.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: CommentOnEntity(uint256,uint256)
+          handler: handleCommentOnEntity
+        - event: EntityBasePermissionsChanged(uint256,uint8)
+          handler: handleEntityBasePermissionsChanged
+        - event: EntityBulkUserPermissionsChanged(uint256,(address,uint8)[])
+          handler: handleEntityBulkUserPermissionsChanged
+        - event: EntityCreated(uint256,uint8,address)
+          handler: handleEntityCreated
+        - event: EntityIndividualUserPermissionsChanged(uint256,address,uint8)
+          handler: handleEntityIndividualUserPermissionsChanged
+        - event: EntityMetaChanged(uint256,(address,string,string,string,uint256,uint256))
+          handler: handleEntityMetaChanged
+        - event: EntityMoved(uint256,uint8,uint256,uint256)
+          handler: handleEntityMoved
+        - event: EntityShareMaxPermissionsChanged(uint256,uint8)
+          handler: handleEntityShareMaxPermissionsChanged
+        - event: EntityTransferredToOrganization(uint256,uint256)
+          handler: handleEntityTransferredToOrganization
+        - event: OrganizationTransferredToIndividual(uint256,address)
+          handler: handleOrganizationTransferredToIndividual
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/entity-manager.ts
