@@ -1,10 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
 import { createUploadthing, type FileRouter } from "uploadthing/next-legacy";
 
 const f = createUploadthing();
-
-const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" }); // Fake auth function
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const fileRouter = {
@@ -12,6 +8,18 @@ export const fileRouter = {
   EtchUpload: f({
     image: {
       maxFileCount: 50,
+      maxFileSize: "128MB",
+    },
+    audio: {
+      maxFileCount: 10,
+      maxFileSize: "128MB",
+    },
+    video: {
+      maxFileCount: 10,
+      maxFileSize: "128MB",
+    },
+    pdf: {
+      maxFileCount: 10,
       maxFileSize: "128MB",
     },
   })

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
@@ -9,10 +9,13 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
 import { Loader2Icon } from "lucide-react";
+import filetype from "magic-bytes.js";
+import { PDFViewer } from "@/components/pdf-viewer";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
-  const [selectedImg, setSelectedImg] = useState("");
+  const [etchFile, setEtchFile] = useState("");
+  const [fileType, setFileType] = useState("");
   const { regenerateAuthSig } = useSignIn();
 
   const decrypt = async () => {
@@ -34,8 +37,11 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     if (!decryptedArrayBuffer) return;
 
+    const fileType = filetype(new Uint8Array(decryptedArrayBuffer as any));
+
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
-    setSelectedImg(image);
+    setEtchFile(image);
+    setFileType(fileType[0]?.mime || "");
 
     return {};
   };
@@ -49,12 +55,53 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
     <div>
       <div className="my-4 flex justify-between gap-4">
         <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
-          {selectedImg ? (
-            <Image src={selectedImg} height={564} width={684} alt="bgImage" className="col-span-2 mx-auto my-auto" />
+          {etchFile ? (
+            <>
+              {!!fileType.startsWith("image/") && (
+                <Image
+                  src={etchFile}
+                  height={564}
+                  width={684}
+                  alt="bgImage"
+                  className="col-span-2 mx-auto my-auto"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                />
+              )}
+
+              {!!fileType.startsWith("video/") && (
+                <video
+                  controls
+                  className="col-span-2 mx-auto my-auto"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                >
+                  <source src={etchFile} type={fileType} />
+                  Your browser does not support the audio element.
+                </video>
+              )}
+
+              {!!fileType.startsWith("audio/") && (
+                <audio
+                  controls
+                  className="col-span-2 mx-auto my-auto"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                >
+                  <source src={etchFile} type={fileType} />
+                  Your browser does not support the audio element.
+                </audio>
+              )}
+
+              {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
+            </>
           ) : (
             <Loader2Icon className="animate-spin" />
           )}
-          <div className="flex h-full w-full  justify-center gap-2 pt-4"></div>
+          {/* <div className="flex h-full w-full  justify-center gap-2 pt-4"></div> */}
         </div>
         <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
       </div>
