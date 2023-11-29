@@ -5,7 +5,6 @@ import {
   ApprovalForAll,
   CommentOnEntity,
   EntityBasePermissionsChanged,
-  EntityBulkUserPermissionsChanged,
   EntityCreated,
   EntityIndividualUserPermissionsChanged,
   EntityMetaChanged,
@@ -112,32 +111,6 @@ export function createEntityBasePermissionsChangedEvent(
   )
 
   return entityBasePermissionsChangedEvent
-}
-
-export function createEntityBulkUserPermissionsChangedEvent(
-  _entityId: BigInt,
-  _permissions: Array<ethereum.Tuple>
-): EntityBulkUserPermissionsChanged {
-  let entityBulkUserPermissionsChangedEvent = changetype<
-    EntityBulkUserPermissionsChanged
-  >(newMockEvent())
-
-  entityBulkUserPermissionsChangedEvent.parameters = new Array()
-
-  entityBulkUserPermissionsChangedEvent.parameters.push(
-    new ethereum.EventParam(
-      "_entityId",
-      ethereum.Value.fromUnsignedBigInt(_entityId)
-    )
-  )
-  entityBulkUserPermissionsChangedEvent.parameters.push(
-    new ethereum.EventParam(
-      "_permissions",
-      ethereum.Value.fromTupleArray(_permissions)
-    )
-  )
-
-  return entityBulkUserPermissionsChangedEvent
 }
 
 export function createEntityCreatedEvent(

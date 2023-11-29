@@ -36,15 +36,6 @@ type EntityBasePermissionsChanged @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type EntityBulkUserPermissionsChanged @entity(immutable: true) {
-  id: Bytes!
-  _entityId: BigInt! # uint256
-  _permissions: [Bytes!]! # tuple[]
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 type EntityCreated @entity(immutable: true) {
   id: Bytes!
   _entityId: BigInt! # uint256

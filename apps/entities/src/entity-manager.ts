@@ -3,7 +3,6 @@ import {
   ApprovalForAll as ApprovalForAllEvent,
   CommentOnEntity as CommentOnEntityEvent,
   EntityBasePermissionsChanged as EntityBasePermissionsChangedEvent,
-  EntityBulkUserPermissionsChanged as EntityBulkUserPermissionsChangedEvent,
   EntityCreated as EntityCreatedEvent,
   EntityIndividualUserPermissionsChanged as EntityIndividualUserPermissionsChangedEvent,
   EntityMetaChanged as EntityMetaChangedEvent,
@@ -19,7 +18,6 @@ import {
   ApprovalForAll,
   CommentOnEntity,
   EntityBasePermissionsChanged,
-  EntityBulkUserPermissionsChanged,
   EntityCreated,
   EntityIndividualUserPermissionsChanged,
   EntityMetaChanged,
@@ -83,22 +81,6 @@ export function handleEntityBasePermissionsChanged(
   )
   entity._entityId = event.params._entityId
   entity._newPermissions = event.params._newPermissions
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleEntityBulkUserPermissionsChanged(
-  event: EntityBulkUserPermissionsChangedEvent
-): void {
-  let entity = new EntityBulkUserPermissionsChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._permissions = event.params._permissions
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
