@@ -108,29 +108,6 @@
         "type": "uint256"
       },
       {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "indexed": false,
-        "internalType": "struct IEntityManager.SPermissions[]",
-        "name": "_permissions",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "EntityBulkUserPermissionsChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_entityId",
-        "type": "uint256"
-      },
-      {
         "indexed": false,
         "internalType": "enum IEntityManager.ImmutableType",
         "name": "_type",
@@ -971,6 +948,24 @@
       { "internalType": "uint8", "name": "_permissions", "type": "uint8" }
     ],
     "name": "setBasePermissionsForEntity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
+      {
+        "components": [
+          { "internalType": "address", "name": "user", "type": "address" },
+          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
+        ],
+        "internalType": "struct IEntityManager.SPermissions[]",
+        "name": "_permissions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setBulkUserPermissionsForEntity",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -1,8 +1,8 @@
 {
   "base-testnet": {
     "EntityManager": {
-      "address": "0x188d6c6dca6276da47e335ee6b7f86410baa4c1f",
-      "startBlock": 12975374
+      "address": "0x896e5f3acbcacf6aa05fee4adde035111ecc87d6",
+      "startBlock": 13014715
     }
   }
 }
