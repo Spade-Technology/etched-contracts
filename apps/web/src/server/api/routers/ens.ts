@@ -8,7 +8,7 @@ import ENSAbi from "@/contracts/abi/EtchENS.json";
 
 import { walletClient } from "@/server/web3";
 import { formatError } from "../nodeErrorFormatter";
-import { arbitrum } from "viem/chains";
+
 import { currentChain } from "@/utils/wagmi";
 
 export const ensRouter = createTRPCRouter({

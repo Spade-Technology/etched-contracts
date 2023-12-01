@@ -99,6 +99,8 @@ export const etchRouter = createTRPCRouter({
           abi: EtchABI,
         });
 
+        console.log(tx1);
+
         try {
           const transactionResult = await publicClient.waitForTransactionReceipt({
             hash: tx1,
@@ -117,7 +119,7 @@ export const etchRouter = createTRPCRouter({
 
           return etchId;
         } catch (e) {
-          return 0;
+          return tx1;
         }
       }
     ),
