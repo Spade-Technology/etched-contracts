@@ -74,7 +74,7 @@ export const useCreateEtch = () => {
 
       setEtchCreated(data.length);
 
-      await bulkMintEtch({
+      const res = await bulkMintEtch({
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         authSig,
@@ -89,6 +89,7 @@ export const useCreateEtch = () => {
 
       setOperation(opId, {
         name: "Creation of " + data.length + " etch" + (data.length > 1 ? "es" : ""),
+        description: "tx: " + res.tx + " -- etchId: " + res.id,
         status: "Done",
         progress: 100,
         statusType: "success",
