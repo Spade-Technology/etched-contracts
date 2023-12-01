@@ -2,9 +2,13 @@ import { PageBoilerplate } from "@/components/page-boilerplate";
 import EtchSection from "@/components/pages/etch/edit/etch-section";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { contracts } from "@/contracts";
 import { Etch } from "@/gql/graphql";
 import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
+
 import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 export const metadata: Metadata = {
@@ -49,6 +53,15 @@ export default function DashboardPage() {
                   )}
                 </div>
               </BreadcrumbLink>
+
+              <Link
+                href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
+                className="ml-2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
+              </Link>
             </BreadcrumbItem>
           </Breadcrumb>
         </div>
