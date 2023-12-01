@@ -6,6 +6,8 @@ const client = new LitJsSdk.LitNodeClient({
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
+
+  // Verbosity of the logging
   debug: false,
 });
 
