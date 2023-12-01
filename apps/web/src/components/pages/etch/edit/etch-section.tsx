@@ -9,10 +9,14 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
 import { Loader2Icon } from "lucide-react";
+import filetype from "magic-bytes.js";
+import { PDFViewer } from "@/components/pdf-viewer";
+import { VideoPlayer } from "@/components/VideoPlayer";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
-  const [selectedImg, setSelectedImg] = useState("");
+  const [etchFile, setEtchFile] = useState("");
+  const [fileType, setFileType] = useState("");
   const { regenerateAuthSig } = useSignIn();
 
   const viewerRef = useRef<HTMLImageElement>(null);
@@ -36,8 +40,11 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     if (!decryptedArrayBuffer) return;
 
+    const fileType = filetype(new Uint8Array(decryptedArrayBuffer as any));
+
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
-    setSelectedImg(image);
+    setEtchFile(image);
+    setFileType(fileType[0]?.mime || "");
 
     return {};
   };
@@ -51,29 +58,37 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
     <div>
       <div className="my-4 flex justify-between gap-4">
         <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
-          {selectedImg ? (
+          {etchFile ? (
             <>
-              <Image
-                src={selectedImg}
-                height={564}
-                width={684}
-                alt="bgImage"
-                className="col-span-2 mx-auto my-auto"
-                onError={(event) => {
-                  event.currentTarget.style.display = "none";
-                }}
-              />
+              {!!fileType.startsWith("image/") && (
+                <Image
+                  src={etchFile}
+                  height={564}
+                  width={684}
+                  alt="bgImage"
+                  className="col-span-2 mx-auto my-auto"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                />
+              )}
 
-              <audio
-                controls
-                className="col-span-2 mx-auto my-auto"
-                onError={(event) => {
-                  event.currentTarget.style.display = "none";
-                }}
-              >
-                <source src={selectedImg} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
+              {!!fileType.startsWith("video/") && <VideoPlayer url={etchFile} />}
+
+              {!!fileType.startsWith("audio/") && (
+                <audio
+                  controls
+                  className="col-span-2 mx-auto my-auto"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                  }}
+                >
+                  <source src={etchFile} type={fileType} />
+                  Your browser does not support the audio element.
+                </audio>
+              )}
+
+              {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
             </>
           ) : (
             <Loader2Icon className="animate-spin" />
