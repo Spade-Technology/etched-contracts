@@ -30,7 +30,6 @@
     "**/*.cjs",
     "**/*.mjs",
     "sol2/tsconfig.json",
-    "next.config.js",
     "next.config.js"
   ],
   "exclude": ["node_modules"]
