@@ -10,6 +10,7 @@ type operationInput = {
   status: string;
   progress: number;
   error?: string;
+  description?: string;
   statusType: "loading" | "success" | "error";
 };
 
