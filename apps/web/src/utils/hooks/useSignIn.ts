@@ -151,7 +151,7 @@ export const useSignIn = () => {
     // -- 2. sign the message
 
     let signedResult: string | undefined;
-    console.log({ isPatchWallet });
+
     if (isPatchWallet) {
       if (!patchUserId) throw new Error("No user ID provided");
       const patchSignatureResult = await generatePatchSignature({
