@@ -42,7 +42,7 @@ export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
                       <HoverCard>
                         <HoverCardTrigger>Success</HoverCardTrigger>
                         <HoverCardContent>
-                          <div className="overflow-scroll">This operation was successful</div>
+                          <div className="overflow-scroll">{el.description || "This operation was successful"}</div>
                         </HoverCardContent>
                       </HoverCard>
                     </>
@@ -52,7 +52,7 @@ export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
                       <HoverCard>
                         <HoverCardTrigger>Inspect Error</HoverCardTrigger>
                         <HoverCardContent>
-                          <div className="overflow-scroll">{el.error}</div>
+                          <div className="overflow-scroll">{el.error || "This operation failed"}</div>
                         </HoverCardContent>
                       </HoverCard>
                     </div>
