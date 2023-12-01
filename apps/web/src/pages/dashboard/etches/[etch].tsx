@@ -54,14 +54,16 @@ export default function DashboardPage() {
                 </div>
               </BreadcrumbLink>
 
-              <Link
-                href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
-                className="ml-2"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
-              </Link>
+              {!isLoading && (
+                <Link
+                  href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
+                  className="ml-2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
+                </Link>
+              )}
             </BreadcrumbItem>
           </Breadcrumb>
         </div>
