@@ -18,14 +18,6 @@ export const fileRouter = {
       maxFileCount: 10,
       maxFileSize: "128MB",
     },
-    audio: {
-      maxFileCount: 10,
-      maxFileSize: "128MB",
-    },
-    video: {
-      maxFileCount: 10,
-      maxFileSize: "128MB",
-    },
     pdf: {
       maxFileCount: 10,
       maxFileSize: "128MB",
