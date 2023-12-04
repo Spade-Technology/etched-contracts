@@ -15,10 +15,12 @@ export default function DashboardPage() {
   const loggedInAddress = useLoggedInAddress();
   const { isLoading, etches, error } = useGetEtchesFromUser(loggedInAddress.toLowerCase());
 
+  const etchesData = error ? [] : etches;
+
   return (
     <PageBoilerplate>
       <div className="mb-64 flex flex-col items-center justify-center">
-        <DataTable isLoading={isLoading} data={error ? [] : etches} />
+        <DataTable isLoading={isLoading} data={etchesData} />
       </div>
     </PageBoilerplate>
   );

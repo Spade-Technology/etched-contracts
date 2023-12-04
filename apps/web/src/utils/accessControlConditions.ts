@@ -63,7 +63,7 @@ export const defaultAccessControlConditionsUsingReadableID = ({ etchId }: { etch
   ];
 };
 
-export const defaultAccessControlConditions = ({ etchUID }: { etchUID: string }): any[] => {
+export const defaultAccessControlConditions = ({ etchUID }: { etchUID: string }): AccsEVMParams[] => {
   const fn = "hasReadPermissionUID";
   return [
     {
@@ -72,10 +72,7 @@ export const defaultAccessControlConditions = ({ etchUID }: { etchUID: string })
       contractAddress: contracts.Etch,
 
       functionName: fn,
-      method: fn,
       functionParams: [":userAddress", etchUID],
-      params: [":userAddress", etchUID],
-      parameters: [":userAddress", etchUID],
       functionAbi: EtchABI.find((abi) => abi.name === fn) as FunctionABI,
 
       chain: camelCaseNetwork,

@@ -380,6 +380,7 @@ export const etchRouter = createTRPCRouter({
         return { tx };
       }
     ),
+
   setIndividualPermissionsBulk: protectedProcedure
     .input(
       z.object({
@@ -430,6 +431,7 @@ export const etchRouter = createTRPCRouter({
         return { tx };
       }
     ),
+
   setTeamPermissionsBulk: protectedProcedure
     .input(
       z.object({
