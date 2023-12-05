@@ -52,7 +52,7 @@ export const VideoPlayer = ({ url }: { url: string }) => {
           </div>
         )}
 
-        {playerRef.current && divRef.current && (
+        {playerRef.current && divRef.current && showControls && (
           <div className="absolute bottom-0 w-full" onClick={(e) => e.stopPropagation()}>
             <Controls
               playerRef={playerRef.current}
