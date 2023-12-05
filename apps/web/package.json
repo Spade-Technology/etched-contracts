@@ -68,6 +68,7 @@
     "react-particles": "^2.12.2",
     "react-pdf": "^7.5.1",
     "react-player": "^2.13.0",
+    "screenfull": "^6.0.2",
     "siwe": "^2.1.4",
     "superjson": "1.12.2",
     "tailwind-merge": "^1.14.0",

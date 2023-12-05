@@ -53,9 +53,9 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   if (isLoading) return <div>Loading...</div>;
   return (
-    <div>
-      <div className="my-4 flex justify-between gap-4">
-        <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
+    <div className="my-4 grid grid-cols-3 gap-4">
+      <div className="col-span-2">
+        <div className="w-full bg-[#F3F5F5] ">
           {etchFile ? (
             <>
               {!!fileType.startsWith("image/") && (
@@ -93,11 +93,13 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
           )}
           {/* <div className="flex h-full w-full  justify-center gap-2 pt-4"></div> */}
         </div>
-        <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
-      </div>
-      <Comments etch={etch || {}} />
 
-      <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
+        <Comments etch={etch || {}} />
+      </div>
+      <div className="col-span-1">
+        <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
+        <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
+      </div>
     </div>
   );
 };
