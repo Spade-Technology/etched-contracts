@@ -5,7 +5,6 @@ import Comments from "./components/comments";
 import Edit from "./components/edit";
 import { Etch } from "@/gql/graphql";
 
-import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
 import { Loader2Icon } from "lucide-react";
@@ -18,23 +17,22 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const [etchFile, setEtchFile] = useState("");
   const [fileType, setFileType] = useState("");
   const { regenerateAuthSig } = useSignIn();
-
   const decrypt = async () => {
     await lit.connect();
-
     if (!lit.client || !etch?.ipfsCid) return;
 
     const authSig = await regenerateAuthSig();
 
-    const decryptedArrayBuffer = await LitJsSdk.decryptFromIpfs({
-      authSig,
-      ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
-      litNodeClient: lit.client as any,
-    }).catch((e) => {
-      console.log(e);
-      if (e.errorKind == "Validation") alert("You are not authorized to view this document");
-      else alert("Something went wrong");
-    });
+    const decryptedArrayBuffer = await lit
+      .decryptFromIpfs({
+        authSig,
+        ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
+      })
+      .catch((e) => {
+        console.log(e);
+        if (e.errorKind == "Validation") alert("You are not authorized to view this document");
+        else alert("Something went wrong");
+      });
 
     if (!decryptedArrayBuffer) return;
 

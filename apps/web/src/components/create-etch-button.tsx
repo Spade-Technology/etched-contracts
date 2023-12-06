@@ -30,7 +30,6 @@ export const CreateEtchButton = () => {
 
   const { onSubmit, isUploading: isLoading, etchCreated, setEtchCreated, uploadProgress } = useCreateEtch();
 
-  const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({});
 
   const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
