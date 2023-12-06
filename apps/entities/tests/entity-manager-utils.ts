@@ -16,7 +16,7 @@ import {
   Transfer
 } from "../generated/EntityManager/EntityManager"
 
-export function createApprovalEvent(
+export function createApprovalEvent (
   owner: Address,
   approved: Address,
   tokenId: BigInt
@@ -41,7 +41,7 @@ export function createApprovalEvent(
   return approvalEvent
 }
 
-export function createApprovalForAllEvent(
+export function createApprovalForAllEvent (
   owner: Address,
   operator: Address,
   approved: boolean
@@ -63,7 +63,7 @@ export function createApprovalForAllEvent(
   return approvalForAllEvent
 }
 
-export function createCommentOnEntityEvent(
+export function createCommentOnEntityEvent (
   _entityId: BigInt,
   _commentId: BigInt
 ): CommentOnEntity {
@@ -87,7 +87,7 @@ export function createCommentOnEntityEvent(
   return commentOnEntityEvent
 }
 
-export function createEntityBasePermissionsChangedEvent(
+export function createEntityBasePermissionsChangedEvent (
   _entityId: BigInt,
   _newPermissions: i32
 ): EntityBasePermissionsChanged {
@@ -113,7 +113,7 @@ export function createEntityBasePermissionsChangedEvent(
   return entityBasePermissionsChangedEvent
 }
 
-export function createEntityCreatedEvent(
+export function createEntityCreatedEvent (
   _entityId: BigInt,
   _type: i32,
   _to: Address
@@ -141,7 +141,7 @@ export function createEntityCreatedEvent(
   return entityCreatedEvent
 }
 
-export function createEntityIndividualUserPermissionsChangedEvent(
+export function createEntityIndividualUserPermissionsChangedEvent (
   _entityId: BigInt,
   _user: Address,
   _permissions: i32
@@ -171,7 +171,7 @@ export function createEntityIndividualUserPermissionsChangedEvent(
   return entityIndividualUserPermissionsChangedEvent
 }
 
-export function createEntityMetaChangedEvent(
+export function createEntityMetaChangedEvent (
   _entityId: BigInt,
   meta: ethereum.Tuple
 ): EntityMetaChanged {
@@ -192,7 +192,7 @@ export function createEntityMetaChangedEvent(
   return entityMetaChangedEvent
 }
 
-export function createEntityMovedEvent(
+export function createEntityMovedEvent (
   _entityId: BigInt,
   _entityType: i32,
   _fromParentId: BigInt,
@@ -230,7 +230,7 @@ export function createEntityMovedEvent(
   return entityMovedEvent
 }
 
-export function createEntityShareMaxPermissionsChangedEvent(
+export function createEntityShareMaxPermissionsChangedEvent (
   _entityId: BigInt,
   _newPermissions: i32
 ): EntityShareMaxPermissionsChanged {
@@ -256,7 +256,7 @@ export function createEntityShareMaxPermissionsChangedEvent(
   return entityShareMaxPermissionsChangedEvent
 }
 
-export function createEntityTransferredToOrganizationEvent(
+export function createEntityTransferredToOrganizationEvent (
   _entityId: BigInt,
   _orgId: BigInt
 ): EntityTransferredToOrganization {
@@ -279,7 +279,7 @@ export function createEntityTransferredToOrganizationEvent(
   return entityTransferredToOrganizationEvent
 }
 
-export function createOrganizationTransferredToIndividualEvent(
+export function createOrganizationTransferredToIndividualEvent (
   _entityId: BigInt,
   _userId: Address
 ): OrganizationTransferredToIndividual {
@@ -302,7 +302,7 @@ export function createOrganizationTransferredToIndividualEvent(
   return organizationTransferredToIndividualEvent
 }
 
-export function createOwnershipTransferredEvent(
+export function createOwnershipTransferredEvent (
   previousOwner: Address,
   newOwner: Address
 ): OwnershipTransferred {
@@ -325,7 +325,7 @@ export function createOwnershipTransferredEvent(
   return ownershipTransferredEvent
 }
 
-export function createTransferEvent(
+export function createTransferEvent (
   from: Address,
   to: Address,
   tokenId: BigInt

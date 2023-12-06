@@ -13,6 +13,9 @@
 			"path": "apps/subgraph"
 		},
 		{
+			"path": "apps/entities"
+		},
+		{
 			"path": "packages"
 		}
 	],
