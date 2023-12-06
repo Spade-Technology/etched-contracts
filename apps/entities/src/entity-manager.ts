@@ -1,6 +1,4 @@
 import {
-  Approval as ApprovalEvent,
-  ApprovalForAll as ApprovalForAllEvent,
   CommentOnEntity as CommentOnEntityEvent,
   EntityBasePermissionsChanged as EntityBasePermissionsChangedEvent,
   EntityCreated as EntityCreatedEvent,
@@ -14,8 +12,6 @@ import {
   Transfer as TransferEvent
 } from "../generated/EntityManager/EntityManager"
 import {
-  Approval,
-  ApprovalForAll,
   CommentOnEntity,
   EntityBasePermissionsChanged,
   EntityCreated,
@@ -28,36 +24,6 @@ import {
   OwnershipTransferred,
   Transfer
 } from "../generated/schema"
-
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
-  entity.tokenId = event.params.tokenId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  let entity = new ApprovalForAll(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.operator = event.params.operator
-  entity.approved = event.params.approved
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
 
 export function handleCommentOnEntity(event: CommentOnEntityEvent): void {
   let entity = new CommentOnEntity(
@@ -89,7 +55,8 @@ export function handleEntityBasePermissionsChanged(
   entity.save()
 }
 
-export function handleEntityCreated(event: EntityCreatedEvent): void {
+export function handleEntityCreated (event: EntityCreatedEvent): void {
+  
   let entity = new EntityCreated(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )

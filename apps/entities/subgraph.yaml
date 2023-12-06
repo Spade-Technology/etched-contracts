@@ -14,8 +14,6 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
         - CommentOnEntity
         - EntityBasePermissionsChanged
         - EntityCreated
@@ -31,10 +29,6 @@ dataSources:
         - name: EntityManager
           file: ./abis/EntityManager.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
         - event: CommentOnEntity(uint256,uint256)
           handler: handleCommentOnEntity
         - event: EntityBasePermissionsChanged(uint256,uint8)
@@ -58,3 +52,38 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/entity-manager.ts
+  - kind: ethereum
+    name: ShareInvites
+    network: base-testnet
+    source:
+      address: "0x789d9ab2af2721dab456dae4918ee0f691982792"
+      abi: ShareInvites
+      startBlock: 13014718
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - InviteAccepted
+        - InviteDeclined
+        - InviteRevoked
+        - InviteSent
+        - ShareInvitesOwnershipTransferred
+        - ShareInvitesTransfer
+      abis:
+        - name: ShareInvites
+          file: ./abis/ShareInvites.json
+      eventHandlers:
+        - event: InviteAccepted(uint256,address)
+          handler: handleInviteAccepted
+        - event: InviteDeclined(uint256,address)
+          handler: handleInviteDeclined
+        - event: InviteRevoked(uint256,address)
+          handler: handleInviteRevoked
+        - event: InviteSent(address,uint256,uint256,uint8,uint8)
+          handler: handleInviteSent
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/share-invites.ts

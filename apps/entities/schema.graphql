@@ -1,23 +1,23 @@
-type Approval @entity(immutable: true) {
+# ENTITIES
+
+type Entity @entity {
   id: Bytes!
-  owner: Bytes! # address
-  approved: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  name: String!
+  tokenId: BigInt!
+  parentId: BigInt!
+  children: [BigInt!]
+  shares: [BigInt!]
+  basePermissions: Int!
 }
 
-type ApprovalForAll @entity(immutable: true) {
+type ShareMeta @entity {
   id: Bytes!
-  owner: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  originalEntityId: BigInt!
+  maxPermissionsPerOwner: BigInt!
+  timestamp: BigInt!
 }
 
+# EVENT-RELATED ITEMS
 type CommentOnEntity @entity(immutable: true) {
   id: Bytes!
   _entityId: BigInt! # uint256
@@ -39,8 +39,10 @@ type EntityBasePermissionsChanged @entity(immutable: true) {
 type EntityCreated @entity(immutable: true) {
   id: Bytes!
   _entityId: BigInt! # uint256
-  _type: Int! # uint8
   _to: Bytes! # address
+  _parent: Bytes! # address
+  _name: String!
+  _type: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -118,6 +120,64 @@ type OwnershipTransferred @entity(immutable: true) {
 }
 
 type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteAccepted @entity(immutable: true) {
+  id: Bytes!
+  inviteId: BigInt! # uint256
+  acceptedBy: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteDeclined @entity(immutable: true) {
+  id: Bytes!
+  inviteId: BigInt! # uint256
+  declinedBy: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteRevoked @entity(immutable: true) {
+  id: Bytes!
+  inviteId: BigInt! # uint256
+  revokedBy: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteSent @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  externalOrgOrTeamId: BigInt! # uint256
+  sourceEntityId: BigInt! # uint256
+  baseSharePerms: Int! # uint8
+  status: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ShareInvitesOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ShareInvitesTransfer @entity(immutable: true) {
   id: Bytes!
   from: Bytes! # address
   to: Bytes! # address

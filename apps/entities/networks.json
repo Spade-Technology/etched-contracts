@@ -1,8 +1,11 @@
 {
   "base-testnet": {
     "EntityManager": {
-      "address": "0x896e5f3acbcacf6aa05fee4adde035111ecc87d6",
+      "address": "0x3e0d965d2f28161eca1c2c4a4384f300d4ea0b6f",
       "startBlock": 13014715
+    },
+    "ShareInvites": {
+      "address": "0xa9015c2a50e58b7985618461c53e151ec6fbecb3"
     }
   }
 }
