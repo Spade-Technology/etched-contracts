@@ -3,11 +3,21 @@
 type Entity @entity {
   id: Bytes!
   name: String!
+  type: Int! #PersonalOrg(0), Org(1), Team(2), Folder(3), File(4)
   tokenId: BigInt!
   parentId: BigInt!
   children: [BigInt!]
   shares: [BigInt!]
+  shareMeta: ShareMeta #Only relevant if the entity *is* a share
+  fileMeta: FileMeta
   basePermissions: Int!
+  userPermissions: [UserPermissions!]
+}
+
+type UserPermissions @entity {
+  id: Bytes!
+  user: Bytes! # address
+  permissions: Int!
 }
 
 type ShareMeta @entity {
@@ -17,11 +27,21 @@ type ShareMeta @entity {
   timestamp: BigInt!
 }
 
+type FileMeta @entity {
+  id: Bytes!
+  creator: Bytes!
+  documentName: String!
+  documentDescription: String!
+  ipfsCid: String!
+  commentsCount: Int!
+  timestamp: BigInt!
+}
+
 # EVENT-RELATED ITEMS
 type CommentOnEntity @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _commentId: BigInt! # uint256
+  entityId: BigInt! # uint256
+  commentId: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -29,8 +49,8 @@ type CommentOnEntity @entity(immutable: true) {
 
 type EntityBasePermissionsChanged @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _newPermissions: Int! # uint8
+  entityId: BigInt! # uint256
+  newPermissions: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -38,11 +58,11 @@ type EntityBasePermissionsChanged @entity(immutable: true) {
 
 type EntityCreated @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _to: Bytes! # address
-  _parent: Bytes! # address
-  _name: String!
-  _type: Int! # uint8
+  entityId: BigInt! # uint256
+  to: Bytes! # address
+  parent: Bytes! # address
+  name: String!
+  type: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -50,9 +70,9 @@ type EntityCreated @entity(immutable: true) {
 
 type EntityIndividualUserPermissionsChanged @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _user: Bytes! # address
-  _permissions: Int! # uint8
+  entityId: BigInt! # uint256
+  user: Bytes! # address
+  permissions: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -60,7 +80,7 @@ type EntityIndividualUserPermissionsChanged @entity(immutable: true) {
 
 type EntityMetaChanged @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
+  entityId: BigInt! # uint256
   meta_creator: Bytes! # address
   meta_documentName: String! # string
   meta_documentDescription: String! # string
@@ -74,10 +94,10 @@ type EntityMetaChanged @entity(immutable: true) {
 
 type EntityMoved @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _entityType: Int! # uint8
-  _fromParentId: BigInt! # uint256
-  _toParentId: BigInt! # uint256
+  entityId: BigInt! # uint256
+  entityType: Int! # uint8
+  fromParentId: BigInt! # uint256
+  toParentId: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -85,8 +105,8 @@ type EntityMoved @entity(immutable: true) {
 
 type EntityShareMaxPermissionsChanged @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _newPermissions: Int! # uint8
+  entityId: BigInt! # uint256
+  newPermissions: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -94,8 +114,8 @@ type EntityShareMaxPermissionsChanged @entity(immutable: true) {
 
 type EntityTransferredToOrganization @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _orgId: BigInt! # uint256
+  entityId: BigInt! # uint256
+  orgId: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -103,8 +123,8 @@ type EntityTransferredToOrganization @entity(immutable: true) {
 
 type OrganizationTransferredToIndividual @entity(immutable: true) {
   id: Bytes!
-  _entityId: BigInt! # uint256
-  _userId: Bytes! # address
+  entityId: BigInt! # uint256
+  userId: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

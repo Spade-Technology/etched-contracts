@@ -29,17 +29,17 @@ dataSources:
         - name: EntityManager
           file: ./abis/EntityManager.json
       eventHandlers:
-        - event: CommentOnEntity(uint256,uint256)
+        - event: CommentOnEntity(uint256,string,uint256,uint256)
           handler: handleCommentOnEntity
         - event: EntityBasePermissionsChanged(uint256,uint8)
           handler: handleEntityBasePermissionsChanged
-        - event: EntityCreated(uint256,uint8,address)
+        - event: EntityCreated(uint256,address,uint256,string,uint8,uint8)
           handler: handleEntityCreated
         - event: EntityIndividualUserPermissionsChanged(uint256,address,uint8)
           handler: handleEntityIndividualUserPermissionsChanged
-        - event: EntityMetaChanged(uint256,(address,string,string,string,uint256,uint256))
+        - event: EntityMetaChanged(uint256,address,string,string,string,uint256,uint256)
           handler: handleEntityMetaChanged
-        - event: EntityMoved(uint256,uint8,uint256,uint256)
+        - event: EntityMoved(uint256,uint256,uint256)
           handler: handleEntityMoved
         - event: EntityShareMaxPermissionsChanged(uint256,uint8)
           handler: handleEntityShareMaxPermissionsChanged
