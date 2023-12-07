@@ -25,6 +25,8 @@ import { teamUser } from "@/types";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { toast } from "@/components/ui/use-toast";
 import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
+import { useUpdateEtch } from "@/utils/hooks/useUpdateEtchBackendOperation";
+import { useTransferOwnershipEtch } from "@/utils/hooks/useEtchTransferOwnershipBackendOperation";
 
 dayjs.extend(relativeTime);
 
@@ -48,26 +50,7 @@ const userPermissions: {
 const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
   const [edit, setEdit] = useState(false);
   const [openTransferOwnerShipDialog, setOpenTransferOwnerShipDialog] = useState(false);
-  const [documentName, setDocumentName] = useState(etch?.documentName || "");
-  const [description, setDescription] = useState(etch?.description || "");
-  const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.updateMetadata.useMutation();
-
-  const saveHandler = async () => {
-    try {
-      await updateAsync({
-        etchId: etch?.tokenId.toString(),
-        fileName: documentName || etch?.documentName || "",
-        description: description || etch?.description || "",
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-
-    setEdit(false);
-  };
-
+  const { isLoading: updateLoading, setDescription, setDocumentName, updateEtch: saveHandler } = useUpdateEtch(setEdit, etch);
   return (
     <div
       className={` ${
@@ -260,57 +243,10 @@ interface transferOwnershipProps {
 }
 
 const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, openDialog, setOpenDialog }) => {
-  const [owner, setOwner] = useState("individual");
-  const [newTeam, setNewTeam] = useState<Team[]>([]);
-  const [newIndiv, setNewIndiv] = useState<teamUser[]>([]);
-
-  const { mutateAsync: transferToTeamAsync, isLoading: isTransferToTeamLoading } = api.etch.transferToTeam.useMutation();
-  const { mutateAsync: transferToIndividualAsync, isLoading: isTransferToIndivLoading2 } =
-    api.etch.transferToIndividual.useMutation();
-  const isLoading = isTransferToTeamLoading || isTransferToIndivLoading2;
-
-  const from = useLoggedInAddress();
-
-  const transfer = async (e: any) => {
-    e.preventDefault();
-    if (owner === "team" && newTeam.length) {
-      const { teamId } = newTeam[0] as Team;
-
-      await transferToTeamAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        teamId: +teamId,
-        tokenId: +etchId,
-      });
-      toast({
-        title: "Ownership Updated",
-        description: "successfull",
-        variant: "success",
-      });
-    } else if (owner === "individual" && newIndiv.length) {
-      const { id } = newIndiv[0] as teamUser;
-
-      await transferToIndividualAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        tokenId: +etchId,
-        to: id,
-        from,
-      });
-      toast({
-        title: "Ownership Updated",
-        description: "successfull",
-        variant: "success",
-      });
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
-    }
-    setOpenDialog(false);
-  };
+  const { transferOwnership, isLoading, owner, setOwner, newTeam, setNewTeam, newIndiv, setNewIndiv } = useTransferOwnershipEtch({
+    etchId,
+    setOpenDialog,
+  });
 
   return (
     <Dialog
@@ -322,12 +258,20 @@ const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, ope
       <DialogContent className={"max-w-[440px]"}>
         <DialogTitle className="text-base text-primary">Transfer Ownership</DialogTitle>
         <DialogDescription>
-          <form onSubmit={transfer}>
+          <form onSubmit={transferOwnership}>
             <Label className="font-semibold">Select</Label>
             <section className="mb-7 mt-[9px] flex gap-5">
               {["individual", "team"].map((item, id) => {
                 return (
-                  <div key={id} onClick={() => setOwner(item)} className="flex items-center gap-1">
+                  <div
+                    key={id}
+                    onClick={() => {
+                      setOwner(item);
+                      setNewTeam([]);
+                      setNewIndiv([]);
+                    }}
+                    className="flex items-center gap-1"
+                  >
                     <div className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] border-muted-foreground">
                       <div
                         className={`${owner == item ? "scale-100" : "scale-0"} h-3 w-3 rounded-full bg-primary duration-300`}

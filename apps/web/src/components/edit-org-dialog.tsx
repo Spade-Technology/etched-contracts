@@ -16,8 +16,10 @@ import { TransferIcon } from "./icons/transfer";
 import { DeleteIcon } from "./icons/delete";
 import { roleData } from "./create-org-dialog";
 import { orgUser } from "@/types";
-import { findUserDifferences } from "@/utils/user";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+
+import { useUpdateOrg } from "@/utils/hooks/useUpdateOrgBackendOperation";
+import { useTransferOwnershipOrg } from "@/utils/hooks/useOrgTransferOwnershipBackendOperation";
+import { shortenAddress } from "@/utils/hooks/address";
 
 const formSchema = z.object({
   orgName: z.string(),
@@ -56,17 +58,20 @@ export const EditOrgDialog = ({
   openEditOrgModal: boolean;
   setOpenEditOrgModal: any;
 }) => {
-  const [orgName, setOrgName] = useState(name || "");
-  const [orgMembers, setOrgMembers] = useState<orgUser[]>(members);
-  const [orgData, setOrgData] = useState<FormData | any>({});
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
-
-  const { mutateAsync: renameOrgAsync, isLoading: renameIsLoading } = api.org.renameOrg.useMutation();
-  const { mutateAsync: setPermissionsOrgAsync, isLoading: setPermissionsIsLoading } = api.org.setPermissionsOrg.useMutation();
-
-  const [updateDone, setUpdateDone] = useState(false);
-  const isLoading = renameIsLoading || setPermissionsIsLoading;
+  const {
+    isLoading,
+    orgData,
+    setOrgMembers,
+    setOrgName,
+    updateDone,
+    orgMembers,
+    setOrgData,
+    setUpdateDone,
+    orgName,
+    updateOrg: onSubmit,
+  } = useUpdateOrg({ name, members, orgId });
 
   const editUserRole = ({ id, item }: { id: string; item: "none" | "member" | "admin" }) => {
     const user = orgMembers?.find((profile: any) => profile.id === id);
@@ -86,40 +91,6 @@ export const EditOrgDialog = ({
       setDeleteTeam(true);
     } else {
       setTransferOwnership(true);
-    }
-  };
-
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
-    if (orgMembers.length > 0 || orgName) {
-      const newPermissions = findUserDifferences(members as orgUser[], orgMembers) as orgUser[];
-      setOrgData({ orgName, orgMembers });
-      if (orgName !== name)
-        await renameOrgAsync({
-          blockchainSignature: localStorage.getItem("blockchainSignature")!,
-          blockchainMessage: localStorage.getItem("blockchainMessage")!,
-          orgId: +orgId,
-          orgName,
-        });
-      if (newPermissions.length)
-        await setPermissionsOrgAsync({
-          blockchainSignature: localStorage.getItem("blockchainSignature")!,
-          blockchainMessage: localStorage.getItem("blockchainMessage")!,
-          orgId: +orgId,
-          orgMembers: newPermissions,
-        });
-      toast({
-        title: "org Updated",
-        description: "successfull",
-        variant: "success",
-      });
-      setUpdateDone(true);
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
     }
   };
 
@@ -205,7 +176,7 @@ export const EditOrgDialog = ({
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
-                                  {name}
+                                  {name || shortenAddress({ address: id })}
                                 </div>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -353,34 +324,16 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
 };
 
 const TransferOwnershipDialog: React.FC<confirmTransferOwnership> = ({ setTransferOwnership, orgId, setOpenEditOrgModal }) => {
-  const [ownerData, setOwnerData] = useState<orgUser[]>([]);
-  const { mutateAsync: transferOwnershipAsync, isLoading } = api.org.transferOwnership.useMutation();
-  const from = useLoggedInAddress();
-
-  const transfer = async (e: any) => {
-    e.preventDefault();
-    if (ownerData[0]?.id) {
-      await transferOwnershipAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        from,
-        orgId: +orgId,
-        to: ownerData[0].id,
-      });
-      toast({
-        title: "org Updated",
-        description: "successfull",
-        variant: "success",
-      });
-      setOpenEditOrgModal(false);
-    }
-  };
+  const { isLoading, ownerData, setOwnerData, transferOwnership } = useTransferOwnershipOrg({
+    setOpenEditOrgModal,
+    orgId,
+  });
 
   return (
     <>
       <DialogTitle className="text-base text-primary">Transfer Ownership</DialogTitle>
       <DialogDescription>
-        <form onSubmit={transfer}>
+        <form onSubmit={transferOwnership}>
           <Label className="font-semibold">Transfer to</Label>
           <UsersInputDropdown
             type={"singleSelect"}

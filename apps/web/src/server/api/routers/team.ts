@@ -119,7 +119,7 @@ export const teamRouter = createTRPCRouter({
         teamMembers: z.array(
           z.object({
             id: z.string(), // wallet address
-            name: z.string(),
+            name: z.string().optional(),
             role: z.enum(["none", "read", "readWrite"]),
           })
         ),
