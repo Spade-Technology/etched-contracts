@@ -48,8 +48,8 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   if (isLoading) return <div>Loading...</div>;
   return (
-    <div>
-      <div className="my-4 flex justify-between gap-4">
+    <div className="flex gap-5">
+      <div className="my-4 w-full flex flex-col justify-between gap-4">
         <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
           {selectedImg ? (
             <>
@@ -80,11 +80,13 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
           )}
           {/* <div className="flex h-full w-full  justify-center gap-2 pt-4"></div> */}
         </div>
+        <Comments etch={etch || {}} />
+      <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
+      </div>
+      <div className="sticky top-1">
         <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
       </div>
-      <Comments etch={etch || {}} />
 
-      <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
     </div>
   );
 };

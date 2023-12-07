@@ -90,6 +90,11 @@
   }
 }
 
+/* Hide scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }

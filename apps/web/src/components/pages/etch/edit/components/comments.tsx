@@ -3,13 +3,14 @@ import { Input } from "@/components/ui/input";
 import { lit } from "@/lit";
 import { useLoggedInAddress, useSignIn } from "@/utils/hooks/useSignIn";
 import Placeholder from "public/icons/dashboard/placeholder2.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { Etch, EtchCommentAdded } from "@/gql/graphql";
 import Avatar from "boring-avatars";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { shortenAddress } from "@/utils/hooks/address";
 import { useCommentEtch } from "@/utils/hooks/useCommentBackendOperation";
+import { TeaxtArea } from "@/components/ui/autoresize-textarea";
 
 type CommentProps = {
   image: any;
@@ -24,11 +25,11 @@ const Comment = ({ image, userName, description, commentedAt, addr }: CommentPro
     <div className="flex justify-start gap-3 py-5">
       <Avatar size={40} name={addr} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
       <div>
-        <div className="flex justify-start gap-3">
-          <div>{userName}</div>
-          <div>{commentedAt}</div>
+        <div className="flex items-center gap-3">
+          <div className='text-muted-foreground pt-2 text-base font-semibold'>{userName}</div>
+          <div className='text-muted-foreground pt-2 text-base font-nornal'>{commentedAt}</div>
         </div>
-        <div className="pt-2">{description}</div>
+        <div className="whitespace-pre-wrap text-muted-foreground pt-2 text-base font-medium">{description}</div>
       </div>
     </div>
   );
@@ -99,7 +100,7 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
               colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]}
             />
           </div>
-          <Input placeholder="Add a comment" value={newComment} onChange={handleComment} />
+          <TeaxtArea disabled={isLoading} placeholder="Add a comment" value={newComment} onChange={handleComment} />
           {newComment && (
             <div className="float-right">
               <div className="flex justify-start gap-5">
@@ -113,7 +114,13 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
                   X
                 </Button> */}
 
-                <Button className="rounded-lg" disabled={!newComment} onClick={addComment} isLoading={isLoading}>
+                <Button
+                  className={`rounded-lg duration-500 ${
+                    !newComment ? " translate-x-[-60px] opacity-0" : " translate-x-0 opacity-100"
+                  }`}
+                  onClick={addComment}
+                  isLoading={isLoading}
+                >
                   <PaperPlaneIcon />
                 </Button>
               </div>
