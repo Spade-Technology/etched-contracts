@@ -25,13 +25,13 @@ export default function DashboardPage() {
   return (
     <PageBoilerplate>
       <div className="mt-6 flex flex-col px-6 pt-6 shadow-etched-1">
-        <div className="flex-col gap-2">
+        <div className="flex-col gap-2 text-xl font-bold text-neutral-700">
           <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+              <BreadcrumbLink className="text-neutral-700 text-xl font-bold" href="/dashboard">Dashboard</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard/">Etches</BreadcrumbLink>
+              <BreadcrumbLink className="text-neutral-700 text-xl font-bold" href="/dashboard/">Etches</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink href={"/dashboard/etches/"}>
@@ -42,10 +42,10 @@ export default function DashboardPage() {
                       <Skeleton className="h-3 w-4" />
                     </>
                   ) : (
-                    <>
-                      <span className="text-sm font-semibold text-gray-800">{etch?.documentName}</span>
-                      <span className="text-sm font-semibold text-gray-500">#{etchId}</span>
-                    </>
+                    <div className="text-neutral-700 text-xl font-bold">
+                      <span className="">{etch?.documentName}</span>
+                      <span className="">#{etchId}</span>
+                    </div>
                   )}
                 </div>
               </BreadcrumbLink>
