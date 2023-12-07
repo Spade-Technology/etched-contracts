@@ -23,6 +23,9 @@ import { Input } from "./ui/input";
 import dayjs from "dayjs";
 import { PDFViewer } from "./pdf-viewer";
 import { VideoPlayer } from "./VideoPlayer";
+// import Viewer from "./ui/model-viewer/Viewer";
+import dynamic from "next/dynamic";
+const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,12 +39,12 @@ export const CreateEtchButton = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
-    accept: {
-      "image/*": [],
-      "audio/*": [],
-      "video/*": [],
-      "application/pdf": [],
-    },
+    // accept: {
+    //   "image/*": [],
+    //   "audio/*": [],
+    //   "video/*": [],
+    //   "application/pdf": [],
+    // },
     onDrop: (acceptedFiles: File[]) => {
       const newFiles = [
         ...files,
@@ -53,7 +56,7 @@ export const CreateEtchButton = () => {
       ];
 
       if (newFiles.length > 10) alert("You cannot bulk upload more than 10 files at a time");
-      else
+      else {
         setFiles([
           ...files,
           ...acceptedFiles.map((file) =>
@@ -62,8 +65,14 @@ export const CreateEtchButton = () => {
             })
           ),
         ]);
+        console.log(acceptedFiles);
+      }
     },
   });
+
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
 
   useEffect(() => {
     document.addEventListener("create-etch", () => {
@@ -225,6 +234,13 @@ const FilePreviewer = ({
     }
   }, [audioPreviewRef?.current]);
 
+  // const fileExist = new Image();
+
+  const fileFormat = file.path.slice(file.path.indexOf(".") + 1);
+  // const path = `/formats/${fileFormat.toUpperCase()}/icon.png`;
+  // fileExist.src = path;
+  // console.log(fileExist.src);
+
   return (
     <div key={index} className="aspect-w-1 aspect-h-1 group relative">
       {file.type.startsWith("image/") ? (
@@ -244,7 +260,11 @@ const FilePreviewer = ({
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
           <FileTextIcon className="h-1/2 w-1/2 text-white" />
         </div>
-      ) : null}
+      ) : (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <img src={`/formats/${fileFormat.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
+        </div>
+      )}
       <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
         <span className="text-center text-sm text-white">
           {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
