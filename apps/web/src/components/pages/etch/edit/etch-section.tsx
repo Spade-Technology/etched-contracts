@@ -11,6 +11,7 @@ import { Loader2Icon } from "lucide-react";
 import filetype from "magic-bytes.js";
 import { PDFViewer } from "@/components/pdf-viewer";
 import { VideoPlayer } from "@/components/VideoPlayer";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -87,9 +88,8 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
               {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
             </>
           ) : (
-            <Loader2Icon className="animate-spin" />
+            <Skeleton className="bg-[#097B45] pb-[56.25%]" />
           )}
-          {/* <div className="flex h-full w-full  justify-center gap-2 pt-4"></div> */}
         </div>
 
         <Comments etch={etch || {}} />
