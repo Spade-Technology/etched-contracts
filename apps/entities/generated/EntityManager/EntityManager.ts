@@ -11,7 +11,7 @@ import {
 } from "@graphprotocol/graph-ts";
 
 export class Approval extends ethereum.Event {
-  get params(): Approval__Params {
+  get params (): Approval__Params {
     return new Approval__Params(this);
   }
 }
@@ -23,21 +23,21 @@ export class Approval__Params {
     this._event = event;
   }
 
-  get owner(): Address {
+  get owner (): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get approved(): Address {
+  get approved (): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get tokenId(): BigInt {
+  get tokenId (): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 }
 
 export class ApprovalForAll extends ethereum.Event {
-  get params(): ApprovalForAll__Params {
+  get params (): ApprovalForAll__Params {
     return new ApprovalForAll__Params(this);
   }
 }
@@ -49,21 +49,21 @@ export class ApprovalForAll__Params {
     this._event = event;
   }
 
-  get owner(): Address {
+  get owner (): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get operator(): Address {
+  get operator (): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get approved(): boolean {
+  get approved (): boolean {
     return this._event.parameters[2].value.toBoolean();
   }
 }
 
 export class CommentOnEntity extends ethereum.Event {
-  get params(): CommentOnEntity__Params {
+  get params (): CommentOnEntity__Params {
     return new CommentOnEntity__Params(this);
   }
 }
@@ -75,17 +75,17 @@ export class CommentOnEntity__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get _commentId(): BigInt {
+  get _commentId (): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 }
 
 export class EntityBasePermissionsChanged extends ethereum.Event {
-  get params(): EntityBasePermissionsChanged__Params {
+  get params (): EntityBasePermissionsChanged__Params {
     return new EntityBasePermissionsChanged__Params(this);
   }
 }
@@ -97,17 +97,17 @@ export class EntityBasePermissionsChanged__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get _newPermissions(): i32 {
+  get _newPermissions (): i32 {
     return this._event.parameters[1].value.toI32();
   }
 }
 
 export class EntityCreated extends ethereum.Event {
-  get params(): EntityCreated__Params {
+  get params (): EntityCreated__Params {
     return new EntityCreated__Params(this);
   }
 }
@@ -119,21 +119,33 @@ export class EntityCreated__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
-
-  get _type(): i32 {
-    return this._event.parameters[1].value.toI32();
+  get _to (): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 
-  get _to(): Address {
-    return this._event.parameters[2].value.toAddress();
+  get _parentId (): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
+
+  get _name (): string {
+    return this._event.parameters[3].value.toString();
+  }
+
+  get _type (): i32 {
+    return this._event.parameters[4].value.toI32();
+  }
+
+  get _basePermissions (): i32 {
+    return this._event.parameters[5].value.toI32();
+  }
+
 }
 
 export class EntityIndividualUserPermissionsChanged extends ethereum.Event {
-  get params(): EntityIndividualUserPermissionsChanged__Params {
+  get params (): EntityIndividualUserPermissionsChanged__Params {
     return new EntityIndividualUserPermissionsChanged__Params(this);
   }
 }
@@ -145,21 +157,21 @@ export class EntityIndividualUserPermissionsChanged__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get _user(): Address {
+  get _user (): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get _permissions(): i32 {
+  get _permissions (): i32 {
     return this._event.parameters[2].value.toI32();
   }
 }
 
 export class EntityMetaChanged extends ethereum.Event {
-  get params(): EntityMetaChanged__Params {
+  get params (): EntityMetaChanged__Params {
     return new EntityMetaChanged__Params(this);
   }
 }
@@ -171,11 +183,11 @@ export class EntityMetaChanged__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get meta(): EntityMetaChangedMetaStruct {
+  get meta (): EntityMetaChangedMetaStruct {
     return changetype<EntityMetaChangedMetaStruct>(
       this._event.parameters[1].value.toTuple()
     );
@@ -183,33 +195,33 @@ export class EntityMetaChanged__Params {
 }
 
 export class EntityMetaChangedMetaStruct extends ethereum.Tuple {
-  get creator(): Address {
+  get creator (): Address {
     return this[0].toAddress();
   }
 
-  get documentName(): string {
+  get documentName (): string {
     return this[1].toString();
   }
 
-  get documentDescription(): string {
+  get documentDescription (): string {
     return this[2].toString();
   }
 
-  get ipfsCid(): string {
+  get ipfsCid (): string {
     return this[3].toString();
   }
 
-  get commentsCount(): BigInt {
+  get commentsCount (): BigInt {
     return this[4].toBigInt();
   }
 
-  get timestamp(): BigInt {
+  get timestamp (): BigInt {
     return this[5].toBigInt();
   }
 }
 
 export class EntityMoved extends ethereum.Event {
-  get params(): EntityMoved__Params {
+  get params (): EntityMoved__Params {
     return new EntityMoved__Params(this);
   }
 }
@@ -221,25 +233,25 @@ export class EntityMoved__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get _entityType(): i32 {
+  get _entityType (): i32 {
     return this._event.parameters[1].value.toI32();
   }
 
-  get _fromParentId(): BigInt {
+  get _fromParentId (): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get _toParentId(): BigInt {
+  get _toParentId (): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 }
 
 export class EntityShareMaxPermissionsChanged extends ethereum.Event {
-  get params(): EntityShareMaxPermissionsChanged__Params {
+  get params (): EntityShareMaxPermissionsChanged__Params {
     return new EntityShareMaxPermissionsChanged__Params(this);
   }
 }
@@ -251,17 +263,17 @@ export class EntityShareMaxPermissionsChanged__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get _newPermissions(): i32 {
+  get _newPermissions (): i32 {
     return this._event.parameters[1].value.toI32();
   }
 }
 
 export class EntityTransferredToOrganization extends ethereum.Event {
-  get params(): EntityTransferredToOrganization__Params {
+  get params (): EntityTransferredToOrganization__Params {
     return new EntityTransferredToOrganization__Params(this);
   }
 }
@@ -273,17 +285,17 @@ export class EntityTransferredToOrganization__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get _orgId(): BigInt {
+  get _orgId (): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 }
 
 export class OrganizationTransferredToIndividual extends ethereum.Event {
-  get params(): OrganizationTransferredToIndividual__Params {
+  get params (): OrganizationTransferredToIndividual__Params {
     return new OrganizationTransferredToIndividual__Params(this);
   }
 }
@@ -295,17 +307,17 @@ export class OrganizationTransferredToIndividual__Params {
     this._event = event;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get _userId(): Address {
+  get _userId (): Address {
     return this._event.parameters[1].value.toAddress();
   }
 }
 
 export class OwnershipTransferred extends ethereum.Event {
-  get params(): OwnershipTransferred__Params {
+  get params (): OwnershipTransferred__Params {
     return new OwnershipTransferred__Params(this);
   }
 }
@@ -317,17 +329,17 @@ export class OwnershipTransferred__Params {
     this._event = event;
   }
 
-  get previousOwner(): Address {
+  get previousOwner (): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get newOwner(): Address {
+  get newOwner (): Address {
     return this._event.parameters[1].value.toAddress();
   }
 }
 
 export class Transfer extends ethereum.Event {
-  get params(): Transfer__Params {
+  get params (): Transfer__Params {
     return new Transfer__Params(this);
   }
 }
@@ -339,43 +351,43 @@ export class Transfer__Params {
     this._event = event;
   }
 
-  get from(): Address {
+  get from (): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get to(): Address {
+  get to (): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get tokenId(): BigInt {
+  get tokenId (): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 }
 
 export class EntityManager__checkSignatureResultValue0Struct extends ethereum.Tuple {
-  get blockNumber(): BigInt {
+  get blockNumber (): BigInt {
     return this[0].toBigInt();
   }
 
-  get nodeAddress(): Address {
+  get nodeAddress (): Address {
     return this[1].toAddress();
   }
 }
 
 export class EntityManager__checkSignatureInput_signatureStruct extends ethereum.Tuple {
-  get encodedMessage(): Bytes {
+  get encodedMessage (): Bytes {
     return this[0].toBytes();
   }
 
-  get messageHash(): Bytes {
+  get messageHash (): Bytes {
     return this[1].toBytes();
   }
 
-  get signature(): Bytes {
+  get signature (): Bytes {
     return this[2].toBytes();
   }
 
-  get signer(): Address {
+  get signer (): Address {
     return this[3].toAddress();
   }
 }
@@ -389,58 +401,58 @@ export class EntityManager__commentsOfResult {
     this.value1 = value1;
   }
 
-  toMap(): TypedMap<string, ethereum.Value> {
+  toMap (): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromString(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     return map;
   }
 
-  getCommentIpfsCid(): string {
+  getCommentIpfsCid (): string {
     return this.value0;
   }
 
-  getTimestamp(): BigInt {
+  getTimestamp (): BigInt {
     return this.value1;
   }
 }
 
 export class EntityManager__entitiesResultShareMetaStruct extends ethereum.Tuple {
-  get originalEntityId(): BigInt {
+  get originalEntityId (): BigInt {
     return this[0].toBigInt();
   }
 
-  get maxPermissionsPerOwner(): i32 {
+  get maxPermissionsPerOwner (): i32 {
     return this[1].toI32();
   }
 
-  get timestamp(): BigInt {
+  get timestamp (): BigInt {
     return this[2].toBigInt();
   }
 }
 
 export class EntityManager__entitiesResultFileMetaStruct extends ethereum.Tuple {
-  get creator(): Address {
+  get creator (): Address {
     return this[0].toAddress();
   }
 
-  get documentName(): string {
+  get documentName (): string {
     return this[1].toString();
   }
 
-  get documentDescription(): string {
+  get documentDescription (): string {
     return this[2].toString();
   }
 
-  get ipfsCid(): string {
+  get ipfsCid (): string {
     return this[3].toString();
   }
 
-  get commentsCount(): BigInt {
+  get commentsCount (): BigInt {
     return this[4].toBigInt();
   }
 
-  get timestamp(): BigInt {
+  get timestamp (): BigInt {
     return this[5].toBigInt();
   }
 }
@@ -472,7 +484,7 @@ export class EntityManager__entitiesResult {
     this.value6 = value6;
   }
 
-  toMap(): TypedMap<string, ethereum.Value> {
+  toMap (): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromString(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
@@ -490,31 +502,31 @@ export class EntityManager__entitiesResult {
     return map;
   }
 
-  getName(): string {
+  getName (): string {
     return this.value0;
   }
 
-  getTokenId(): BigInt {
+  getTokenId (): BigInt {
     return this.value1;
   }
 
-  getParentId(): BigInt {
+  getParentId (): BigInt {
     return this.value2;
   }
 
-  getBasePermissions(): i32 {
+  getBasePermissions (): i32 {
     return this.value3;
   }
 
-  getEntityType(): i32 {
+  getEntityType (): i32 {
     return this.value4;
   }
 
-  getShareMeta(): EntityManager__entitiesResultShareMetaStruct {
+  getShareMeta (): EntityManager__entitiesResultShareMetaStruct {
     return this.value5;
   }
 
-  getFileMeta(): EntityManager__entitiesResultFileMetaStruct {
+  getFileMeta (): EntityManager__entitiesResultFileMetaStruct {
     return this.value6;
   }
 }
@@ -543,7 +555,7 @@ export class EntityManager__metadataOfResult {
     this.value5 = value5;
   }
 
-  toMap(): TypedMap<string, ethereum.Value> {
+  toMap (): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromAddress(this.value0));
     map.set("value1", ethereum.Value.fromString(this.value1));
@@ -554,37 +566,37 @@ export class EntityManager__metadataOfResult {
     return map;
   }
 
-  getCreator(): Address {
+  getCreator (): Address {
     return this.value0;
   }
 
-  getDocumentName(): string {
+  getDocumentName (): string {
     return this.value1;
   }
 
-  getDocumentDescription(): string {
+  getDocumentDescription (): string {
     return this.value2;
   }
 
-  getIpfsCid(): string {
+  getIpfsCid (): string {
     return this.value3;
   }
 
-  getCommentsCount(): BigInt {
+  getCommentsCount (): BigInt {
     return this.value4;
   }
 
-  getTimestamp(): BigInt {
+  getTimestamp (): BigInt {
     return this.value5;
   }
 }
 
 export class EntityManager extends ethereum.SmartContract {
-  static bind(address: Address): EntityManager {
+  static bind (address: Address): EntityManager {
     return new EntityManager("EntityManager", address);
   }
 
-  _nodes(node: Address): boolean {
+  _nodes (node: Address): boolean {
     let result = super.call("_nodes", "_nodes(address):(bool)", [
       ethereum.Value.fromAddress(node)
     ]);
@@ -592,7 +604,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try__nodes(node: Address): ethereum.CallResult<boolean> {
+  try__nodes (node: Address): ethereum.CallResult<boolean> {
     let result = super.tryCall("_nodes", "_nodes(address):(bool)", [
       ethereum.Value.fromAddress(node)
     ]);
@@ -603,7 +615,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  balanceOf(owner: Address): BigInt {
+  balanceOf (owner: Address): BigInt {
     let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
       ethereum.Value.fromAddress(owner)
     ]);
@@ -611,7 +623,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBigInt();
   }
 
-  try_balanceOf(owner: Address): ethereum.CallResult<BigInt> {
+  try_balanceOf (owner: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
       ethereum.Value.fromAddress(owner)
     ]);
@@ -622,7 +634,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  canPerform(_entityId: BigInt, _user: Address, _permissions: i32): boolean {
+  canPerform (_entityId: BigInt, _user: Address, _permissions: i32): boolean {
     let result = super.call(
       "canPerform",
       "canPerform(uint256,address,uint8):(bool)",
@@ -636,7 +648,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try_canPerform(
+  try_canPerform (
     _entityId: BigInt,
     _user: Address,
     _permissions: i32
@@ -657,7 +669,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  checkSignature(
+  checkSignature (
     _signature: EntityManager__checkSignatureInput_signatureStruct
   ): EntityManager__checkSignatureResultValue0Struct {
     let result = super.call(
@@ -671,7 +683,7 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  try_checkSignature(
+  try_checkSignature (
     _signature: EntityManager__checkSignatureInput_signatureStruct
   ): ethereum.CallResult<EntityManager__checkSignatureResultValue0Struct> {
     let result = super.tryCall(
@@ -690,7 +702,7 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  commentsOf(entity: BigInt, param1: BigInt): EntityManager__commentsOfResult {
+  commentsOf (entity: BigInt, param1: BigInt): EntityManager__commentsOfResult {
     let result = super.call(
       "commentsOf",
       "commentsOf(uint256,uint256):(string,uint256)",
@@ -706,7 +718,7 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  try_commentsOf(
+  try_commentsOf (
     entity: BigInt,
     param1: BigInt
   ): ethereum.CallResult<EntityManager__commentsOfResult> {
@@ -730,7 +742,7 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  entities(entity: BigInt): EntityManager__entitiesResult {
+  entities (entity: BigInt): EntityManager__entitiesResult {
     let result = super.call(
       "entities",
       "entities(uint256):(string,uint256,uint256,uint8,uint8,(uint256,uint8,uint256),(address,string,string,string,uint256,uint256))",
@@ -752,7 +764,7 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  try_entities(
+  try_entities (
     entity: BigInt
   ): ethereum.CallResult<EntityManager__entitiesResult> {
     let result = super.tryCall(
@@ -781,7 +793,7 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  entityCanReceiveShare(_targetEntityId: BigInt): boolean {
+  entityCanReceiveShare (_targetEntityId: BigInt): boolean {
     let result = super.call(
       "entityCanReceiveShare",
       "entityCanReceiveShare(uint256):(bool)",
@@ -791,7 +803,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try_entityCanReceiveShare(
+  try_entityCanReceiveShare (
     _targetEntityId: BigInt
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
@@ -806,7 +818,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  findOwnerOfEntityOrganization(_entityId: BigInt): Address {
+  findOwnerOfEntityOrganization (_entityId: BigInt): Address {
     let result = super.call(
       "findOwnerOfEntityOrganization",
       "findOwnerOfEntityOrganization(uint256):(address)",
@@ -816,7 +828,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toAddress();
   }
 
-  try_findOwnerOfEntityOrganization(
+  try_findOwnerOfEntityOrganization (
     _entityId: BigInt
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
@@ -831,7 +843,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  getApproved(tokenId: BigInt): Address {
+  getApproved (tokenId: BigInt): Address {
     let result = super.call("getApproved", "getApproved(uint256):(address)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
     ]);
@@ -839,7 +851,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toAddress();
   }
 
-  try_getApproved(tokenId: BigInt): ethereum.CallResult<Address> {
+  try_getApproved (tokenId: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "getApproved",
       "getApproved(uint256):(address)",
@@ -852,13 +864,13 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  getParent(): Address {
+  getParent (): Address {
     let result = super.call("getParent", "getParent():(address)", []);
 
     return result[0].toAddress();
   }
 
-  try_getParent(): ethereum.CallResult<Address> {
+  try_getParent (): ethereum.CallResult<Address> {
     let result = super.tryCall("getParent", "getParent():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -867,7 +879,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  getPersonalOrg(_to: Address): BigInt {
+  getPersonalOrg (_to: Address): BigInt {
     let result = super.call(
       "getPersonalOrg",
       "getPersonalOrg(address):(uint256)",
@@ -877,7 +889,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBigInt();
   }
 
-  try_getPersonalOrg(_to: Address): ethereum.CallResult<BigInt> {
+  try_getPersonalOrg (_to: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getPersonalOrg",
       "getPersonalOrg(address):(uint256)",
@@ -890,13 +902,13 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getTotalSupply(): BigInt {
+  getTotalSupply (): BigInt {
     let result = super.call("getTotalSupply", "getTotalSupply():(uint256)", []);
 
     return result[0].toBigInt();
   }
 
-  try_getTotalSupply(): ethereum.CallResult<BigInt> {
+  try_getTotalSupply (): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getTotalSupply",
       "getTotalSupply():(uint256)",
@@ -909,7 +921,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getUserPermissionsForEntity(
+  getUserPermissionsForEntity (
     _entityId: BigInt,
     _user: Address,
     _walk: boolean
@@ -927,7 +939,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toI32();
   }
 
-  try_getUserPermissionsForEntity(
+  try_getUserPermissionsForEntity (
     _entityId: BigInt,
     _user: Address,
     _walk: boolean
@@ -948,7 +960,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
-  isApprovedForAll(owner: Address, operator: Address): boolean {
+  isApprovedForAll (owner: Address, operator: Address): boolean {
     let result = super.call(
       "isApprovedForAll",
       "isApprovedForAll(address,address):(bool)",
@@ -958,7 +970,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try_isApprovedForAll(
+  try_isApprovedForAll (
     owner: Address,
     operator: Address
   ): ethereum.CallResult<boolean> {
@@ -974,7 +986,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  isNode(node: Address): boolean {
+  isNode (node: Address): boolean {
     let result = super.call("isNode", "isNode(address):(bool)", [
       ethereum.Value.fromAddress(node)
     ]);
@@ -982,7 +994,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try_isNode(node: Address): ethereum.CallResult<boolean> {
+  try_isNode (node: Address): ethereum.CallResult<boolean> {
     let result = super.tryCall("isNode", "isNode(address):(bool)", [
       ethereum.Value.fromAddress(node)
     ]);
@@ -993,7 +1005,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  metadataOf(entity: BigInt): EntityManager__metadataOfResult {
+  metadataOf (entity: BigInt): EntityManager__metadataOfResult {
     let result = super.call(
       "metadataOf",
       "metadataOf(uint256):(address,string,string,string,uint256,uint256)",
@@ -1010,7 +1022,7 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  try_metadataOf(
+  try_metadataOf (
     entity: BigInt
   ): ethereum.CallResult<EntityManager__metadataOfResult> {
     let result = super.tryCall(
@@ -1034,13 +1046,13 @@ export class EntityManager extends ethereum.SmartContract {
     );
   }
 
-  name(): string {
+  name (): string {
     let result = super.call("name", "name():(string)", []);
 
     return result[0].toString();
   }
 
-  try_name(): ethereum.CallResult<string> {
+  try_name (): ethereum.CallResult<string> {
     let result = super.tryCall("name", "name():(string)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1049,13 +1061,13 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  owner(): Address {
+  owner (): Address {
     let result = super.call("owner", "owner():(address)", []);
 
     return result[0].toAddress();
   }
 
-  try_owner(): ethereum.CallResult<Address> {
+  try_owner (): ethereum.CallResult<Address> {
     let result = super.tryCall("owner", "owner():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1064,7 +1076,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  ownerOf(tokenId: BigInt): Address {
+  ownerOf (tokenId: BigInt): Address {
     let result = super.call("ownerOf", "ownerOf(uint256):(address)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
     ]);
@@ -1072,7 +1084,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toAddress();
   }
 
-  try_ownerOf(tokenId: BigInt): ethereum.CallResult<Address> {
+  try_ownerOf (tokenId: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall("ownerOf", "ownerOf(uint256):(address)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
     ]);
@@ -1083,7 +1095,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  personalOrgs(wallet: Address): BigInt {
+  personalOrgs (wallet: Address): BigInt {
     let result = super.call("personalOrgs", "personalOrgs(address):(uint256)", [
       ethereum.Value.fromAddress(wallet)
     ]);
@@ -1091,7 +1103,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBigInt();
   }
 
-  try_personalOrgs(wallet: Address): ethereum.CallResult<BigInt> {
+  try_personalOrgs (wallet: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "personalOrgs",
       "personalOrgs(address):(uint256)",
@@ -1104,7 +1116,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  supportsInterface(interfaceId: Bytes): boolean {
+  supportsInterface (interfaceId: Bytes): boolean {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
@@ -1114,7 +1126,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try_supportsInterface(interfaceId: Bytes): ethereum.CallResult<boolean> {
+  try_supportsInterface (interfaceId: Bytes): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
@@ -1127,13 +1139,13 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  symbol(): string {
+  symbol (): string {
     let result = super.call("symbol", "symbol():(string)", []);
 
     return result[0].toString();
   }
 
-  try_symbol(): ethereum.CallResult<string> {
+  try_symbol (): ethereum.CallResult<string> {
     let result = super.tryCall("symbol", "symbol():(string)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1142,7 +1154,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  tokenURI(tokenId: BigInt): string {
+  tokenURI (tokenId: BigInt): string {
     let result = super.call("tokenURI", "tokenURI(uint256):(string)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
     ]);
@@ -1150,7 +1162,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toString();
   }
 
-  try_tokenURI(tokenId: BigInt): ethereum.CallResult<string> {
+  try_tokenURI (tokenId: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall("tokenURI", "tokenURI(uint256):(string)", [
       ethereum.Value.fromUnsignedBigInt(tokenId)
     ]);
@@ -1161,7 +1173,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  walkParentsForOwnerMatch(_entityId: BigInt, _user: Address): boolean {
+  walkParentsForOwnerMatch (_entityId: BigInt, _user: Address): boolean {
     let result = super.call(
       "walkParentsForOwnerMatch",
       "walkParentsForOwnerMatch(uint256,address):(bool)",
@@ -1174,7 +1186,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toBoolean();
   }
 
-  try_walkParentsForOwnerMatch(
+  try_walkParentsForOwnerMatch (
     _entityId: BigInt,
     _user: Address
   ): ethereum.CallResult<boolean> {
@@ -1193,7 +1205,7 @@ export class EntityManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  walkUpPermissionsUint(_entityId: BigInt, _user: Address, _tPerms: i32): i32 {
+  walkUpPermissionsUint (_entityId: BigInt, _user: Address, _tPerms: i32): i32 {
     let result = super.call(
       "walkUpPermissionsUint",
       "walkUpPermissionsUint(uint256,address,uint8):(uint8)",
@@ -1207,7 +1219,7 @@ export class EntityManager extends ethereum.SmartContract {
     return result[0].toI32();
   }
 
-  try_walkUpPermissionsUint(
+  try_walkUpPermissionsUint (
     _entityId: BigInt,
     _user: Address,
     _tPerms: i32
@@ -1230,11 +1242,11 @@ export class EntityManager extends ethereum.SmartContract {
 }
 
 export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
+  get inputs (): ConstructorCall__Inputs {
     return new ConstructorCall__Inputs(this);
   }
 
-  get outputs(): ConstructorCall__Outputs {
+  get outputs (): ConstructorCall__Outputs {
     return new ConstructorCall__Outputs(this);
   }
 }
@@ -1256,11 +1268,11 @@ export class ConstructorCall__Outputs {
 }
 
 export class ActOnAcceptedShareCall extends ethereum.Call {
-  get inputs(): ActOnAcceptedShareCall__Inputs {
+  get inputs (): ActOnAcceptedShareCall__Inputs {
     return new ActOnAcceptedShareCall__Inputs(this);
   }
 
-  get outputs(): ActOnAcceptedShareCall__Outputs {
+  get outputs (): ActOnAcceptedShareCall__Outputs {
     return new ActOnAcceptedShareCall__Outputs(this);
   }
 }
@@ -1272,23 +1284,23 @@ export class ActOnAcceptedShareCall__Inputs {
     this._call = call;
   }
 
-  get _existingEntityId(): BigInt {
+  get _existingEntityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _name(): string {
+  get _name (): string {
     return this._call.inputValues[1].value.toString();
   }
 
-  get _externalOrgOrTeamId(): BigInt {
+  get _externalOrgOrTeamId (): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _filterPermissionsFromOriginalOwner(): i32 {
+  get _filterPermissionsFromOriginalOwner (): i32 {
     return this._call.inputValues[3].value.toI32();
   }
 
-  get _userPerms(): Array<ActOnAcceptedShareCall_userPermsStruct> {
+  get _userPerms (): Array<ActOnAcceptedShareCall_userPermsStruct> {
     return this._call.inputValues[4].value.toTupleArray<
       ActOnAcceptedShareCall_userPermsStruct
     >();
@@ -1304,21 +1316,21 @@ export class ActOnAcceptedShareCall__Outputs {
 }
 
 export class ActOnAcceptedShareCall_userPermsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class AddEntityToParentCall extends ethereum.Call {
-  get inputs(): AddEntityToParentCall__Inputs {
+  get inputs (): AddEntityToParentCall__Inputs {
     return new AddEntityToParentCall__Inputs(this);
   }
 
-  get outputs(): AddEntityToParentCall__Outputs {
+  get outputs (): AddEntityToParentCall__Outputs {
     return new AddEntityToParentCall__Outputs(this);
   }
 }
@@ -1330,11 +1342,11 @@ export class AddEntityToParentCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _newParentId(): BigInt {
+  get _newParentId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
@@ -1348,11 +1360,11 @@ export class AddEntityToParentCall__Outputs {
 }
 
 export class AddNodeCall extends ethereum.Call {
-  get inputs(): AddNodeCall__Inputs {
+  get inputs (): AddNodeCall__Inputs {
     return new AddNodeCall__Inputs(this);
   }
 
-  get outputs(): AddNodeCall__Outputs {
+  get outputs (): AddNodeCall__Outputs {
     return new AddNodeCall__Outputs(this);
   }
 }
@@ -1364,7 +1376,7 @@ export class AddNodeCall__Inputs {
     this._call = call;
   }
 
-  get node(): Address {
+  get node (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
@@ -1378,11 +1390,11 @@ export class AddNodeCall__Outputs {
 }
 
 export class AdjustShareMaxPermissionsPerOwnerCall extends ethereum.Call {
-  get inputs(): AdjustShareMaxPermissionsPerOwnerCall__Inputs {
+  get inputs (): AdjustShareMaxPermissionsPerOwnerCall__Inputs {
     return new AdjustShareMaxPermissionsPerOwnerCall__Inputs(this);
   }
 
-  get outputs(): AdjustShareMaxPermissionsPerOwnerCall__Outputs {
+  get outputs (): AdjustShareMaxPermissionsPerOwnerCall__Outputs {
     return new AdjustShareMaxPermissionsPerOwnerCall__Outputs(this);
   }
 }
@@ -1394,11 +1406,11 @@ export class AdjustShareMaxPermissionsPerOwnerCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _permissions(): i32 {
+  get _permissions (): i32 {
     return this._call.inputValues[1].value.toI32();
   }
 }
@@ -1412,11 +1424,11 @@ export class AdjustShareMaxPermissionsPerOwnerCall__Outputs {
 }
 
 export class ApproveCall extends ethereum.Call {
-  get inputs(): ApproveCall__Inputs {
+  get inputs (): ApproveCall__Inputs {
     return new ApproveCall__Inputs(this);
   }
 
-  get outputs(): ApproveCall__Outputs {
+  get outputs (): ApproveCall__Outputs {
     return new ApproveCall__Outputs(this);
   }
 }
@@ -1428,11 +1440,11 @@ export class ApproveCall__Inputs {
     this._call = call;
   }
 
-  get to(): Address {
+  get to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get tokenId(): BigInt {
+  get tokenId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
@@ -1446,11 +1458,11 @@ export class ApproveCall__Outputs {
 }
 
 export class CheckSignatureCall extends ethereum.Call {
-  get inputs(): CheckSignatureCall__Inputs {
+  get inputs (): CheckSignatureCall__Inputs {
     return new CheckSignatureCall__Inputs(this);
   }
 
-  get outputs(): CheckSignatureCall__Outputs {
+  get outputs (): CheckSignatureCall__Outputs {
     return new CheckSignatureCall__Outputs(this);
   }
 }
@@ -1462,7 +1474,7 @@ export class CheckSignatureCall__Inputs {
     this._call = call;
   }
 
-  get _signature(): CheckSignatureCall_signatureStruct {
+  get _signature (): CheckSignatureCall_signatureStruct {
     return changetype<CheckSignatureCall_signatureStruct>(
       this._call.inputValues[0].value.toTuple()
     );
@@ -1476,7 +1488,7 @@ export class CheckSignatureCall__Outputs {
     this._call = call;
   }
 
-  get value0(): CheckSignatureCallValue0Struct {
+  get value0 (): CheckSignatureCallValue0Struct {
     return changetype<CheckSignatureCallValue0Struct>(
       this._call.outputValues[0].value.toTuple()
     );
@@ -1484,39 +1496,39 @@ export class CheckSignatureCall__Outputs {
 }
 
 export class CheckSignatureCall_signatureStruct extends ethereum.Tuple {
-  get encodedMessage(): Bytes {
+  get encodedMessage (): Bytes {
     return this[0].toBytes();
   }
 
-  get messageHash(): Bytes {
+  get messageHash (): Bytes {
     return this[1].toBytes();
   }
 
-  get signature(): Bytes {
+  get signature (): Bytes {
     return this[2].toBytes();
   }
 
-  get signer(): Address {
+  get signer (): Address {
     return this[3].toAddress();
   }
 }
 
 export class CheckSignatureCallValue0Struct extends ethereum.Tuple {
-  get blockNumber(): BigInt {
+  get blockNumber (): BigInt {
     return this[0].toBigInt();
   }
 
-  get nodeAddress(): Address {
+  get nodeAddress (): Address {
     return this[1].toAddress();
   }
 }
 
 export class CommentOnEntityCall extends ethereum.Call {
-  get inputs(): CommentOnEntityCall__Inputs {
+  get inputs (): CommentOnEntityCall__Inputs {
     return new CommentOnEntityCall__Inputs(this);
   }
 
-  get outputs(): CommentOnEntityCall__Outputs {
+  get outputs (): CommentOnEntityCall__Outputs {
     return new CommentOnEntityCall__Outputs(this);
   }
 }
@@ -1528,11 +1540,11 @@ export class CommentOnEntityCall__Inputs {
     this._call = call;
   }
 
-  get tokenId(): BigInt {
+  get tokenId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get commentIpfsCid(): string {
+  get commentIpfsCid (): string {
     return this._call.inputValues[1].value.toString();
   }
 }
@@ -1546,11 +1558,11 @@ export class CommentOnEntityCall__Outputs {
 }
 
 export class CreateBaseEntityCall extends ethereum.Call {
-  get inputs(): CreateBaseEntityCall__Inputs {
+  get inputs (): CreateBaseEntityCall__Inputs {
     return new CreateBaseEntityCall__Inputs(this);
   }
 
-  get outputs(): CreateBaseEntityCall__Outputs {
+  get outputs (): CreateBaseEntityCall__Outputs {
     return new CreateBaseEntityCall__Outputs(this);
   }
 }
@@ -1562,27 +1574,27 @@ export class CreateBaseEntityCall__Inputs {
     this._call = call;
   }
 
-  get _to(): Address {
+  get _to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _parentId(): BigInt {
+  get _parentId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _type(): i32 {
+  get _type (): i32 {
     return this._call.inputValues[2].value.toI32();
   }
 
-  get _name(): string {
+  get _name (): string {
     return this._call.inputValues[3].value.toString();
   }
 
-  get _basePerms(): i32 {
+  get _basePerms (): i32 {
     return this._call.inputValues[4].value.toI32();
   }
 
-  get _userPerms(): Array<CreateBaseEntityCall_userPermsStruct> {
+  get _userPerms (): Array<CreateBaseEntityCall_userPermsStruct> {
     return this._call.inputValues[5].value.toTupleArray<
       CreateBaseEntityCall_userPermsStruct
     >();
@@ -1598,21 +1610,21 @@ export class CreateBaseEntityCall__Outputs {
 }
 
 export class CreateBaseEntityCall_userPermsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class CreateFileCall extends ethereum.Call {
-  get inputs(): CreateFileCall__Inputs {
+  get inputs (): CreateFileCall__Inputs {
     return new CreateFileCall__Inputs(this);
   }
 
-  get outputs(): CreateFileCall__Outputs {
+  get outputs (): CreateFileCall__Outputs {
     return new CreateFileCall__Outputs(this);
   }
 }
@@ -1624,33 +1636,33 @@ export class CreateFileCall__Inputs {
     this._call = call;
   }
 
-  get _to(): Address {
+  get _to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _parentId(): BigInt {
+  get _parentId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _name(): string {
+  get _name (): string {
     return this._call.inputValues[2].value.toString();
   }
 
-  get _basePerms(): i32 {
+  get _basePerms (): i32 {
     return this._call.inputValues[3].value.toI32();
   }
 
-  get _userPerms(): Array<CreateFileCall_userPermsStruct> {
+  get _userPerms (): Array<CreateFileCall_userPermsStruct> {
     return this._call.inputValues[4].value.toTupleArray<
       CreateFileCall_userPermsStruct
     >();
   }
 
-  get _description(): string {
+  get _description (): string {
     return this._call.inputValues[5].value.toString();
   }
 
-  get _ipfsCid(): string {
+  get _ipfsCid (): string {
     return this._call.inputValues[6].value.toString();
   }
 }
@@ -1664,21 +1676,21 @@ export class CreateFileCall__Outputs {
 }
 
 export class CreateFileCall_userPermsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class CreateFolderCall extends ethereum.Call {
-  get inputs(): CreateFolderCall__Inputs {
+  get inputs (): CreateFolderCall__Inputs {
     return new CreateFolderCall__Inputs(this);
   }
 
-  get outputs(): CreateFolderCall__Outputs {
+  get outputs (): CreateFolderCall__Outputs {
     return new CreateFolderCall__Outputs(this);
   }
 }
@@ -1690,23 +1702,23 @@ export class CreateFolderCall__Inputs {
     this._call = call;
   }
 
-  get _to(): Address {
+  get _to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _parentId(): BigInt {
+  get _parentId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _name(): string {
+  get _name (): string {
     return this._call.inputValues[2].value.toString();
   }
 
-  get _basePerms(): i32 {
+  get _basePerms (): i32 {
     return this._call.inputValues[3].value.toI32();
   }
 
-  get _userPerms(): Array<CreateFolderCall_userPermsStruct> {
+  get _userPerms (): Array<CreateFolderCall_userPermsStruct> {
     return this._call.inputValues[4].value.toTupleArray<
       CreateFolderCall_userPermsStruct
     >();
@@ -1722,21 +1734,21 @@ export class CreateFolderCall__Outputs {
 }
 
 export class CreateFolderCall_userPermsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class CreateOrganizationCall extends ethereum.Call {
-  get inputs(): CreateOrganizationCall__Inputs {
+  get inputs (): CreateOrganizationCall__Inputs {
     return new CreateOrganizationCall__Inputs(this);
   }
 
-  get outputs(): CreateOrganizationCall__Outputs {
+  get outputs (): CreateOrganizationCall__Outputs {
     return new CreateOrganizationCall__Outputs(this);
   }
 }
@@ -1748,19 +1760,19 @@ export class CreateOrganizationCall__Inputs {
     this._call = call;
   }
 
-  get _to(): Address {
+  get _to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _name(): string {
+  get _name (): string {
     return this._call.inputValues[1].value.toString();
   }
 
-  get _basePerms(): i32 {
+  get _basePerms (): i32 {
     return this._call.inputValues[2].value.toI32();
   }
 
-  get _userPerms(): Array<CreateOrganizationCall_userPermsStruct> {
+  get _userPerms (): Array<CreateOrganizationCall_userPermsStruct> {
     return this._call.inputValues[3].value.toTupleArray<
       CreateOrganizationCall_userPermsStruct
     >();
@@ -1776,21 +1788,21 @@ export class CreateOrganizationCall__Outputs {
 }
 
 export class CreateOrganizationCall_userPermsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class CreatePersonalOrganizationCall extends ethereum.Call {
-  get inputs(): CreatePersonalOrganizationCall__Inputs {
+  get inputs (): CreatePersonalOrganizationCall__Inputs {
     return new CreatePersonalOrganizationCall__Inputs(this);
   }
 
-  get outputs(): CreatePersonalOrganizationCall__Outputs {
+  get outputs (): CreatePersonalOrganizationCall__Outputs {
     return new CreatePersonalOrganizationCall__Outputs(this);
   }
 }
@@ -1802,19 +1814,19 @@ export class CreatePersonalOrganizationCall__Inputs {
     this._call = call;
   }
 
-  get _to(): Address {
+  get _to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _name(): string {
+  get _name (): string {
     return this._call.inputValues[1].value.toString();
   }
 
-  get _basePerms(): i32 {
+  get _basePerms (): i32 {
     return this._call.inputValues[2].value.toI32();
   }
 
-  get _userPerms(): Array<CreatePersonalOrganizationCall_userPermsStruct> {
+  get _userPerms (): Array<CreatePersonalOrganizationCall_userPermsStruct> {
     return this._call.inputValues[3].value.toTupleArray<
       CreatePersonalOrganizationCall_userPermsStruct
     >();
@@ -1830,21 +1842,21 @@ export class CreatePersonalOrganizationCall__Outputs {
 }
 
 export class CreatePersonalOrganizationCall_userPermsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class CreateTeamCall extends ethereum.Call {
-  get inputs(): CreateTeamCall__Inputs {
+  get inputs (): CreateTeamCall__Inputs {
     return new CreateTeamCall__Inputs(this);
   }
 
-  get outputs(): CreateTeamCall__Outputs {
+  get outputs (): CreateTeamCall__Outputs {
     return new CreateTeamCall__Outputs(this);
   }
 }
@@ -1856,23 +1868,23 @@ export class CreateTeamCall__Inputs {
     this._call = call;
   }
 
-  get _to(): Address {
+  get _to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _parentId(): BigInt {
+  get _parentId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _name(): string {
+  get _name (): string {
     return this._call.inputValues[2].value.toString();
   }
 
-  get _basePerms(): i32 {
+  get _basePerms (): i32 {
     return this._call.inputValues[3].value.toI32();
   }
 
-  get _userPerms(): Array<CreateTeamCall_userPermsStruct> {
+  get _userPerms (): Array<CreateTeamCall_userPermsStruct> {
     return this._call.inputValues[4].value.toTupleArray<
       CreateTeamCall_userPermsStruct
     >();
@@ -1888,21 +1900,21 @@ export class CreateTeamCall__Outputs {
 }
 
 export class CreateTeamCall_userPermsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class DelegateCallsToSelfCall extends ethereum.Call {
-  get inputs(): DelegateCallsToSelfCall__Inputs {
+  get inputs (): DelegateCallsToSelfCall__Inputs {
     return new DelegateCallsToSelfCall__Inputs(this);
   }
 
-  get outputs(): DelegateCallsToSelfCall__Outputs {
+  get outputs (): DelegateCallsToSelfCall__Outputs {
     return new DelegateCallsToSelfCall__Outputs(this);
   }
 }
@@ -1914,13 +1926,13 @@ export class DelegateCallsToSelfCall__Inputs {
     this._call = call;
   }
 
-  get signature(): DelegateCallsToSelfCallSignatureStruct {
+  get signature (): DelegateCallsToSelfCallSignatureStruct {
     return changetype<DelegateCallsToSelfCallSignatureStruct>(
       this._call.inputValues[0].value.toTuple()
     );
   }
 
-  get _calldata(): Array<Bytes> {
+  get _calldata (): Array<Bytes> {
     return this._call.inputValues[1].value.toBytesArray();
   }
 }
@@ -1934,29 +1946,29 @@ export class DelegateCallsToSelfCall__Outputs {
 }
 
 export class DelegateCallsToSelfCallSignatureStruct extends ethereum.Tuple {
-  get encodedMessage(): Bytes {
+  get encodedMessage (): Bytes {
     return this[0].toBytes();
   }
 
-  get messageHash(): Bytes {
+  get messageHash (): Bytes {
     return this[1].toBytes();
   }
 
-  get signature(): Bytes {
+  get signature (): Bytes {
     return this[2].toBytes();
   }
 
-  get signer(): Address {
+  get signer (): Address {
     return this[3].toAddress();
   }
 }
 
 export class GetOwnerCall extends ethereum.Call {
-  get inputs(): GetOwnerCall__Inputs {
+  get inputs (): GetOwnerCall__Inputs {
     return new GetOwnerCall__Inputs(this);
   }
 
-  get outputs(): GetOwnerCall__Outputs {
+  get outputs (): GetOwnerCall__Outputs {
     return new GetOwnerCall__Outputs(this);
   }
 }
@@ -1978,11 +1990,11 @@ export class GetOwnerCall__Outputs {
 }
 
 export class GetPersonalOrgCall extends ethereum.Call {
-  get inputs(): GetPersonalOrgCall__Inputs {
+  get inputs (): GetPersonalOrgCall__Inputs {
     return new GetPersonalOrgCall__Inputs(this);
   }
 
-  get outputs(): GetPersonalOrgCall__Outputs {
+  get outputs (): GetPersonalOrgCall__Outputs {
     return new GetPersonalOrgCall__Outputs(this);
   }
 }
@@ -1994,7 +2006,7 @@ export class GetPersonalOrgCall__Inputs {
     this._call = call;
   }
 
-  get _to(): Address {
+  get _to (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
@@ -2006,17 +2018,17 @@ export class GetPersonalOrgCall__Outputs {
     this._call = call;
   }
 
-  get value0(): BigInt {
+  get value0 (): BigInt {
     return this._call.outputValues[0].value.toBigInt();
   }
 }
 
 export class MoveEntityCall extends ethereum.Call {
-  get inputs(): MoveEntityCall__Inputs {
+  get inputs (): MoveEntityCall__Inputs {
     return new MoveEntityCall__Inputs(this);
   }
 
-  get outputs(): MoveEntityCall__Outputs {
+  get outputs (): MoveEntityCall__Outputs {
     return new MoveEntityCall__Outputs(this);
   }
 }
@@ -2028,11 +2040,11 @@ export class MoveEntityCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _destId(): BigInt {
+  get _destId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
@@ -2046,11 +2058,11 @@ export class MoveEntityCall__Outputs {
 }
 
 export class MoveFileCall extends ethereum.Call {
-  get inputs(): MoveFileCall__Inputs {
+  get inputs (): MoveFileCall__Inputs {
     return new MoveFileCall__Inputs(this);
   }
 
-  get outputs(): MoveFileCall__Outputs {
+  get outputs (): MoveFileCall__Outputs {
     return new MoveFileCall__Outputs(this);
   }
 }
@@ -2062,11 +2074,11 @@ export class MoveFileCall__Inputs {
     this._call = call;
   }
 
-  get _orgId(): BigInt {
+  get _orgId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _destId(): Address {
+  get _destId (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 }
@@ -2080,11 +2092,11 @@ export class MoveFileCall__Outputs {
 }
 
 export class MoveFolderCall extends ethereum.Call {
-  get inputs(): MoveFolderCall__Inputs {
+  get inputs (): MoveFolderCall__Inputs {
     return new MoveFolderCall__Inputs(this);
   }
 
-  get outputs(): MoveFolderCall__Outputs {
+  get outputs (): MoveFolderCall__Outputs {
     return new MoveFolderCall__Outputs(this);
   }
 }
@@ -2096,11 +2108,11 @@ export class MoveFolderCall__Inputs {
     this._call = call;
   }
 
-  get _orgId(): BigInt {
+  get _orgId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _destId(): Address {
+  get _destId (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 }
@@ -2114,11 +2126,11 @@ export class MoveFolderCall__Outputs {
 }
 
 export class MoveTeamCall extends ethereum.Call {
-  get inputs(): MoveTeamCall__Inputs {
+  get inputs (): MoveTeamCall__Inputs {
     return new MoveTeamCall__Inputs(this);
   }
 
-  get outputs(): MoveTeamCall__Outputs {
+  get outputs (): MoveTeamCall__Outputs {
     return new MoveTeamCall__Outputs(this);
   }
 }
@@ -2130,11 +2142,11 @@ export class MoveTeamCall__Inputs {
     this._call = call;
   }
 
-  get _teamId(): BigInt {
+  get _teamId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _destId(): Address {
+  get _destId (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 }
@@ -2148,11 +2160,11 @@ export class MoveTeamCall__Outputs {
 }
 
 export class RemoveEntityFromParentCall extends ethereum.Call {
-  get inputs(): RemoveEntityFromParentCall__Inputs {
+  get inputs (): RemoveEntityFromParentCall__Inputs {
     return new RemoveEntityFromParentCall__Inputs(this);
   }
 
-  get outputs(): RemoveEntityFromParentCall__Outputs {
+  get outputs (): RemoveEntityFromParentCall__Outputs {
     return new RemoveEntityFromParentCall__Outputs(this);
   }
 }
@@ -2164,11 +2176,11 @@ export class RemoveEntityFromParentCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _oldParentId(): BigInt {
+  get _oldParentId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
@@ -2182,11 +2194,11 @@ export class RemoveEntityFromParentCall__Outputs {
 }
 
 export class RenounceOwnershipCall extends ethereum.Call {
-  get inputs(): RenounceOwnershipCall__Inputs {
+  get inputs (): RenounceOwnershipCall__Inputs {
     return new RenounceOwnershipCall__Inputs(this);
   }
 
-  get outputs(): RenounceOwnershipCall__Outputs {
+  get outputs (): RenounceOwnershipCall__Outputs {
     return new RenounceOwnershipCall__Outputs(this);
   }
 }
@@ -2208,11 +2220,11 @@ export class RenounceOwnershipCall__Outputs {
 }
 
 export class SafeTransferFromCall extends ethereum.Call {
-  get inputs(): SafeTransferFromCall__Inputs {
+  get inputs (): SafeTransferFromCall__Inputs {
     return new SafeTransferFromCall__Inputs(this);
   }
 
-  get outputs(): SafeTransferFromCall__Outputs {
+  get outputs (): SafeTransferFromCall__Outputs {
     return new SafeTransferFromCall__Outputs(this);
   }
 }
@@ -2224,15 +2236,15 @@ export class SafeTransferFromCall__Inputs {
     this._call = call;
   }
 
-  get from(): Address {
+  get from (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get to(): Address {
+  get to (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get tokenId(): BigInt {
+  get tokenId (): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 }
@@ -2246,11 +2258,11 @@ export class SafeTransferFromCall__Outputs {
 }
 
 export class SafeTransferFrom1Call extends ethereum.Call {
-  get inputs(): SafeTransferFrom1Call__Inputs {
+  get inputs (): SafeTransferFrom1Call__Inputs {
     return new SafeTransferFrom1Call__Inputs(this);
   }
 
-  get outputs(): SafeTransferFrom1Call__Outputs {
+  get outputs (): SafeTransferFrom1Call__Outputs {
     return new SafeTransferFrom1Call__Outputs(this);
   }
 }
@@ -2262,19 +2274,19 @@ export class SafeTransferFrom1Call__Inputs {
     this._call = call;
   }
 
-  get from(): Address {
+  get from (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get to(): Address {
+  get to (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get tokenId(): BigInt {
+  get tokenId (): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get data(): Bytes {
+  get data (): Bytes {
     return this._call.inputValues[3].value.toBytes();
   }
 }
@@ -2288,11 +2300,11 @@ export class SafeTransferFrom1Call__Outputs {
 }
 
 export class SetApprovalForAllCall extends ethereum.Call {
-  get inputs(): SetApprovalForAllCall__Inputs {
+  get inputs (): SetApprovalForAllCall__Inputs {
     return new SetApprovalForAllCall__Inputs(this);
   }
 
-  get outputs(): SetApprovalForAllCall__Outputs {
+  get outputs (): SetApprovalForAllCall__Outputs {
     return new SetApprovalForAllCall__Outputs(this);
   }
 }
@@ -2304,11 +2316,11 @@ export class SetApprovalForAllCall__Inputs {
     this._call = call;
   }
 
-  get operator(): Address {
+  get operator (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get approved(): boolean {
+  get approved (): boolean {
     return this._call.inputValues[1].value.toBoolean();
   }
 }
@@ -2322,11 +2334,11 @@ export class SetApprovalForAllCall__Outputs {
 }
 
 export class SetBasePermissionsForEntityCall extends ethereum.Call {
-  get inputs(): SetBasePermissionsForEntityCall__Inputs {
+  get inputs (): SetBasePermissionsForEntityCall__Inputs {
     return new SetBasePermissionsForEntityCall__Inputs(this);
   }
 
-  get outputs(): SetBasePermissionsForEntityCall__Outputs {
+  get outputs (): SetBasePermissionsForEntityCall__Outputs {
     return new SetBasePermissionsForEntityCall__Outputs(this);
   }
 }
@@ -2338,11 +2350,11 @@ export class SetBasePermissionsForEntityCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _permissions(): i32 {
+  get _permissions (): i32 {
     return this._call.inputValues[1].value.toI32();
   }
 }
@@ -2356,11 +2368,11 @@ export class SetBasePermissionsForEntityCall__Outputs {
 }
 
 export class SetBulkUserPermissionsForEntityCall extends ethereum.Call {
-  get inputs(): SetBulkUserPermissionsForEntityCall__Inputs {
+  get inputs (): SetBulkUserPermissionsForEntityCall__Inputs {
     return new SetBulkUserPermissionsForEntityCall__Inputs(this);
   }
 
-  get outputs(): SetBulkUserPermissionsForEntityCall__Outputs {
+  get outputs (): SetBulkUserPermissionsForEntityCall__Outputs {
     return new SetBulkUserPermissionsForEntityCall__Outputs(this);
   }
 }
@@ -2372,11 +2384,11 @@ export class SetBulkUserPermissionsForEntityCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _permissions(): Array<
+  get _permissions (): Array<
     SetBulkUserPermissionsForEntityCall_permissionsStruct
   > {
     return this._call.inputValues[1].value.toTupleArray<
@@ -2394,21 +2406,21 @@ export class SetBulkUserPermissionsForEntityCall__Outputs {
 }
 
 export class SetBulkUserPermissionsForEntityCall_permissionsStruct extends ethereum.Tuple {
-  get user(): Address {
+  get user (): Address {
     return this[0].toAddress();
   }
 
-  get permissions(): i32 {
+  get permissions (): i32 {
     return this[1].toI32();
   }
 }
 
 export class SetMetadataCall extends ethereum.Call {
-  get inputs(): SetMetadataCall__Inputs {
+  get inputs (): SetMetadataCall__Inputs {
     return new SetMetadataCall__Inputs(this);
   }
 
-  get outputs(): SetMetadataCall__Outputs {
+  get outputs (): SetMetadataCall__Outputs {
     return new SetMetadataCall__Outputs(this);
   }
 }
@@ -2420,19 +2432,19 @@ export class SetMetadataCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _documentName(): string {
+  get _documentName (): string {
     return this._call.inputValues[1].value.toString();
   }
 
-  get _documentDescription(): string {
+  get _documentDescription (): string {
     return this._call.inputValues[2].value.toString();
   }
 
-  get _ipfsCid(): string {
+  get _ipfsCid (): string {
     return this._call.inputValues[3].value.toString();
   }
 }
@@ -2446,11 +2458,11 @@ export class SetMetadataCall__Outputs {
 }
 
 export class SetShareContractCall extends ethereum.Call {
-  get inputs(): SetShareContractCall__Inputs {
+  get inputs (): SetShareContractCall__Inputs {
     return new SetShareContractCall__Inputs(this);
   }
 
-  get outputs(): SetShareContractCall__Outputs {
+  get outputs (): SetShareContractCall__Outputs {
     return new SetShareContractCall__Outputs(this);
   }
 }
@@ -2462,7 +2474,7 @@ export class SetShareContractCall__Inputs {
     this._call = call;
   }
 
-  get _shareContract(): Address {
+  get _shareContract (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
@@ -2476,11 +2488,11 @@ export class SetShareContractCall__Outputs {
 }
 
 export class SetUserPermissionsForEntityCall extends ethereum.Call {
-  get inputs(): SetUserPermissionsForEntityCall__Inputs {
+  get inputs (): SetUserPermissionsForEntityCall__Inputs {
     return new SetUserPermissionsForEntityCall__Inputs(this);
   }
 
-  get outputs(): SetUserPermissionsForEntityCall__Outputs {
+  get outputs (): SetUserPermissionsForEntityCall__Outputs {
     return new SetUserPermissionsForEntityCall__Outputs(this);
   }
 }
@@ -2492,15 +2504,15 @@ export class SetUserPermissionsForEntityCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _user(): Address {
+  get _user (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _permissions(): i32 {
+  get _permissions (): i32 {
     return this._call.inputValues[2].value.toI32();
   }
 }
@@ -2514,11 +2526,11 @@ export class SetUserPermissionsForEntityCall__Outputs {
 }
 
 export class TransferEntityCall extends ethereum.Call {
-  get inputs(): TransferEntityCall__Inputs {
+  get inputs (): TransferEntityCall__Inputs {
     return new TransferEntityCall__Inputs(this);
   }
 
-  get outputs(): TransferEntityCall__Outputs {
+  get outputs (): TransferEntityCall__Outputs {
     return new TransferEntityCall__Outputs(this);
   }
 }
@@ -2530,11 +2542,11 @@ export class TransferEntityCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _user(): Address {
+  get _user (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 }
@@ -2548,11 +2560,11 @@ export class TransferEntityCall__Outputs {
 }
 
 export class TransferFromCall extends ethereum.Call {
-  get inputs(): TransferFromCall__Inputs {
+  get inputs (): TransferFromCall__Inputs {
     return new TransferFromCall__Inputs(this);
   }
 
-  get outputs(): TransferFromCall__Outputs {
+  get outputs (): TransferFromCall__Outputs {
     return new TransferFromCall__Outputs(this);
   }
 }
@@ -2564,15 +2576,15 @@ export class TransferFromCall__Inputs {
     this._call = call;
   }
 
-  get from(): Address {
+  get from (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get to(): Address {
+  get to (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get tokenId(): BigInt {
+  get tokenId (): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 }
@@ -2586,11 +2598,11 @@ export class TransferFromCall__Outputs {
 }
 
 export class TransferItemToOrganizationCall extends ethereum.Call {
-  get inputs(): TransferItemToOrganizationCall__Inputs {
+  get inputs (): TransferItemToOrganizationCall__Inputs {
     return new TransferItemToOrganizationCall__Inputs(this);
   }
 
-  get outputs(): TransferItemToOrganizationCall__Outputs {
+  get outputs (): TransferItemToOrganizationCall__Outputs {
     return new TransferItemToOrganizationCall__Outputs(this);
   }
 }
@@ -2602,11 +2614,11 @@ export class TransferItemToOrganizationCall__Inputs {
     this._call = call;
   }
 
-  get _entityId(): BigInt {
+  get _entityId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _destOrgId(): BigInt {
+  get _destOrgId (): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 }
@@ -2620,11 +2632,11 @@ export class TransferItemToOrganizationCall__Outputs {
 }
 
 export class TransferOrganizationOwnershipCall extends ethereum.Call {
-  get inputs(): TransferOrganizationOwnershipCall__Inputs {
+  get inputs (): TransferOrganizationOwnershipCall__Inputs {
     return new TransferOrganizationOwnershipCall__Inputs(this);
   }
 
-  get outputs(): TransferOrganizationOwnershipCall__Outputs {
+  get outputs (): TransferOrganizationOwnershipCall__Outputs {
     return new TransferOrganizationOwnershipCall__Outputs(this);
   }
 }
@@ -2636,11 +2648,11 @@ export class TransferOrganizationOwnershipCall__Inputs {
     this._call = call;
   }
 
-  get _orgId(): BigInt {
+  get _orgId (): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _newOwner(): Address {
+  get _newOwner (): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 }
@@ -2654,11 +2666,11 @@ export class TransferOrganizationOwnershipCall__Outputs {
 }
 
 export class TransferOwnershipCall extends ethereum.Call {
-  get inputs(): TransferOwnershipCall__Inputs {
+  get inputs (): TransferOwnershipCall__Inputs {
     return new TransferOwnershipCall__Inputs(this);
   }
 
-  get outputs(): TransferOwnershipCall__Outputs {
+  get outputs (): TransferOwnershipCall__Outputs {
     return new TransferOwnershipCall__Outputs(this);
   }
 }
@@ -2670,7 +2682,7 @@ export class TransferOwnershipCall__Inputs {
     this._call = call;
   }
 
-  get newOwner(): Address {
+  get newOwner (): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 }
