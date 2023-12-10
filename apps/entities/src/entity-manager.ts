@@ -25,7 +25,7 @@ import {
   Transfer
 } from "../generated/schema"
 
-export function handleCommentOnEntity(event: CommentOnEntityEvent): void {
+export function handleCommentOnEntity (event: CommentOnEntityEvent): void {
   let entity = new CommentOnEntity(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -39,7 +39,7 @@ export function handleCommentOnEntity(event: CommentOnEntityEvent): void {
   entity.save()
 }
 
-export function handleEntityBasePermissionsChanged(
+export function handleEntityBasePermissionsChanged (
   event: EntityBasePermissionsChangedEvent
 ): void {
   let entity = new EntityBasePermissionsChanged(
@@ -56,13 +56,16 @@ export function handleEntityBasePermissionsChanged(
 }
 
 export function handleEntityCreated (event: EntityCreatedEvent): void {
-  
+
   let entity = new EntityCreated(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity._entityId = event.params._entityId
   entity._type = event.params._type
   entity._to = event.params._to
+  entity._parentId = event.params._parentId
+  entity._name = event.params._name
+  entity._basePermissions = event.params._basePermissions
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -71,7 +74,7 @@ export function handleEntityCreated (event: EntityCreatedEvent): void {
   entity.save()
 }
 
-export function handleEntityIndividualUserPermissionsChanged(
+export function handleEntityIndividualUserPermissionsChanged (
   event: EntityIndividualUserPermissionsChangedEvent
 ): void {
   let entity = new EntityIndividualUserPermissionsChanged(
@@ -88,7 +91,7 @@ export function handleEntityIndividualUserPermissionsChanged(
   entity.save()
 }
 
-export function handleEntityMetaChanged(event: EntityMetaChangedEvent): void {
+export function handleEntityMetaChanged (event: EntityMetaChangedEvent): void {
   let entity = new EntityMetaChanged(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -107,7 +110,7 @@ export function handleEntityMetaChanged(event: EntityMetaChangedEvent): void {
   entity.save()
 }
 
-export function handleEntityMoved(event: EntityMovedEvent): void {
+export function handleEntityMoved (event: EntityMovedEvent): void {
   let entity = new EntityMoved(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -123,7 +126,7 @@ export function handleEntityMoved(event: EntityMovedEvent): void {
   entity.save()
 }
 
-export function handleEntityShareMaxPermissionsChanged(
+export function handleEntityShareMaxPermissionsChanged (
   event: EntityShareMaxPermissionsChangedEvent
 ): void {
   let entity = new EntityShareMaxPermissionsChanged(
@@ -139,7 +142,7 @@ export function handleEntityShareMaxPermissionsChanged(
   entity.save()
 }
 
-export function handleEntityTransferredToOrganization(
+export function handleEntityTransferredToOrganization (
   event: EntityTransferredToOrganizationEvent
 ): void {
   let entity = new EntityTransferredToOrganization(
@@ -155,7 +158,7 @@ export function handleEntityTransferredToOrganization(
   entity.save()
 }
 
-export function handleOrganizationTransferredToIndividual(
+export function handleOrganizationTransferredToIndividual (
   event: OrganizationTransferredToIndividualEvent
 ): void {
   let entity = new OrganizationTransferredToIndividual(
@@ -171,7 +174,7 @@ export function handleOrganizationTransferredToIndividual(
   entity.save()
 }
 
-export function handleOwnershipTransferred(
+export function handleOwnershipTransferred (
   event: OwnershipTransferredEvent
 ): void {
   let entity = new OwnershipTransferred(
@@ -187,7 +190,7 @@ export function handleOwnershipTransferred(
   entity.save()
 }
 
-export function handleTransfer(event: TransferEvent): void {
+export function handleTransfer (event: TransferEvent): void {
   let entity = new Transfer(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
