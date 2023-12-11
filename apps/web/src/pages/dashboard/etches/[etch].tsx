@@ -12,11 +12,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Dashboard of the Etched app.",
+  title: "Etch Viewer",
+  description: "Etch Viewer",
 };
 
-export default function DashboardPage() {
+export default function EtchPage() {
   const router = useRouter();
   const etchId = !!globalThis.window && (window?.location?.pathname?.split("/").pop() as string);
 
@@ -52,21 +52,25 @@ export default function DashboardPage() {
                   ) : (
                     <div className="text-xl font-bold text-neutral-700">
                       <span className="">{etch?.documentName}</span>
-                      <span className="">#{etchId}</span>
                     </div>
                   )}
                 </div>
               </BreadcrumbLink>
 
               {!isLoading && (
-                <Link
-                  href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
-                  className="ml-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
-                </Link>
+                <div className="mx-3 flex items-center gap-3">
+                  <div className="h-3 w-[1px] bg-slate-300"></div>
+
+                  <span>#{etchId}</span>
+
+                  <Link
+                    href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
+                  </Link>
+                </div>
               )}
             </BreadcrumbItem>
           </Breadcrumb>
