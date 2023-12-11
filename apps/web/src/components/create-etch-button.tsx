@@ -79,6 +79,10 @@ export const CreateEtchButton = () => {
   }, [files]);
 
   useEffect(() => {
+    console.log(files);
+  }, [files]);
+
+  useEffect(() => {
     document.addEventListener("create-etch", () => {
       setIsOpen(true);
     });
@@ -367,6 +371,34 @@ const FilePreviewer = ({
             />
           )}
         </div>
+      )}
+
+      {file.type.startsWith("video/") && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <VideoPlayer url={file.preview} />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {file.type.includes("pdf") && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <PDFViewer file={file} />
+          </DialogContent>
+        </Dialog>
       )}
 
       {file.type.startsWith("video/") && (
