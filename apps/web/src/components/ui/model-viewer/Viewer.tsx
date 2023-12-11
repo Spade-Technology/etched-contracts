@@ -1,50 +1,33 @@
 import React, { useEffect, useState } from "react";
 import Unity, { UnityContent } from "react-unity-webgl";
-import { makeStyles } from "@material-ui/core/styles";
 
 const unityContent = new UnityContent("/Build/build.json", "/Build/UnityLoader.js", {
   adjustOnWindowResize: true,
 });
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     width: "100%",
-//     height: "100%",
-//   },
-//   unityContent: {
-//     background: "white",
-//     width: "100%",
-//     height: "100%",
-//   },
-//   paper: {
-//     padding: theme.spacing(2),
-//     textAlign: "center",
-//     color: theme.palette.text.secondary,
-//   },
-// }));
-
-export default function Viewer(props) {
-  const classes = "";
+export default function Viewer(props: any) {
   const [ready, setReady] = useState(false);
   const [fileName, setFileName] = useState(null);
+
+  unityContent.on("canvas", function (canvas: any) {
+    canvas.width = "100%";
+    canvas.height = "50%";
+  });
 
   unityContent.on("Ready", () => {
     setReady(true);
     loadFile();
-    if (typeof props.onReady == "function") props.onReady();
   });
 
   unityContent.on("OnLoaded", () => {
     try {
       console.log("huugyf");
       console.log(props.file);
-      if (typeof props.onLoaded == "function") props.onLoaded();
     } catch {}
   });
 
   unityContent.on("OnError", () => {
     try {
-      if (typeof props.onError == "function") props.onError();
     } catch {}
   });
 
@@ -80,18 +63,5 @@ export default function Viewer(props) {
     }
   };
 
-  return (
-    <div className={"h-sreen w-[900px]"}>
-      <Unity
-        unityContent={unityContent}
-        style={{
-          height: "100%",
-          width: 950,
-          border: "2px solid black",
-          background: "grey",
-        }}
-        className={"bg-primary"}
-      />
-    </div>
-  );
+  return <Unity unityContent={unityContent} />;
 }

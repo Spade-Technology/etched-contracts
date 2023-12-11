@@ -15,6 +15,8 @@ const config = {
 
   webpack: (config, { isServer }) => {
     config.plugins.push(new webpack.IgnorePlugin({ resourceRegExp: /^node:buffer$/ }));
+    // This is for react-pdf.
+    config.resolve.alias.canvas = false;
 
     return config;
   },

@@ -3,7 +3,7 @@ import { useQuery } from "urql";
 
 const GET_USERS_QUERY = graphql(`
   query Users($input: String) {
-    wallets(first: 15, where: { etchENS_: { name_contains_nocase: $input } }) {
+    wallets(first: 15, where: { or: [{ etchENS_: { name_contains_nocase: $input } }, { eoa_contains_nocase: $input }] }) {
       id
       etchENS {
         name
