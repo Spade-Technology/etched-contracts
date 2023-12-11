@@ -92,7 +92,7 @@ function NewTeam() {
                   <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                     {selectedProfiles.map(({ id, name, role }) => {
                       return (
-                        <section className="flex items-center justify-between">
+                        <div className="flex items-center justify-between">
                           <div
                             key={id}
                             // onClick={() => inviteUser({ id, name, role })}
@@ -127,7 +127,7 @@ function NewTeam() {
                               </DropdownMenuGroup>
                             </DropdownMenuContent>
                           </DropdownMenu>
-                        </section>
+                        </div>
                       );
                     })}
                   </div>
@@ -161,12 +161,12 @@ function NewTeam() {
                   <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
                   {inviteUsers.users.map(({ id, name, role }) => {
                     return (
-                      <section className="flex items-center justify-between ">
+                      <div className="flex items-center justify-between ">
                         <div key={id} className="cursor-default text-sm transition-colors hover:text-accent-foreground ">
                           {name}
                         </div>
                         <div className="">{role}</div>
-                      </section>
+                      </div>
                     );
                   })}
                 </div>

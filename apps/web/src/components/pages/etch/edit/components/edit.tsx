@@ -256,7 +256,7 @@ const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, ope
         <DialogDescription>
           <form onSubmit={transferOwnership}>
             <Label className="font-semibold">Select</Label>
-            <section className="mb-7 mt-[9px] flex gap-5">
+            <div className="mb-7 mt-[9px] flex gap-5">
               {["individual", "team"].map((item, id) => {
                 return (
                   <div
@@ -283,7 +283,7 @@ const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, ope
                   </div>
                 );
               })}
-            </section>
+            </div>
             {owner === "individual" && (
               <>
                 <Label className="font-semibold">Transfer to</Label>

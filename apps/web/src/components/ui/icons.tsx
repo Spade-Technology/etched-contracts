@@ -1,3 +1,5 @@
+import { BuildingIcon } from "lucide-react";
+
 type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
@@ -490,4 +492,6 @@ export const Icons = {
       />
     </svg>
   ),
+
+  organisation: (props: IconProps) => <BuildingIcon {...props} />,
 };

@@ -148,12 +148,12 @@ export const EditTeamDialog = ({
                       setSelectedItems={setTeamMembers}
                     />
 
-                    <section>
+                    <div>
                       {teamMembers.length > 0 && (
                         <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                           {teamMembers.map(({ id, name, role }) => {
                             return (
-                              <section key={id} className="flex items-center justify-between">
+                              <div key={id} className="flex items-center justify-between">
                                 <div
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
@@ -192,12 +192,12 @@ export const EditTeamDialog = ({
                                     </DropdownMenuGroup>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
-                              </section>
+                              </div>
                             );
                           })}
                         </div>
                       )}
-                    </section>
+                    </div>
 
                     <footer className="mt-10 flex items-center justify-end gap-5">
                       <div
@@ -229,18 +229,18 @@ export const EditTeamDialog = ({
                   <DialogDescription>
                     <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
                       <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
-                      <section className="flex items-center justify-between ">
+                      <div className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">
                           {teamOrganisation}
                         </div>
                         <div className="">Owner</div>
-                      </section>
+                      </div>
                       {teamMembers?.map(({ id, name, role }: teamUser) => {
                         return (
-                          <section key={id} className="flex items-center justify-between ">
+                          <div key={id} className="flex items-center justify-between ">
                             <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
                             <div className="">{role}</div>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
@@ -275,7 +275,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
     setOpenEditTeamModal(false);
   };
   return (
-    <section>
+    <div>
       <DialogTitle className="mb-6 text-center text-base text-[#f55]">Deleting Team Confirmation</DialogTitle>
       <div className="mx-auto w-[342px] text-center text-muted-foreground">
         Are you sure that you want to delete Team <span className="capitalize">“{teamName}”</span>?
@@ -298,7 +298,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
           </Button>
         </div>
       </footer>
-    </section>
+    </div>
   );
 };
 
@@ -320,7 +320,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
       <DialogDescription>
         <form onSubmit={transferOwnership}>
           <Label className="font-semibold">Select</Label>
-          <section className="mb-7 mt-[9px] flex gap-5">
+          <div className="mb-7 mt-[9px] flex gap-5">
             {["individual", "organization"].map((item, id) => {
               return (
                 <div
@@ -347,7 +347,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
                 </div>
               );
             })}
-          </section>
+          </div>
           {owner === "individual" && (
             <>
               <Label className="font-semibold">Transfer to</Label>

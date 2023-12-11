@@ -127,7 +127,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                     <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                       {orgMembers.map(({ id, name, role }) => {
                         return (
-                          <section className="flex items-center justify-between">
+                          <div className="flex items-center justify-between">
                             <div
                               key={id}
                               // onClick={() => inviteUser({ id, name, role })}
@@ -167,7 +167,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                                 </DropdownMenuGroup>
                               </DropdownMenuContent>
                             </DropdownMenu>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
@@ -209,10 +209,10 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                   <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
                   {orgMembers?.map(({ id, name, role }: orgUser) => {
                     return (
-                      <section key={id} className="flex items-center justify-between ">
+                      <div key={id} className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
                         <div className="">{role}</div>
-                      </section>
+                      </div>
                     );
                   })}
                 </div>

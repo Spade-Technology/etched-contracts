@@ -68,7 +68,7 @@ export const Teams = ({
           <Icons.dropdown className={`${accordion === name ? "rotate-180" : "rotate-0"} mb-2.5 ml-[37px] w-6 duration-300`} />
         </header>
         <main ref={ref} style={{ height: `${height}px` }} className="overflow-hidden bg-white duration-300">
-          <section className="mt-10 flex flex-col gap-5">
+          <div className="mt-10 flex flex-col gap-5">
             {teams?.map(
               ({
                 id,
@@ -99,7 +99,7 @@ export const Teams = ({
                 return <TeamDialog {...props} />;
               }
             )}
-          </section>
+          </div>
         </main>
       </article>
     );

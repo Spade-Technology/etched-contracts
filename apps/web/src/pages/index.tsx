@@ -71,7 +71,7 @@ export default function Home() {
 
   return (
     <div className="w-full overflow-hidden font-campton">
-      <section className="mx-5 md:mx-10 xl:mx-24">
+      <div className="mx-5 md:mx-10 xl:mx-24">
         {/* <Button onClick={() => router.push("/auth")}>Authenticate</Button> */}
         <Header setShowWaitlist={showWaitlistUsing} />
         <div className="mx-auto text-center align-middle ">
@@ -93,7 +93,7 @@ export default function Home() {
 
         <Footer />
         {/* {showWaitlist && <JoinWaitlist show={showWaitlist} close={() => setShowWaitlist(false)} />} */}
-      </section>
+      </div>
     </div>
   );
 }

@@ -161,7 +161,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
               "absolute left-0 top-10 z-50 max-h-32 min-w-full overflow-hidden rounded-md border bg-popover px-3 py-3 text-popover-foreground shadow-md"
             )}`}
           >
-            <section className="custom-scrollbar max-h-24 overflow-auto overflow-x-hidden pr-2">
+            <div className="custom-scrollbar max-h-24 overflow-auto overflow-x-hidden pr-2">
               {orgs.map(({ id, name, orgId }) => {
                 const isSelected = selectedItems.find((item: any) => item.name === name);
                 return (
@@ -179,7 +179,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
                   </div>
                 );
               })}
-            </section>
+            </div>
           </div>
         </main>
       </div>
@@ -235,7 +235,7 @@ const TeamInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems,
               "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
             )}`}
           >
-            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+            <div className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
               {teams.map(({ id, name, teamId }) => {
                 const isSelected = selectedItems.find((item: any) => item.name === name);
                 return (
@@ -253,7 +253,7 @@ const TeamInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems,
                   </div>
                 );
               })}
-            </section>
+            </div>
           </div>
         </main>
 
@@ -354,13 +354,13 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
               "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
             )}`}
           >
-            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+            <div className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
               {!!users.length ? (
                 users.map(({ id, name }) => <DropDownItem id={id} name={name} />)
               ) : (
                 <DropDownItem id={input?.value} name={""} />
               )}
-            </section>
+            </div>
           </div>
         </main>
 

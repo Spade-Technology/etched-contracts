@@ -128,7 +128,7 @@ export default function PropertiesDialog({
         }}
         className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer"
       />
-      <section className="cursor-default text-sm font-semibold text-muted-foreground">
+      <div className="cursor-default text-sm font-semibold text-muted-foreground">
         <header className="flex text-base capitalize text-foreground">
           <div
             onClick={() => setActiveTab("General")}
@@ -144,7 +144,7 @@ export default function PropertiesDialog({
           </div>
         </header>
         {activeTab === "General" && (
-          <section className="flex flex-col bg-accent">
+          <div className="flex flex-col bg-accent">
             {data.map(({ name, value }) => {
               return (
                 <main className="grid grid-cols-12 px-3 py-3">
@@ -153,10 +153,10 @@ export default function PropertiesDialog({
                 </main>
               );
             })}
-          </section>
+          </div>
         )}
         {activeTab === "Permissions" && (
-          <section className="flex flex-col gap-4 bg-accent p-3 pt-4">
+          <div className="flex flex-col gap-4 bg-accent p-3 pt-4">
             {permissions.map(({ name, address, role, img }) => {
               return (
                 <main className=" flex items-center gap-3">
@@ -169,9 +169,9 @@ export default function PropertiesDialog({
                 </main>
               );
             })}
-          </section>
+          </div>
         )}
-      </section>
+      </div>
     </main>
   );
 }

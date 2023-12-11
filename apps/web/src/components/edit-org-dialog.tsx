@@ -164,12 +164,12 @@ export const EditOrgDialog = ({
                       setSelectedItems={setOrgMembers}
                     />
 
-                    <section>
+                    <div>
                       {orgMembers.length > 0 && (
                         <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                           {orgMembers.map(({ id, name, role }) => {
                             return (
-                              <section key={id} className="flex items-center justify-between">
+                              <div key={id} className="flex items-center justify-between">
                                 <div
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
@@ -208,12 +208,12 @@ export const EditOrgDialog = ({
                                     </DropdownMenuGroup>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
-                              </section>
+                              </div>
                             );
                           })}
                         </div>
                       )}
-                    </section>
+                    </div>
 
                     <footer className="mt-10 flex items-center justify-end gap-5">
                       <div
@@ -245,16 +245,16 @@ export const EditOrgDialog = ({
                   <DialogDescription>
                     <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
                       <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
-                      <section className="flex items-center justify-between ">
+                      <div className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{orgName}</div>
                         <div className="">Owner</div>
-                      </section>
+                      </div>
                       {orgData?.orgMembers?.map(({ id, name, role }: orgUser) => {
                         return (
-                          <section key={id} className="flex items-center justify-between ">
+                          <div key={id} className="flex items-center justify-between ">
                             <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
                             <div className="">{role}</div>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
@@ -294,7 +294,7 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
   };
 
   return (
-    <section>
+    <div>
       <DialogTitle className="mb-6 text-center text-base text-[#f55]">Deleting Organization Confirmation</DialogTitle>
       <div className="mx-auto w-[342px] text-center text-muted-foreground">
         Are you sure that you want to delete Organization <span className="capitalize">“{orgName}”</span>?
@@ -317,7 +317,7 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
           </Button>
         </div>
       </footer>
-    </section>
+    </div>
   );
 };
 
