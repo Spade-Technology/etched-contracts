@@ -56,11 +56,7 @@ export const SideBar = () => {
   const activePageIndex = pages.findIndex(({ url }) => url === path) === -1 ? 0 : pages.findIndex(({ url }) => url === path);
 
   return (
-    <aside
-      id="sidebar"
-      className="sticky left-0 top-0 z-40 h-screen w-fit px-3 transition-transform lg:w-52"
-      aria-label="Sidebar"
-    >
+    <aside id="sidebar" className="sticky left-0 top-0 h-screen w-fit px-3 transition-transform lg:w-52" aria-label="Sidebar">
       <div className="flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
         <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
 
