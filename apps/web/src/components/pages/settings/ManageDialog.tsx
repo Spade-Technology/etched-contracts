@@ -37,27 +37,17 @@ export const ManageDialog = () => {
         })}
       </header>
 
-      {organisations.length > 0 ||
-        [1, 2, 3].map((item, idx) => (
-          <div key={idx} className="h-[105px] w-full bg-white px-10 shadow">
-            <div className="flex h-full animate-pulse items-center gap-5 ">
-              <div className="h-6 w-2/12 rounded-md bg-gray-300 "></div>
-              <div className="h-6 w-4/12 rounded-md bg-gray-300 "></div>
-              <div className="ml-auto h-6 w-4/12 rounded-md bg-gray-300 "></div>
-            </div>
-          </div>
-        ))}
-
-      {organisations?.map(({ id, orgId, name, createdAt }) => {
-        const prop = {
-          id,
-          orgId,
-          name,
-          date: new Date(+createdAt * 1000).toDateString(),
-          teams: teams?.filter(({ ownership }) => ownership?.organisation?.name === name),
-          accordion,
-          setAccordion,
-          organisations,
+      {organisations?.map(({ id, orgId, name, createdAt }) => (
+        <OrgDialog
+          {...{
+            id,
+            orgId,
+            name,
+            date: new Date(+createdAt * 1000).toDateString(),
+            teams: teams?.filter(({ ownership }) => ownership?.organisation?.name === name),
+            accordion,
+            setAccordion,
+            organisations,
         };
         return <OrgDialog {...prop} />;
       })}
