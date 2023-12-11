@@ -20,6 +20,7 @@ export const etchRouter = createTRPCRouter({
             name: z.string(),
             description: z.string(),
             url: z.string(),
+            type: z.string(),
           })
         ),
         team: z.string().optional(),
@@ -45,29 +46,26 @@ export const etchRouter = createTRPCRouter({
         let callDatas: string[] = [];
 
         await Promise.all(
-          files.map(async ({ url, name, description }) => {
+          files.map(async ({ url, name, type }) => {
             const etchUID = BigInt(keccak256(encodePacked(["address"], [address as Address]))) + random(48);
             etchUIDs.push(etchUID);
 
             const file = await fetch(url).then((res) => res.blob());
 
-            const ipfsCid = await LitJsSdk.encryptToIpfs({
-              // authSig: authSig,
-              authSig: await generateServerAuthSig(),
-              file,
-              chain: camelCaseNetwork,
-
-              infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
-              infuraSecretKey: process.env.INFURA_API_SECRET as string,
-
-              litNodeClient: lit.client as any,
-
-              evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
-            }).catch((err) => {
-              console.log(err);
-              console.log(err.stack);
-              throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
-            });
+            const ipfsCid = await lit
+              .encryptToIpfs({
+                // authSig: authSig,
+                authSig: await generateServerAuthSig(),
+                file,
+                chain: camelCaseNetwork,
+                evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
+                metadata: { type },
+              })
+              .catch((err) => {
+                console.log(err);
+                console.log(err.stack);
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+              });
 
             ipfsCids.push(ipfsCid);
 
