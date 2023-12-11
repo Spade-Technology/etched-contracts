@@ -37,7 +37,10 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     if (!decryptedArrayBuffer) return;
 
-    const fileType = filetype(new Uint8Array(decryptedArrayBuffer as any));
+    const metadata = await lit.getMetadataFromIpfs(etch?.ipfsCid);
+    let fileType = metadata?.type;
+
+    if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any));
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
     setEtchFile(image);
