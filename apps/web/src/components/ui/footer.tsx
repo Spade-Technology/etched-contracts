@@ -21,11 +21,11 @@ const links = [
 
 const Footer = () => {
   return (
-    <footer className="mx-auto mt-[76px] border-t-[1px] border-t-[#94A3B8] pb-[65px] pt-7 md:mt-[54px] md:py-[72px] lg:px-24">
-      <main className="mx-auto flex max-w-[1280px] flex-col justify-between text-start text-base  font-normal leading-[27px] md:flex-row md:text-xl md:leading-[34px] ">
+    <footer className="md:py-18 mx-auto mt-20 border-t border-gray-300 pb-16 pt-7 md:mt-14 lg:px-24">
+      <main className="mx-auto flex max-w-7xl flex-col justify-between text-start text-base font-normal leading-7 md:flex-row md:text-xl md:leading-9 ">
         <section>
-          <Icons.logoLong color="#097B45" className="h-[35px] !w-[133px] max-sm:mx-auto" />
-          <div className="mx-auto w-[136px] pt-[13px] max-sm:text-center md:w-[200px]">
+          <Icons.logoLong color="#097B45" className="h-9 w-32 max-sm:mx-auto" />
+          <div className="w-34 md:w-50 mx-auto pt-3 max-sm:text-center">
             Dashwood House
             <br />
             EC2M 1QS
@@ -33,11 +33,11 @@ const Footer = () => {
             London
           </div>
         </section>
-        <section className="-mt-1 flex flex-col justify-between gap-7 md:flex-row md:gap-[80px] lg:gap-[150px]">
+        <section className="-mt-1 flex flex-col justify-between gap-7 md:flex-row md:gap-20 lg:gap-36">
           {links.map(({ title, links }, index) => {
             return (
               <div className="text-right max-sm:text-center" key={index}>
-                <div className="font-header text-[28px] font-semibold leading-[47.7px]">{title}</div>
+                <div className="font-header text-3xl font-semibold leading-[3rem]">{title}</div>
                 <div className="flex flex-col gap-3">
                   {links.map(({ url, text }) => {
                     return (

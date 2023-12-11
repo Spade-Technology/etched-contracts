@@ -146,7 +146,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
 
   return (
     <DropdownMenu>
-      <div className="relative flex justify-between rounded-lg border-[1px] border-[#6D6D6D]">
+      <div className="relative flex justify-between rounded-lg border border-gray-600">
         <main ref={ref}>
           <SearchInput
             type="text"
@@ -157,11 +157,11 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
             className="border-none p-3 outline-none"
           />
           <div
-            className={`${openDropdown && orgs.length > 0 ? "" : "-z-50 hidden opacity-0"} ${cn(
-              "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
+            className={`${openDropdown && orgs.length > 0 ? "" : "invisible"} ${cn(
+              "absolute left-0 top-10 z-50 max-h-32 min-w-full overflow-hidden rounded-md border bg-popover px-3 py-3 text-popover-foreground shadow-md"
             )}`}
           >
-            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+            <section className="custom-scrollbar max-h-24 overflow-auto overflow-x-hidden pr-2">
               {orgs.map(({ id, name, orgId }) => {
                 const isSelected = selectedItems.find((item: any) => item.name === name);
                 return (
@@ -170,7 +170,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
                     onClick={() => addData({ id, name, orgId } as Organisation)}
                     className={`${
                       isSelected ? "pointer-events-none" : ""
-                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
+                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-gray-600 outline-none transition-colors hover:bg-blue-100 hover:text-blue-800 data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
                   >
                     {name}
                     <div className="flex items-center gap-1">

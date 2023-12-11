@@ -44,7 +44,7 @@ export default function GuideTour() {
         setOpenModal(!openModal);
       }}
     >
-      <AlertDialogContent className={" w-[500px] gap-4 border bg-background px-0 py-0 drop-shadow-2xl duration-200"}>
+      <AlertDialogContent className={"w-[500px] gap-4 border bg-background px-0 py-0 drop-shadow-2xl duration-200"}>
         <main className="cursor-default text-sm font-semibold text-muted-foreground">
           <header className="flex cursor-grabbing items-center gap-2 px-4 py-3 text-base text-foreground">
             <div className="h-6 w-6">

@@ -18,7 +18,7 @@ const EditButton = ({
     )}
     onClick={onClick}
   >
-    <Icons.edit className="h-[14px]" color={"#097B45"} />
+    <Icons.edit className="h-3" color={"#097B45"} />
     {title}
   </button>
 );

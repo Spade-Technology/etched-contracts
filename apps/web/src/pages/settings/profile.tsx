@@ -16,7 +16,7 @@ export default function SettingsPage() {
 
   return (
     <PageBoilerplate>
-      <article className="mt-[19px] flex w-full bg-white px-10 py-[34px] shadow-[0px_4px_20px_3px_rgba(0,0,0,0.10)]"></article>
+      <div className="mt-[19px] flex w-full bg-white px-10 py-[34px] shadow-[0px_4px_20px_3px_rgba(0,0,0,0.10)]">{/*  */}</div>
     </PageBoilerplate>
   );
 }
