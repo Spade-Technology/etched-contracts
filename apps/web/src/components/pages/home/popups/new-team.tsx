@@ -1,6 +1,6 @@
 import { GoodIcon } from "@/components/icons/good";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTitle, DialogContent, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { teamUser } from "@/types";
 import { shortenAddress } from "@/utils/hooks/address";
 
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import React, { useState } from "react";
+import { useState } from "react";
 
 function NewTeam() {
   const [openModal, setOpenModal] = useState(false);

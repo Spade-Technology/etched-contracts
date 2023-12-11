@@ -1,7 +1,7 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { keccak256, toBytes, toHex } from "viem";
-import { EncryptToIpfsProps, SymmetricKey, decryptToIpfsProps } from "./utils/litTypes";
 import { ipfsClient } from "./ipfs";
+import { EncryptToIpfsProps, SymmetricKey, decryptToIpfsProps } from "./utils/litTypes";
 
 const client = new LitJsSdk.LitNodeClient({
   litNetwork: "serrano",

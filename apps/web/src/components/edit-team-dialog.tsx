@@ -1,22 +1,21 @@
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { toast } from "./ui/use-toast";
 import { Organisation, TeamOwnership } from "@/gql/graphql";
+import { teamUser } from "@/types";
+import React, { useState } from "react";
+import { BarIcon } from "./icons/bar";
+import { DeleteIcon } from "./icons/delete";
+import { GoodIcon } from "./icons/good";
+import { TransferIcon } from "./icons/transfer";
+import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
-import { Label } from "./ui/label";
-import { OrgInputDropdown, UsersInputDropdown } from "./ui/input-dropdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Icons } from "./ui/icons";
-import { GoodIcon } from "./icons/good";
-import { BarIcon } from "./icons/bar";
-import { TransferIcon } from "./icons/transfer";
-import { DeleteIcon } from "./icons/delete";
-import { teamUser } from "@/types";
+import { OrgInputDropdown, UsersInputDropdown } from "./ui/input-dropdown";
+import { Label } from "./ui/label";
 
-import { useUpdateTeam } from "@/utils/hooks/useUpdateTeamBackendOperation";
-import { useTransferOwnershipTeam } from "@/utils/hooks/useTeamTransferOwnershipBackendOperation";
 import { shortenAddress } from "@/utils/hooks/address";
+import { useTransferOwnershipTeam } from "@/utils/hooks/useTeamTransferOwnershipBackendOperation";
+import { useUpdateTeam } from "@/utils/hooks/useUpdateTeamBackendOperation";
 
 const roleData = ["read", "read & write"];
 

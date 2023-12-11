@@ -1,9 +1,9 @@
 import { etchRouter } from "@/server/api/routers/etch";
 import { createTRPCRouter } from "@/server/api/trpc";
 import { ensRouter } from "./routers/ens";
+import { orgRouter } from "./routers/org";
 import { patchRouter } from "./routers/patch";
 import { teamRouter } from "./routers/team";
-import { orgRouter } from "./routers/org";
 import { userRouter } from "./routers/user";
 
 /**

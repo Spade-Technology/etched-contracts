@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import { EditOrgDialog } from "@/components/edit-org-dialog";
 import { EditButton } from "@/components/ui/edit-button";
 import { Icons } from "@/components/ui/icons";
-import { EditOrgDialog } from "@/components/edit-org-dialog";
 import { Organisation } from "@/gql/graphql";
-import { useGetMembersFromOrg } from "@/utils/hooks/useGetMembersFromOrg";
 import { teamUser } from "@/types";
+import { useGetMembersFromOrg } from "@/utils/hooks/useGetMembersFromOrg";
+import { useEffect, useRef, useState } from "react";
 
-import { TeamDialog } from "./TeamDialog";
 import { shortenAddress } from "@/utils/hooks/address";
+import { TeamDialog } from "./TeamDialog";
 
 export const OrgDialog = ({
   id,

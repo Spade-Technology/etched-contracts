@@ -1,4 +1,3 @@
-import { BigInt, log } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
@@ -8,34 +7,24 @@ import {
   TeamRenamed as TeamRenamedEvent,
   Transfer as TransferEvent,
   TransferToOrganisation as TransferToOrganisationEvent,
-} from "../generated/Team/Team";
+} from '../generated/Team/Team';
 import {
+  Team,
   TeamApproval,
   TeamApprovalForAll,
+  TeamCreated,
   TeamOwnershipTransferred,
   TeamPermissionsUpdated,
-  TeamCreated,
+  TeamRenamed,
   TeamTransfer,
   TeamTransferToOrganisation,
-  TeamRenamed,
-  Team,
-} from "../generated/schema";
-import { getOrCreateWallet } from "./wallet";
+} from '../generated/schema';
+import { getOrCreateWallet } from './wallet';
 
-import {
-  EOID,
-  ETID,
-  getOrgId,
-  getTeamId,
-  upsertTeam,
-  upsertTeamOwnership,
-  upsertTeamPermission,
-} from "./utils";
+import { EOID, ETID, getOrgId, getTeamId, upsertTeam, upsertTeamOwnership, upsertTeamPermission } from './utils';
 
 export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
-  const entity = new TeamPermissionsUpdated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  const entity = new TeamPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.account = event.params.account;
   entity.newPermission = event.params.newPermission;
 
@@ -48,24 +37,13 @@ export function handlePermissionsUpdated(event: PermissionsUpdatedEvent): void {
   entity.save();
 
   const teamId = getTeamId(ETID.Team, event.params.teamId);
-  const teamPermissionId = getTeamId(
-    ETID.Permission,
-    event.params.teamId,
-    event.params.account.toString()
-  );
+  const teamPermissionId = getTeamId(ETID.Permission, event.params.teamId, event.params.account.toString());
 
-  upsertTeamPermission(
-    teamPermissionId,
-    teamId,
-    event.params.account,
-    event.params.newPermission
-  );
+  upsertTeamPermission(teamPermissionId, teamId, event.params.account, event.params.newPermission);
 }
 
 export function handleTeamRenamed(event: TeamRenamedEvent): void {
-  const entity = new TeamRenamed(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  const entity = new TeamRenamed(event.transaction.hash.concatI32(event.logIndex.toI32()));
 
   entity.newName = event.params.newName;
 
@@ -87,9 +65,7 @@ export function handleTeamRenamed(event: TeamRenamedEvent): void {
 }
 
 export function handleTeamCreated(event: TeamCreatedEvent): void {
-  const entity = new TeamCreated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  const entity = new TeamCreated(event.transaction.hash.concatI32(event.logIndex.toI32()));
 
   entity.to = event.params.to;
 
@@ -114,9 +90,7 @@ export function handleTeamCreated(event: TeamCreatedEvent): void {
 }
 
 export function handleTransfer(event: TransferEvent): void {
-  const entity = new TeamTransfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  const entity = new TeamTransfer(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.from = event.params.from;
   entity.to = event.params.to;
 
@@ -136,16 +110,12 @@ export function handleTransfer(event: TransferEvent): void {
   upsertTeamOwnership(ownershipId, teamId, event.params.to);
 }
 
-export function handleTransferToOrganisation(
-  event: TransferToOrganisationEvent
-): void {
+export function handleTransferToOrganisation(event: TransferToOrganisationEvent): void {
   const ownershipId = getTeamId(ETID.Ownership, event.params.teamId);
   const teamId = getTeamId(ETID.Team, event.params.teamId);
   const organisationId = getOrgId(EOID.Org, event.params.orgId);
 
-  const entity = new TeamTransferToOrganisation(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  const entity = new TeamTransferToOrganisation(event.transaction.hash.concatI32(event.logIndex.toI32()));
 
   entity.orgId = event.params.orgId;
 
@@ -165,9 +135,7 @@ export function handleTransferToOrganisation(
 // No need to handle this events, but parsing them for completeness
 
 export function handleApproval(event: ApprovalEvent): void {
-  const entity = new TeamApproval(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  const entity = new TeamApproval(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.owner = event.params.owner;
   entity.approved = event.params.approved;
   entity.tokenId = event.params.tokenId;
@@ -182,9 +150,7 @@ export function handleApproval(event: ApprovalEvent): void {
 }
 
 export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  const entity = new TeamApprovalForAll(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  const entity = new TeamApprovalForAll(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.owner = event.params.owner;
   entity.operator = event.params.operator;
   entity.approved = event.params.approved;
@@ -196,12 +162,8 @@ export function handleApprovalForAll(event: ApprovalForAllEvent): void {
   entity.save();
 }
 
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {
-  const entity = new TeamOwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+export function handleOwnershipTransferred(event: OwnershipTransferredEvent): void {
+  const entity = new TeamOwnershipTransferred(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.previousOwner = event.params.previousOwner;
   entity.newOwner = event.params.newOwner;
 

@@ -2,20 +2,20 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
 
-import { toast } from "./ui/use-toast";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
-import { Label } from "./ui/label";
-import { UsersInputDropdown } from "./ui/input-dropdown";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { Icons } from "./ui/icons";
-import { GoodIcon } from "./icons/good";
 import { orgUser } from "@/types";
 import { shortenAddress } from "@/utils/hooks/address";
+import { GoodIcon } from "./icons/good";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Icons } from "./ui/icons";
+import { UsersInputDropdown } from "./ui/input-dropdown";
+import { Label } from "./ui/label";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   orgName: z.string(),

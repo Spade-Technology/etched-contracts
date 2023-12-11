@@ -4,7 +4,7 @@ import { PageBoilerplate } from "@/components/page-boilerplate";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Wallet } from "@/gql/graphql";
-import { formatUserFromWallet, shortenAddress } from "@/utils/hooks/address";
+import { formatUserFromWallet } from "@/utils/hooks/address";
 import { useGetEtchesFromTeam } from "@/utils/hooks/useGetEtchesFromTeam";
 import { Metadata } from "next";
 import { useRouter } from "next/router";

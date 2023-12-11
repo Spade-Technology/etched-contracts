@@ -1,11 +1,8 @@
-import { Cross2Icon } from "@radix-ui/react-icons";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./icons/logo-long-animated";
-import { Icons } from "./ui/icons";
-import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent } from "./ui/dialog";
 import { AlertDialog, AlertDialogContent } from "./ui/alert-dialog";
+import { Checkbox } from "./ui/checkbox";
+import { Icons } from "./ui/icons";
 
 export default function GuideTour() {
   const [openModal, setOpenModal] = useState(false);

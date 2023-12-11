@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
 import { Icons } from "@/components/ui/icons";
 import { Organisation } from "@/gql/graphql";
 import { teamUser } from "@/types";
+import { useEffect, useRef, useState } from "react";
 import { TeamDialog } from "./TeamDialog";
 
 export const Teams = ({

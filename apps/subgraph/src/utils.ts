@@ -1,13 +1,5 @@
-import { Address, BigInt, Bytes, Entity, ethereum, log } from "@graphprotocol/graph-ts";
-import {
-  Organisation,
-  OrganisationOwnership,
-  OrganisationPermission,
-  Team,
-  TeamOwnership,
-  TeamPermission,
-  Wallet,
-} from "../generated/schema";
+import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import { Organisation, OrganisationOwnership, OrganisationPermission, Team, TeamOwnership, TeamPermission } from '../generated/schema';
 
 export const upsertOrgOwnership = (dbOwnershipId: string, dbOrgId: string, owner: Bytes): void => {
   let organisationOwnership = OrganisationOwnership.load(dbOwnershipId);
@@ -21,7 +13,7 @@ export const upsertOrgOwnership = (dbOwnershipId: string, dbOrgId: string, owner
 export const upsertOrg = (dbOrgId: string, orgId: BigInt, block: ethereum.Block): void => {
   let org = Organisation.load(dbOrgId);
   if (org == null) org = new Organisation(dbOrgId);
-  org.createdAt =  block.timestamp;
+  org.createdAt = block.timestamp;
   org.orgId = orgId;
   org.save();
 };
@@ -77,11 +69,11 @@ export enum EID {
   Permission,
 }
 
-export function getEtchId(type: EID, tokenId: BigInt, walletOrTeamId: string = ""): string {
-  if (type == EID.Etch) return tokenId.toString() + "-Etch";
-  else if (type == EID.Ownership) return tokenId.toString() + "-Etch-Ownership";
-  else if (type == EID.Permission) return tokenId.toString() + "-" + walletOrTeamId + "-Etch-Permission";
-  else return "";
+export function getEtchId(type: EID, tokenId: BigInt, walletOrTeamId: string = ''): string {
+  if (type == EID.Etch) return tokenId.toString() + '-Etch';
+  else if (type == EID.Ownership) return tokenId.toString() + '-Etch-Ownership';
+  else if (type == EID.Permission) return tokenId.toString() + '-' + walletOrTeamId + '-Etch-Permission';
+  else return '';
 }
 
 export enum ETID {
@@ -90,11 +82,11 @@ export enum ETID {
   Permission,
 }
 
-export function getTeamId(type: ETID, teamId: BigInt, wallet: string = ""): string {
-  if (type == ETID.Team) return teamId.toString() + "-Team";
-  else if (type == ETID.Ownership) return teamId.toString() + "-Team-Ownership";
-  else if (type == ETID.Permission) return teamId.toString() + "-" + wallet + "-Team-Permission";
-  else return "";
+export function getTeamId(type: ETID, teamId: BigInt, wallet: string = ''): string {
+  if (type == ETID.Team) return teamId.toString() + '-Team';
+  else if (type == ETID.Ownership) return teamId.toString() + '-Team-Ownership';
+  else if (type == ETID.Permission) return teamId.toString() + '-' + wallet + '-Team-Permission';
+  else return '';
 }
 
 export enum EOID {
@@ -103,9 +95,9 @@ export enum EOID {
   Permission,
 }
 
-export function getOrgId(type: EOID, orgId: BigInt, wallet: string = ""): string {
-  if (type == EOID.Org) return orgId.toString() + "-Organisation";
-  else if (type == EOID.Ownership) return orgId.toString() + "-Organisation-Ownership";
-  else if (type == EOID.Permission) return orgId.toString() + "-" + wallet + "-Organisation-Permission";
-  else return "";
+export function getOrgId(type: EOID, orgId: BigInt, wallet: string = ''): string {
+  if (type == EOID.Org) return orgId.toString() + '-Organisation';
+  else if (type == EOID.Ownership) return orgId.toString() + '-Organisation-Ownership';
+  else if (type == EOID.Permission) return orgId.toString() + '-' + wallet + '-Organisation-Permission';
+  else return '';
 }

@@ -1,9 +1,9 @@
-import React from "react";
-import { EditButton } from "@/components/ui/edit-button";
 import { EditTeamDialog } from "@/components/edit-team-dialog";
+import { EditButton } from "@/components/ui/edit-button";
 import { Organisation } from "@/gql/graphql";
 import { teamUser } from "@/types";
 import { shortenAddress } from "@/utils/hooks/address";
+import React from "react";
 
 export const TeamDialog = ({
   id,

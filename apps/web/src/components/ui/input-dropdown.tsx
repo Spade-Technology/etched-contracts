@@ -7,20 +7,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { Organisation } from "@/gql/graphql";
+import { cn } from "@/lib/utils";
+import { orgUser } from "@/types";
+import { isValidEthereumAddress } from "@/utils/common";
+import { shortenAddress } from "@/utils/hooks/address";
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useGetUsers } from "@/utils/hooks/useGetUsers";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { GoodIcon } from "../icons/good";
 import { ProfileProps } from "../pages/etch/edit/components/add-user";
 import { Button } from "./button";
 import ProfileCard from "./profile-card";
 import { SearchInput } from "./search-input";
-import { cn } from "@/lib/utils";
-import { GoodIcon } from "../icons/good";
-import { useGetUsers } from "@/utils/hooks/useGetUsers";
-import { orgUser, teamUser } from "@/types";
-import { Organisation, Team } from "@/gql/graphql";
-import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { isValidEthereumAddress } from "@/utils/common";
-import { shortenAddress } from "@/utils/hooks/address";
 
 type InputDropdownProps = {
   data: {
@@ -395,4 +395,4 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
 };
 
 export default InputDropdown;
-export { UsersInputDropdown, OrgInputDropdown, TeamInputDropdown };
+export { OrgInputDropdown, TeamInputDropdown, UsersInputDropdown };

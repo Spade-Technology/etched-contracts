@@ -17,7 +17,7 @@ const TeaxtArea = React.forwardRef<HTMLTextAreaElement, InputProps>(({ className
         textAreaRef.current.style.height = `${textAreaRef.current?.scrollHeight}px`;
       }}
       className={cn(
-        "custom-scrollbar duration-300 hide-scrollbar h-fit w-full whitespace-pre-wrap rounded-md border border-input bg-transparent px-3 pb-2 pt-2 font-body text-lg font-medium leading-6 shadow-sm placeholder:text-base focus:border-primary focus:outline-none focus:ring-0",
+        "custom-scrollbar hide-scrollbar h-fit w-full whitespace-pre-wrap rounded-md border border-input bg-transparent px-3 pb-2 pt-2 font-body text-lg font-medium leading-6 shadow-sm duration-300 placeholder:text-base focus:border-primary focus:outline-none focus:ring-0",
         className
       )}
       {...props}

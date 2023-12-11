@@ -1,8 +1,8 @@
 import { graphql } from "@/gql";
+import { Etch, Organisation, Team, Wallet } from "@/gql/graphql";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "urql";
 import { refetchContext } from "../urql";
-import { Etch, EtchEns_OrderBy, Organisation, Team, Wallet } from "@/gql/graphql";
 
 const SEARCH_GQL_QUERY = graphql(`
   query Search($input: String) {

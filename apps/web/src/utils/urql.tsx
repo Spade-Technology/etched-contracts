@@ -1,9 +1,9 @@
+import { cacheExchange } from "@urql/exchange-graphcache";
 import { withUrqlClient } from "next-urql";
 import { createContext, useEffect, useState } from "react";
-import { cacheExchange } from "@urql/exchange-graphcache";
 
-import { fetchExchange } from "urql";
 import { devtoolsExchange } from "@urql/devtools";
+import { fetchExchange } from "urql";
 
 type operationInput = {
   name: string;

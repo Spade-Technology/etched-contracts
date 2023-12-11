@@ -1,10 +1,10 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { DashboardHeader } from "./dashboard-header";
+import GuideTour from "./guide-tour";
 import { SideBar } from "./sidebar";
 import { WorkQueue } from "./work-queue";
-import GuideTour from "./guide-tour";
 
 export const PageBoilerplate = ({ children }: { children: React.ReactNode }) => {
   // maybe a bit extra, should do the trick though, right
