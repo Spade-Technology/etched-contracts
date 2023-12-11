@@ -26,7 +26,7 @@ import { VideoPlayer } from "./VideoPlayer";
 // import Viewer from "./ui/model-viewer/Viewer";
 import dynamic from "next/dynamic";
 const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
-import { model_formats } from "./../utils/3d-models-format";
+import { model_formats } from "../utils/model-formats";
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);

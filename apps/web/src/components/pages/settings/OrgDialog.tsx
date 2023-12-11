@@ -68,18 +68,6 @@ export const OrgDialog = ({
     };
   }, [accordion]);
 
-  if (isLoading) {
-    return (
-      <article
-        key={name}
-        className={`h-fit w-full bg-white px-10 shadow-[0px_7.11111px_35.55556px_5.33333px_rgba(0,0,0,0.10)] ${
-          accordion === name ? " pb-10" : ""
-        }`}
-      >
-        Loading...
-      </article>
-    );
-  }
   return (
     <article
       key={name}
