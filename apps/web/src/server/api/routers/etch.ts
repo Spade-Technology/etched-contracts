@@ -20,6 +20,7 @@ export const etchRouter = createTRPCRouter({
             name: z.string(),
             description: z.string(),
             url: z.string(),
+            type: z.string(),
           })
         ),
         team: z.string().optional(),
@@ -45,28 +46,26 @@ export const etchRouter = createTRPCRouter({
         let callDatas: string[] = [];
 
         await Promise.all(
-          files.map(async ({ url, name, description }) => {
+          files.map(async ({ url, name, type }) => {
             const etchUID = BigInt(keccak256(encodePacked(["address"], [address as Address]))) + random(48);
             etchUIDs.push(etchUID);
 
             const file = await fetch(url).then((res) => res.blob());
 
-            const ipfsCid = await LitJsSdk.encryptToIpfs({
-              authSig: await generateServerAuthSig(),
-              file,
-              chain: camelCaseNetwork,
-
-              infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
-              infuraSecretKey: process.env.INFURA_API_SECRET as string,
-
-              litNodeClient: lit.client as any,
-
-              evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
-            }).catch((err) => {
-              console.log(err);
-              console.log(err.stack);
-              throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
-            });
+            const ipfsCid = await lit
+              .encryptToIpfs({
+                // authSig: authSig,
+                authSig: await generateServerAuthSig(),
+                file,
+                chain: camelCaseNetwork,
+                evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
+                metadata: { type },
+              })
+              .catch((err) => {
+                console.log(err);
+                console.log(err.stack);
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+              });
 
             ipfsCids.push(ipfsCid);
 
@@ -98,22 +97,26 @@ export const etchRouter = createTRPCRouter({
           abi: EtchABI,
         });
 
-        const transactionResult = await publicClient.waitForTransactionReceipt({
-          hash: tx1,
-        });
+        try {
+          const transactionResult = await publicClient.waitForTransactionReceipt({
+            hash: tx1,
+          });
 
-        if (!transactionResult.logs[0]) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Transaction failed" });
+          if (!transactionResult.logs[0]) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Transaction failed" });
 
-        const transferEvent = decodeEventLog({
-          abi: EtchABI,
-          eventName: "Transfer",
-          data: transactionResult.logs[0].data,
-          topics: transactionResult.logs[0].topics,
-        });
+          const transferEvent = decodeEventLog({
+            abi: EtchABI,
+            eventName: "Transfer",
+            data: transactionResult.logs[0].data,
+            topics: transactionResult.logs[0].topics,
+          });
 
-        const etchId = (transferEvent.args as any).tokenId;
+          const etchId = (transferEvent.args as any).tokenId;
 
-        return etchId;
+          return { tx: tx1, id: etchId };
+        } catch (e) {
+          return { tx: tx1, id: undefined };
+        }
       }
     ),
 
@@ -275,10 +278,6 @@ export const etchRouter = createTRPCRouter({
             [calldata],
           ],
           abi: EtchABI,
-        });
-
-        await publicClient.waitForTransactionReceipt({
-          hash: tx,
         });
 
         return { tx };

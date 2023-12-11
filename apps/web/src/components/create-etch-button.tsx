@@ -8,31 +8,24 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
-import { EditIcon, Trash2 } from "lucide-react";
+import dayjs from "dayjs";
+import { EditIcon, EyeIcon, FileAudioIcon, FileTextIcon, PauseCircleIcon, PlayCircleIcon, Trash2, VideoIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+import { VideoPlayer } from "./VideoPlayer";
+import { PDFViewer } from "./pdf-viewer";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
-
-const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
-
-const formSchema = z.object({
-  etchTitle: z.string(),
-  etchDescription: z.string(),
-  etchFile: z.any(),
-  etchVisibility: z.boolean(),
-});
-
-type FormData = z.infer<typeof formSchema>;
+// import Viewer from "./ui/model-viewer/Viewer";
+import dynamic from "next/dynamic";
+const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,35 +33,46 @@ export const CreateEtchButton = () => {
 
   const { onSubmit, isUploading: isLoading, etchCreated, setEtchCreated, uploadProgress } = useCreateEtch();
 
-  const iframeRef = React.useRef<HTMLIFrameElement>(null);
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-
-    defaultValues: {
-      etchTitle: "",
-      etchDescription: "",
-      etchFile: null,
-      etchVisibility: false,
-    },
-  });
+  const form = useForm<FormData>({});
 
   const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
 
   const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 10,
     accept: {
       "image/*": [],
+      "audio/*": [],
+      "video/*": [],
+      "application/pdf": [],
     },
     onDrop: (acceptedFiles: File[]) => {
-      setFiles([
+      const newFiles = [
         ...files,
         ...acceptedFiles.map((file) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
         ),
-      ]);
+      ];
+
+      if (newFiles.length > 10) alert("You cannot bulk upload more than 10 files at a time");
+      else {
+        setFiles([
+          ...files,
+          ...acceptedFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          ),
+        ]);
+        console.log(acceptedFiles);
+      }
     },
   });
+
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
 
   useEffect(() => {
     document.addEventListener("create-etch", () => {
@@ -131,7 +135,7 @@ export const CreateEtchButton = () => {
                 <form>
                   <div className="mt-8 flex gap-4">
                     <div className="w-1/2 ">
-                      <section>
+                      <div>
                         <div
                           {...getRootProps()}
                           className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
@@ -141,7 +145,7 @@ export const CreateEtchButton = () => {
                             Drag 'n' drop some files here, or <span className="underline">click to select files</span>
                           </p>
                         </div>
-                      </section>
+                      </div>
                     </div>
                     <div className="h-[33vh] w-1/2 overflow-scroll">
                       <Label>Create on Behalf of</Label>
@@ -161,87 +165,7 @@ export const CreateEtchButton = () => {
                       </div>
                       <div className="mt-3 grid grid-cols-3 gap-4 overflow-scroll">
                         {files.map((file, index) => (
-                          <div key={index} className="aspect-w-1 aspect-h-1 group relative">
-                            <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
-                            <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
-                              <span className="text-center text-sm text-white">
-                                {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
-                              </span>
-                              {isLoading ? (
-                                <span className="text-white opacity-50"> {uploadProgress}% </span>
-                              ) : (
-                                <span className="text-white opacity-50">
-                                  {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB
-                                </span>
-                              )}
-                            </div>
-
-                            <Dialog>
-                              <DialogTrigger className="w-23 absolute left-0 top-0 m-2 flex  rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100">
-                                <EditIcon className="h-6 w-6" />
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>
-                                    Edit {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
-                                  </DialogTitle>
-                                  <DialogDescription className="mx-0 mt-4 flex flex-col gap-2 px-0">
-                                    <div>
-                                      <Label>File Name</Label>
-                                      <Input
-                                        defaultValue={(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
-                                        onChange={(e) => {
-                                          setFiles(
-                                            files.map((el, i) => {
-                                              if (i === index) {
-                                                return Object.assign(el, {
-                                                  nameOverride: e.target.value + "." + el.name.split(".").pop(),
-                                                });
-                                              }
-                                              return el;
-                                            })
-                                          );
-                                        }}
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label>Description</Label>
-                                      <Input
-                                        defaultValue={file.description}
-                                        onChange={(e) => {
-                                          setFiles(
-                                            files.map((el, i) => {
-                                              if (i === index) {
-                                                return Object.assign(el, {
-                                                  description: e.target.value,
-                                                });
-                                              }
-                                              return el;
-                                            })
-                                          );
-                                        }}
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label>File Extension</Label>
-                                      <Input defaultValue={(file.nameOverride ?? file.name).split(".").pop()} readOnly />
-                                    </div>
-                                    <div>
-                                      <Label>File Size</Label>
-                                      <Input defaultValue={(file.size / 1024 / 1024).toFixed(2) + " MB"} readOnly />
-                                    </div>
-                                  </DialogDescription>
-                                </DialogHeader>
-                              </DialogContent>
-                            </Dialog>
-
-                            <div
-                              className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                              onClick={() => setFiles(files.filter((_, i) => i !== index))}
-                            >
-                              <Trash2 className="h-6 w-6" href="" />
-                            </div>
-                          </div>
+                          <FilePreviewer file={file} index={index} isLoading={isLoading} setFiles={setFiles} files={files} />
                         ))}
                       </div>
                     </div>
@@ -274,5 +198,198 @@ export const CreateEtchButton = () => {
         </div>
       </AlertDialogContent>
     </AlertDialog>
+  );
+};
+
+type FilePreview = File & {
+  preview: string;
+  nameOverride?: string | undefined;
+  path?: string | undefined;
+  description?: string | undefined;
+};
+
+const FilePreviewer = ({
+  file,
+  uploadProgress,
+  index,
+  isLoading,
+  files,
+  setFiles,
+}: {
+  file: FilePreview;
+  uploadProgress?: number;
+  index: number;
+  isLoading?: boolean;
+  files: FilePreview[];
+  setFiles: React.Dispatch<React.SetStateAction<FilePreview[]>>;
+}) => {
+  const audioPreviewRef = useRef<HTMLAudioElement>(null);
+  const [time, setTime] = useState(0);
+
+  // on audioPreviewRef initialization, update state at timeupdate
+  useEffect(() => {
+    if (audioPreviewRef?.current) {
+      audioPreviewRef.current.addEventListener("timeupdate", () => {
+        setTime(audioPreviewRef?.current?.currentTime ?? 0);
+      });
+    }
+  }, [audioPreviewRef?.current]);
+
+  const fileFormat = file.path?.slice(file.path.indexOf(".") + 1);
+
+  return (
+    <div key={index} className="aspect-w-1 aspect-h-1 group relative">
+      {file.type.startsWith("image/") ? (
+        <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
+      ) : file.type.startsWith("audio/") ? (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <FileAudioIcon className="h-1/2 w-1/2 text-white" />
+          <audio className="rounded-lg shadow-lg" ref={audioPreviewRef}>
+            <source src={file.preview} type={file.type} />
+          </audio>
+        </div>
+      ) : file.type.startsWith("video/") ? (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <VideoIcon className="h-1/2 w-1/2 text-white" />
+        </div>
+      ) : file.type.includes("pdf") ? (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <FileTextIcon className="h-1/2 w-1/2 text-white" />
+        </div>
+      ) : (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <img src={`/formats/${fileFormat?.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
+        </div>
+      )}
+      <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
+        <span className="text-center text-sm text-white">
+          {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+        </span>
+        {isLoading ? (
+          <span className="text-white opacity-50"> {uploadProgress}% </span>
+        ) : (
+          <span className="text-white opacity-50">
+            {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB
+          </span>
+        )}
+      </div>
+
+      <Dialog>
+        <DialogTrigger className="w-23 absolute left-0 top-0 m-2 flex  rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100">
+          <EditIcon className="h-6 w-6" />
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            <DialogDescription className="mx-0 mt-4 flex flex-col gap-2 px-0">
+              <div>
+                <Label>File Name</Label>
+                <Input
+                  defaultValue={(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+                  onChange={(e) => {
+                    setFiles(
+                      files.map((el, i) => {
+                        if (i === index) {
+                          return Object.assign(el, {
+                            nameOverride: e.target.value + "." + el.name.split(".").pop(),
+                          });
+                        }
+                        return el;
+                      })
+                    );
+                  }}
+                />
+              </div>
+              <div>
+                <Label>Description</Label>
+                <Input
+                  defaultValue={file.description}
+                  onChange={(e) => {
+                    setFiles(
+                      files.map((el, i) => {
+                        if (i === index) {
+                          return Object.assign(el, {
+                            description: e.target.value,
+                          });
+                        }
+                        return el;
+                      })
+                    );
+                  }}
+                />
+              </div>
+              <div>
+                <Label>File Extension</Label>
+                <Input defaultValue={(file.nameOverride ?? file.name).split(".").pop()} readOnly />
+              </div>
+              <div>
+                <Label>File Size</Label>
+                <Input defaultValue={(file.size / 1024 / 1024).toFixed(2) + " MB"} readOnly />
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+      {file.type.startsWith("audio/") && audioPreviewRef?.current && (
+        <div className="w-23 absolute bottom-0 right-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+          <span className="mr-2 text-white opacity-50">
+            {dayjs()
+              .hour(0)
+              .minute(0)
+              .second(time)
+              .format(time >= 3600 ? "HH:mm:ss" : "mm:ss")}
+          </span>
+          {audioPreviewRef?.current?.paused ? (
+            <PlayCircleIcon
+              className="h-6 w-6"
+              onClick={() => {
+                audioPreviewRef?.current?.play();
+              }}
+            />
+          ) : (
+            <PauseCircleIcon
+              className="h-6 w-6"
+              onClick={() => {
+                audioPreviewRef?.current?.pause();
+              }}
+            />
+          )}
+        </div>
+      )}
+
+      {file.type.startsWith("video/") && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <VideoPlayer url={file.preview} />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {file.type.includes("pdf") && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <PDFViewer file={file} />
+          </DialogContent>
+        </Dialog>
+      )}
+      <div
+        className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"
+        onClick={() => setFiles(files.filter((_, i) => i !== index))}
+      >
+        <Trash2 className="h-6 w-6" href="" />
+      </div>
+    </div>
   );
 };

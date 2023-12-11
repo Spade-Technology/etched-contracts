@@ -1,9 +1,6 @@
+import { GoodIcon } from "@/components/icons/good";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
-import { Label } from "@/components/ui/label";
-import { Etch } from "@/gql/graphql";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,12 +9,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
-import { GoodIcon } from "@/components/icons/good";
-import { api } from "@/utils/api";
-import { findUserDifferences } from "@/utils/user";
-import { teamUser } from "@/types";
-import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
+import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
+import { Etch } from "@/gql/graphql";
+import { teamUser } from "@/types";
+import { api } from "@/utils/api";
+import { shortenAddress } from "@/utils/hooks/address";
+import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
+import { findUserDifferences } from "@/utils/user";
+import { useState } from "react";
 
 type UserProps = {
   show: boolean;
@@ -162,7 +163,7 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
           <DialogTitle className="font-normal text-[#6D6D6D]">Invite users and teams</DialogTitle>
           <DialogDescription className="text-[#6D6D6D]">
             <Label className="font-semibold">Select</Label>
-            <section className="mb-7 mt-[9px] flex gap-5">
+            <div className="mb-7 mt-[9px] flex gap-5">
               {["individual", "team"].map((item, id) => {
                 return (
                   <div key={id} onClick={() => setPermissaionTo(item)} className="flex items-center gap-1">
@@ -183,7 +184,7 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                   </div>
                 );
               })}
-            </section>
+            </div>
 
             {permissionTo === "individual" && (
               <>
@@ -196,17 +197,17 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                   setSelectedItems={setSelectedUsers}
                 />
 
-                <section>
+                <div>
                   {selectedUsers?.length > 0 && (
                     <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                       {selectedUsers.map(({ id, name, role }) => {
                         return (
-                          <section className="flex items-center justify-between">
+                          <div className="flex items-center justify-between">
                             <div
                               key={id}
                               className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                             >
-                              {name}
+                              {name || shortenAddress({ address: id })}
                             </div>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -240,12 +241,12 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                                 </DropdownMenuGroup>
                               </DropdownMenuContent>
                             </DropdownMenu>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
                   )}
-                </section>
+                </div>
               </>
             )}
             {permissionTo === "team" && (
@@ -259,12 +260,12 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                   setSelectedItems={setSelectedTeams}
                 />
 
-                <section>
+                <div>
                   {selectedTeams?.length > 0 && (
                     <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                       {selectedTeams.map(({ id, name, role }) => {
                         return (
-                          <section className="flex items-center justify-between">
+                          <div className="flex items-center justify-between">
                             <div
                               key={id}
                               className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
@@ -303,12 +304,12 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                                 </DropdownMenuGroup>
                               </DropdownMenuContent>
                             </DropdownMenu>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
                   )}
-                </section>
+                </div>
               </>
             )}
           </DialogDescription>

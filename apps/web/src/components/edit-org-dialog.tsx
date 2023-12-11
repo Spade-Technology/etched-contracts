@@ -1,23 +1,23 @@
 import { Input } from "@/components/ui/input";
-import { api } from "@/utils/api";
 import React, { useState } from "react";
 
+import { orgUser } from "@/types";
 import * as z from "zod";
+import { roleData } from "./create-org-dialog";
+import { BarIcon } from "./icons/bar";
+import { DeleteIcon } from "./icons/delete";
+import { GoodIcon } from "./icons/good";
+import { TransferIcon } from "./icons/transfer";
 import { Button } from "./ui/button";
-import { toast } from "./ui/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
-import { Label } from "./ui/label";
-import { UsersInputDropdown } from "./ui/input-dropdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Icons } from "./ui/icons";
-import { GoodIcon } from "./icons/good";
-import { BarIcon } from "./icons/bar";
-import { TransferIcon } from "./icons/transfer";
-import { DeleteIcon } from "./icons/delete";
-import { roleData } from "./create-org-dialog";
-import { orgUser } from "@/types";
-import { findUserDifferences } from "@/utils/user";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { UsersInputDropdown } from "./ui/input-dropdown";
+import { Label } from "./ui/label";
+
+import { shortenAddress } from "@/utils/hooks/address";
+import { useTransferOwnershipOrg } from "@/utils/hooks/useOrgTransferOwnershipBackendOperation";
+import { useUpdateOrg } from "@/utils/hooks/useUpdateOrgBackendOperation";
 
 const formSchema = z.object({
   orgName: z.string(),
@@ -56,17 +56,20 @@ export const EditOrgDialog = ({
   openEditOrgModal: boolean;
   setOpenEditOrgModal: any;
 }) => {
-  const [orgName, setOrgName] = useState(name || "");
-  const [orgMembers, setOrgMembers] = useState<orgUser[]>(members);
-  const [orgData, setOrgData] = useState<FormData | any>({});
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
-
-  const { mutateAsync: renameOrgAsync, isLoading: renameIsLoading } = api.org.renameOrg.useMutation();
-  const { mutateAsync: setPermissionsOrgAsync, isLoading: setPermissionsIsLoading } = api.org.setPermissionsOrg.useMutation();
-
-  const [updateDone, setUpdateDone] = useState(false);
-  const isLoading = renameIsLoading || setPermissionsIsLoading;
+  const {
+    isLoading,
+    orgData,
+    setOrgMembers,
+    setOrgName,
+    updateDone,
+    orgMembers,
+    setOrgData,
+    setUpdateDone,
+    orgName,
+    updateOrg: onSubmit,
+  } = useUpdateOrg({ name, members, orgId });
 
   const editUserRole = ({ id, item }: { id: string; item: "none" | "member" | "admin" }) => {
     const user = orgMembers?.find((profile: any) => profile.id === id);
@@ -86,40 +89,6 @@ export const EditOrgDialog = ({
       setDeleteTeam(true);
     } else {
       setTransferOwnership(true);
-    }
-  };
-
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
-    if (orgMembers.length > 0 || orgName) {
-      const newPermissions = findUserDifferences(members as orgUser[], orgMembers) as orgUser[];
-      setOrgData({ orgName, orgMembers });
-      if (orgName !== name)
-        await renameOrgAsync({
-          blockchainSignature: localStorage.getItem("blockchainSignature")!,
-          blockchainMessage: localStorage.getItem("blockchainMessage")!,
-          orgId: +orgId,
-          orgName,
-        });
-      if (newPermissions.length)
-        await setPermissionsOrgAsync({
-          blockchainSignature: localStorage.getItem("blockchainSignature")!,
-          blockchainMessage: localStorage.getItem("blockchainMessage")!,
-          orgId: +orgId,
-          orgMembers: newPermissions,
-        });
-      toast({
-        title: "org Updated",
-        description: "successfull",
-        variant: "success",
-      });
-      setUpdateDone(true);
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
     }
   };
 
@@ -195,17 +164,17 @@ export const EditOrgDialog = ({
                       setSelectedItems={setOrgMembers}
                     />
 
-                    <section>
+                    <div>
                       {orgMembers.length > 0 && (
                         <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                           {orgMembers.map(({ id, name, role }) => {
                             return (
-                              <section key={id} className="flex items-center justify-between">
+                              <div key={id} className="flex items-center justify-between">
                                 <div
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
-                                  {name}
+                                  {name || shortenAddress({ address: id })}
                                 </div>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -239,12 +208,12 @@ export const EditOrgDialog = ({
                                     </DropdownMenuGroup>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
-                              </section>
+                              </div>
                             );
                           })}
                         </div>
                       )}
-                    </section>
+                    </div>
 
                     <footer className="mt-10 flex items-center justify-end gap-5">
                       <div
@@ -276,16 +245,16 @@ export const EditOrgDialog = ({
                   <DialogDescription>
                     <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
                       <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
-                      <section className="flex items-center justify-between ">
+                      <div className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{orgName}</div>
                         <div className="">Owner</div>
-                      </section>
+                      </div>
                       {orgData?.orgMembers?.map(({ id, name, role }: orgUser) => {
                         return (
-                          <section key={id} className="flex items-center justify-between ">
+                          <div key={id} className="flex items-center justify-between ">
                             <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
                             <div className="">{role}</div>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
@@ -325,7 +294,7 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
   };
 
   return (
-    <section>
+    <div>
       <DialogTitle className="mb-6 text-center text-base text-[#f55]">Deleting Organization Confirmation</DialogTitle>
       <div className="mx-auto w-[342px] text-center text-muted-foreground">
         Are you sure that you want to delete Organization <span className="capitalize">“{orgName}”</span>?
@@ -348,39 +317,21 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
           </Button>
         </div>
       </footer>
-    </section>
+    </div>
   );
 };
 
 const TransferOwnershipDialog: React.FC<confirmTransferOwnership> = ({ setTransferOwnership, orgId, setOpenEditOrgModal }) => {
-  const [ownerData, setOwnerData] = useState<orgUser[]>([]);
-  const { mutateAsync: transferOwnershipAsync, isLoading } = api.org.transferOwnership.useMutation();
-  const from = useLoggedInAddress();
-
-  const transfer = async (e: any) => {
-    e.preventDefault();
-    if (ownerData[0]?.id) {
-      await transferOwnershipAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        from,
-        orgId: +orgId,
-        to: ownerData[0].id,
-      });
-      toast({
-        title: "org Updated",
-        description: "successfull",
-        variant: "success",
-      });
-      setOpenEditOrgModal(false);
-    }
-  };
+  const { isLoading, ownerData, setOwnerData, transferOwnership } = useTransferOwnershipOrg({
+    setOpenEditOrgModal,
+    orgId,
+  });
 
   return (
     <>
       <DialogTitle className="text-base text-primary">Transfer Ownership</DialogTitle>
       <DialogDescription>
-        <form onSubmit={transfer}>
+        <form onSubmit={transferOwnership}>
           <Label className="font-semibold">Transfer to</Label>
           <UsersInputDropdown
             type={"singleSelect"}

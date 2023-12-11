@@ -1,30 +1,28 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Etch } from "@/gql/graphql";
+import { formatUserFromWallet } from "@/utils/hooks/address";
+import { useTransferOwnershipEtch } from "@/utils/hooks/useEtchTransferOwnershipBackendOperation";
+import { useUpdateEtch } from "@/utils/hooks/useUpdateEtchBackendOperation";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
+import Link from "next/link";
 import AddIcon from "public/icons/dashboard/editEtch/addIcon.svg";
 import PenIcon from "public/icons/dashboard/editEtch/pen.svg";
 import Placeholder1 from "public/icons/dashboard/placeholder1.svg";
 import Placeholder2 from "public/icons/dashboard/placeholder2.svg";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
 import BgVector from "public/images/backgrounds/dashboard/vector.svg";
 import { Dispatch, SetStateAction, useState } from "react";
 import ProfileCard from "../../../../ui/profile-card";
-import { Etch, Team } from "@/gql/graphql";
-import { formatUserFromWallet } from "@/utils/hooks/address";
-import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { api } from "@/utils/api";
-import { Textarea } from "@/components/ui/textarea";
-import { teamUser } from "@/types";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { toast } from "@/components/ui/use-toast";
-import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
 
 dayjs.extend(relativeTime);
 
@@ -48,31 +46,12 @@ const userPermissions: {
 const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
   const [edit, setEdit] = useState(false);
   const [openTransferOwnerShipDialog, setOpenTransferOwnerShipDialog] = useState(false);
-  const [documentName, setDocumentName] = useState(etch?.documentName || "");
-  const [description, setDescription] = useState(etch?.description || "");
-  const { mutateAsync: updateAsync, isLoading: updateLoading } = api.etch.updateMetadata.useMutation();
-
-  const saveHandler = async () => {
-    try {
-      await updateAsync({
-        etchId: etch?.tokenId.toString(),
-        fileName: documentName || etch?.documentName || "",
-        description: description || etch?.description || "",
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-
-    setEdit(false);
-  };
-
+  const { isLoading: updateLoading, setDescription, setDocumentName, updateEtch: saveHandler } = useUpdateEtch(setEdit, etch);
   return (
     <div
       className={` ${
         edit ? "bg-[#F3F5F5] text-[#6D6D6D]" : " bg-[#097B45] text-[#FBFBFB]"
-      } relative z-10 w-fit basis-1/3 rounded-2xl transition-colors`}
+      } sticky top-20 w-[414px] basis-1/3 rounded-2xl transition-colors`}
     >
       <TransferOwnershipDialog
         openDialog={openTransferOwnerShipDialog}
@@ -118,7 +97,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
         </div>
 
         <div>
-          <div className="pt-5 text-base"> Owned by </div>
+          <div className="pt-5 text-base font-semibold"> Owned by </div>
           <div className="flex justify-between py-1">
             {isLoading ? (
               <Skeleton className="my-auto h-4 w-16" />
@@ -143,16 +122,16 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
               variant="default"
               className={`${
                 edit ? "border-[#097B45] bg-transparent text-[#097B45]" : "border-[#A1FFD3] text-[#A1FFD3]"
-              } gap-2  rounded-full  border-[1px] px-3 text-base`}
+              } gap-2 rounded-full  border-[1px] px-3 text-base`}
             >
-              <span className="my-auto">Transfer</span>
+              <div>Transfer</div>
               <Icons.transferIcon color={edit ? "#097B45" : "#A1FFD3"} className="align-middle" />
             </Button>
           </div>
         </div>
 
         <div>
-          <div className="text-base"> Time Stamp </div>
+          <div className="text-base font-semibold"> Time Stamp </div>
           {isLoading ? (
             <div className="flex w-full gap-1">
               <Skeleton className="my-auto h-4 w-16" /> UTC | <Skeleton className="my-auto h-4 w-3" /> /{" "}
@@ -178,36 +157,38 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
           )}
         </div>
 
-        <div>
+        <div className="mb-5">
           {edit ? (
             <>
-              <div className="pt-5 text-base">Description </div>
+              <div className="pt-5 text-base font-semibold">Description </div>
               <Textarea
                 defaultValue={etch?.description || ""}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={updateLoading}
-                className="mb-5 w-full bg-[#F3F5F5]"
+                className="w-full bg-[#F3F5F5]"
               />
             </>
           ) : (
             etch?.description && (
               <>
-                <div className="pt-5 text-base">Description </div>
-                <div className="mb-5 max-w-[400px] pt-1 text-base font-normal text-[#E2E2E2]">{etch?.description}</div>
+                <div className="pt-5 text-base font-semibold">Description </div>
+                <div className="max-w-[400px] pt-1 text-base font-medium text-[#E2E2E2]">
+                  <div className="custom-scrollbar max-h-[204px] overflow-y-auto">{etch?.description}</div>
+                </div>
               </>
             )
           )}
         </div>
 
         <div className={`${edit ? "bg-[#FFF]" : "bg-[#A1FFD3]"} mt-auto rounded-2xl p-4 text-[#6D6D6D]`}>
-          <div>Shared with</div>
+          <div className="font-base font-semibold">Shared with</div>
           {etch?.permissions?.map((perm) => {
             if (perm.wallet)
               return (
                 <ProfileCard
-                  image={Placeholder1}
                   name={perm.wallet.etchENS[0]?.name || "Unamed User"}
                   link={perm.wallet.id}
+                  uid={perm.wallet.id}
                   role={userPermissions[perm.permissionLevel]}
                 />
               );
@@ -217,9 +198,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
             if (perm.team)
               return (
                 <ProfileCard
-                  image={Placeholder2}
                   name={perm.team.name || "Unamed Team"}
                   link={perm.team.id}
+                  uid={perm?.wallet?.id}
                   role={userPermissions[perm.permissionLevel]}
                 />
               );
@@ -258,57 +239,10 @@ interface transferOwnershipProps {
 }
 
 const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, openDialog, setOpenDialog }) => {
-  const [owner, setOwner] = useState("individual");
-  const [newTeam, setNewTeam] = useState<Team[]>([]);
-  const [newIndiv, setNewIndiv] = useState<teamUser[]>([]);
-
-  const { mutateAsync: transferToTeamAsync, isLoading: isTransferToTeamLoading } = api.etch.transferToTeam.useMutation();
-  const { mutateAsync: transferToIndividualAsync, isLoading: isTransferToIndivLoading2 } =
-    api.etch.transferToIndividual.useMutation();
-  const isLoading = isTransferToTeamLoading || isTransferToIndivLoading2;
-
-  const from = useLoggedInAddress();
-
-  const transfer = async (e: any) => {
-    e.preventDefault();
-    if (owner === "team" && newTeam.length) {
-      const { teamId } = newTeam[0] as Team;
-
-      await transferToTeamAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        teamId: +teamId,
-        tokenId: +etchId,
-      });
-      toast({
-        title: "Ownership Updated",
-        description: "successfull",
-        variant: "success",
-      });
-    } else if (owner === "individual" && newIndiv.length) {
-      const { id } = newIndiv[0] as teamUser;
-
-      await transferToIndividualAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        tokenId: +etchId,
-        to: id,
-        from,
-      });
-      toast({
-        title: "Ownership Updated",
-        description: "successfull",
-        variant: "success",
-      });
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
-    }
-    setOpenDialog(false);
-  };
+  const { transferOwnership, isLoading, owner, setOwner, newTeam, setNewTeam, newIndiv, setNewIndiv } = useTransferOwnershipEtch({
+    etchId,
+    setOpenDialog,
+  });
 
   return (
     <Dialog
@@ -320,12 +254,20 @@ const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, ope
       <DialogContent className={"max-w-[440px]"}>
         <DialogTitle className="text-base text-primary">Transfer Ownership</DialogTitle>
         <DialogDescription>
-          <form onSubmit={transfer}>
+          <form onSubmit={transferOwnership}>
             <Label className="font-semibold">Select</Label>
-            <section className="mb-7 mt-[9px] flex gap-5">
+            <div className="mb-7 mt-[9px] flex gap-5">
               {["individual", "team"].map((item, id) => {
                 return (
-                  <div key={id} onClick={() => setOwner(item)} className="flex items-center gap-1">
+                  <div
+                    key={id}
+                    onClick={() => {
+                      setOwner(item);
+                      setNewTeam([]);
+                      setNewIndiv([]);
+                    }}
+                    className="flex items-center gap-1"
+                  >
                     <div className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] border-muted-foreground">
                       <div
                         className={`${owner == item ? "scale-100" : "scale-0"} h-3 w-3 rounded-full bg-primary duration-300`}
@@ -341,7 +283,7 @@ const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, ope
                   </div>
                 );
               })}
-            </section>
+            </div>
             {owner === "individual" && (
               <>
                 <Label className="font-semibold">Transfer to</Label>

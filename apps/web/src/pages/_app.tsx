@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import "@/styles/globals.css";
 import { api } from "@/utils/api";
-import { withUrql, refetchContext, RefetchProvider } from "@/utils/urql";
+import { RefetchProvider, withUrql } from "@/utils/urql";
 import { config } from "@/utils/wagmi";
 import { ClerkProvider } from "@clerk/nextjs";
 import { type Session } from "next-auth";

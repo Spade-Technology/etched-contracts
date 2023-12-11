@@ -1,22 +1,21 @@
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { toast } from "./ui/use-toast";
 import { Organisation, TeamOwnership } from "@/gql/graphql";
+import { teamUser } from "@/types";
+import React, { useState } from "react";
+import { BarIcon } from "./icons/bar";
+import { DeleteIcon } from "./icons/delete";
+import { GoodIcon } from "./icons/good";
+import { TransferIcon } from "./icons/transfer";
+import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
-import { Label } from "./ui/label";
-import { OrgInputDropdown, UsersInputDropdown } from "./ui/input-dropdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Icons } from "./ui/icons";
-import { GoodIcon } from "./icons/good";
-import { BarIcon } from "./icons/bar";
-import { TransferIcon } from "./icons/transfer";
-import { DeleteIcon } from "./icons/delete";
-import { teamUser } from "@/types";
-import { api } from "@/utils/api";
-import { findUserDifferences } from "@/utils/user";
-import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { OrgInputDropdown, UsersInputDropdown } from "./ui/input-dropdown";
+import { Label } from "./ui/label";
+
+import { shortenAddress } from "@/utils/hooks/address";
+import { useTransferOwnershipTeam } from "@/utils/hooks/useTeamTransferOwnershipBackendOperation";
+import { useUpdateTeam } from "@/utils/hooks/useUpdateTeamBackendOperation";
 
 const roleData = ["read", "read & write"];
 
@@ -37,18 +36,15 @@ export const EditTeamDialog = ({
   organisations: Partial<Organisation | any>;
   ownership: TeamOwnership;
 }) => {
-  const [teamName, setTeamName] = useState(name || "");
-  const [teamMembers, setTeamMembers] = useState<teamUser[]>(members);
   const [teamOrganisation, setTeamOrganisation] = useState<string>(ownership?.organisation?.name || "");
   const [deleteTeam, setDeleteTeam] = useState(false);
   const [transferOwnership, setTransferOwnership] = useState(false);
 
-  const { mutateAsync: renameTeamAsync, isLoading: renameIsLoading } = api.team.renameTeam.useMutation();
-  const { mutateAsync: setPermissionsTeamAsync, isLoading: setPermissionsIsLoading } = api.team.setPermissionsTeam.useMutation();
-
-  const [updateDone, setUpdateDone] = useState(false);
-  const isLoading = renameIsLoading || setPermissionsIsLoading;
-
+  const { setTeamName, setTeamMembers, updateDone, setUpdateDone, updateTeam, isLoading, teamName, teamMembers } = useUpdateTeam({
+    members,
+    name,
+    teamId,
+  });
   const editUserRole = ({ id, item }: { id: string; item: "none" | "read" | "readWrite" }) => {
     const user = teamMembers?.find((profile: teamUser) => profile.id === id);
     if (user) user.role = item;
@@ -66,45 +62,6 @@ export const EditTeamDialog = ({
       setDeleteTeam(true);
     } else {
       setTransferOwnership(true);
-    }
-  };
-
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
-    if (teamMembers.length > 0 || teamName) {
-      const newPermissions = findUserDifferences(members as teamUser[], teamMembers) as teamUser[];
-
-      if (teamName !== name)
-        await renameTeamAsync({
-          blockchainSignature: localStorage.getItem("blockchainSignature")!,
-          blockchainMessage: localStorage.getItem("blockchainMessage")!,
-          teamId: +teamId,
-          teamName,
-        });
-
-      if (newPermissions.length)
-        await setPermissionsTeamAsync({
-          blockchainSignature: localStorage.getItem("blockchainSignature")!,
-          blockchainMessage: localStorage.getItem("blockchainMessage")!,
-          teamId: +teamId,
-          teamMembers: newPermissions.map(({ id, name, role }) => ({
-            id,
-            name,
-            role: removeAmpersandAndtransformToCamelCase(role),
-          })) as teamUser[],
-        });
-      toast({
-        title: "team Updated",
-        description: "successfull",
-        variant: "success",
-      });
-      setUpdateDone(true);
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
     }
   };
 
@@ -172,7 +129,7 @@ export const EditTeamDialog = ({
                   </DropdownMenu>
                 </div>
                 <DialogDescription>
-                  <form onSubmit={onSubmit}>
+                  <form onSubmit={updateTeam}>
                     <Label className="font-semibold">Team Name</Label>
                     <Input
                       disabled={isLoading}
@@ -191,17 +148,17 @@ export const EditTeamDialog = ({
                       setSelectedItems={setTeamMembers}
                     />
 
-                    <section>
+                    <div>
                       {teamMembers.length > 0 && (
                         <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                           {teamMembers.map(({ id, name, role }) => {
                             return (
-                              <section key={id} className="flex items-center justify-between">
+                              <div key={id} className="flex items-center justify-between">
                                 <div
                                   // onClick={() => inviteUser({ id, name, role })}
                                   className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
-                                  {name}
+                                  {name || shortenAddress({ address: id })}
                                 </div>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -235,12 +192,12 @@ export const EditTeamDialog = ({
                                     </DropdownMenuGroup>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
-                              </section>
+                              </div>
                             );
                           })}
                         </div>
                       )}
-                    </section>
+                    </div>
 
                     <footer className="mt-10 flex items-center justify-end gap-5">
                       <div
@@ -272,18 +229,18 @@ export const EditTeamDialog = ({
                   <DialogDescription>
                     <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
                       <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
-                      <section className="flex items-center justify-between ">
+                      <div className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">
                           {teamOrganisation}
                         </div>
                         <div className="">Owner</div>
-                      </section>
+                      </div>
                       {teamMembers?.map(({ id, name, role }: teamUser) => {
                         return (
-                          <section key={id} className="flex items-center justify-between ">
+                          <div key={id} className="flex items-center justify-between ">
                             <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
                             <div className="">{role}</div>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
@@ -318,7 +275,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
     setOpenEditTeamModal(false);
   };
   return (
-    <section>
+    <div>
       <DialogTitle className="mb-6 text-center text-base text-[#f55]">Deleting Team Confirmation</DialogTitle>
       <div className="mx-auto w-[342px] text-center text-muted-foreground">
         Are you sure that you want to delete Team <span className="capitalize">“{teamName}”</span>?
@@ -341,7 +298,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
           </Button>
         </div>
       </footer>
-    </section>
+    </div>
   );
 };
 
@@ -352,67 +309,29 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
   setOpenEditTeamModal,
   ownership,
 }) => {
-  const [owner, setOwner] = useState("individual");
-  const [newOrg, setNewOrg] = useState<Organisation[]>([]);
-  const [newIndiv, setNewIndiv] = useState<teamUser[]>([]);
-  const { mutateAsync: transferToOrganisationAsync, isLoading: isTransferToOrgLoading } =
-    api.team.transferToOrganisation.useMutation();
-  const { mutateAsync: transferToIndividualAsync, isLoading: isTransferToIndivLoading2 } =
-    api.team.transferToIndividual.useMutation();
-  const isLoading = isTransferToOrgLoading || isTransferToIndivLoading2;
-  const from = useLoggedInAddress();
-
-  const transfer = async (e: any) => {
-    e.preventDefault();
-    if (owner === "organization" && newOrg.length) {
-      const { orgId } = newOrg[0] as Organisation;
-
-      await transferToOrganisationAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        teamId: +teamId,
-        orgId: +orgId,
-      });
-      toast({
-        title: "team Updated",
-        description: "successfull",
-        variant: "success",
-      });
-    } else if (owner === "individual" && newIndiv.length) {
-      const { id } = newIndiv[0] as teamUser;
-
-      await transferToIndividualAsync({
-        blockchainSignature: localStorage.getItem("blockchainSignature")!,
-        blockchainMessage: localStorage.getItem("blockchainMessage")!,
-        teamId: +teamId,
-        to: id,
-        from,
-      });
-      toast({
-        title: "team Updated",
-        description: "successfull",
-        variant: "success",
-      });
-    } else {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again",
-        variant: "destructive",
-      });
-    }
-    setOpenEditTeamModal(false);
-  };
+  const { owner, setOwner, newOrg, setNewOrg, newIndiv, setNewIndiv, transferOwnership, isLoading } = useTransferOwnershipTeam({
+    teamId,
+    setOpenEditTeamModal,
+  });
 
   return (
     <>
       <DialogTitle className="text-base text-primary">Transfer Ownership</DialogTitle>
       <DialogDescription>
-        <form onSubmit={transfer}>
+        <form onSubmit={transferOwnership}>
           <Label className="font-semibold">Select</Label>
-          <section className="mb-7 mt-[9px] flex gap-5">
+          <div className="mb-7 mt-[9px] flex gap-5">
             {["individual", "organization"].map((item, id) => {
               return (
-                <div key={id} onClick={() => setOwner(item)} className="flex items-center gap-1">
+                <div
+                  key={id}
+                  onClick={() => {
+                    setOwner(item);
+                    setNewOrg([]);
+                    setNewIndiv([]);
+                  }}
+                  className="flex items-center gap-1"
+                >
                   <div className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] border-muted-foreground">
                     <div
                       className={`${owner == item ? "scale-100" : "scale-0"} h-3 w-3 rounded-full bg-primary duration-300`}
@@ -428,7 +347,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
                 </div>
               );
             })}
-          </section>
+          </div>
           {owner === "individual" && (
             <>
               <Label className="font-semibold">Transfer to</Label>

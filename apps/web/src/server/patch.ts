@@ -1,15 +1,6 @@
 import { PATCH_FACTORY_ABI, PATCH_FACTORY_ADDRESS } from "@/contracts/patchwallet/factory";
 import { env } from "@/env.mjs";
-import {
-  Address,
-  concat,
-  encodeAbiParameters,
-  encodeFunctionData,
-  hashMessage,
-  keccak256,
-  parseAbiParameters,
-  toBytes,
-} from "viem";
+import { Address, concat, encodeAbiParameters, encodeFunctionData, keccak256, parseAbiParameters, toBytes } from "viem";
 import { publicClient } from "./web3";
 
 var validateSigOffchainBytecode =

@@ -1,17 +1,16 @@
+import { prisma } from "@/server/db";
 import { IncomingMessage } from "http";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
-import { prisma } from "@/server/db";
-import { Address, concat, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters, toBytes } from "viem";
+import { Address, concat, encodeAbiParameters, parseAbiParameters } from "viem";
 import { publicClient } from "./web3";
-import { call } from "viem/_types/actions/public/call";
 
+import { currentNetworkId } from "@/contracts";
 import { env } from "@/env.mjs";
-import { createERC6492Signature, getAccessToken, getBaseAccountAddress } from "./patch";
-import { currentNode } from "@/contracts";
+import { hashMessageForLit } from "@/lit";
+import { createERC6492Signature } from "./patch";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -52,7 +51,7 @@ export async function verifySiweMessage(
   let verified = { success: false };
   if (credentials?.signature.endsWith("6492".repeat(16)) || credentials?.derivedVia === "EIP1271") {
     let credentials6492 = {
-      hash: hashMessage(credentials!.message),
+      hash: hashMessageForLit(credentials!.message),
       signature: credentials?.signature as Address,
     };
 
@@ -61,7 +60,7 @@ export async function verifySiweMessage(
         userId: credentials?.userId,
         baseProvider: env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
         _signature: {
-          hash: hashMessage(credentials?.message),
+          hash: hashMessageForLit(credentials?.message),
           signature: credentials?.signature,
         },
       });
@@ -84,7 +83,7 @@ export async function verifySiweMessage(
 
       // Check for chainId to be 1
       let invalidChainId = false;
-      if (siwe.chainId !== 1) invalidChainId = true;
+      if (siwe.chainId !== currentNetworkId) invalidChainId = true;
 
       // Check for expiration (ISO 8601)
       const expirationDate = new Date(siwe.expirationTime || "");
@@ -97,6 +96,7 @@ export async function verifySiweMessage(
       if (isNaN(signingDate.getTime()) || signingDate > new Date()) invalidSigningDate = true;
 
       verified = { success: isValidSignature && !expiredMessage && !invalidSigningDate && !invalidChainId };
+      console.log({ isValidSignature, expiredMessage, invalidSigningDate, invalidChainId });
     } catch (e) {
       console.log(e);
     }

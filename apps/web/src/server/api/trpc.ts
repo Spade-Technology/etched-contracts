@@ -7,13 +7,13 @@
  * need to use are documented accordingly near the end.
  */
 
+import { getServerAuthSession } from "@/server/auth";
+import { prisma } from "@/server/db";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { getServerAuthSession } from "@/server/auth";
-import { prisma } from "@/server/db";
 
 /**
  * 1. CONTEXT
@@ -83,7 +83,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 });
 
 /**
- * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
+ * 3. ROUTER & PROCEDURE (THE importANT BIT)
  *
  * These are the pieces you use to build your tRPC API. You should import these a lot in the
  * "/src/server/api/routers" directory.

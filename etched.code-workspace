@@ -1,28 +1,28 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "apps/web"
-		},
-		{
-			"path": "apps/sol"
-		},
-		{
-			"path": "apps/subgraph"
-		},
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "apps/web"
+    },
+    {
+      "path": "apps/sol"
+    },
+    {
+      "path": "apps/subgraph"
+    },
 		{
 			"path": "apps/entities"
 		},
-		{
-			"path": "packages"
-		}
-	],
-	"settings": {
-		// "editor.formatOnSave": true,
-		// 	"editor.codeActionsOnSave": {
-		// 		"source.organizeImports": true
-		// 	}
-	}
+    {
+      "path": "packages"
+    },
+  ],
+  "settings": {
+    // "editor.formatOnSave": true,
+    // "editor.codeActionsOnSave": {
+    //   "source.organizeImports": true
+    // }
+  }
 }
