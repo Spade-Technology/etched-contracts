@@ -97,8 +97,6 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
     decrypt(etch.comments || []);
   }, [etch.comments]);
 
-  console.log(hasWritePermission);
-
   return (
     <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
       <div className="text-xl font-semibold">{Object.keys(comments).length} Comments</div>
