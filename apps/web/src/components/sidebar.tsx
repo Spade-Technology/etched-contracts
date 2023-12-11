@@ -49,7 +49,7 @@ export const SideBar = () => {
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
     { url: "/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
     { url: "/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
-    { url: "/ommunity", title: "Community", Icon: Icons.community, disabled: true },
+    { url: "/community", title: "Community", Icon: Icons.community, disabled: false },
     { url: "/settings", title: "Settings", Icon: Icons.settings },
   ];
 
@@ -59,7 +59,7 @@ export const SideBar = () => {
       className="sticky left-0 top-0 z-40 h-screen w-fit px-3 transition-transform lg:w-52"
       aria-label="Sidebar"
     >
-      <div className="flex h-full flex-col overflow-y-auto pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
+      <div className="flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
         <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
 
         <ul className="my-auto space-y-2 text-sm font-medium">
