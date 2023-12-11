@@ -103,7 +103,7 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
               colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]}
             />
           </div>
-          <TeaxtArea disabled={isLoading} placeholder="Add a comment" value={newComment} onChange={handleComment} />
+          <TeaxtArea disabled={isLoading} placeholder="Add a comment" value={newComment} onChange={handleComment} d />
           {newComment && (
             <div className="float-right">
               <div className="flex justify-start gap-5">

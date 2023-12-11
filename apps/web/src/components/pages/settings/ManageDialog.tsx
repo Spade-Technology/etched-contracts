@@ -65,7 +65,7 @@ export const ManageDialog = () => {
           ))}
 
           <Teams
-            name={"MySelf"}
+            name={"My Teams"}
             accordion={accordion}
             setAccordion={setAccordion}
             teams={teams?.filter(({ ownership }) => !ownership?.organisation)}
