@@ -1,6 +1,6 @@
 import { GoodIcon } from "@/components/icons/good";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTitle, DialogContent, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { teamUser } from "@/types";
 import { shortenAddress } from "@/utils/hooks/address";
 
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import React, { useState } from "react";
+import { useState } from "react";
 
 function NewTeam() {
   const [openModal, setOpenModal] = useState(false);
@@ -92,7 +92,7 @@ function NewTeam() {
                   <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                     {selectedProfiles.map(({ id, name, role }) => {
                       return (
-                        <section className="flex items-center justify-between">
+                        <div className="flex items-center justify-between">
                           <div
                             key={id}
                             // onClick={() => inviteUser({ id, name, role })}
@@ -127,7 +127,7 @@ function NewTeam() {
                               </DropdownMenuGroup>
                             </DropdownMenuContent>
                           </DropdownMenu>
-                        </section>
+                        </div>
                       );
                     })}
                   </div>
@@ -161,12 +161,12 @@ function NewTeam() {
                   <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
                   {inviteUsers.users.map(({ id, name, role }) => {
                     return (
-                      <section className="flex items-center justify-between ">
+                      <div className="flex items-center justify-between ">
                         <div key={id} className="cursor-default text-sm transition-colors hover:text-accent-foreground ">
                           {name}
                         </div>
                         <div className="">{role}</div>
-                      </section>
+                      </div>
                     );
                   })}
                 </div>

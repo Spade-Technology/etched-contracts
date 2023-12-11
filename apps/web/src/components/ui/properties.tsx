@@ -1,16 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./dialog";
 import { Etch } from "@/gql/graphql";
 import { formatUserFromWallet } from "@/utils/hooks/address";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface types {
   etch?: Partial<Etch | any>;
   isLoading: boolean;
   openPropertiesModal: boolean;
-  setOpenPropertiesModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenPropertiesModal: React.Dispatch<boolean>;
   activeModals: any; // replace 'any' with the actual type of activeModals
-  setActiveModals: React.Dispatch<React.SetStateAction<any>>; // replace 'any' with the actual type of setActiveModals
+  setActiveModals: React.Dispatch<any>; // replace 'any' with the actual type of setActiveModals
 }
 
 export default function PropertiesDialog({
@@ -23,7 +22,6 @@ export default function PropertiesDialog({
 }: types) {
   const ref: React.MutableRefObject<HTMLElement> | any = useRef();
 
-  const [windowWidth, setWindowWidth] = useState(0);
   const [activeTab, setActiveTab] = useState("General");
   const [shake, setShake] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -57,19 +55,15 @@ export default function PropertiesDialog({
     { address: "0x3234...5678", name: "louis.etched", role: "editor", img: "/icons/dashboard/placeholder3.svg" },
   ];
 
-  // const modalIndex = activeModals.list.find((item: string, idx: number) => {
-  //   if (item === data[0]?.value) return item + idx;
-  // });
-  // console.log(activeModals.list);
-
   // Drag modal function
   const onMouseDown = useCallback(
     (event: any) => {
       const onMouseMove = (event: MouseEvent) => {
-        position.x += event.movementX;
-        position.y += event.movementY;
         const element = ref.current;
-        if (element) {
+        if (element && element.contains(event.target)) {
+          position.x += event.movementX;
+          position.y += event.movementY;
+
           element.style.transform = `translate(${position.x}px, ${position.y}px)`;
         }
         setPosition(position);
@@ -134,7 +128,7 @@ export default function PropertiesDialog({
         }}
         className="absolute right-0 top-0 m-4 h-4 w-4 cursor-pointer"
       />
-      <section className="cursor-default text-sm font-semibold text-muted-foreground">
+      <div className="cursor-default text-sm font-semibold text-muted-foreground">
         <header className="flex text-base capitalize text-foreground">
           <div
             onClick={() => setActiveTab("General")}
@@ -150,7 +144,7 @@ export default function PropertiesDialog({
           </div>
         </header>
         {activeTab === "General" && (
-          <section className="flex flex-col bg-accent">
+          <div className="flex flex-col bg-accent">
             {data.map(({ name, value }) => {
               return (
                 <main className="grid grid-cols-12 px-3 py-3">
@@ -159,10 +153,10 @@ export default function PropertiesDialog({
                 </main>
               );
             })}
-          </section>
+          </div>
         )}
         {activeTab === "Permissions" && (
-          <section className="flex flex-col gap-4 bg-accent p-3 pt-4">
+          <div className="flex flex-col gap-4 bg-accent p-3 pt-4">
             {permissions.map(({ name, address, role, img }) => {
               return (
                 <main className=" flex items-center gap-3">
@@ -175,9 +169,9 @@ export default function PropertiesDialog({
                 </main>
               );
             })}
-          </section>
+          </div>
         )}
-      </section>
+      </div>
     </main>
   );
 }

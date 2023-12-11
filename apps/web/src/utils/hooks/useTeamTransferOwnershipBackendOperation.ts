@@ -1,12 +1,12 @@
-import { api } from "../api";
 import { toast } from "@/components/ui/use-toast";
 import { useContext, useState } from "react";
+import { api } from "../api";
 import { refetchContext } from "../urql";
 
-import { orgUser, teamUser } from "@/types";
+import { Organisation } from "@/gql/graphql";
+import { teamUser } from "@/types";
 import { sleep } from "../common";
 import { useLoggedInAddress } from "./useSignIn";
-import { Organisation } from "@/gql/graphql";
 
 function enableBeforeUnload() {
   window.onbeforeunload = function (e) {

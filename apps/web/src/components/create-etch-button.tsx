@@ -15,14 +15,17 @@ import { Label } from "./ui/label";
 
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
+import dayjs from "dayjs";
 import { EditIcon, EyeIcon, FileAudioIcon, FileTextIcon, PauseCircleIcon, PlayCircleIcon, Trash2, VideoIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+import { VideoPlayer } from "./VideoPlayer";
+import { PDFViewer } from "./pdf-viewer";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
-import dayjs from "dayjs";
-import { PDFViewer } from "./pdf-viewer";
-import { VideoPlayer } from "./VideoPlayer";
+// import Viewer from "./ui/model-viewer/Viewer";
+import dynamic from "next/dynamic";
+const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +56,7 @@ export const CreateEtchButton = () => {
       ];
 
       if (newFiles.length > 10) alert("You cannot bulk upload more than 10 files at a time");
-      else
+      else {
         setFiles([
           ...files,
           ...acceptedFiles.map((file) =>
@@ -62,8 +65,14 @@ export const CreateEtchButton = () => {
             })
           ),
         ]);
+        console.log(acceptedFiles);
+      }
     },
   });
+
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
 
   useEffect(() => {
     document.addEventListener("create-etch", () => {
@@ -126,7 +135,7 @@ export const CreateEtchButton = () => {
                 <form>
                   <div className="mt-8 flex gap-4">
                     <div className="w-1/2 ">
-                      <section>
+                      <div>
                         <div
                           {...getRootProps()}
                           className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
@@ -136,7 +145,7 @@ export const CreateEtchButton = () => {
                             Drag 'n' drop some files here, or <span className="underline">click to select files</span>
                           </p>
                         </div>
-                      </section>
+                      </div>
                     </div>
                     <div className="h-[33vh] w-1/2 overflow-scroll">
                       <Label>Create on Behalf of</Label>
@@ -195,6 +204,7 @@ export const CreateEtchButton = () => {
 type FilePreview = File & {
   preview: string;
   nameOverride?: string | undefined;
+  path?: string | undefined;
   description?: string | undefined;
 };
 
@@ -225,6 +235,8 @@ const FilePreviewer = ({
     }
   }, [audioPreviewRef?.current]);
 
+  const fileFormat = file.path?.slice(file.path.indexOf(".") + 1);
+
   return (
     <div key={index} className="aspect-w-1 aspect-h-1 group relative">
       {file.type.startsWith("image/") ? (
@@ -244,7 +256,11 @@ const FilePreviewer = ({
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
           <FileTextIcon className="h-1/2 w-1/2 text-white" />
         </div>
-      ) : null}
+      ) : (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <img src={`/formats/${fileFormat?.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
+        </div>
+      )}
       <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
         <span className="text-center text-sm text-white">
           {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}

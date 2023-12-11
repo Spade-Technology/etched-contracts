@@ -1,23 +1,25 @@
+import { Etch } from "@/gql/graphql";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
-import { Etch } from "@/gql/graphql";
 
-import { useSignIn } from "@/utils/hooks/useSignIn";
-import { lit } from "@/lit";
-import { Loader2Icon } from "lucide-react";
-import filetype from "magic-bytes.js";
-import { PDFViewer } from "@/components/pdf-viewer";
 import { VideoPlayer } from "@/components/VideoPlayer";
+import { PDFViewer } from "@/components/pdf-viewer";
 import { Skeleton } from "@/components/ui/skeleton";
+import { lit } from "@/lit";
+import { useSignIn } from "@/utils/hooks/useSignIn";
+import filetype from "magic-bytes.js";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
   const [etchFile, setEtchFile] = useState("");
   const [fileType, setFileType] = useState("");
   const { regenerateAuthSig } = useSignIn();
+
+  const viewerRef = useRef<HTMLImageElement>(null);
+
   const decrypt = async () => {
     await lit.connect();
     if (!lit.client || !etch?.ipfsCid) return;

@@ -7,7 +7,7 @@ export const fileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   EtchUpload: f({
     image: {
-      maxFileCount: 50,
+      maxFileCount: 10,
       maxFileSize: "128MB",
     },
     audio: {

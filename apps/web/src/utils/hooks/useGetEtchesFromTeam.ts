@@ -1,8 +1,8 @@
 import { graphql } from "@/gql";
+import { Etch } from "@/gql/graphql";
 import { useContext, useEffect } from "react";
 import { useQuery } from "urql";
 import { refetchContext } from "../urql";
-import { Etch } from "@/gql/graphql";
 
 const GET_ETCHES_FROM_TEAM_QUERY = graphql(`
   query TeamEtches($teamId: BigInt!) {

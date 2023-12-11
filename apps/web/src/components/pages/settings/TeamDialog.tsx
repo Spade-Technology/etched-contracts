@@ -1,9 +1,9 @@
-import React from "react";
-import { EditButton } from "@/components/ui/edit-button";
 import { EditTeamDialog } from "@/components/edit-team-dialog";
+import { EditButton } from "@/components/ui/edit-button";
 import { Organisation } from "@/gql/graphql";
 import { teamUser } from "@/types";
 import { shortenAddress } from "@/utils/hooks/address";
+import React from "react";
 
 export const TeamDialog = ({
   id,
@@ -47,7 +47,7 @@ export const TeamDialog = ({
         <div className="text-base font-bold capitalize text-neutral-700">Team: {name}</div>
         <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
       </div>
-      <section className="flex gap-[53px]">
+      <div className="flex gap-[53px]">
         <div className="mt-2.5">
           <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
           <div className="mt-[14px] flex flex-col gap-2">
@@ -64,7 +64,7 @@ export const TeamDialog = ({
             })}
           </div>
         </div>
-      </section>
+      </div>
       <div className="mt-7 flex justify-between text-xs font-medium text-neutral-400">
         <div>{date}</div>
         <div>{teamId}</div>

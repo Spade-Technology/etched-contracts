@@ -15,11 +15,11 @@ import {
 import { shortenAddress } from "@/utils/hooks/address";
 import { signOut, useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { Icons } from "./ui/icons";
-import { LogoAnimated } from "./icons/logo-long-animated";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { LogoAnimated } from "./icons/logo-long-animated";
+import { Icons } from "./ui/icons";
 
 const sideBarElementCn =
   "cursor-pointer flex flex-col max-lg:mx-auto items-center justify-center rounded-lg max-lg:px-5 px-3 max-lg:w-fit py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700";
@@ -37,7 +37,6 @@ enum activePage {
 }
 
 export const SideBar = () => {
-  const { data } = useSession();
   const router = useRouter();
   const [tooltip, setTooltip] = useState("");
 
@@ -47,11 +46,14 @@ export const SideBar = () => {
 
   const pages = [
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
-    { url: "/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
-    { url: "/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
-    { url: "/ommunity", title: "Community", Icon: Icons.community, disabled: true },
-    { url: "/settings", title: "Settings", Icon: Icons.settings },
+    { url: "/dashboard/manage", title: "Organisation", Icon: Icons.organisation },
+    { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
+    { url: "/dashboard/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
+    { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: false },
+    { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
   ];
+
+  const activePageIndex = pages.findIndex(({ url }) => url === path) === -1 ? 0 : pages.findIndex(({ url }) => url === path);
 
   return (
     <aside
@@ -59,17 +61,17 @@ export const SideBar = () => {
       className="sticky left-0 top-0 z-40 h-screen w-fit px-3 transition-transform lg:w-52"
       aria-label="Sidebar"
     >
-      <div className="flex h-full flex-col overflow-y-auto pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
+      <div className="flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
         <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
 
         <ul className="my-auto space-y-2 text-sm font-medium">
-          {pages.map(({ url, title, Icon, disabled }) => {
+          {pages.map(({ url, title, Icon, disabled }, index) => {
             return (
               <li key={title}>
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
-                  className={path.includes(url) ? activeClassName : sideBarElementCn}
+                  className={index === activePageIndex ? activeClassName : sideBarElementCn}
                   href={disabled ? "#" : url}
                 >
                   <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
