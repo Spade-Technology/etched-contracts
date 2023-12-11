@@ -71,6 +71,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   }, [isFullScreen]);
 
   if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className="my-4 grid grid-cols-3 gap-4">
       {/* FullScreen overlay */}
@@ -125,7 +126,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
                 {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
               </>
             ) : (
-              <Skeleton className="bg-[#097B45] pb-[56.25%]" />
+              <Skeleton className="h-full w-full rounded-2xl bg-[#097B45]" />
             )}
           </div>
         </AspectRatio>

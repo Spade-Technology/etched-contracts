@@ -10,6 +10,9 @@ import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import Avatar from "boring-avatars";
 import Placeholder from "public/icons/dashboard/placeholder2.svg";
 import { useEffect, useState } from "react";
+import { useContractRead } from "wagmi";
+import EtchesABI from "@/contracts/abi/Etches.json";
+import { contracts } from "@/contracts";
 
 type CommentProps = {
   image: any;
@@ -46,6 +49,13 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
+
+  const { data: hasWritePermission } = useContractRead({
+    abi: EtchesABI,
+    address: contracts.Etch,
+    functionName: "hasWritePermission",
+    args: [owner, etch?.tokenId],
+  });
 
   const handleComment = (evt: any) => {
     const input = evt.target.value;
@@ -87,6 +97,8 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
     decrypt(etch.comments || []);
   }, [etch.comments]);
 
+  console.log(hasWritePermission);
+
   return (
     <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
       <div className="text-xl font-semibold">{Object.keys(comments).length} Comments</div>
@@ -94,8 +106,6 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
       <div className=" py-5">
         <div className="flex justify-start gap-3">
           <div className="flex cursor-pointer gap-1">
-            {/* <Image src={Placeholder} alt="placeholder" className="my-auto" /> */}
-            {/* <Icons.dropdownIcon className="my-auto mt-4" /> */}
             <Avatar
               size={40}
               name={owner.toLowerCase()}
@@ -103,26 +113,23 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
               colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]}
             />
           </div>
-          <TeaxtArea disabled={isLoading} placeholder="Add a comment" value={newComment} onChange={handleComment} d />
+          <TeaxtArea
+            disabled={isLoading || !hasWritePermission}
+            placeholder="Add a comment"
+            value={newComment}
+            onChange={handleComment}
+            className={!hasWritePermission ? "cursor-not-allowed" : ""}
+          />
           {newComment && (
             <div className="float-right">
               <div className="flex justify-start gap-5">
-                {/* <Button
-                  className="border-none bg-transparent text-[#6D6D6D]"
-                  disabled={!newComment}
-                  onClick={() => {
-                    setNewComment("");
-                  }}
-                >
-                  X
-                </Button> */}
-
                 <Button
                   className={`rounded-lg duration-500 ${
                     !newComment ? " translate-x-[-60px] opacity-0" : " translate-x-0 opacity-100"
-                  }`}
+                  }
+                  `}
                   onClick={addComment}
-                  isLoading={isLoading}
+                  isLoading={isLoading || !hasWritePermission}
                 >
                   <PaperPlaneIcon />
                 </Button>
