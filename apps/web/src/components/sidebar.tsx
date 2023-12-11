@@ -37,7 +37,6 @@ enum activePage {
 }
 
 export const SideBar = () => {
-  const { data } = useSession();
   const router = useRouter();
   const [tooltip, setTooltip] = useState("");
 
@@ -54,6 +53,8 @@ export const SideBar = () => {
     { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
   ];
 
+  const activePageIndex = pages.findIndex(({ url }) => url === path) === -1 ? 0 : pages.findIndex(({ url }) => url === path);
+
   return (
     <aside
       id="sidebar"
@@ -64,13 +65,13 @@ export const SideBar = () => {
         <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
 
         <ul className="my-auto space-y-2 text-sm font-medium">
-          {pages.map(({ url, title, Icon, disabled }) => {
+          {pages.map(({ url, title, Icon, disabled }, index) => {
             return (
               <li key={title}>
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
-                  className={path.includes(url) ? activeClassName : sideBarElementCn}
+                  className={index === activePageIndex ? activeClassName : sideBarElementCn}
                   href={disabled ? "#" : url}
                 >
                   <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />

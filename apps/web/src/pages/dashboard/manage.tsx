@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 
 export default function SettingsPage() {
   const loggedInAddress = useLoggedInAddress();
-  const { isLoading, etches, error } = useGetEtchesFromUser(loggedInAddress.toLowerCase());
 
   return (
     <PageBoilerplate>
