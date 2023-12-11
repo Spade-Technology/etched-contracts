@@ -26,6 +26,7 @@ import { VideoPlayer } from "./VideoPlayer";
 // import Viewer from "./ui/model-viewer/Viewer";
 import dynamic from "next/dynamic";
 const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
+import { model_formats } from "./../utils/3d-models-format";
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,16 +36,19 @@ export const CreateEtchButton = () => {
 
   const form = useForm<FormData>({});
 
-  const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
+  const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string; path?: string })[]>(
+    []
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
-    // accept: {
-    //   "image/*": [],
-    //   "audio/*": [],
-    //   "video/*": [],
-    //   "application/pdf": [],
-    // },
+    accept: {
+      ...model_formats,
+      "image/*": [],
+      "audio/*": [],
+      "video/*": [],
+      "application/pdf": [],
+    },
     onDrop: (acceptedFiles: File[]) => {
       const newFiles = [
         ...files,
@@ -205,6 +209,7 @@ type FilePreview = File & {
   preview: string;
   nameOverride?: string | undefined;
   description?: string | undefined;
+  path?: string;
 };
 
 const FilePreviewer = ({
@@ -224,6 +229,7 @@ const FilePreviewer = ({
 }) => {
   const audioPreviewRef = useRef<HTMLAudioElement>(null);
   const [time, setTime] = useState(0);
+  const [isModel, setIsModel] = useState(false);
 
   // on audioPreviewRef initialization, update state at timeupdate
   useEffect(() => {
@@ -234,12 +240,14 @@ const FilePreviewer = ({
     }
   }, [audioPreviewRef?.current]);
 
-  // const fileExist = new Image();
-
+  // Check if file is 3d model
   const fileFormat = file.path.slice(file.path.indexOf(".") + 1);
-  // const path = `/formats/${fileFormat.toUpperCase()}/icon.png`;
-  // fileExist.src = path;
-  // console.log(fileExist.src);
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(`/formats/${fileFormat.toUpperCase()}/icon.png`, { method: "HEAD" }).then((res) => setIsModel(res.ok));
+    };
+    fetchData();
+  }, []);
 
   return (
     <div key={index} className="aspect-w-1 aspect-h-1 group relative">
@@ -260,11 +268,11 @@ const FilePreviewer = ({
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
           <FileTextIcon className="h-1/2 w-1/2 text-white" />
         </div>
-      ) : (
+      ) : isModel ? (
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
-          <img src={`/formats/${fileFormat.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
+          <img src={`/formats/${fileFormat.toLowerCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
         </div>
-      )}
+      ) : null}
       <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
         <span className="text-center text-sm text-white">
           {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
