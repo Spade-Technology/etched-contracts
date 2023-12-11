@@ -5,13 +5,13 @@ import Comments from "./components/comments";
 import Edit from "./components/edit";
 import { Etch } from "@/gql/graphql";
 
-import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import { lit } from "@/lit";
 import { Loader2Icon } from "lucide-react";
 import filetype from "magic-bytes.js";
 import { PDFViewer } from "@/components/pdf-viewer";
 import { VideoPlayer } from "@/components/VideoPlayer";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -23,20 +23,20 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   const decrypt = async () => {
     await lit.connect();
-
     if (!lit.client || !etch?.ipfsCid) return;
 
     const authSig = await regenerateAuthSig();
 
-    const decryptedArrayBuffer = await LitJsSdk.decryptFromIpfs({
-      authSig,
-      ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
-      litNodeClient: lit.client as any,
-    }).catch((e) => {
-      console.log(e);
-      if (e.errorKind == "Validation") alert("You are not authorized to view this document");
-      else alert("Something went wrong");
-    });
+    const decryptedArrayBuffer = await lit
+      .decryptFromIpfs({
+        authSig,
+        ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
+      })
+      .catch((e) => {
+        console.log(e);
+        if (e.errorKind == "Validation") alert("You are not authorized to view this document");
+        else alert("Something went wrong");
+      });
 
     if (!decryptedArrayBuffer) return;
 
@@ -55,9 +55,9 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   if (isLoading) return <div>Loading...</div>;
   return (
-    <div>
-      <div className="my-4 flex justify-between gap-4">
-        <div className="flex w-full basis-2/3 flex-col justify-between rounded-2xl bg-[#F3F5F5] p-4 text-black">
+    <div className="my-4 grid grid-cols-3 gap-4">
+      <div className="col-span-2">
+        <div className="w-full bg-[#F3F5F5] ">
           {etchFile ? (
             <>
               {!!fileType.startsWith("image/") && (
@@ -91,15 +91,16 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
               {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
             </>
           ) : (
-            <Loader2Icon className="animate-spin" />
+            <Skeleton className="bg-[#097B45] pb-[56.25%]" />
           )}
-          {/* <div className="flex h-full w-full  justify-center gap-2 pt-4"></div> */}
         </div>
-        <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
-      </div>
-      <Comments etch={etch || {}} />
 
-      <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
+        <Comments etch={etch || {}} />
+      </div>
+      <div className="col-span-1">
+        <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
+        <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
+      </div>
     </div>
   );
 };

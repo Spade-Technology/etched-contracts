@@ -84,6 +84,7 @@ export const useCreateEtch = () => {
           name: d.name,
           description: d.description,
           url: uploaded?.[i]?.url || "",
+          type: d.file.type,
         })),
       });
 
