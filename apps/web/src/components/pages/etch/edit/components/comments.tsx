@@ -19,10 +19,14 @@ type CommentProps = {
   addr: string;
 };
 
+export const EtchedAvatar = ({ uid }: { uid: string }) => (
+  <Avatar size={40} name={uid.toLowerCase()} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
+);
+
 const Comment = ({ image, userName, description, commentedAt, addr }: CommentProps) => {
   return (
     <div className="flex justify-start gap-3 py-5">
-      <Avatar size={40} name={addr} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
+      <EtchedAvatar uid={addr} />
       <div>
         <div className="flex items-center gap-3">
           <div className="pt-2 text-base font-semibold text-muted-foreground">{userName}</div>
