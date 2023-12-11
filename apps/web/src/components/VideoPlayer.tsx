@@ -1,9 +1,9 @@
-import { ExpandIcon, PauseCircleIcon, PlayCircleIcon, Volume2Icon, VolumeXIcon } from "lucide-react";
-import { useState, useRef, MutableRefObject } from "react";
-import ReactPlayer from "react-player";
-import { Slider } from "./ui/slider";
 import { formatVideoTime } from "@/utils/common";
+import { ExpandIcon, PauseCircleIcon, PlayCircleIcon, Volume2Icon, VolumeXIcon } from "lucide-react";
+import { MutableRefObject, useRef, useState } from "react";
+import ReactPlayer from "react-player";
 import screenfull from "screenfull";
+import { Slider } from "./ui/slider";
 
 export const VideoPlayer = ({ url }: { url: string }) => {
   const [playing, setPlaying] = useState(false);

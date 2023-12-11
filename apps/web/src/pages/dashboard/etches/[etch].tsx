@@ -2,9 +2,13 @@ import { PageBoilerplate } from "@/components/page-boilerplate";
 import EtchSection from "@/components/pages/etch/edit/etch-section";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { contracts } from "@/contracts";
 import { Etch } from "@/gql/graphql";
 import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
+
 import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 export const metadata: Metadata = {
@@ -25,13 +29,17 @@ export default function DashboardPage() {
   return (
     <PageBoilerplate>
       <div className="mt-6 flex flex-col px-6 pt-6 shadow-etched-1">
-        <div className="flex-col gap-2">
+        <div className="flex-col gap-2 text-xl font-bold text-neutral-700">
           <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+              <BreadcrumbLink className="text-xl font-bold text-neutral-700" href="/dashboard">
+                Dashboard
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard/">Etches</BreadcrumbLink>
+              <BreadcrumbLink className="text-xl font-bold text-neutral-700" href="/dashboard/">
+                Etches
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink href={"/dashboard/etches/"}>
@@ -42,13 +50,24 @@ export default function DashboardPage() {
                       <Skeleton className="h-3 w-4" />
                     </>
                   ) : (
-                    <>
-                      <span className="text-sm font-semibold text-gray-800">{etch?.documentName}</span>
-                      <span className="text-sm font-semibold text-gray-500">#{etchId}</span>
-                    </>
+                    <div className="text-xl font-bold text-neutral-700">
+                      <span className="">{etch?.documentName}</span>
+                      <span className="">#{etchId}</span>
+                    </div>
                   )}
                 </div>
               </BreadcrumbLink>
+
+              {!isLoading && (
+                <Link
+                  href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
+                  className="ml-2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
+                </Link>
+              )}
             </BreadcrumbItem>
           </Breadcrumb>
         </div>

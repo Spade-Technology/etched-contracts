@@ -1,8 +1,8 @@
 import { graphql } from "@/gql";
 import { useContext, useEffect } from "react";
 import { useQuery } from "urql";
-import { refetchContext } from "../urql";
 import { removeDuplicatesByField } from "../common";
+import { refetchContext } from "../urql";
 
 const EtchFragment = graphql(`
   fragment EtchFragment on Etch {

@@ -1,11 +1,11 @@
 import { contracts } from "@/contracts";
+import TeamABI from "@/contracts/abi/Teams.json";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { publicClient, walletClient } from "@/server/web3";
+import { teamPermissions } from "@/utils/common";
 import EtchABI from "@abis/Etches.json";
 import { Address, encodeFunctionData, keccak256 } from "viem";
 import { z } from "zod";
-import TeamABI from "@/contracts/abi/Teams.json";
-import { teamPermissions } from "@/utils/common";
 
 export const teamRouter = createTRPCRouter({
   createTeam: protectedProcedure

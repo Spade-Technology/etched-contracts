@@ -1,10 +1,10 @@
 import { contracts } from "@/contracts";
+import OrgABI from "@/contracts/abi/Organisations.json";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { publicClient, walletClient } from "@/server/web3";
 import EtchABI from "@abis/Etches.json";
 import { Address, encodeFunctionData, keccak256 } from "viem";
 import { z } from "zod";
-import OrgABI from "@/contracts/abi/Organisations.json";
 
 const userPermissions = {
   none: 0,
