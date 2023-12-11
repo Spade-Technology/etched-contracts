@@ -141,7 +141,7 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           if (!siwe) return null;
 
           // Fetch user by address
-          let user = prisma.user.findUnique({ where: { address: siwe.address } });
+          let user = await prisma.user.findUnique({ where: { address: siwe.address } });
 
           // If user doesn't exist, create it
           if (!user) user = await prisma.user.create({ data: { address: siwe.address } });

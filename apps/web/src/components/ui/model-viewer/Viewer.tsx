@@ -5,9 +5,15 @@ const unityContent = new UnityContent("/Build/build.json", "/Build/UnityLoader.j
   adjustOnWindowResize: true,
 });
 
+declare global {
+  interface Window {
+    filedata: { [key: string]: any };
+  }
+}
+
 export default function Viewer(props: any) {
   const [ready, setReady] = useState(false);
-  const [fileName, setFileName] = useState(null);
+  const [fileName, setFileName] = useState<string | null>(null);
 
   unityContent.on("canvas", function (canvas: any) {
     canvas.width = "100%";
@@ -44,7 +50,7 @@ export default function Viewer(props: any) {
         var reader = new FileReader();
         reader.onload = (function (file) {
           return function (e) {
-            (window.filedata = window.filedata ? window.filedata : {})[file.name] = e.target.result;
+            (window.filedata = window.filedata ? window.filedata : {})[file.name] = e?.target?.result;
             unityContent.send("root", "FileUpload", file.name);
             setFileName(file.name);
           };
