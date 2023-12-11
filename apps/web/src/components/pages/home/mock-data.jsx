@@ -1,7 +1,7 @@
-import File_SS from "public/images/home/file_SS.svg";
-import Storage_SS from "public/images/home/storage_SS.svg";
-import Library_SS from "public/images/home/etched_library.svg";
-import Dashboard_SS from "public/images/home/dashboard_SS.svg";
+import Storage_SS from "public/images/home/storage.png";
+import File_SS from "public/images/home/create_etch.png";
+import Library_SS from "public/images/home/etched_library.png";
+import Dashboard_SS from "public/images/home/dashboard.png";
 
 export const features = [
   {
