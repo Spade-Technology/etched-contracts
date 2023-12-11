@@ -9,16 +9,13 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { signOut } from "@/utils/hooks/useSignIn";
-import { BriefcaseIcon, Loader2Icon, SearchIcon, Users2Icon } from "lucide-react";
+import { Loader2Icon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { Button } from "./ui/button";
-import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
-import { Skeleton } from "./ui/skeleton";
-import { FileIcon } from "@radix-ui/react-icons";
-import { Label } from "./ui/label";
 import { Etch, Organisation, Team, Wallet } from "@/gql/graphql";
+import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
 import { useRouter } from "next/router";
+import { Button } from "./ui/button";
 
 export const commands = [
   {

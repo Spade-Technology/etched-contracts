@@ -2,19 +2,20 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
 
-import { toast } from "./ui/use-toast";
+import { orgUser } from "@/types";
+import { shortenAddress } from "@/utils/hooks/address";
+import { GoodIcon } from "./icons/good";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
-import { Label } from "./ui/label";
-import { UsersInputDropdown } from "./ui/input-dropdown";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Icons } from "./ui/icons";
-import { GoodIcon } from "./icons/good";
-import { orgUser } from "@/types";
+import { UsersInputDropdown } from "./ui/input-dropdown";
+import { Label } from "./ui/label";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   orgName: z.string(),
@@ -126,13 +127,13 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                     <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
                       {orgMembers.map(({ id, name, role }) => {
                         return (
-                          <section className="flex items-center justify-between">
+                          <div className="flex items-center justify-between">
                             <div
                               key={id}
                               // onClick={() => inviteUser({ id, name, role })}
                               className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                             >
-                              {name}
+                              {name || shortenAddress({ address: id })}
                             </div>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -166,7 +167,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                                 </DropdownMenuGroup>
                               </DropdownMenuContent>
                             </DropdownMenu>
-                          </section>
+                          </div>
                         );
                       })}
                     </div>
@@ -208,10 +209,10 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                   <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
                   {orgMembers?.map(({ id, name, role }: orgUser) => {
                     return (
-                      <section key={id} className="flex items-center justify-between ">
+                      <div key={id} className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
                         <div className="">{role}</div>
-                      </section>
+                      </div>
                     );
                   })}
                 </div>

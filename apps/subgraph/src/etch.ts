@@ -1,4 +1,3 @@
-import { log } from 'matchstick-as';
 import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
@@ -13,21 +12,20 @@ import {
 } from '../generated/Etch/Etch';
 
 import {
+  Etch,
   EtchApproval,
   EtchApprovalForAll,
   EtchCommentAdded,
   EtchCreated,
-  EtchTransferedToTeam,
-  EtchPermissionsUpdated,
-  EtchOwnershipTransferred,
-  EtchTransfer,
-  Etch,
   EtchOwnership,
+  EtchOwnershipTransferred,
   EtchPermission,
+  EtchPermissionsUpdated,
   EtchTeamPermissionsUpdated,
+  EtchTransfer,
+  EtchTransferedToTeam,
 } from '../generated/schema';
 import { getOrCreateWallet } from './wallet';
-import { BigInt } from '@graphprotocol/graph-ts';
 
 import { EID, ETID, getEtchId, getTeamId } from './utils';
 

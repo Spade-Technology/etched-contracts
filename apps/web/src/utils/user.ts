@@ -8,11 +8,8 @@ export function findUserDifferences(old: userType[], newUsers: userType[]): user
   for (const newUser of newUsers) {
     const oldUser = old.find((user) => user.id === newUser.id);
 
-    if (!oldUser) {
-      differences.push(newUser);
-    } else if (oldUser.role !== newUser.role) {
-      differences.push(newUser);
-    }
+    if (!oldUser) differences.push(newUser);
+    else if (oldUser.role !== newUser.role) differences.push(newUser);
   }
 
   return differences;
