@@ -55,16 +55,16 @@ export default function GuidedTour() {
             <div>Wecome to Etched</div>
             <Cross1Icon className="ml-auto cursor-pointer" onClick={() => setOpenModal(false)} />
           </header>
-          <section className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
             <Icons.info className="h-4 w-4" />
             <div className="">Interactive lesson available</div>
             <div className="ml-auto cursor-pointer text-base text-primary">Start learning</div>
-          </section>
-          <section className="flex h-[204px] flex-col px-4 py-3">
+          </div>
+          <div className="flex h-[204px] flex-col px-4 py-3">
             {tips.map(({ title, description }, idx) => {
               if (idx === tip) {
                 return (
-                  <div className="">
+                  <div className="" key={idx}>
                     <div className="mb-3 text-xl capitalize text-foreground">{title}</div>
                     <div className="">{description}</div>
                   </div>
@@ -85,7 +85,7 @@ export default function GuidedTour() {
                 className="h-5 w-5 rotate-180 cursor-pointer"
               />
             </div>
-          </section>
+          </div>
 
           <footer className="border-forground flex items-center justify-between border-t p-4">
             <div className="flex items-center gap-2">

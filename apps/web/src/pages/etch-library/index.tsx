@@ -19,14 +19,14 @@ export default function index() {
 
   return (
     <PageBoilerplate>
-      <section className="mt-[19px]">
+      <div className="mt-[19px]">
         <HeaderDialog {...props} />
 
         <main className="mt-[19px] flex flex-col gap-4 bg-white px-6 py-[34px] shadow">
           <FilesDialog {...props} />
           {/* <FoldersDialog /> */}
         </main>
-      </section>
+      </div>
     </PageBoilerplate>
   );
 }

@@ -135,7 +135,7 @@ export const CreateEtchButton = () => {
                 <form>
                   <div className="mt-8 flex gap-4">
                     <div className="w-1/2 ">
-                      <section>
+                      <div>
                         <div
                           {...getRootProps()}
                           className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
@@ -145,7 +145,7 @@ export const CreateEtchButton = () => {
                             Drag 'n' drop some files here, or <span className="underline">click to select files</span>
                           </p>
                         </div>
-                      </section>
+                      </div>
                     </div>
                     <div className="h-[33vh] w-1/2 overflow-scroll">
                       <Label>Create on Behalf of</Label>
