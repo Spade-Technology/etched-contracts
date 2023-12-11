@@ -64,7 +64,9 @@ export const Teams = ({
         }`}
       >
         <header onClick={openAccordion} className="flex h-[105px] cursor-pointer items-center justify-between">
-          <div className="mr-4 text-xl font-bold capitalize text-foreground">{name}</div>
+          <div className="mr-4 text-xl font-bold capitalize text-foreground">
+            {name} <span className="text-slate-500">| {teams.length} Teams</span>
+          </div>
           <Icons.dropdown className={`${accordion === name ? "rotate-180" : "rotate-0"} mb-2.5 ml-[37px] w-6 duration-300`} />
         </header>
         <main ref={ref} style={{ height: `${height}px` }} className="overflow-hidden bg-white duration-300">
