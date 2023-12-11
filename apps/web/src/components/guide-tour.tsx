@@ -3,6 +3,8 @@ import { Logo } from "./icons/logo-long-animated";
 import { AlertDialog, AlertDialogContent } from "./ui/alert-dialog";
 import { Checkbox } from "./ui/checkbox";
 import { Icons } from "./ui/icons";
+import { Cross1Icon } from "@radix-ui/react-icons";
+import { Dialog, DialogContent } from "./ui/dialog";
 
 export default function GuideTour() {
   const [openModal, setOpenModal] = useState(false);
@@ -10,7 +12,7 @@ export default function GuideTour() {
   const [tip, setTip] = useState(0);
 
   useEffect(() => {
-    const viewedTips = JSON.parse(localStorage.getItem("viewedTips"));
+    const viewedTips = JSON.parse(localStorage.getItem("viewedTips") || "false");
     if (!viewedTips) {
       setOpenModal(true);
     }
@@ -37,20 +39,21 @@ export default function GuideTour() {
   };
 
   return (
-    <AlertDialog
+    <Dialog
       open={openModal}
       onOpenChange={() => {
         localStorage.setItem("viewedTips", JSON.stringify(true));
         setOpenModal(!openModal);
       }}
     >
-      <AlertDialogContent className={"w-[500px] gap-4 border bg-background px-0 py-0 drop-shadow-2xl duration-200"}>
-        <main className="cursor-default text-sm font-semibold text-muted-foreground">
-          <header className="flex cursor-grabbing items-center gap-2 px-4 py-3 text-base text-foreground">
+      <DialogContent className={"w-[500px] gap-4 border bg-background px-0 py-0 drop-shadow-2xl duration-200"}>
+        <main className="text-sm font-semibold text-muted-foreground">
+          <header className="flex items-center gap-2 px-4 py-3 text-base text-foreground">
             <div className="h-6 w-6">
               <Logo />
             </div>
             <div>Wecome to Etched</div>
+            <Cross1Icon className="ml-auto cursor-pointer" onClick={() => setOpenModal(false)} />
           </header>
           <section className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
             <Icons.info className="h-4 w-4" />
@@ -110,8 +113,8 @@ export default function GuideTour() {
             </aside>
           </footer>
         </main>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 }
 
