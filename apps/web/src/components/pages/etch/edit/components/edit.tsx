@@ -186,9 +186,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
             if (perm.wallet)
               return (
                 <ProfileCard
-                  image={Placeholder1}
                   name={perm.wallet.etchENS[0]?.name || "Unamed User"}
                   link={perm.wallet.id}
+                  uid={perm.wallet.id}
                   role={userPermissions[perm.permissionLevel]}
                 />
               );
@@ -198,9 +198,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
             if (perm.team)
               return (
                 <ProfileCard
-                  image={Placeholder2}
                   name={perm.team.name || "Unamed Team"}
                   link={perm.team.id}
+                  uid={perm.wallet.id}
                   role={userPermissions[perm.permissionLevel]}
                 />
               );
