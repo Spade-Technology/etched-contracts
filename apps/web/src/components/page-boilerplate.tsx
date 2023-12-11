@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { DashboardHeader } from "./dashboard-header";
-import GuideTour from "./guide-tour";
+import GuidedTour from "./guided-tour";
 import { SideBar } from "./sidebar";
 import { WorkQueue } from "./work-queue";
 
@@ -28,7 +28,7 @@ export const PageBoilerplate = ({ children }: { children: React.ReactNode }) => 
     <div className="flex w-full bg-white !font-body">
       <SideBar />
       <div className="w-full p-3">
-        <GuideTour />
+        <GuidedTour />
         <DashboardHeader />
         <WorkQueue />
         {children}

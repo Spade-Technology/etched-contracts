@@ -6,7 +6,7 @@ import { Icons } from "./ui/icons";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog, DialogContent } from "./ui/dialog";
 
-export default function GuideTour() {
+export default function GuidedTour() {
   const [openModal, setOpenModal] = useState(false);
   const [rate, setRate] = useState("");
   const [tip, setTip] = useState(0);
