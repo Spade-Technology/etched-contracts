@@ -1,10 +1,10 @@
-import { z } from "zod";
-import { api } from "../api";
-import { useLoggedInAddress, useSignIn } from "./useSignIn";
 import { toast } from "@/components/ui/use-toast";
 import { useContext, useState } from "react";
-import { refetchContext } from "../urql";
+import { z } from "zod";
+import { api } from "../api";
 import { sleep } from "../common";
+import { refetchContext } from "../urql";
+import { useLoggedInAddress, useSignIn } from "./useSignIn";
 
 const formSchema = z.object({
   name: z.string(),

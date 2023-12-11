@@ -1,10 +1,10 @@
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "@/server/api/trpc";
 
+import { contracts } from "@/contracts";
+import ENSAbi from "@/contracts/abi/EtchENS.json";
 import { TRPCError } from "@trpc/server";
 import { readContract, waitForTransaction } from "@wagmi/core";
-import { contracts, currentNetwork, currentNetworkId } from "@/contracts";
-import ENSAbi from "@/contracts/abi/EtchENS.json";
 
 import { walletClient } from "@/server/web3";
 import { formatError } from "../nodeErrorFormatter";

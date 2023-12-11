@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./dialog";
 import { Etch } from "@/gql/graphql";
 import { formatUserFromWallet } from "@/utils/hooks/address";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface types {
   etch?: Partial<Etch | any>;

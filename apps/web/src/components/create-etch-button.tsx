@@ -15,14 +15,14 @@ import { Label } from "./ui/label";
 
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
+import dayjs from "dayjs";
 import { EditIcon, EyeIcon, FileAudioIcon, FileTextIcon, PauseCircleIcon, PlayCircleIcon, Trash2, VideoIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+import { VideoPlayer } from "./VideoPlayer";
+import { PDFViewer } from "./pdf-viewer";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
-import dayjs from "dayjs";
-import { PDFViewer } from "./pdf-viewer";
-import { VideoPlayer } from "./VideoPlayer";
 // import Viewer from "./ui/model-viewer/Viewer";
 import dynamic from "next/dynamic";
 const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });

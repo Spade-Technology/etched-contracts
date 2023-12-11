@@ -15,11 +15,11 @@ import {
 import { shortenAddress } from "@/utils/hooks/address";
 import { signOut, useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { Icons } from "./ui/icons";
-import { LogoAnimated } from "./icons/logo-long-animated";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { LogoAnimated } from "./icons/logo-long-animated";
+import { Icons } from "./ui/icons";
 
 const sideBarElementCn =
   "cursor-pointer flex flex-col max-lg:mx-auto items-center justify-center rounded-lg max-lg:px-5 px-3 max-lg:w-fit py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700";

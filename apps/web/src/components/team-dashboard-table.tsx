@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+import { Team, TeamOwnership } from "@/gql/graphql";
 import { shortenAddress } from "@/utils/hooks/address";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -33,7 +34,6 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Skeleton } from "./ui/skeleton";
-import { Team, TeamOwnership } from "@/gql/graphql";
 
 dayjs.extend(relativeTime);
 

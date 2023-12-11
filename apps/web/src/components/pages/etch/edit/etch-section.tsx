@@ -1,17 +1,16 @@
+import { Etch } from "@/gql/graphql";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
-import { Etch } from "@/gql/graphql";
 
-import { useSignIn } from "@/utils/hooks/useSignIn";
-import { lit } from "@/lit";
-import { Loader2Icon } from "lucide-react";
-import filetype from "magic-bytes.js";
-import { PDFViewer } from "@/components/pdf-viewer";
 import { VideoPlayer } from "@/components/VideoPlayer";
+import { PDFViewer } from "@/components/pdf-viewer";
 import { Skeleton } from "@/components/ui/skeleton";
+import { lit } from "@/lit";
+import { useSignIn } from "@/utils/hooks/useSignIn";
+import filetype from "magic-bytes.js";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);

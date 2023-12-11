@@ -1,18 +1,18 @@
 import { currentNetworkId, currentNode } from "@/contracts";
-import { useAuth, useSession } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { getWalletClient } from "@wagmi/core";
 import { signOut as _signOut, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { Address, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters, toBytes, toHex } from "viem";
+import { Address, encodeAbiParameters, keccak256, parseAbiParameters } from "viem";
 import { useAccount, useBlockNumber, useSignMessage } from "wagmi";
 
-import { api } from "../api";
-import { env } from "@/env.mjs";
 import { toast } from "@/components/ui/use-toast";
+import { env } from "@/env.mjs";
 import { hashMessageForLit } from "@/lit";
+import { api } from "../api";
 
 export function signOut() {
   localStorage.clear();

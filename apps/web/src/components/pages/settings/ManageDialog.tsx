@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import { CreateOrgDialog } from "@/components/create-org-dialog";
 import { CreateTeamDialog } from "@/components/create-team-dialog";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
-import { Teams } from "./Teams";
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { useState } from "react";
 import { OrgDialog } from "./OrgDialog";
+import { Teams } from "./Teams";
 
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);

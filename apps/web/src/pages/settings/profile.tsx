@@ -1,6 +1,5 @@
 // import { DocsSidebarNav } from "@/components/dashboard-side-bar";
 import { PageBoilerplate } from "@/components/page-boilerplate";
-import { ManageDialog, SidebarDialog } from "@/components/pages/settings";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 

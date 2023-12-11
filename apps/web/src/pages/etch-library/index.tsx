@@ -2,7 +2,7 @@ import { PageBoilerplate } from "@/components/page-boilerplate";
 import { FilesDialog, HeaderDialog } from "@/components/pages/etch-library";
 import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function index() {
   const [sort, setSort] = useState("Latest first");

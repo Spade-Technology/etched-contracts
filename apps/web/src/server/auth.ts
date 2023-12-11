@@ -1,18 +1,16 @@
+import { prisma } from "@/server/db";
 import { IncomingMessage } from "http";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
-import { prisma } from "@/server/db";
-import { Address, concat, encodeAbiParameters, hashMessage, keccak256, parseAbiParameters, toBytes } from "viem";
+import { Address, concat, encodeAbiParameters, parseAbiParameters } from "viem";
 import { publicClient } from "./web3";
-import { call } from "viem/_types/actions/public/call";
 
+import { currentNetworkId } from "@/contracts";
 import { env } from "@/env.mjs";
-import { createERC6492Signature, getAccessToken, getBaseAccountAddress } from "./patch";
-import { currentNetworkId, currentNode } from "@/contracts";
 import { hashMessageForLit } from "@/lit";
+import { createERC6492Signature } from "./patch";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
