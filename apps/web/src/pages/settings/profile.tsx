@@ -17,10 +17,7 @@ export default function SettingsPage() {
 
   return (
     <PageBoilerplate>
-      <div className="mt-[19px] flex w-full bg-white px-10 py-[34px] shadow-[0px_4px_20px_3px_rgba(0,0,0,0.10)]">
-        <SidebarDialog />
-        <ManageDialog />
-      </div>
+      <article className="mt-[19px] flex w-full bg-white px-10 py-[34px] shadow-[0px_4px_20px_3px_rgba(0,0,0,0.10)]"></article>
     </PageBoilerplate>
   );
 }
