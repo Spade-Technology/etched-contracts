@@ -15,7 +15,7 @@ export default function index() {
 
   const files = etches.filter(({ documentName }) => documentName.toLowerCase().includes(searchValue.toLowerCase()));
 
-  const props = { sort, setSort, filter, setFilter, searchValue, setSearchValue, files };
+  const props = { sort, setSort, filter, setFilter, searchValue, setSearchValue, files, isLoading };
 
   return (
     <PageBoilerplate>

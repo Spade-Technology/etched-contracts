@@ -14,8 +14,9 @@
 
 @layer base {
   :root {
-    --background: #ffffff;
-    --foreground: #020817;
+    --background: hsla(0, 0%, 100%, 1);
+    --foreground: hsla(222.2, 84%, 4.9%, 1);
+    --skeleton: hsl(204, 9%, 90%);
 
     --card: #ffffff;
     --card-foreground: #020817;
@@ -89,6 +90,11 @@
   }
 }
 
+/* Hide scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
@@ -114,8 +120,6 @@
 /* Shake animation */
 .shake {
   animation: shake 0.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
-  /* backface-visibility: hidden; */
-  /* perspective: 1000px; */
 }
 
 @keyframes shake {
@@ -123,51 +127,41 @@
   90% {
     margin-left: 1.5px;
     margin-top: 1.5px;
-    /* transform: translate(-1px, 0, 0); */
   }
 
   20%,
   80% {
     margin-right: 1.5px;
-    /* transform: translate3d(1.5px, 0, 0); */
   }
 
   30%,
   50%,
   70% {
     margin-left: 1.5px;
-    /* transform: translate3d(-4px, 0, 0); */
   }
 
   40%,
   60% {
     margin-bottom: 1.5px;
-    /* transform: translate3d(4px, 0, 0); */
   }
 }
 
-.skeleto {
+/* Skeleton loader animation */
+.skeleton {
   min-height: 20px;
   border-radius: 4px;
 }
 
-.skeleto {
-  /* background-color: #e2e5e7; */
-  background: linear-gradient(to right, rgba(168, 41, 41, 0.2) 8%, rgba(107, 12, 12, 0.3) 18%, rgba(130, 130, 130, 0.2) 33%);
-  /* background-size: 20px 10px; */
-  background: rgba(130, 130, 130, 0.2);
+.skeleton {
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-size: 40px 100%;
   background-repeat: no-repeat;
-  /* background-position: left 40px top 2px; */
-  animation: shin 1s ease infinite;
-  background-size: 800px 100px;
-  animation: shine 2s infinite ease-out;
+  background-position: left -40px top 0;
+  animation: shine 1s ease infinite;
 }
 
 @keyframes shine {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
+  to {
+    background-position: right -40px top 0;
   }
 }
