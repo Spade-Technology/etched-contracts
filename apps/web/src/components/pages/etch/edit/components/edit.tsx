@@ -122,9 +122,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
               variant="default"
               className={`${
                 edit ? "border-[#097B45] bg-transparent text-[#097B45]" : "border-[#A1FFD3] text-[#A1FFD3]"
-              } gap-2  rounded-full  border-[1px] px-3 text-base`}
+              } gap-2 rounded-full  border-[1px] px-3 text-base`}
             >
-              <span className="my-auto">Transfer</span>
+              <div>Transfer</div>
               <Icons.transferIcon color={edit ? "#097B45" : "#A1FFD3"} className="align-middle" />
             </Button>
           </div>
