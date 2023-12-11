@@ -8,23 +8,24 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Form } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
-import { EditIcon, FileAudioIcon, PauseCircleIcon, PlayCircleIcon, Trash2 } from "lucide-react";
+import { EditIcon, EyeIcon, FileAudioIcon, FileTextIcon, PauseCircleIcon, PlayCircleIcon, Trash2, VideoIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
 import dayjs from "dayjs";
-
-const previewFileTypes = ["pdf", "docx", "doc", "txt", "png", "jpg", "docx", "jpeg", "gif", "svg", "mp4", "mp3", "wav", "mpeg"];
+import { PDFViewer } from "./pdf-viewer";
+import { VideoPlayer } from "./VideoPlayer";
+// import Viewer from "./ui/model-viewer/Viewer";
+import dynamic from "next/dynamic";
+const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,17 +33,18 @@ export const CreateEtchButton = () => {
 
   const { onSubmit, isUploading: isLoading, etchCreated, setEtchCreated, uploadProgress } = useCreateEtch();
 
-  const iframeRef = React.useRef<HTMLIFrameElement>(null);
   const form = useForm<FormData>({});
 
   const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
-    accept: {
-      "image/*": [],
-      "audio/*": [],
-    },
+    // accept: {
+    //   "image/*": [],
+    //   "audio/*": [],
+    //   "video/*": [],
+    //   "application/pdf": [],
+    // },
     onDrop: (acceptedFiles: File[]) => {
       const newFiles = [
         ...files,
@@ -54,7 +56,7 @@ export const CreateEtchButton = () => {
       ];
 
       if (newFiles.length > 10) alert("You cannot bulk upload more than 10 files at a time");
-      else
+      else {
         setFiles([
           ...files,
           ...acceptedFiles.map((file) =>
@@ -63,8 +65,14 @@ export const CreateEtchButton = () => {
             })
           ),
         ]);
+        console.log(acceptedFiles);
+      }
     },
   });
+
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
 
   useEffect(() => {
     document.addEventListener("create-etch", () => {
@@ -215,7 +223,6 @@ const FilePreviewer = ({
   setFiles: React.Dispatch<React.SetStateAction<FilePreview[]>>;
 }) => {
   const audioPreviewRef = useRef<HTMLAudioElement>(null);
-  const [paused, setPaused] = useState(true);
   const [time, setTime] = useState(0);
 
   // on audioPreviewRef initialization, update state at timeupdate
@@ -226,6 +233,13 @@ const FilePreviewer = ({
       });
     }
   }, [audioPreviewRef?.current]);
+
+  // const fileExist = new Image();
+
+  const fileFormat = file.path.slice(file.path.indexOf(".") + 1);
+  // const path = `/formats/${fileFormat.toUpperCase()}/icon.png`;
+  // fileExist.src = path;
+  // console.log(fileExist.src);
 
   return (
     <div key={index} className="aspect-w-1 aspect-h-1 group relative">
@@ -239,10 +253,18 @@ const FilePreviewer = ({
           </audio>
         </div>
       ) : file.type.startsWith("video/") ? (
-        <video className="rounded-lg shadow-lg">
-          <source src={file.preview} type={file.type} />
-        </video>
-      ) : null}
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <VideoIcon className="h-1/2 w-1/2 text-white" />
+        </div>
+      ) : file.type.includes("pdf") ? (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <FileTextIcon className="h-1/2 w-1/2 text-white" />
+        </div>
+      ) : (
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+          <img src={`/formats/${fileFormat.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
+        </div>
+      )}
       <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
         <span className="text-center text-sm text-white">
           {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
@@ -326,7 +348,6 @@ const FilePreviewer = ({
               className="h-6 w-6"
               onClick={() => {
                 audioPreviewRef?.current?.play();
-                setPaused(audioPreviewRef?.current?.paused ?? false);
               }}
             />
           ) : (
@@ -334,11 +355,38 @@ const FilePreviewer = ({
               className="h-6 w-6"
               onClick={() => {
                 audioPreviewRef?.current?.pause();
-                setPaused(audioPreviewRef?.current?.paused ?? true);
               }}
             />
           )}
         </div>
+      )}
+
+      {file.type.startsWith("video/") && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <VideoPlayer url={file.preview} />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {file.type.includes("pdf") && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <PDFViewer file={file} />
+          </DialogContent>
+        </Dialog>
       )}
       <div
         className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"

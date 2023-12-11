@@ -115,7 +115,7 @@ export const orgRouter = createTRPCRouter({
         orgMembers: z.array(
           z.object({
             id: z.string(), // wallet address
-            name: z.string(),
+            name: z.string().optional(),
             role: z.enum(["none", "member", "admin"]),
           })
         ),

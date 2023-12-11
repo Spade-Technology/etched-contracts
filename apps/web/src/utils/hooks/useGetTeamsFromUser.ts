@@ -1,9 +1,10 @@
 import { graphql } from "@/gql";
 import { TeamPermission } from "@/gql/graphql";
 import { teamUser } from "@/types";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useQuery } from "urql";
 import { removeDuplicatesByField } from "../common";
+import { refetchContext } from "../urql";
 
 const userPermissions: {
   0: string;
@@ -65,14 +66,19 @@ const GET_TEAMS_FROM_USER_QUERY = graphql(`
 `);
 
 export const useGetTeamsFromUser = (userId?: string) => {
-  const [{ data: teamsData, fetching, error }, refetch] = useQuery({
+  const [{ data: teamsData, fetching, error, operation }, reexecute] = useQuery({
     query: GET_TEAMS_FROM_USER_QUERY,
     variables: { userId },
   });
 
-  useEffect(() => document.addEventListener("refresh-teams", () => refetch()), []);
+  useEffect(() => document.addEventListener("refresh-teams", () => reexecute()), []);
 
-  if (!teamsData) return { teams: [], isLoading: fetching, error, refetch };
+  const refetch = () => reexecute({ requestPolicy: "network-only" });
+
+  const { setRefetchTeams } = useContext(refetchContext);
+  useEffect(() => setRefetchTeams(refetch), [operation]);
+
+  if (!teamsData) return { teams: [], isLoading: fetching, error, refetch: reexecute };
 
   const teams = [
     ...teamsData.teams,
@@ -90,5 +96,11 @@ export const useGetTeamsFromUser = (userId?: string) => {
     .map((team) => team.ownership.organisation?.name ?? team.ownership.organisation?.orgId ?? "Sole Team")
     .filter((org, index, self) => self.indexOf(org) === index);
 
-  return { teams: removeDuplicatesByField(teams, "id"), uniqueOrgs: Organisations, isLoading: fetching, error, refetch };
+  return {
+    teams: removeDuplicatesByField(teams, "id"),
+    uniqueOrgs: Organisations,
+    isLoading: fetching,
+    error,
+    refetch: reexecute,
+  };
 };
