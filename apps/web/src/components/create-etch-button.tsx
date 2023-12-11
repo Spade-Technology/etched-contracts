@@ -204,6 +204,7 @@ export const CreateEtchButton = () => {
 type FilePreview = File & {
   preview: string;
   nameOverride?: string | undefined;
+  path?: string | undefined;
   description?: string | undefined;
 };
 
@@ -234,12 +235,7 @@ const FilePreviewer = ({
     }
   }, [audioPreviewRef?.current]);
 
-  // const fileExist = new Image();
-
-  const fileFormat = file.path.slice(file.path.indexOf(".") + 1);
-  // const path = `/formats/${fileFormat.toUpperCase()}/icon.png`;
-  // fileExist.src = path;
-  // console.log(fileExist.src);
+  const fileFormat = file.path?.slice(file.path.indexOf(".") + 1);
 
   return (
     <div key={index} className="aspect-w-1 aspect-h-1 group relative">
@@ -262,7 +258,7 @@ const FilePreviewer = ({
         </div>
       ) : (
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
-          <img src={`/formats/${fileFormat.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
+          <img src={`/formats/${fileFormat?.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
         </div>
       )}
       <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
