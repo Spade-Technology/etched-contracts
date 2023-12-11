@@ -195,9 +195,7 @@ export const FilesDialog = ({ files, isLoading }: props) => {
                   className="flex h-[44px] w-full cursor-default items-center gap-[17px] rounded-lg bg-[rgba(0,0,0,.02)] px-[12px] !font-body"
                 >
                   {" "}
-                  <div className="skeleton flex h-[18px] w-6 items-center justify-end bg-skeleton">
-                    {/* <FileLockIcon className="h-[18px] w-6" /> */}
-                  </div>
+                  <div className="skeleton flex h-[18px] w-6 items-center justify-end bg-skeleton"></div>
                   <div className="skeleton h-[20px]  w-full truncate bg-skeleton text-base font-medium text-muted-foreground"></div>
                 </main>
               );

@@ -87,9 +87,9 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
               {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
             </>
           ) : (
-            <Loader2Icon className="animate-spin" />
+            // <Loader2Icon className="animate-spin" />
+            <div className="skeleton flex h-[400px] w-full items-center justify-end bg-skeleton"></div>
           )}
-          {/* <div className="flex h-full w-full  justify-center gap-2 pt-4"></div> */}
         </div>
 
         <Comments etch={etch || {}} />
