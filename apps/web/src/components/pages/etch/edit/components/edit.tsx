@@ -200,7 +200,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
                 <ProfileCard
                   name={perm.team.name || "Unamed Team"}
                   link={perm.team.id}
-                  uid={perm.wallet.id}
+                  uid={perm?.wallet?.id}
                   role={userPermissions[perm.permissionLevel]}
                 />
               );
