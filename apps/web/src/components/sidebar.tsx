@@ -47,11 +47,11 @@ export const SideBar = () => {
 
   const pages = [
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
-    { url: "/manage", title: "Organisation", Icon: Icons.organisation },
-    { url: "/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
-    { url: "/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
-    { url: "/community", title: "Community", Icon: Icons.community, disabled: false },
-    { url: "/settings", title: "Settings", Icon: Icons.settings },
+    { url: "/dashboard/manage", title: "Organisation", Icon: Icons.organisation },
+    { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
+    { url: "/dashboard/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
+    { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: false },
+    { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
   ];
 
   return (
