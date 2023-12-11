@@ -18,8 +18,6 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const [fileType, setFileType] = useState("");
   const { regenerateAuthSig } = useSignIn();
 
-  const viewerRef = useRef<HTMLImageElement>(null);
-
   const decrypt = async () => {
     await lit.connect();
     if (!lit.client || !etch?.ipfsCid) return;
