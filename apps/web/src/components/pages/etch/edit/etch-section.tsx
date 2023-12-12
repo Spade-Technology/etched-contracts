@@ -12,7 +12,6 @@ import { lit } from "@/lit";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import filetype from "magic-bytes.js";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
@@ -44,11 +43,11 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
     const metadata = await lit.getMetadataFromIpfs(etch?.ipfsCid);
     let fileType = metadata?.type;
 
-    if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any));
+    if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any))[0]?.mime;
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
     setEtchFile(image);
-    setFileType(fileType[0]?.mime || "");
+    setFileType(fileType || "");
 
     return {};
   };

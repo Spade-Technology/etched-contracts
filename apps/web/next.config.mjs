@@ -8,6 +8,9 @@ import withPWA from "next-pwa";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  images: {
+    domains: ["img.clerk.com"],
+  },
   reactStrictMode: true,
 
   experimental: {

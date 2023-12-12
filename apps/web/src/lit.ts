@@ -4,7 +4,8 @@ import { ipfsClient } from "./ipfs";
 import { EncryptToIpfsProps, SymmetricKey, decryptToIpfsProps } from "./utils/litTypes";
 
 const client = new LitJsSdk.LitNodeClient({
-  litNetwork: "serrano",
+  // litNetwork: "serrano",
+  litNetwork: "jalapeno",
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
