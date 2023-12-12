@@ -18,40 +18,95 @@ type ApprovalForAll @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type InviteAccepted @entity(immutable: true) {
+type CommentOnEntity @entity(immutable: true) {
   id: Bytes!
-  inviteId: BigInt! # uint256
-  acceptedBy: Bytes! # address
+  _entityId: BigInt! # uint256
+  _commentIpfsCid: String! # string
+  _timestamp: BigInt! # uint256
+  _commentCount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type InviteDeclined @entity(immutable: true) {
+type EntityBasePermissionsChanged @entity(immutable: true) {
   id: Bytes!
-  inviteId: BigInt! # uint256
-  declinedBy: Bytes! # address
+  _entityId: BigInt! # uint256
+  _newPermissions: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type InviteRevoked @entity(immutable: true) {
+type EntityCreated @entity(immutable: true) {
   id: Bytes!
-  inviteId: BigInt! # uint256
-  revokedBy: Bytes! # address
+  _entityId: BigInt! # uint256
+  _to: Bytes! # address
+  _parentId: BigInt! # uint256
+  _name: String! # string
+  _type: Int! # uint8
+  _basePermissions: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
 
-type InviteSent @entity(immutable: true) {
+type EntityIndividualUserPermissionsChanged @entity(immutable: true) {
   id: Bytes!
-  from: Bytes! # address
-  externalOrgOrTeamId: BigInt! # uint256
-  sourceEntityId: BigInt! # uint256
-  baseSharePerms: Int! # uint8
-  status: Int! # uint8
+  _entityId: BigInt! # uint256
+  _user: Bytes! # address
+  _permissions: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EntityMetaChanged @entity(immutable: true) {
+  id: Bytes!
+  _entityId: BigInt! # uint256
+  _creator: Bytes! # address
+  _documentName: String! # string
+  _documentDescription: String! # string
+  _ipfsCid: String! # string
+  _commentsCount: BigInt! # uint256
+  _timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EntityMoved @entity(immutable: true) {
+  id: Bytes!
+  _entityId: BigInt! # uint256
+  _fromParentId: BigInt! # uint256
+  _toParentId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EntityShareMaxPermissionsChanged @entity(immutable: true) {
+  id: Bytes!
+  _entityId: BigInt! # uint256
+  _newPermissions: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EntityTransferredToOrganization @entity(immutable: true) {
+  id: Bytes!
+  _entityId: BigInt! # uint256
+  _orgId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OrganizationTransferredToIndividual @entity(immutable: true) {
+  id: Bytes!
+  _entityId: BigInt! # uint256
+  _userId: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
