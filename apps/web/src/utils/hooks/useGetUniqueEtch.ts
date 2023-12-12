@@ -24,6 +24,7 @@ const FullEtchFragment = graphql(`
       }
       owner {
         id
+        eoa
         etchENS {
           id
           name
