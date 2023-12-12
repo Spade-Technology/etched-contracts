@@ -125,15 +125,13 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
         try {
           if (!credentials) return null;
 
-          console.log(credentials);
-
           // Verify the message
           const siwe = await verifySiweMessage(
             {
               message: credentials.message,
               signature: credentials.signature,
               derivedVia: credentials.derivedVia,
-              userId: credentials.userId.toLowerCase(),
+              userId: credentials.userId,
             },
             req
           );
@@ -147,10 +145,12 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           // If user doesn't exist, create it
           if (!user) user = await prisma.user.create({ data: { address: siwe.address } });
 
-          let clerkUser = await clerkClient.users.getUser(credentials.userId);
+          if (credentials.userId && credentials.userId !== "null") {
+            let clerkUser = await clerkClient.users.getUser(credentials.userId);
 
-          if (!clerkUser?.externalId)
-            clerkUser = await clerkClient.users.updateUser(credentials.userId, { externalId: siwe.address });
+            if (!clerkUser?.externalId)
+              clerkUser = await clerkClient.users.updateUser(credentials.userId, { externalId: siwe.address });
+          }
 
           // Return the user info
           return { id: siwe.address };

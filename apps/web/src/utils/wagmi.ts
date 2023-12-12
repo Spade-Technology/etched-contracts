@@ -1,9 +1,9 @@
 import { providers } from "ethers";
 import { Chain, WalletClient, configureChains, createConfig } from "wagmi";
-import { polygon } from "wagmi/chains";
+import { baseGoerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
-export const currentChain = polygon;
+export const currentChain = baseGoerli;
 export const { chains, publicClient, webSocketPublicClient } = configureChains([currentChain], [publicProvider()]);
 
 export const config = createConfig({

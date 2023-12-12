@@ -6,7 +6,7 @@ dataSources:
     name: Etch
     network: base-testnet
     source:
-      address: "0x283CF689A5219202c6c5d0BF105ce4d22f1c3D88"
+      address: "0xAc7e92bA24a80460D32d9cf084511d85aca26cfF"
       abi: Etch
       startBlock: 12080400
     mapping:
@@ -52,7 +52,7 @@ dataSources:
     name: Team
     network: base-testnet
     source:
-      address: "0x7034F61C669E69c3E152cd6E54292aDEe25f50c0"
+      address: "0xdFA18217e8d0f386A21aBC2b1BC4e3F7F1Fa2a0e"
       abi: Team
       startBlock: 12080400
     mapping:
@@ -93,7 +93,7 @@ dataSources:
     name: Organisation
     network: base-testnet
     source:
-      address: "0x3f94003C697F554Cb42473453Ac25901eD463FFe"
+      address: "0xfcEDddf12Cd5502e1F676eBDCf78Cbab97BB7D8a"
       abi: Organisation
       startBlock: 12080400
     mapping:
@@ -131,7 +131,7 @@ dataSources:
     name: EtchENS
     network: base-testnet
     source:
-      address: "0xe637DDF8971eeb200B6E7AC3cB33B494226D6Cf2"
+      address: "0xE4207f3eE3ED227575ED112089bC2c29ac44E156"
       abi: EtchENS
       startBlock: 12080400
     mapping:
