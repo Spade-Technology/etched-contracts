@@ -1,5 +1,15 @@
 [
-  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "entityManagerContract",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
   {
     "inputs": [{ "internalType": "bytes", "name": "error", "type": "bytes" }],
     "name": "ERC1271Revert",
@@ -66,91 +76,17 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_entityId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "_commentIpfsCid",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_timestamp",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_commentCount",
-        "type": "uint256"
-      }
-    ],
-    "name": "CommentOnEntity",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_entityId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "_newPermissions",
-        "type": "uint8"
-      }
-    ],
-    "name": "EntityBasePermissionsChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_entityId",
+        "name": "inviteId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_to",
+        "name": "acceptedBy",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_parentId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum IFSEntityManager.ImmutableType",
-        "name": "_type",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "_basePermissions",
-        "type": "uint8"
       }
     ],
-    "name": "EntityCreated",
+    "name": "InviteAccepted",
     "type": "event"
   },
   {
@@ -159,23 +95,17 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_entityId",
+        "name": "inviteId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_user",
+        "name": "declinedBy",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "_permissions",
-        "type": "uint8"
       }
     ],
-    "name": "EntityIndividualUserPermissionsChanged",
+    "name": "InviteDeclined",
     "type": "event"
   },
   {
@@ -184,129 +114,54 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_entityId",
+        "name": "inviteId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_creator",
+        "name": "revokedBy",
+        "type": "address"
+      }
+    ],
+    "name": "InviteRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "from",
         "type": "address"
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "_documentName",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "_documentDescription",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "_ipfsCid",
-        "type": "string"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
-        "name": "_commentsCount",
+        "name": "externalOrgOrTeamId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_timestamp",
-        "type": "uint256"
-      }
-    ],
-    "name": "EntityMetaChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_entityId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_fromParentId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_toParentId",
-        "type": "uint256"
-      }
-    ],
-    "name": "EntityMoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_entityId",
+        "name": "sourceEntityId",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint8",
-        "name": "_newPermissions",
+        "name": "baseSharePerms",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IShareInvites.EShareInviteStatus",
+        "name": "status",
         "type": "uint8"
       }
     ],
-    "name": "EntityShareMaxPermissionsChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_entityId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_orgId",
-        "type": "uint256"
-      }
-    ],
-    "name": "EntityTransferredToOrganization",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_entityId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_userId",
-        "type": "address"
-      }
-    ],
-    "name": "OrganizationTransferredToIndividual",
+    "name": "InviteSent",
     "type": "event"
   },
   {
@@ -364,43 +219,9 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_existingEntityId",
-        "type": "uint256"
-      },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      {
-        "internalType": "uint256",
-        "name": "_externalOrgOrTeamId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_filterPermissionsFromOriginalOwner",
-        "type": "uint8"
-      },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_userPerms",
-        "type": "tuple[]"
-      }
+      { "internalType": "uint256", "name": "_inviteId", "type": "uint256" }
     ],
-    "name": "actOnAcceptedShare",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "uint256", "name": "_newParentId", "type": "uint256" }
-    ],
-    "name": "addEntityToParent",
+    "name": "acceptInvite",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -410,16 +231,6 @@
       { "internalType": "address", "name": "node", "type": "address" }
     ],
     "name": "addNode",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "uint8", "name": "_permissions", "type": "uint8" }
-    ],
-    "name": "adjustShareMaxPermissionsPerOwner",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -440,17 +251,6 @@
     ],
     "name": "balanceOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "address", "name": "_user", "type": "address" },
-      { "internalType": "uint8", "name": "_permissions", "type": "uint8" }
-    ],
-    "name": "canPerform",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -501,154 +301,9 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "string", "name": "commentIpfsCid", "type": "string" }
+      { "internalType": "uint256", "name": "_inviteId", "type": "uint256" }
     ],
-    "name": "commentOnEntity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "fsId", "type": "uint256" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
-    ],
-    "name": "commentsOf",
-    "outputs": [
-      { "internalType": "string", "name": "commentIpfsCid", "type": "string" },
-      { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_to", "type": "address" },
-      { "internalType": "uint256", "name": "_parentId", "type": "uint256" },
-      {
-        "internalType": "enum IFSEntityManager.ImmutableType",
-        "name": "_type",
-        "type": "uint8"
-      },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      { "internalType": "uint8", "name": "_basePerms", "type": "uint8" },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_userPerms",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "createBaseEntity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_to", "type": "address" },
-      { "internalType": "uint256", "name": "_parentId", "type": "uint256" },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      { "internalType": "uint8", "name": "_basePerms", "type": "uint8" },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_userPerms",
-        "type": "tuple[]"
-      },
-      { "internalType": "string", "name": "_description", "type": "string" },
-      { "internalType": "string", "name": "_ipfsCid", "type": "string" }
-    ],
-    "name": "createFile",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_to", "type": "address" },
-      { "internalType": "uint256", "name": "_parentId", "type": "uint256" },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      { "internalType": "uint8", "name": "_basePerms", "type": "uint8" },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_userPerms",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "createFolder",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_to", "type": "address" },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      { "internalType": "uint8", "name": "_basePerms", "type": "uint8" },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_userPerms",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "createOrganization",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_to", "type": "address" },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      { "internalType": "uint8", "name": "_basePerms", "type": "uint8" },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_userPerms",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "createPersonalOrganization",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_to", "type": "address" },
-      { "internalType": "uint256", "name": "_parentId", "type": "uint256" },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      { "internalType": "uint8", "name": "_basePerms", "type": "uint8" },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_userPerms",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "createTeam",
+    "name": "declineInvite",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -682,86 +337,9 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_targetEntityId",
-        "type": "uint256"
-      }
-    ],
-    "name": "entityCanReceiveShare",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" }
-    ],
-    "name": "findOwnerOfEntityOrganization",
+    "inputs": [],
+    "name": "entities",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "fsId", "type": "uint256" }
-    ],
-    "name": "fsEntities",
-    "outputs": [
-      { "internalType": "string", "name": "name", "type": "string" },
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "uint256", "name": "parentId", "type": "uint256" },
-      { "internalType": "uint8", "name": "basePermissions", "type": "uint8" },
-      {
-        "internalType": "enum IFSEntityManager.ImmutableType",
-        "name": "entityType",
-        "type": "uint8"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "originalEntityId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint8",
-            "name": "maxPermissionsPerOwner",
-            "type": "uint8"
-          },
-          { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
-        ],
-        "internalType": "struct IFSEntityManager.SShareMeta",
-        "name": "shareMeta",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          { "internalType": "address", "name": "creator", "type": "address" },
-          {
-            "internalType": "string",
-            "name": "documentName",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "documentDescription",
-            "type": "string"
-          },
-          { "internalType": "string", "name": "ipfsCid", "type": "string" },
-          {
-            "internalType": "uint256",
-            "name": "commentsCount",
-            "type": "uint256"
-          },
-          { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
-        ],
-        "internalType": "struct IFSEntityManager.SFileMeta",
-        "name": "fileMeta",
-        "type": "tuple"
-      }
-    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -776,23 +354,9 @@
   },
   {
     "inputs": [],
-    "name": "getOwner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getParent",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "_to", "type": "address" }],
-    "name": "getPersonalOrg",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -804,12 +368,29 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "address", "name": "_to", "type": "address" },
-      { "internalType": "bool", "name": "_walk", "type": "bool" }
+      { "internalType": "uint256", "name": "invite", "type": "uint256" }
     ],
-    "name": "getUserPermissionsForEntity",
-    "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+    "name": "invites",
+    "outputs": [
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "address", "name": "from", "type": "address" },
+      {
+        "internalType": "uint256",
+        "name": "externalOrgOrTeamId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "sourceEntityId",
+        "type": "uint256"
+      },
+      { "internalType": "uint8", "name": "baseSharePerms", "type": "uint8" },
+      {
+        "internalType": "enum IShareInvites.EShareInviteStatus",
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -830,66 +411,6 @@
     "name": "isNode",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "fsId", "type": "uint256" }
-    ],
-    "name": "metadataOf",
-    "outputs": [
-      { "internalType": "address", "name": "creator", "type": "address" },
-      { "internalType": "string", "name": "documentName", "type": "string" },
-      {
-        "internalType": "string",
-        "name": "documentDescription",
-        "type": "string"
-      },
-      { "internalType": "string", "name": "ipfsCid", "type": "string" },
-      { "internalType": "uint256", "name": "commentsCount", "type": "uint256" },
-      { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "uint256", "name": "_destId", "type": "uint256" }
-    ],
-    "name": "moveEntity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_orgId", "type": "uint256" },
-      { "internalType": "address", "name": "_destId", "type": "address" }
-    ],
-    "name": "moveFile",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_orgId", "type": "uint256" },
-      { "internalType": "address", "name": "_destId", "type": "address" }
-    ],
-    "name": "moveFolder",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_teamId", "type": "uint256" },
-      { "internalType": "address", "name": "_destId", "type": "address" }
-    ],
-    "name": "moveTeam",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -916,29 +437,17 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "wallet", "type": "address" }
-    ],
-    "name": "personalOrgs",
-    "outputs": [
-      { "internalType": "uint256", "name": "personalOrgId", "type": "uint256" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "uint256", "name": "_oldParentId", "type": "uint256" }
-    ],
-    "name": "removeEntityFromParent",
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
+    "inputs": [
+      { "internalType": "uint256", "name": "_inviteId", "type": "uint256" }
+    ],
+    "name": "revokeInvite",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -968,74 +477,44 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_externalOrgOrTeamId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sourceEntityId",
+        "type": "uint256"
+      },
+      { "internalType": "uint8", "name": "_baseSharePerms", "type": "uint8" }
+    ],
+    "name": "sendInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_to", "type": "address" },
+      {
+        "internalType": "uint256",
+        "name": "_sourceEntityId",
+        "type": "uint256"
+      },
+      { "internalType": "uint8", "name": "_baseSharePerms", "type": "uint8" }
+    ],
+    "name": "sendInviteToIndividual",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "address", "name": "operator", "type": "address" },
       { "internalType": "bool", "name": "approved", "type": "bool" }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "uint8", "name": "_permissions", "type": "uint8" }
-    ],
-    "name": "setBasePermissionsForEntity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      {
-        "components": [
-          { "internalType": "address", "name": "user", "type": "address" },
-          { "internalType": "uint8", "name": "permissions", "type": "uint8" }
-        ],
-        "internalType": "struct IFSEntityManager.SPermissions[]",
-        "name": "_permissions",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "setBulkUserPermissionsForEntity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "string", "name": "_documentName", "type": "string" },
-      {
-        "internalType": "string",
-        "name": "_documentDescription",
-        "type": "string"
-      },
-      { "internalType": "string", "name": "_ipfsCid", "type": "string" }
-    ],
-    "name": "setMetadata",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_shareContract", "type": "address" }
-    ],
-    "name": "setShareContract",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "address", "name": "_user", "type": "address" },
-      { "internalType": "uint8", "name": "_permissions", "type": "uint8" }
-    ],
-    "name": "setUserPermissionsForEntity",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1058,6 +537,15 @@
   },
   {
     "inputs": [
+      { "internalType": "uint256", "name": "_inviteId", "type": "uint256" }
+    ],
+    "name": "testGrabInvite",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "tokenURI",
@@ -1067,41 +555,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "address", "name": "_user", "type": "address" }
-    ],
-    "name": "transferEntity",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
       { "internalType": "address", "name": "from", "type": "address" },
       { "internalType": "address", "name": "to", "type": "address" },
       { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "transferFrom",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_entityId", "type": "uint256" },
-      { "internalType": "uint256", "name": "_destOrgId", "type": "uint256" }
-    ],
-    "name": "transferItemToOrganization",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_orgId", "type": "uint256" },
-      { "internalType": "address", "name": "_newOwner", "type": "address" }
-    ],
-    "name": "transferOrganizationOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
