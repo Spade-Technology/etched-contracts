@@ -1,0 +1,11 @@
+{
+  "base-testnet": {
+    "FSEntityManager": {
+      "address": "0xc2e7a00c29606f3fcebe87998c0076b4f86db10d",
+      "startBlock": 13578744
+    },
+    "ShareInvites": {
+      "address": "0x8f7f8624ed38e5b192da5fda38dbbebf757805ae"
+    }
+  }
+}
