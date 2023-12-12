@@ -11,6 +11,7 @@ import { currentNetworkId } from "@/contracts";
 import { env } from "@/env.mjs";
 import { hashMessageForLit } from "@/lit";
 import { createERC6492Signature } from "./patch";
+import { clerkClient } from "@clerk/nextjs";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -132,7 +133,7 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
               message: credentials.message,
               signature: credentials.signature,
               derivedVia: credentials.derivedVia,
-              userId: credentials.userId,
+              userId: credentials.userId.toLowerCase(),
             },
             req
           );
@@ -146,9 +147,15 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           // If user doesn't exist, create it
           if (!user) user = await prisma.user.create({ data: { address: siwe.address } });
 
+          let clerkUser = await clerkClient.users.getUser(credentials.userId);
+
+          if (!clerkUser?.externalId)
+            clerkUser = await clerkClient.users.updateUser(credentials.userId, { externalId: siwe.address });
+
           // Return the user info
           return { id: siwe.address };
         } catch (e) {
+          console.error(e);
           return null;
         }
       },
