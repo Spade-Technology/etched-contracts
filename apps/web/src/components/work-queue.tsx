@@ -1,12 +1,8 @@
-import { useContext, useState } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { refetchContext } from "@/utils/urql";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
-import { ScrollArea } from "./ui/scroll-area";
 import { Loader2 } from "lucide-react";
+import { useContext } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
-import { error } from "console";
-import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 
 export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
@@ -42,7 +38,7 @@ export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
                       <HoverCard>
                         <HoverCardTrigger>Success</HoverCardTrigger>
                         <HoverCardContent>
-                          <div className="overflow-scroll">This operation was successful</div>
+                          <div className="overflow-scroll">{el.description || "This operation was successful"}</div>
                         </HoverCardContent>
                       </HoverCard>
                     </>
@@ -52,7 +48,7 @@ export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
                       <HoverCard>
                         <HoverCardTrigger>Inspect Error</HoverCardTrigger>
                         <HoverCardContent>
-                          <div className="overflow-scroll">{el.error}</div>
+                          <div className="overflow-scroll">{el.error || "This operation failed"}</div>
                         </HoverCardContent>
                       </HoverCard>
                     </div>

@@ -1,11 +1,11 @@
-import { z } from "zod";
-import { api } from "../api";
-import { useSignIn } from "./useSignIn";
 import { getSelectedTeam } from "@/components/team-selector";
-import { useUploadThing } from "../uploadthing";
 import { toast } from "@/components/ui/use-toast";
 import { useContext, useState } from "react";
+import { z } from "zod";
+import { api } from "../api";
+import { useUploadThing } from "../uploadthing";
 import { refetchContext } from "../urql";
+import { useSignIn } from "./useSignIn";
 
 const formSchema = z.object({
   name: z.string(),
@@ -74,7 +74,7 @@ export const useCreateEtch = () => {
 
       setEtchCreated(data.length);
 
-      await bulkMintEtch({
+      const res = await bulkMintEtch({
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         authSig,
@@ -90,6 +90,7 @@ export const useCreateEtch = () => {
 
       setOperation(opId, {
         name: "Creation of " + data.length + " etch" + (data.length > 1 ? "es" : ""),
+        description: "tx: " + res.tx + " -- etchId: " + res.id,
         status: "Done",
         progress: 100,
         statusType: "success",

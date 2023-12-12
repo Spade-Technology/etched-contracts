@@ -7,20 +7,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { Organisation } from "@/gql/graphql";
+import { cn } from "@/lib/utils";
+import { orgUser } from "@/types";
+import { isValidEthereumAddress } from "@/utils/common";
+import { shortenAddress } from "@/utils/hooks/address";
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useGetUsers } from "@/utils/hooks/useGetUsers";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { GoodIcon } from "../icons/good";
 import { ProfileProps } from "../pages/etch/edit/components/add-user";
 import { Button } from "./button";
 import ProfileCard from "./profile-card";
 import { SearchInput } from "./search-input";
-import { cn } from "@/lib/utils";
-import { GoodIcon } from "../icons/good";
-import { useGetUsers } from "@/utils/hooks/useGetUsers";
-import { orgUser, teamUser } from "@/types";
-import { Organisation, Team } from "@/gql/graphql";
-import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { isValidEthereumAddress } from "@/utils/common";
-import { shortenAddress } from "@/utils/hooks/address";
 
 type InputDropdownProps = {
   data: {
@@ -146,7 +146,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
 
   return (
     <DropdownMenu>
-      <div className="relative flex justify-between rounded-lg border-[1px] border-[#6D6D6D]">
+      <div className="relative flex justify-between rounded-lg border border-gray-600">
         <main ref={ref}>
           <SearchInput
             type="text"
@@ -157,11 +157,11 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
             className="border-none p-3 outline-none"
           />
           <div
-            className={`${openDropdown && orgs.length > 0 ? "" : "-z-50 hidden opacity-0"} ${cn(
-              "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
+            className={`${openDropdown && orgs.length > 0 ? "" : "invisible"} ${cn(
+              "absolute left-0 top-10 z-50 max-h-32 min-w-full overflow-hidden rounded-md border bg-popover px-3 py-3 text-popover-foreground shadow-md"
             )}`}
           >
-            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+            <div className="custom-scrollbar max-h-24 overflow-auto overflow-x-hidden pr-2">
               {orgs.map(({ id, name, orgId }) => {
                 const isSelected = selectedItems.find((item: any) => item.name === name);
                 return (
@@ -170,7 +170,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
                     onClick={() => addData({ id, name, orgId } as Organisation)}
                     className={`${
                       isSelected ? "pointer-events-none" : ""
-                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
+                    } flex cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-sm text-gray-600 outline-none transition-colors hover:bg-blue-100 hover:text-blue-800 data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
                   >
                     {name}
                     <div className="flex items-center gap-1">
@@ -179,7 +179,7 @@ const OrgInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems, 
                   </div>
                 );
               })}
-            </section>
+            </div>
           </div>
         </main>
       </div>
@@ -235,7 +235,7 @@ const TeamInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems,
               "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
             )}`}
           >
-            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+            <div className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
               {teams.map(({ id, name, teamId }) => {
                 const isSelected = selectedItems.find((item: any) => item.name === name);
                 return (
@@ -253,7 +253,7 @@ const TeamInputDropdown = ({ type, placeholder, selectedItems, setSelectedItems,
                   </div>
                 );
               })}
-            </section>
+            </div>
           </div>
         </main>
 
@@ -354,13 +354,13 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
               "absolute left-0 top-10 z-50 max-h-[132px] min-w-full  overflow-hidden rounded-md border bg-popover px-[13px] py-3 text-popover-foreground shadow-md"
             )}`}
           >
-            <section className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
+            <div className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
               {!!users.length ? (
                 users.map(({ id, name }) => <DropDownItem id={id} name={name} />)
               ) : (
                 <DropDownItem id={input?.value} name={""} />
               )}
-            </section>
+            </div>
           </div>
         </main>
 
@@ -395,4 +395,4 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
 };
 
 export default InputDropdown;
-export { UsersInputDropdown, OrgInputDropdown, TeamInputDropdown };
+export { OrgInputDropdown, TeamInputDropdown, UsersInputDropdown };

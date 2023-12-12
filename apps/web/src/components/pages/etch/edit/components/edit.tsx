@@ -1,32 +1,28 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
+import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Etch } from "@/gql/graphql";
+import { formatUserFromWallet } from "@/utils/hooks/address";
+import { useTransferOwnershipEtch } from "@/utils/hooks/useEtchTransferOwnershipBackendOperation";
+import { useUpdateEtch } from "@/utils/hooks/useUpdateEtchBackendOperation";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
+import Link from "next/link";
 import AddIcon from "public/icons/dashboard/editEtch/addIcon.svg";
 import PenIcon from "public/icons/dashboard/editEtch/pen.svg";
 import Placeholder1 from "public/icons/dashboard/placeholder1.svg";
 import Placeholder2 from "public/icons/dashboard/placeholder2.svg";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
 import BgVector from "public/images/backgrounds/dashboard/vector.svg";
 import { Dispatch, SetStateAction, useState } from "react";
 import ProfileCard from "../../../../ui/profile-card";
-import { Etch, Team } from "@/gql/graphql";
-import { formatUserFromWallet } from "@/utils/hooks/address";
-import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { api } from "@/utils/api";
-import { Textarea } from "@/components/ui/textarea";
-import { teamUser } from "@/types";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { toast } from "@/components/ui/use-toast";
-import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
-import { useUpdateEtch } from "@/utils/hooks/useUpdateEtchBackendOperation";
-import { useTransferOwnershipEtch } from "@/utils/hooks/useEtchTransferOwnershipBackendOperation";
 
 dayjs.extend(relativeTime);
 
@@ -126,9 +122,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
               variant="default"
               className={`${
                 edit ? "border-[#097B45] bg-transparent text-[#097B45]" : "border-[#A1FFD3] text-[#A1FFD3]"
-              } gap-2  rounded-full  border-[1px] px-3 text-base`}
+              } gap-2 rounded-full  border-[1px] px-3 text-base`}
             >
-              <span className="my-auto">Transfer</span>
+              <div>Transfer</div>
               <Icons.transferIcon color={edit ? "#097B45" : "#A1FFD3"} className="align-middle" />
             </Button>
           </div>
@@ -260,7 +256,7 @@ const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, ope
         <DialogDescription>
           <form onSubmit={transferOwnership}>
             <Label className="font-semibold">Select</Label>
-            <section className="mb-7 mt-[9px] flex gap-5">
+            <div className="mb-7 mt-[9px] flex gap-5">
               {["individual", "team"].map((item, id) => {
                 return (
                   <div
@@ -287,7 +283,7 @@ const TransferOwnershipDialog: React.FC<transferOwnershipProps> = ({ etchId, ope
                   </div>
                 );
               })}
-            </section>
+            </div>
             {owner === "individual" && (
               <>
                 <Label className="font-semibold">Transfer to</Label>

@@ -125,9 +125,9 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
                   </DropdownMenuItem>
                 )
             )}
-            <section className={` flex cursor-default items-center justify-between px-2 py-1 text-base  text-muted-foreground`}>
+            <div className={` flex cursor-default items-center justify-between px-2 py-1 text-base  text-muted-foreground`}>
               Shared with {">"}
-            </section>
+            </div>
             {filterList.map(
               (item, idx) =>
                 idx > 1 && (
@@ -186,7 +186,7 @@ export const FilesDialog = ({ files, isLoading }: props) => {
       <div className="mb-4 text-xl font-bold text-muted-foreground">
         {!isLoading && files.length < 1 ? "Please create a file/Etch" : "Files"}
       </div>
-      <section className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
+      <div className="grid grid-cols-3 justify-between gap-5 lg:grid-cols-4 xl:grid-cols-5 ">
         {isLoading
           ? skeletons.split("")?.map((item, index) => {
               return (
@@ -203,7 +203,7 @@ export const FilesDialog = ({ files, isLoading }: props) => {
           : files.map((file) => {
               return <File {...file} key={file.tokenId} activeModals={activeModals} setActiveModals={setActiveModals} />;
             })}
-      </section>
+      </div>
     </main>
   );
 };
@@ -282,7 +282,7 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
               </div>
               <div className="bo mt-5 text-base font-semibold text-primary">Choose location</div>
               <div className="h-[0px] w-[121px] border-2 border-primary"></div>
-              <section className="mt-[14px] flex flex-col gap-3">
+              <div className="mt-[14px] flex flex-col gap-3">
                 {[
                   "NexusLogix Solutions",
                   "CrestCore Analytics",
@@ -297,7 +297,7 @@ const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProp
                     </div>
                   );
                 })}
-              </section>
+              </div>
               <footer className="mt-10 flex items-center justify-end gap-5">
                 <div
                   onClick={() => setOpenMoveModal(false)}

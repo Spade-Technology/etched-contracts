@@ -1,12 +1,12 @@
-import { api } from "../api";
 import { toast } from "@/components/ui/use-toast";
 import { useContext, useState } from "react";
+import { api } from "../api";
 import { refetchContext } from "../urql";
 
-import { orgUser, teamUser } from "@/types";
-import { findUserDifferences } from "../user";
+import { teamUser } from "@/types";
 import { sleep } from "../common";
 import { removeAmpersandAndtransformToCamelCase } from "../team";
+import { findUserDifferences } from "../user";
 
 function enableBeforeUnload() {
   window.onbeforeunload = function (e) {

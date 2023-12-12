@@ -1,5 +1,5 @@
-import * as React from "react";
 import { cn } from "@/lib/utils";
+import * as React from "react";
 import { Icons } from "./icons";
 
 const EditButton = ({
@@ -18,7 +18,7 @@ const EditButton = ({
     )}
     onClick={onClick}
   >
-    <Icons.edit className="h-[14px]" color={"#097B45"} />
+    <Icons.edit className="h-3" color={"#097B45"} />
     {title}
   </button>
 );

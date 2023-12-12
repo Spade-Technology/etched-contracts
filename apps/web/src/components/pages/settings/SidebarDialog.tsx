@@ -1,5 +1,5 @@
 import { Icons } from "@/components/ui/icons";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export const SidebarDialog = () => {
   const [activeTab, setActiveTab] = useState<string>("Manage");

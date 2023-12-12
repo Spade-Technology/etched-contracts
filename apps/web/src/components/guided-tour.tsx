@@ -1,19 +1,18 @@
-import { Cross2Icon } from "@radix-ui/react-icons";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./icons/logo-long-animated";
-import { Icons } from "./ui/icons";
-import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent } from "./ui/dialog";
 import { AlertDialog, AlertDialogContent } from "./ui/alert-dialog";
+import { Checkbox } from "./ui/checkbox";
+import { Icons } from "./ui/icons";
+import { Cross1Icon } from "@radix-ui/react-icons";
+import { Dialog, DialogContent } from "./ui/dialog";
 
-export default function GuideTour() {
+export default function GuidedTour() {
   const [openModal, setOpenModal] = useState(false);
   const [rate, setRate] = useState("");
   const [tip, setTip] = useState(0);
 
   useEffect(() => {
-    const viewedTips = JSON.parse(localStorage.getItem("viewedTips"));
+    const viewedTips = JSON.parse(localStorage.getItem("viewedTips") || "false");
     if (!viewedTips) {
       setOpenModal(true);
     }
@@ -40,31 +39,32 @@ export default function GuideTour() {
   };
 
   return (
-    <AlertDialog
+    <Dialog
       open={openModal}
       onOpenChange={() => {
         localStorage.setItem("viewedTips", JSON.stringify(true));
         setOpenModal(!openModal);
       }}
     >
-      <AlertDialogContent className={" w-[500px] gap-4 border bg-background px-0 py-0 drop-shadow-2xl duration-200"}>
-        <main className="cursor-default text-sm font-semibold text-muted-foreground">
-          <header className="flex cursor-grabbing items-center gap-2 px-4 py-3 text-base text-foreground">
+      <DialogContent className={"w-[500px] gap-4 border bg-background px-0 py-0 drop-shadow-2xl duration-200"}>
+        <main className="text-sm font-semibold text-muted-foreground">
+          <header className="flex items-center gap-2 px-4 py-3 text-base text-foreground">
             <div className="h-6 w-6">
               <Logo />
             </div>
             <div>Wecome to Etched</div>
+            <Cross1Icon className="ml-auto cursor-pointer" onClick={() => setOpenModal(false)} />
           </header>
-          <section className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
             <Icons.info className="h-4 w-4" />
             <div className="">Interactive lesson available</div>
             <div className="ml-auto cursor-pointer text-base text-primary">Start learning</div>
-          </section>
-          <section className="flex h-[204px] flex-col px-4 py-3">
+          </div>
+          <div className="flex h-[204px] flex-col px-4 py-3">
             {tips.map(({ title, description }, idx) => {
               if (idx === tip) {
                 return (
-                  <div className="">
+                  <div className="" key={idx}>
                     <div className="mb-3 text-xl capitalize text-foreground">{title}</div>
                     <div className="">{description}</div>
                   </div>
@@ -85,7 +85,7 @@ export default function GuideTour() {
                 className="h-5 w-5 rotate-180 cursor-pointer"
               />
             </div>
-          </section>
+          </div>
 
           <footer className="border-forground flex items-center justify-between border-t p-4">
             <div className="flex items-center gap-2">
@@ -113,8 +113,8 @@ export default function GuideTour() {
             </aside>
           </footer>
         </main>
-      </AlertDialogContent>
-    </AlertDialog>
+      </DialogContent>
+    </Dialog>
   );
 }
 

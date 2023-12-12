@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 // import CamptonBold from "./public/fonts/campton-cufonfonts"
 import defaultTheme from "tailwindcss/defaultTheme";
-import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 
 module.exports = {
   darkMode: ["class"],

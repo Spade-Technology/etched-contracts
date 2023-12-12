@@ -1,5 +1,5 @@
+import { camelCaseNetwork, contracts } from "@/contracts";
 import EtchABI from "@abis/Etches.json";
-import { camelCaseNetwork, contracts, currentNetwork } from "@/contracts";
 
 declare type ConditionType = "solRpc" | "evmBasic" | "evmContract" | "cosmos";
 declare type Chain = string;
