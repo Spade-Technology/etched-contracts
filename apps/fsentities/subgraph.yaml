@@ -3,20 +3,22 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: EntityManager
-    network: localhost
+    name: FSEntityManager
+    network: base-testnet
     source:
-      address: "0x5fbdb2315678afecb367f032d93f642f64180aa3"
-      abi: EntityManager
-      startBlock: 0
+      address: "0xc2e7a00c29606f3fcebe87998c0076b4f86db10d"
+      abi: FSEntityManager
+      startBlock: 13578744
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - Approval
+        - ApprovalForAll
         - CommentOnEntity
         - EntityBasePermissionsChanged
-        - EntityCreated``
+        - EntityCreated
         - EntityIndividualUserPermissionsChanged
         - EntityMetaChanged
         - EntityMoved
@@ -26,9 +28,13 @@ dataSources:
         - OwnershipTransferred
         - Transfer
       abis:
-        - name: EntityManager
-          file: ./abis/EntityManager.json
+        - name: FSEntityManager
+          file: ./abis/FSEntityManager.json
       eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
         - event: CommentOnEntity(uint256,string,uint256,uint256)
           handler: handleCommentOnEntity
         - event: EntityBasePermissionsChanged(uint256,uint8)
@@ -51,39 +57,4 @@ dataSources:
           handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/entity-manager.ts
-  - kind: ethereum
-    name: ShareInvites
-    network: localhost
-    source:
-      address: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
-      abi: ShareInvites
-      startBlock: 0
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - InviteAccepted
-        - InviteDeclined
-        - InviteRevoked
-        - InviteSent
-        - ShareInvitesOwnershipTransferred
-        - ShareInvitesTransfer
-      abis:
-        - name: ShareInvites
-          file: ./abis/ShareInvites.json
-      eventHandlers:
-        - event: InviteAccepted(uint256,address)
-          handler: handleInviteAccepted
-        - event: InviteDeclined(uint256,address)
-          handler: handleInviteDeclined
-        - event: InviteRevoked(uint256,address)
-          handler: handleInviteRevoked
-        - event: InviteSent(address,uint256,uint256,uint8,uint8)
-          handler: handleInviteSent
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-      file: ./src/share-invites.ts
+      file: ./src/fs-entity-manager.ts
