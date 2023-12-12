@@ -6,6 +6,7 @@ import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useState } from "react";
 import { OrgDialog } from "./OrgDialog";
 import { Teams } from "./Teams";
+import { usePathname } from "next/navigation";
 
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);
@@ -18,8 +19,14 @@ export const ManageDialog = () => {
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
+  const pathname = usePathname();
+
   return (
-    <article className="flex min-h-screen w-full flex-col gap-7">
+    <article
+      className={`flex min-h-screen w-full flex-col gap-7 ${
+        pathname.includes("settings") && "ml-6 border-l border-[#E0E0E0] pl-5"
+      }`}
+    >
       {/*------------- Modals & More -------------*/}
       <CreateTeamDialog openTeamModal={openTeamModal} setOpenTeamModal={setOpenTeamModal} />
       <CreateOrgDialog openOrgModal={openOrgModal} setOpenOrgModal={setOpenOrgModal} />

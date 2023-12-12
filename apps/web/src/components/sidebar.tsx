@@ -49,7 +49,7 @@ export const SideBar = () => {
     { url: "/dashboard/manage", title: "Organisation", Icon: Icons.organisation },
     { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
     { url: "/dashboard/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
-    { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: false },
+    { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: true },
     { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
   ];
 
@@ -61,13 +61,12 @@ export const SideBar = () => {
       className="sticky left-0 top-0 z-40 h-screen w-fit px-3 transition-transform lg:w-52"
       aria-label="Sidebar"
     >
-      <div className="flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
+      <div className="custom-scrollbar flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
         <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
-
         <ul className="my-auto space-y-2 text-sm font-medium">
           {pages.map(({ url, title, Icon, disabled }, index) => {
             return (
-              <li key={title}>
+              <li key={title} className="pr-1 max-xl:pr-0">
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
