@@ -100,6 +100,7 @@ export const useGetUniqueEtch = (etchId?: string) => {
   const [{ data: etchData, fetching, error, operation }, reexecute] = useQuery({
     query: GET_UNIQUE_ETCH_QUERY,
     variables: { etchId },
+    requestPolicy: "cache-and-network",
   });
 
   const refetch = () => reexecute({ requestPolicy: "cache-and-network" });
