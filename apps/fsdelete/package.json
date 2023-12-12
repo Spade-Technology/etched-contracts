@@ -1,13 +1,13 @@
 {
-  "name": "fsdelete",
+  "name": "true",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ fsdelete",
-    "create-local": "graph create --node http://localhost:8020/ fsdelete",
-    "remove-local": "graph remove --node http://localhost:8020/ fsdelete",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 fsdelete",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ true",
+    "create-local": "graph create --node http://localhost:8020/ true",
+    "remove-local": "graph remove --node http://localhost:8020/ true",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 true",
     "test": "graph test"
   },
   "dependencies": {
