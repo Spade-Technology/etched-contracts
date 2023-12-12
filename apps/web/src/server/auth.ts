@@ -131,7 +131,7 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
               message: credentials.message,
               signature: credentials.signature,
               derivedVia: credentials.derivedVia,
-              userId: credentials.userId,
+              userId: credentials.userId.toLowerCase(),
             },
             req
           );
@@ -149,7 +149,9 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
             let clerkUser = await clerkClient.users.getUser(credentials.userId);
 
             if (!clerkUser?.externalId)
-              clerkUser = await clerkClient.users.updateUser(credentials.userId, { externalId: siwe.address });
+              clerkUser = await clerkClient.users.updateUser(credentials.userId, {
+                externalId: siwe.address.toLocaleLowerCase(),
+              });
           }
 
           // Return the user info
