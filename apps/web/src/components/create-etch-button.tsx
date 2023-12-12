@@ -43,6 +43,7 @@ export const CreateEtchButton = () => {
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
     accept: {
+      ...model_formats,
       "image/*": [],
       "audio/*": [],
       "video/*": [],
@@ -245,6 +246,14 @@ const FilePreviewer = ({
   }, [audioPreviewRef?.current]);
 
   const fileFormat = file.path?.slice(file.path.indexOf(".") + 1);
+
+  // Check if file is 3d model
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(`/formats/${fileFormat.toUpperCase()}/icon.png`, { method: "HEAD" }).then((res) => setIsModel(res.ok));
+    };
+    fetchData();
+  }, []);
 
   return (
     <div key={index} className="aspect-w-1 aspect-h-1 group relative">
