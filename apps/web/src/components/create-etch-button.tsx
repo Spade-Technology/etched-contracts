@@ -212,7 +212,6 @@ export const CreateEtchButton = () => {
 type FilePreview = File & {
   preview: string;
   nameOverride?: string | undefined;
-  path?: string | undefined;
   description?: string | undefined;
   path?: string;
 };
@@ -250,7 +249,7 @@ const FilePreviewer = ({
   // Check if file is 3d model
   useEffect(() => {
     const fetchData = async () => {
-      await fetch(`/formats/${fileFormat.toUpperCase()}/icon.png`, { method: "HEAD" }).then((res) => setIsModel(res.ok));
+      await fetch(`/formats/${fileFormat?.toUpperCase()}/icon.png`, { method: "HEAD" }).then((res) => setIsModel(res.ok));
     };
     fetchData();
   }, []);
