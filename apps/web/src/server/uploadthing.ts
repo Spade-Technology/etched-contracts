@@ -26,6 +26,10 @@ export const fileRouter = {
       maxFileCount: 10,
       maxFileSize: "128MB",
     },
+    "model/obj": {
+      maxFileCount: 10,
+      maxFileSize: "128MB",
+    },
   })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req, res }) => {
