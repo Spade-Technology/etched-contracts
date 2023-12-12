@@ -6,7 +6,7 @@ dataSources:
     name: FSEntityManager
     network: mainnet
     source:
-      address: "0xdc64a140aa3e981100a9beca4e685f962f0cf6c9"
+      address: "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9"
       abi: FSEntityManager
       startBlock: 0
     mapping:
@@ -16,10 +16,15 @@ dataSources:
       entities:
         - Approval
         - ApprovalForAll
-        - InviteAccepted
-        - InviteDeclined
-        - InviteRevoked
-        - InviteSent
+        - CommentOnEntity
+        - EntityBasePermissionsChanged
+        - EntityCreated
+        - EntityIndividualUserPermissionsChanged
+        - EntityMetaChanged
+        - EntityMoved
+        - EntityShareMaxPermissionsChanged
+        - EntityTransferredToOrganization
+        - OrganizationTransferredToIndividual
         - OwnershipTransferred
         - Transfer
       abis:
@@ -30,14 +35,24 @@ dataSources:
           handler: handleApproval
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
-        - event: InviteAccepted(uint256,address)
-          handler: handleInviteAccepted
-        - event: InviteDeclined(uint256,address)
-          handler: handleInviteDeclined
-        - event: InviteRevoked(uint256,address)
-          handler: handleInviteRevoked
-        - event: InviteSent(address,uint256,uint256,uint8,uint8)
-          handler: handleInviteSent
+        - event: CommentOnEntity(uint256,string,uint256,uint256)
+          handler: handleCommentOnEntity
+        - event: EntityBasePermissionsChanged(uint256,uint8)
+          handler: handleEntityBasePermissionsChanged
+        - event: EntityCreated(uint256,address,uint256,string,uint8,uint8)
+          handler: handleEntityCreated
+        - event: EntityIndividualUserPermissionsChanged(uint256,address,uint8)
+          handler: handleEntityIndividualUserPermissionsChanged
+        - event: EntityMetaChanged(uint256,address,string,string,string,uint256,uint256)
+          handler: handleEntityMetaChanged
+        - event: EntityMoved(uint256,uint256,uint256)
+          handler: handleEntityMoved
+        - event: EntityShareMaxPermissionsChanged(uint256,uint8)
+          handler: handleEntityShareMaxPermissionsChanged
+        - event: EntityTransferredToOrganization(uint256,uint256)
+          handler: handleEntityTransferredToOrganization
+        - event: OrganizationTransferredToIndividual(uint256,address)
+          handler: handleOrganizationTransferredToIndividual
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
