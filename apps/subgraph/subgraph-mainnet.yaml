@@ -1,0 +1,152 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Etch
+    network: arbitrum-one
+    source:
+      address: '0x1e413589C4933037f1b136dDE143346dCfC2bA63'
+      abi: Etch
+      startBlock: 152613300
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - CommentAdded
+        - EtchCreated
+        - EtchTransferedToTeam
+        - InvididualPermissionsUpdated
+        - OwnershipTransferred
+        - Transfer
+        - EtchMetadataUpdated
+      abis:
+        - name: Etch
+          file: ./abis/Etch.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256),indexed address)
+          handler: handleCommentAdded
+        - event: EtchCreated(indexed uint256,indexed address,string,string)
+          handler: handleEtchCreated
+        - event: EtchTransferedToTeam(indexed uint256,indexed address,indexed uint256)
+          handler: handleEtchTransferedToTeam
+        - event: InvididualPermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handleInvididualPermissionsUpdated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TeamPermissionsUpdated(indexed uint256,indexed uint256,uint8)
+          handler: handleTeamPermissionsUpdated
+        - event: EtchMetadataUpdated(indexed uint256,string,string,string)
+          handler: handleEtchMetadataUpdated
+      file: ./src/etch.ts
+  - kind: ethereum
+    name: Team
+    network: arbitrum-one
+    source:
+      address: '0xb46B46c136F85Fbd6657B8DF47cAccd4F8065932'
+      abi: Team
+      startBlock: 152613300
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TeamApproval
+        - TeamApprovalForAll
+        - TeamOwnershipTransferred
+        - PermissionsUpdated
+        - TeamCreated
+        - TeamTransfer
+        - TransferToOrganisation
+        - TeamRenamed
+      abis:
+        - name: Team
+          file: ./abis/Team.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handlePermissionsUpdated
+        - event: TeamCreated(indexed uint256,indexed address)
+          handler: handleTeamCreated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TransferToOrganisation(indexed uint256,indexed uint256)
+          handler: handleTransferToOrganisation
+        - event: TeamRenamed(indexed uint256,string)
+          handler: handleTeamRenamed
+      file: ./src/team.ts
+  - kind: ethereum
+    name: Organisation
+    network: arbitrum-one
+    source:
+      address: '0x4e3F5840956fCB276faB524B092Eec115eb116C4'
+      abi: Organisation
+      startBlock: 152613300
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OrganisationApproval
+        - OrganisationApprovalForAll
+        - OrganisationCreated
+        - OrganisationOwnershipTransferred
+        - OrganisationPermissionsUpdated
+        - OrganisationTransfer
+        - OrganisationRenamed
+      abis:
+        - name: Organisation
+          file: ./abis/Organisation.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OrganisationCreated(indexed uint256,indexed address)
+          handler: handleOrganisationCreated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handlePermissionsUpdated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: OrganisationRenamed(indexed uint256,string)
+          handler: handleOrganisationRenamed
+      file: ./src/organisation.ts
+  - kind: ethereum
+    name: EtchENS
+    network: arbitrum-one
+    source:
+      address: '0x2B9786adeA8dd24cbb36036919884271Abb0dAbF'
+      abi: EtchENS
+      startBlock: 152613300
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EtchTransferred
+        - EtchENSTransfer
+      abis:
+        - name: EtchENS
+          file: ./abis/EtchENS.json
+      eventHandlers:
+        - event: EtchENSCreated(indexed uint256,indexed address,string)
+          handler: handleEtchENSCreated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleENSTransfer
+      file: ./src/etch-ens.ts

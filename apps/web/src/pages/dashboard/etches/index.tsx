@@ -1,6 +1,4 @@
 import { PageBoilerplate } from "@/components/page-boilerplate";
-import EtchSection from "@/components/pages/etch/edit/etch-section";
-import { useGetEtchesFromUser } from "@/utils/hooks/useGetEtchesFromUser";
 import { useSession } from "next-auth/react";
 
 export default function EditEtch() {

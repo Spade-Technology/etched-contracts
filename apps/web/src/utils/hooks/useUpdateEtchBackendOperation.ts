@@ -1,9 +1,9 @@
-import { api } from "../api";
 import { toast } from "@/components/ui/use-toast";
-import { useContext, useState } from "react";
-import { refetchContext } from "../urql";
-import { sleep } from "../common";
 import { Etch } from "@/gql/graphql";
+import { useContext, useState } from "react";
+import { api } from "../api";
+import { sleep } from "../common";
+import { refetchContext } from "../urql";
 
 function enableBeforeUnload() {
   window.onbeforeunload = function (e) {

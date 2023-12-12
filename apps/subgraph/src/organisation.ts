@@ -1,4 +1,3 @@
-import { BigInt } from "@graphprotocol/graph-ts";
 import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
@@ -6,23 +5,20 @@ import {
   OrganisationRenamed as OrganisationRenamedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   PermissionsUpdated as PermissionsUpdatedEvent,
-  
   Transfer as TransferEvent,
-} from "../generated/Organisation/Organisation";
+} from '../generated/Organisation/Organisation';
 import {
+  Organisation,
   OrganisationApproval,
   OrganisationApprovalForAll,
+  OrganisationContractOwnershipTransferred,
   OrganisationCreated,
   OrganisationPermissionsUpdated,
-  OrganisationTransfer,
-  OrganisationContractOwnershipTransferred,
-  OrganisationOwnership,
-  Organisation,
-  OrganisationPermission,
   OrganisationRenamed,
-} from "../generated/schema";
-import { getOrCreateWallet } from "./wallet";
-import { EOID, getOrgId, upsertOrg, upsertOrgOwnership, upsertOrgPermission } from "./utils";
+  OrganisationTransfer,
+} from '../generated/schema';
+import { EOID, getOrgId, upsertOrg, upsertOrgOwnership, upsertOrgPermission } from './utils';
+import { getOrCreateWallet } from './wallet';
 
 export function handleOrganisationCreated(event: OrganisationCreatedEvent): void {
   const entity = new OrganisationCreated(event.transaction.hash.concatI32(event.logIndex.toI32()));

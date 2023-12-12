@@ -1,25 +1,25 @@
-import React, { useState } from "react";
 import { CreateOrgDialog } from "@/components/create-org-dialog";
 import { CreateTeamDialog } from "@/components/create-team-dialog";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
-import { Teams } from "./Teams";
+import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { useState } from "react";
 import { OrgDialog } from "./OrgDialog";
+import { Teams } from "./Teams";
 
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);
   const [openTeamModal, setOpenTeamModal] = useState(false);
   const [accordion, setAccordion] = useState("");
   const loggedInAddress = useLoggedInAddress();
-  const { organisations } = useGetOrgsFromUser(loggedInAddress.toLowerCase());
+  const { organisations, isLoading } = useGetOrgsFromUser(loggedInAddress.toLowerCase());
 
   const { teams } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
   return (
-    <article className="ml-[25px] flex min-h-screen w-full flex-col gap-7 border-l-[1px] border-[#E0E0E0] pl-5 lg:pl-[60px]">
+    <article className="flex min-h-screen w-full flex-col gap-7">
       {/*------------- Modals & More -------------*/}
       <CreateTeamDialog openTeamModal={openTeamModal} setOpenTeamModal={setOpenTeamModal} />
       <CreateOrgDialog openOrgModal={openOrgModal} setOpenOrgModal={setOpenOrgModal} />
@@ -37,7 +37,7 @@ export const ManageDialog = () => {
         })}
       </header>
 
-      {organisations.length > 0 ||
+      {isLoading ? (
         [1, 2, 3].map((item, idx) => (
           <div key={idx} className="h-[105px] w-full bg-white px-10 shadow">
             <div className="flex h-full animate-pulse items-center gap-5 ">
@@ -46,28 +46,33 @@ export const ManageDialog = () => {
               <div className="ml-auto h-6 w-4/12 rounded-md bg-gray-300 "></div>
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <>
+          {organisations?.map(({ id, orgId, name, createdAt }) => (
+            <OrgDialog
+              {...{
+                id,
+                orgId,
+                name,
+                date: new Date(+createdAt * 1000).toDateString(),
+                teams: teams?.filter(({ ownership }) => ownership?.organisation?.name === name),
+                accordion,
+                setAccordion,
+                organisations,
+              }}
+            />
+          ))}
 
-      {organisations?.map(({ id, orgId, name, createdAt }) => {
-        const prop = {
-          id,
-          orgId,
-          name,
-          date: new Date(+createdAt * 1000).toDateString(),
-          teams: teams?.filter(({ ownership }) => ownership?.organisation?.name === name),
-          accordion,
-          setAccordion,
-          organisations,
-        };
-        return <OrgDialog {...prop} />;
-      })}
-      <Teams
-        name={"MySelf"}
-        accordion={accordion}
-        setAccordion={setAccordion}
-        teams={teams?.filter(({ ownership }) => !ownership?.organisation)}
-        organisations={organisations}
-      />
+          <Teams
+            name={"MySelf"}
+            accordion={accordion}
+            setAccordion={setAccordion}
+            teams={teams?.filter(({ ownership }) => !ownership?.organisation)}
+            organisations={organisations}
+          />
+        </>
+      )}
     </article>
   );
 };

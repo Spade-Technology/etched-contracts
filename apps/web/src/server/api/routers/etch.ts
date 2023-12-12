@@ -113,9 +113,9 @@ export const etchRouter = createTRPCRouter({
 
           const etchId = (transferEvent.args as any).tokenId;
 
-          return etchId;
+          return { tx: tx1, id: etchId };
         } catch (e) {
-          return 0;
+          return { tx: tx1, id: undefined };
         }
       }
     ),
