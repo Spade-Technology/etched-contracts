@@ -1,0 +1,8 @@
+{
+  "base-testnet": {
+    "FSEntityManager": {
+      "address": "0xc2e7a00c29606f3fcebe87998c0076b4f86db10d",
+      "startBlock": 13578744
+    }
+  }
+}
