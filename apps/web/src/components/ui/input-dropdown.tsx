@@ -80,8 +80,8 @@ const InputDropdown = ({ data, selectedItems, setSelectedItems }: InputDropdownP
         <DropdownMenuGroup>
           {data.map((item, idx) => {
             return (
-              <DropdownMenuItem key={idx} onClick={() => onSelectItem(item)} textValue="Jim Carlos">
-                <ProfileCard image={item.image} name={item.name} link={item.link} />
+              <DropdownMenuItem key={idx} onClick={() => onSelectItem(item)}>
+                <ProfileCard name={item.name} link={item.link} />
               </DropdownMenuItem>
             );
           })}
