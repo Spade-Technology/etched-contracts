@@ -9,8 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
 import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Etch } from "@/gql/graphql";
 import { teamUser } from "@/types";
@@ -19,6 +21,10 @@ import { shortenAddress } from "@/utils/hooks/address";
 import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
 import { findUserDifferences } from "@/utils/user";
 import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { link } from "fs";
+import { CopyIcon } from "@radix-ui/react-icons";
+import { privateKeyToAccount } from "viem/accounts";
 
 type UserProps = {
   show: boolean;
@@ -46,6 +52,8 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
   const { mutateAsync: setTeamPermissionsAsync, isLoading: isSettingTeamPermLoading } =
     api.etch.setTeamPermissionsBulk.useMutation();
   const isLoading = isSettingIndivPermLoading || isSettingTeamPermLoading;
+
+  const [gerneatedLink, setGeneratedLink] = useState("");
 
   const [selectedUsers, setSelectedUsers] = useState<teamUser[]>(
     etch?.permissions
@@ -103,6 +111,51 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
 
   const permissionHandler = async (e: any) => {
     e.preventDefault();
+
+    if (permissionTo === "link") {
+      // Generate a random Ethereum private key using the 'crypto' module
+      const { randomBytes } = require("crypto");
+      const privateKey = ("0x" + randomBytes(32).toString("hex")) as `0x${string}`;
+      console.log("Generated Ethereum Private Key:", privateKey);
+
+      const wallet = privateKeyToAccount(privateKey);
+
+      const newPermissions = findUserDifferences(
+        etch.permissions
+          ?.filter((perm) => !!perm.wallet)
+          .map((perm) => ({
+            id: perm.wallet?.id,
+            name: perm.wallet?.etchENS[0]?.name || "",
+            role: permissions[perm.permissionLevel],
+          })) as teamUser[],
+        [{ id: wallet.address, name: "Link", role: "read" }]
+      ) as teamUser[];
+
+      if (newPermissions.length === 0) return;
+
+      await setIndividualPermissionsAsync({
+        etchId: +etch.tokenId,
+        users: newPermissions.map(({ id, name, role }) => ({
+          id,
+          name,
+          role: removeAmpersandAndtransformToCamelCase(role),
+        })) as teamUser[],
+        blockchainSignature: localStorage.getItem("blockchainSignature")!,
+        blockchainMessage: localStorage.getItem("blockchainMessage")!,
+      });
+
+      toast({
+        title: "Link has been generated",
+        description: "successful",
+        variant: "success",
+      });
+
+      const currentDomain = window.location.origin;
+      setGeneratedLink(`${currentDomain}/dashboard/etch/${etch.tokenId}?k=${privateKey}`);
+
+      return;
+    }
+
     if (permissionTo === "individual") {
       const newPermissions = findUserDifferences(
         etch.permissions
@@ -115,6 +168,8 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
         selectedUsers
       ) as teamUser[];
 
+      if (newPermissions.length === 0) return;
+
       await setIndividualPermissionsAsync({
         etchId: +etch.tokenId,
         users: newPermissions.map(({ id, name, role }) => ({
@@ -126,6 +181,7 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
     }
+
     if (permissionTo === "team") {
       const newPermissions = findUserDifferences(
         etch.permissions
@@ -138,6 +194,8 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
         selectedTeams
       ) as any[];
 
+      if (newPermissions.length !== 0) return;
+
       await setTeamPermissionsAsync({
         etchId: +etch.tokenId,
         teams: newPermissions.map(({ teamId, role }) => ({
@@ -148,9 +206,10 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
     }
+
     toast({
       title: "Permissions Updated",
-      description: "successfull",
+      description: "successful",
       variant: "success",
     });
     setShow(false);
@@ -160,34 +219,17 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
     <Dialog open={show} onOpenChange={(x) => setShow(x)}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="font-normal text-[#6D6D6D]">Invite users and teams</DialogTitle>
+          <DialogTitle className="font-normal text-[#6D6D6D]">Invite or Edit permissions</DialogTitle>
           <DialogDescription className="text-[#6D6D6D]">
-            <Label className="font-semibold">Select</Label>
-            <div className="mb-7 mt-[9px] flex gap-5">
-              {["individual", "team"].map((item, id) => {
-                return (
-                  <div key={id} onClick={() => setPermissaionTo(item)} className="flex items-center gap-1">
-                    <div className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] border-muted-foreground">
-                      <div
-                        className={`${
-                          permissionTo == item ? "scale-100" : "scale-0"
-                        } h-3 w-3 rounded-full bg-primary duration-300`}
-                      ></div>
-                    </div>
-                    <div
-                      className={`text-sm font-medium capitalize text-muted-foreground ${
-                        permissionTo == item ? "!text-foreground" : "text-muted-foreground"
-                      }`}
-                    >
-                      {item}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {permissionTo === "individual" && (
-              <>
+            <Tabs defaultValue="individual" value={permissionTo} onValueChange={(v) => setPermissaionTo(v)}>
+              <TabsList aria-label="Permission types" className="mb-7 mt-[9px]  w-full">
+                {["individual", "team", "link"].map((item, id) => (
+                  <TabsTrigger key={id} value={item} className="w-full">
+                    {item}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <TabsContent value="individual">
                 <Label className="font-semibold">Allow user</Label>
                 <UsersInputDropdown
                   placeholder="ex: astrew.etched"
@@ -196,7 +238,6 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                   selectedItems={selectedUsers}
                   setSelectedItems={setSelectedUsers}
                 />
-
                 <div>
                   {selectedUsers?.length > 0 && (
                     <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
@@ -209,48 +250,25 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                             >
                               {name || shortenAddress({ address: id })}
                             </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  variant={"ghost"}
-                                  className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
-                                >
-                                  {role} <Icons.dropdownIcon />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className=" items-start p-1">
-                                <DropdownMenuGroup>
-                                  {[...roleData, "Remove access"].map((item, idx) => {
-                                    return (
-                                      <DropdownMenuItem
-                                        key={idx}
-                                        // @ts-ignore
-                                        onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeUserAccess(id))}
-                                        className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
-                                          idx < 2
-                                            ? "hover:bg-accent"
-                                            : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
-                                        }`}
-                                        textValue="Jim Carlos"
-                                      >
-                                        <GoodIcon className={role === item ? "" : "hidden"} />
-                                        {item}
-                                      </DropdownMenuItem>
-                                    );
-                                  })}
-                                </DropdownMenuGroup>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <RoleDropdown id={id} role={role} editRole={editUserRole} removeAccess={removeUserAccess} />
                           </div>
                         );
                       })}
                     </div>
                   )}
                 </div>
-              </>
-            )}
-            {permissionTo === "team" && (
-              <>
+                <div className="flex w-full items-end">
+                  <Button
+                    type="submit"
+                    className="ml-auto mt-5 gap-3 rounded-lg"
+                    onClick={permissionHandler}
+                    isLoading={isLoading}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </TabsContent>
+              <TabsContent value="team">
                 <Label className="font-semibold">Allow team</Label>
                 <TeamInputDropdown
                   placeholder="ex: team1"
@@ -259,7 +277,6 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                   selectedItems={selectedTeams}
                   setSelectedItems={setSelectedTeams}
                 />
-
                 <div>
                   {selectedTeams?.length > 0 && (
                     <div className="mt-3 rounded-[6px] bg-[#F3F5F5] p-3">
@@ -272,56 +289,99 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                             >
                               {name}
                             </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  variant={"ghost"}
-                                  className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
-                                >
-                                  {role} <Icons.dropdownIcon />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className=" items-start p-1">
-                                <DropdownMenuGroup>
-                                  {[...roleData, "Remove access"].map((item, idx) => {
-                                    return (
-                                      <DropdownMenuItem
-                                        key={idx}
-                                        // @ts-ignore
-                                        onClick={() => (idx !== 2 ? editTeamRole({ id, item }) : removeTeamAccess(id))}
-                                        className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
-                                          idx < 2
-                                            ? "hover:bg-accent"
-                                            : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
-                                        }`}
-                                        textValue="Jim Carlos"
-                                      >
-                                        <GoodIcon className={role === item ? "" : "hidden"} />
-                                        {item}
-                                      </DropdownMenuItem>
-                                    );
-                                  })}
-                                </DropdownMenuGroup>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <RoleDropdown id={id} role={role} editRole={editTeamRole} removeAccess={removeTeamAccess} />
                           </div>
                         );
                       })}
                     </div>
                   )}
                 </div>
-              </>
-            )}
+                <div className="flex w-full items-end">
+                  <Button
+                    type="submit"
+                    className="ml-auto mt-5 gap-3 rounded-lg"
+                    onClick={permissionHandler}
+                    isLoading={isLoading}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </TabsContent>
+              <TabsContent value="link">
+                <div className="flex flex-col gap-4">
+                  <div className="mt-5 flex w-full flex-col items-center justify-center">
+                    {gerneatedLink === "" ? (
+                      <>
+                        <Button type="submit" className="w-full rounded-lg" onClick={permissionHandler} isLoading={isLoading}>
+                          Generate Read-Only Link
+                        </Button>
+                        <div className="my-auto mt-2 text-xs text-gray-500">
+                          The link will be displayed only once and will not be shown again.
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex w-full items-center gap-2">
+                          <Input className="w-full" readOnly value={gerneatedLink} />
+                          <Button
+                            aria-label="Copy link"
+                            className="rounded-full"
+                            onClick={() => navigator.clipboard.writeText(gerneatedLink)}
+                          >
+                            <CopyIcon />
+                          </Button>
+                        </div>
+                        <div className="my-auto mt-2 text-xs text-gray-500">
+                          Please save this link, it will not be shown again. The access will act as a user.
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </DialogDescription>
-
-          <DialogFooter>
-            <Button type="submit" className="mt-5 gap-3 rounded-lg" onClick={permissionHandler} isLoading={isLoading}>
-              Done
-            </Button>
-          </DialogFooter>
         </DialogHeader>
       </DialogContent>
     </Dialog>
+  );
+};
+
+const RoleDropdown = ({ id, role, editRole, removeAccess }: { id: string; role: string; editRole: any; removeAccess: any }) => {
+  console.log({ id, role, editRole, removeAccess });
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant={"ghost"}
+          className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D] hover:bg-transparent"
+        >
+          {role} <Icons.dropdownIcon />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="items-start p-1">
+        <DropdownMenuGroup>
+          {[...roleData, ...(removeAccess ? ["Remove Access"] : [])].map((item, idx) => {
+            return (
+              <DropdownMenuItem
+                key={idx}
+                // @ts-ignore
+                onClick={() => (item !== "Remove Access" ? editRole({ id, item }) : removeAccess && removeAccess(id))}
+                className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground ${
+                  idx < 2
+                    ? "hover:bg-accent"
+                    : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                }`}
+              >
+                <GoodIcon className={role === item ? "" : "hidden"} />
+                {item}
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

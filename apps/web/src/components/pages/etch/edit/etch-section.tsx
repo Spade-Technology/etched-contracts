@@ -13,7 +13,13 @@ import { useSignIn } from "@/utils/hooks/useSignIn";
 import filetype from "magic-bytes.js";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useContractRead } from "wagmi";
+import EtchesABI from "@/contracts/abi/Etches.json";
+
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+
 import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
+import { contracts } from "@/contracts";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -23,6 +29,15 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const { regenerateAuthSig } = useSignIn();
 
   const viewerRef = useRef<HTMLImageElement>(null);
+
+  const owner = useLoggedInAddress();
+
+  const { data: hasWritePermission } = useContractRead({
+    abi: EtchesABI,
+    address: contracts.Etch,
+    functionName: "hasWritePermission",
+    args: [owner, etch?.tokenId],
+  });
 
   const decrypt = async () => {
     await lit.connect();
@@ -131,10 +146,15 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
           </div>
         </AspectRatio>
 
-        <Comments etch={etch || {}} />
+        <Comments etch={etch || {}} hasWritePermission={hasWritePermission as boolean} />
       </div>
       <div className="col-span-1">
-        <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
+        <Edit
+          setOpenAddUser={setOpenAddUser}
+          etch={etch}
+          isLoading={isLoading}
+          hasWritePermission={hasWritePermission as boolean}
+        />
         <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
       </div>
     </div>
