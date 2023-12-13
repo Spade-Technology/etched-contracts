@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import BlackForward from "public/icons/blackForward.svg";
-import Library_SS from "public/images/home/library_SS.svg";
+import Library_SS from "public/images/home/library.png";
 import { features } from "./mock-data";
 
 interface Props {
@@ -53,7 +53,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
 
       <div
         className={`relative z-10 mx-auto mt-40 flex h-[539px] max-w-[1280px] flex-col gap-7 overflow-hidden rounded-[32px]
-      bg-[url(/images/home/backImage.svg)] bg-cover bg-center bg-no-repeat p-10 max-xs:p-5 md:h-[438px] md:pb-[95px] md:pl-[45px]`}
+      bg-[url(/images/home/gradient.png)] bg-cover bg-center bg-no-repeat p-10 max-xs:p-5 md:h-[438px] md:pb-[95px] md:pl-[45px]`}
       >
         {/* <Image src={GradientImg} alt="BackImage" className="rounded-3xl" /> */}
         {/* md:bottom-[340px] */}

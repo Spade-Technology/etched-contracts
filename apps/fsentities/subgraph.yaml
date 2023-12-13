@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum
     name: FSEntityManager
-    network: mainnet
+    network: localhost
     source:
-      address: "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+      address: "0x4c5859f0f772848b2d91f1d83e2fe57935348029"
       abi: FSEntityManager
       startBlock: 0
     mapping:
@@ -14,8 +14,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
+        - FSEntity
         - CommentOnEntity
         - EntityBasePermissionsChanged
         - EntityCreated
@@ -31,10 +30,6 @@ dataSources:
         - name: FSEntityManager
           file: ./abis/FSEntityManager.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
         - event: CommentOnEntity(uint256,string,uint256,uint256)
           handler: handleCommentOnEntity
         - event: EntityBasePermissionsChanged(uint256,uint8)
@@ -58,3 +53,66 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/fs-entity-manager.ts
+  - kind: ethereum
+    name: ShareInvites
+    network: localhost
+    source:
+      address: "0x1291be112d480055dafd8a610b7d1e203891c274"
+      abi: ShareInvites
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - InviteAccepted
+        - InviteDeclined
+        - InviteRevoked
+        - InviteSent
+        - ShareInvitesOwnershipTransferred
+        - ShareInvitesTransfer
+      abis:
+        - name: ShareInvites
+          file: ./abis/ShareInvites.json
+      eventHandlers:
+        - event: InviteAccepted(uint256,address)
+          handler: handleInviteAccepted
+        - event: InviteDeclined(uint256,address)
+          handler: handleInviteDeclined
+        - event: InviteRevoked(uint256,address)
+          handler: handleInviteRevoked
+        - event: InviteSent(address,uint256,uint256,uint8,uint8)
+          handler: handleInviteSent
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/share-invites.ts
+  - kind: ethereum
+    name: EtchENS
+    network: localhost
+    source:
+      address: "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154"
+      abi: EtchENS
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - EtchENSCreated
+        - EtchENSOwnershipTransferred
+        - EtchENSTransfer
+      abis:
+        - name: EtchENS
+          file: ./abis/EtchENS.json
+      eventHandlers:
+        - event: EtchENSCreated(indexed uint256,indexed address,string)
+          handler: handleEtchENSCreated
+        # - event: OwnershipTransferred(indexed address,indexed address)
+        #   handler: handleOwnershipTransferred
+        # - event: Transfer(indexed address,indexed address,indexed uint256)
+        #   handler: handleTransfer
+      file: ./src/etch-ens.ts
