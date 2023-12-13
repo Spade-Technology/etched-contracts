@@ -417,13 +417,10 @@ export const etchRouter = createTRPCRouter({
           abi: EtchABI,
         });
 
-        await publicClient.waitForTransactionReceipt({
-          hash: tx,
-        });
-
         return { tx };
       }
     ),
+
   setTeamPermissionsBulk: protectedProcedure
     .input(
       z.object({
@@ -464,10 +461,6 @@ export const etchRouter = createTRPCRouter({
             [calldata],
           ],
           abi: EtchABI,
-        });
-
-        await publicClient.waitForTransactionReceipt({
-          hash: tx,
         });
 
         return { tx };
