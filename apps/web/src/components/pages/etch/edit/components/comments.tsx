@@ -8,21 +8,29 @@ import { useLoggedInAddress, useSignIn } from "@/utils/hooks/useSignIn";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import Avatar from "boring-avatars";
-import Placeholder from "public/icons/dashboard/placeholder2.svg";
 import { useEffect, useState } from "react";
+import { useContractRead } from "wagmi";
+import EtchesABI from "@/contracts/abi/Etches.json";
+import { contracts } from "@/contracts";
+import Image from "next/image";
+import { api } from "@/utils/api";
 
 type CommentProps = {
-  image: any;
+  imgUrl?: string;
   userName: string;
   description: string;
   commentedAt: string;
   addr: string;
 };
 
-const Comment = ({ image, userName, description, commentedAt, addr }: CommentProps) => {
+export const EtchedAvatar = ({ uid }: { uid: string }) => (
+  <Avatar size={40} name={uid.toLowerCase()} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
+);
+
+const Comment = ({ imgUrl, userName, description, commentedAt, addr }: CommentProps) => {
   return (
     <div className="flex justify-start gap-3 py-5">
-      <Avatar size={40} name={addr} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
+      {imgUrl ? <Image src={imgUrl} width={40} height={40} alt={description} className="rounded" /> : <EtchedAvatar uid={addr} />}
       <div>
         <div className="flex items-center gap-3">
           <div className="pt-2 text-base font-semibold text-muted-foreground">{userName}</div>
@@ -35,13 +43,23 @@ const Comment = ({ image, userName, description, commentedAt, addr }: CommentPro
 };
 
 const Comments = ({ etch }: { etch: Partial<Etch> }) => {
-  const [comments, setComments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
-    {}
-  );
+  const [comments, setComments] = useState<
+    Record<string, { comment: string; timestamp: number; owner: string; addr: string; imgUrl?: string }>
+  >({});
+
+  const [profilePics, setProfilePics] = useState<Record<string, string | undefined>>({});
   const { addComment, isLoading, newComment, setNewComment } = useCommentEtch(etch?.documentName, etch.tokenId);
 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
+  const { mutateAsync: getClerkUsers } = api.user.getClerkUser.useMutation();
+
+  const { data: hasWritePermission } = useContractRead({
+    abi: EtchesABI,
+    address: contracts.Etch,
+    functionName: "hasWritePermission",
+    args: [owner, etch?.tokenId],
+  });
 
   const handleComment = (evt: any) => {
     const input = evt.target.value;
@@ -66,7 +84,7 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
         litNodeClient: lit.client as any,
       })) as string;
 
-      if (decryptedComment)
+      if (decryptedComment) {
         setComments((old) => ({
           ...old,
           [comment.commentId]: {
@@ -76,11 +94,36 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
             owner: comment.owner.etchENS[0]?.name || shortenAddress({ address: comment.owner.id }),
           },
         }));
+      }
+    });
+  };
+  const getProfilePics = async (comments: EtchCommentAdded[]) => {
+    const extractUniqueWalletIds = (comments: EtchCommentAdded[]): string[] => {
+      const uniqueWalletIdsSet = new Set<string>();
+
+      comments.forEach((comment) => {
+        if (comment?.owner?.id) {
+          uniqueWalletIdsSet.add(comment.owner.id);
+        }
+      });
+
+      return Array.from(uniqueWalletIdsSet);
+    };
+
+    const accounts = extractUniqueWalletIds(comments);
+
+    const users = await getClerkUsers({ externalId: accounts });
+    users.forEach(async (user) => {
+      setProfilePics((old) => ({
+        ...old,
+        [user.externalId as string]: users[0]?.imageUrl,
+      }));
     });
   };
 
   useEffect(() => {
     decrypt(etch.comments || []);
+    getProfilePics(etch.comments || []);
   }, [etch.comments]);
 
   return (
@@ -90,8 +133,6 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
       <div className=" py-5">
         <div className="flex justify-start gap-3">
           <div className="flex cursor-pointer gap-1">
-            {/* <Image src={Placeholder} alt="placeholder" className="my-auto" /> */}
-            {/* <Icons.dropdownIcon className="my-auto mt-4" /> */}
             <Avatar
               size={40}
               name={owner.toLowerCase()}
@@ -99,26 +140,23 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
               colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]}
             />
           </div>
-          <TeaxtArea disabled={isLoading} placeholder="Add a comment" value={newComment} onChange={handleComment} />
+          <TeaxtArea
+            disabled={isLoading || !hasWritePermission}
+            placeholder="Add a comment"
+            value={newComment}
+            onChange={handleComment}
+            className={!hasWritePermission ? "cursor-not-allowed" : ""}
+          />
           {newComment && (
             <div className="float-right">
               <div className="flex justify-start gap-5">
-                {/* <Button
-                  className="border-none bg-transparent text-[#6D6D6D]"
-                  disabled={!newComment}
-                  onClick={() => {
-                    setNewComment("");
-                  }}
-                >
-                  X
-                </Button> */}
-
                 <Button
                   className={`rounded-lg duration-500 ${
                     !newComment ? " translate-x-[-60px] opacity-0" : " translate-x-0 opacity-100"
-                  }`}
+                  }
+                  `}
                   onClick={addComment}
-                  isLoading={isLoading}
+                  isLoading={isLoading || !hasWritePermission}
                 >
                   <PaperPlaneIcon />
                 </Button>
@@ -133,12 +171,12 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
         Object.values(comments).map(({ comment, timestamp, owner, addr }, idx) => {
           return (
             <Comment
-              image={Placeholder}
               userName={owner}
               description={comment}
               commentedAt={new Date(timestamp * 1000).toDateString()}
               key={idx}
               addr={addr}
+              imgUrl={profilePics[addr]}
             />
           );
         })}

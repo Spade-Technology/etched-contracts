@@ -4,9 +4,13 @@
  */
 import webpack from "webpack";
 await import("./src/env.mjs");
+import withPWA from "next-pwa";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  images: {
+    domains: ["img.clerk.com"],
+  },
   reactStrictMode: true,
 
   experimental: {
@@ -33,4 +37,13 @@ const config = {
   },
 };
 
-export default config;
+const isProd = process.env.NODE_ENV === "production";
+
+const pwaConfig = {
+  dest: "public",
+  register: true,
+  scope: "/dashboard",
+  skipWaiting: true,
+};
+
+export default isProd ? withPWA(pwaConfig)(config) : config;
