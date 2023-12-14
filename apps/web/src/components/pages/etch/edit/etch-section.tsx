@@ -13,6 +13,9 @@ import { useSignIn } from "@/utils/hooks/useSignIn";
 import filetype from "magic-bytes.js";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
+import dynamic from "next/dynamic";
+// import Viewer from "@/components/ui/model-viewer/Viewer";
+const Viewer = dynamic(() => import("@/components/ui/model-viewer/Viewer"), { ssr: false });
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -42,8 +45,10 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     const metadata = await lit.getMetadataFromIpfs(etch?.ipfsCid);
     let fileType = metadata?.type;
+    console.log(metadata);
 
     if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any))[0]?.mime;
+    console.log(URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)])));
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
     setEtchFile(image);
@@ -69,17 +74,20 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const toggleFullScreen = useCallback(() => {
     setIsFullScreen(!isFullScreen);
   }, [isFullScreen]);
+  console.log(fileType);
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="my-4 grid grid-cols-3 gap-4">
       {/* FullScreen overlay */}
+      {/* <Viewer file={"https://rufus31415.github.io/sandbox/3d-viewer/formats/BVH/models/01_01.bvh"} /> */}
       {isFullScreen && (
         <div
           className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-white bg-opacity-75"
           onClick={toggleFullScreen}
         >
+          <Viewer file={etchFile} />
           <ExitFullScreenIcon className="absolute right-5 top-5 h-6 w-6 cursor-pointer" />
           {etchFile && fileType.startsWith("image/") && (
             <img src={etchFile} alt="Etch image" className="max-h-full max-w-full rounded-sm" />
