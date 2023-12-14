@@ -5,6 +5,8 @@ import { api } from "../api";
 import { sleep } from "../common";
 import { refetchContext } from "../urql";
 import { useLoggedInAddress, useSignIn } from "./useSignIn";
+import { publicClient } from "../wagmi";
+import { currentNetworkId } from "@/contracts";
 
 const formSchema = z.object({
   name: z.string(),
@@ -31,6 +33,7 @@ export const useCommentEtch = (etchName: string | undefined, etchId: string) => 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
   const [newComment, setNewComment] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const addComment = async () => {
     if (!newComment) {
@@ -42,6 +45,7 @@ export const useCommentEtch = (etchName: string | undefined, etchId: string) => 
       return;
     }
     enableBeforeUnload();
+    setIsLoading(true);
     const name = `Commenting the etch ${etchName || etchId}`;
     const opId = addOperation({
       name,
@@ -76,13 +80,22 @@ export const useCommentEtch = (etchName: string | undefined, etchId: string) => 
         statusType: "loading",
       });
 
-      await commentOnEtchAsync({
+      const res = await commentOnEtchAsync({
         etchId,
         ipfsCid,
         owner,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
       });
+
+      const receipt = await publicClient({ chainId: currentNetworkId }).waitForTransactionReceipt({
+        hash: res.tx,
+      });
+
+      console.log(receipt);
+
+      setIsLoading(false);
+
       setOperation(opId, {
         name,
         status: "Done",
@@ -95,12 +108,14 @@ export const useCommentEtch = (etchName: string | undefined, etchId: string) => 
         description: "Your comment has been created, and will be visible shortly.",
         variant: "success",
       });
+      setNewComment("");
 
       await sleep(5000);
 
       refetchEtch();
     } catch (e: any) {
       console.error(e);
+      setIsLoading(false);
       toast({
         title: "Something went wrong",
         description: "Please try again",
@@ -116,7 +131,5 @@ export const useCommentEtch = (etchName: string | undefined, etchId: string) => 
     disableBeforeUnload();
   };
 
-  const isLoading: boolean = encryptLoading || commentOnEtchLoading;
-
-  return { addComment, isLoading, newComment, setNewComment };
+  return { addComment, isLoading: encryptLoading || commentOnEtchLoading || isLoading, newComment, setNewComment };
 };

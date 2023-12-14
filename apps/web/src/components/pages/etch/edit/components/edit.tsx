@@ -51,7 +51,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
     <div
       className={` ${
         edit ? "bg-[#F3F5F5] text-[#6D6D6D]" : " bg-[#097B45] text-[#FBFBFB]"
-      } sticky top-20 z-10 w-[414px] basis-1/3 rounded-2xl transition-colors`}
+      } sticky top-20 w-[414px] basis-1/3 rounded-2xl transition-colors`}
     >
       <TransferOwnershipDialog
         openDialog={openTransferOwnerShipDialog}
@@ -186,9 +186,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
             if (perm.wallet)
               return (
                 <ProfileCard
-                  image={Placeholder1}
                   name={perm.wallet.etchENS[0]?.name || "Unamed User"}
                   link={perm.wallet.id}
+                  uid={perm.wallet.id}
                   role={userPermissions[perm.permissionLevel]}
                 />
               );
@@ -198,9 +198,9 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
             if (perm.team)
               return (
                 <ProfileCard
-                  image={Placeholder2}
                   name={perm.team.name || "Unamed Team"}
                   link={perm.team.id}
+                  uid={perm?.wallet?.id}
                   role={userPermissions[perm.permissionLevel]}
                 />
               );

@@ -70,7 +70,7 @@ export const useSignIn = () => {
       const signedIn = await signIn("credentials", {
         message: authSig.signedMessage,
         signature: authSig.sig,
-        userId: userId,
+        userId: _userId,
         derivedVia: authSig.derivedVia,
         blockchainMessage,
         blockchainSignature,
