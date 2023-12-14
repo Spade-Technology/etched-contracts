@@ -179,7 +179,8 @@ export function CommandMenu() {
         className="mx-auto flex w-fit cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500 max-[950px]:hidden"
       >
         <SearchIcon className="h-full scale-150" />
-        Type a Command, or use {bsrtct("⌘K")}
+        Type a Command, or use{" "}
+        {bsrtct(typeof window !== "undefined" && window?.navigator.userAgent.indexOf("Mac OS X") != -1 ? "⌘K" : "ctrl + K")}
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
