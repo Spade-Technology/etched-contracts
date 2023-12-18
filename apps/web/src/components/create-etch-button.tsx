@@ -226,9 +226,6 @@ const FilePreviewer = ({
   const audioPreviewRef = useRef<HTMLAudioElement>(null);
   const [time, setTime] = useState(0);
 
-  // ONLY LOADING THE UNITY VIEWER IF IT'S A 3D FILE, PLEASE DON'T USE A STATE FOR THAT!!!!
-  // MAMA: DO IT IN ETCH-SECTION
-  // MAMA: FLEX ABOUT IT :rofl:
   let ModelViewer: ComponentType<{ file: string; fileName: string }> = () => <></>;
   if (Object.keys(model_formats).includes(file.type) || files.some((file) => Object.keys(model_formats).includes(file.type))) {
     ModelViewer = dynamic(() => import("./model-viewer"), { ssr: false });

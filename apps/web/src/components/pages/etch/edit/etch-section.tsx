@@ -1,6 +1,6 @@
 import { Etch } from "@/gql/graphql";
 import Image from "next/image";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, ComponentType } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
@@ -20,6 +20,7 @@ import EtchesABI from "@/contracts/abi/Etches.json";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 import { contracts } from "@/contracts";
+import dynamic from "next/dynamic";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -58,7 +59,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     const metadata = await lit.getMetadataFromIpfs(etch?.ipfsCid);
     let fileType = metadata?.type;
-    console.log("MAMA fileType: ", fileType);
+
     if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any))[0]?.mime;
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
@@ -85,6 +86,11 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const toggleFullScreen = useCallback(() => {
     setIsFullScreen(!isFullScreen);
   }, [isFullScreen]);
+
+  let ModelViewer: ComponentType<{ file: string; fileName: string }> = () => <></>;
+  if (Object.keys(model_formats).includes(fileType)) {
+    ModelViewer = dynamic(() => import("@/components/model-viewer"), { ssr: false });
+  }
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -141,7 +147,10 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
                 {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
 
-                {Object.keys(model_formats).includes(fileType) && 1}
+                {Object.keys(model_formats).includes(fileType) && (
+                  // @ts-ignore
+                  <ModelViewer file={etchFile} fileName={`model${model_formats[fileType][0]}`} />
+                )}
               </>
             ) : (
               <Skeleton className="h-full w-full rounded-2xl bg-[#097B45]" />
