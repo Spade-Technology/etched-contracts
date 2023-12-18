@@ -8,7 +8,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Form } from "@/components/ui/form";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { ComponentType, useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
@@ -23,9 +23,9 @@ import { PDFViewer } from "./pdf-viewer";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
-// import Viewer from "./ui/model-viewer/Viewer";
 import dynamic from "next/dynamic";
-const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
+import { model_formats } from "@/utils/model-formats";
+// import ModelViewer from "./model-viewer";
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +36,6 @@ export const CreateEtchButton = () => {
   const form = useForm<FormData>({});
 
   const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
-
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
     accept: {
@@ -44,6 +43,7 @@ export const CreateEtchButton = () => {
       "audio/*": [],
       "video/*": [],
       "application/pdf": [],
+      ...model_formats,
     },
     onDrop: (acceptedFiles: File[]) => {
       const newFiles = [
@@ -226,6 +226,14 @@ const FilePreviewer = ({
   const audioPreviewRef = useRef<HTMLAudioElement>(null);
   const [time, setTime] = useState(0);
 
+  // ONLY LOADING THE UNITY VIEWER IF IT'S A 3D FILE, PLEASE DON'T USE A STATE FOR THAT!!!!
+  // MAMA: DO IT IN ETCH-SECTION
+  // MAMA: FLEX ABOUT IT :rofl:
+  let ModelViewer: ComponentType<{ file: string; fileName: string }> = () => <></>;
+  if (Object.keys(model_formats).includes(file.type) || files.some((file) => Object.keys(model_formats).includes(file.type))) {
+    ModelViewer = dynamic(() => import("./model-viewer"), { ssr: false });
+  }
+
   // on audioPreviewRef initialization, update state at timeupdate
   useEffect(() => {
     if (audioPreviewRef?.current) {
@@ -384,6 +392,21 @@ const FilePreviewer = ({
           </DialogContent>
         </Dialog>
       )}
+
+      {Object.keys(model_formats).includes(file.type) && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <ModelViewer file={file.preview} fileName={file.name} />
+          </DialogContent>
+        </Dialog>
+      )}
+
       <div
         className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"
         onClick={() => setFiles(files.filter((_, i) => i !== index))}

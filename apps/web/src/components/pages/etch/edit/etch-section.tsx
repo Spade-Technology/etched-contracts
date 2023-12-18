@@ -13,6 +13,7 @@ import { useSignIn } from "@/utils/hooks/useSignIn";
 import filetype from "magic-bytes.js";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
+import { model_formats } from "@/utils/model-formats";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -42,7 +43,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     const metadata = await lit.getMetadataFromIpfs(etch?.ipfsCid);
     let fileType = metadata?.type;
-
+    console.log("MAMA fileType: ", fileType);
     if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any))[0]?.mime;
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
@@ -124,6 +125,8 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
                 )}
 
                 {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
+
+                {Object.keys(model_formats).includes(fileType) && 1}
               </>
             ) : (
               <Skeleton className="h-full w-full rounded-2xl bg-[#097B45]" />
