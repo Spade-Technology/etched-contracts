@@ -1,4 +1,6 @@
 import { getOrCreateWallet } from "./wallet"
+import { upsertEntityUserPermission } from "./utils";
+
 import {
   CommentOnEntity as CommentOnEntityEvent,
   EntityBasePermissionsChanged as EntityBasePermissionsChangedEvent,
@@ -26,6 +28,65 @@ import {
   OwnershipTransferred,
   Transfer
 } from "../generated/schema"
+
+export function handleEntityCreated (event: EntityCreatedEvent): void {
+  let wallet = getOrCreateWallet(event.params._to);
+
+  let entity = new FSEntity(
+    event.params._entityId.toString()
+  )
+  // entity._entityId = event.params._entityId
+  entity._to = event.params._to
+  entity._parent = event.params._parentId.toString()
+  entity._name = event.params._name
+  entity._type = event.params._type
+  entity._basePermissions = event.params._basePermissions
+  entity.owner = wallet.id
+
+  // entity.blockNumber = event.block.number
+  // entity.blockTimestamp = event.block.timestamp
+  // entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleEntityMoved (event: EntityMovedEvent): void {
+  //DETAIL: Storing the currently-useless `EntityMoved` instance.
+  let entity = new EntityMoved(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity._entityId = event.params._entityId
+  entity._fromParentId = event.params._fromParentId
+  entity._toParentId = event.params._toParentId
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+
+  //DETAIL: ADJUST ACTUAL FSEntity
+  let fsEntity = FSEntity.load(event.params._entityId.toString())
+  if (!!fsEntity) {
+    fsEntity._parent = event.params._toParentId.toString()
+    fsEntity.save()
+  }
+}
+
+export function handleEntityIndividualUserPermissionsChanged (
+  event: EntityIndividualUserPermissionsChangedEvent
+): void {
+  let wallet = getOrCreateWallet(event.params._user);
+  const entityUserId = `${event.params._entityId}-${wallet.eoa}`;
+  let entity = upsertEntityUserPermission(entityUserId, `${event.params._entityId}`, wallet.id, event.params._permissions)
+
+  // entity._entityId = event.params._entityId.toString()
+  // entity._user = event.params._user
+  // entity._permissions = event.params._permissions
+
+  // entity.save()
+}
+
 
 export function handleCommentOnEntity (event: CommentOnEntityEvent): void {
   let entity = new CommentOnEntity(
@@ -59,44 +120,6 @@ export function handleEntityBasePermissionsChanged (
   entity.save()
 }
 
-export function handleEntityCreated (event: EntityCreatedEvent): void {
-  let wallet = getOrCreateWallet(event.params._to);
-
-  let entity = new FSEntity(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._to = event.params._to
-  entity._parentId = event.params._parentId
-  entity._name = event.params._name
-  entity._type = event.params._type
-  entity._basePermissions = event.params._basePermissions
-  entity.owner = wallet.id
-
-  // entity.blockNumber = event.block.number
-  // entity.blockTimestamp = event.block.timestamp
-  // entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleEntityIndividualUserPermissionsChanged (
-  event: EntityIndividualUserPermissionsChangedEvent
-): void {
-  let entity = new EntityIndividualUserPermissionsChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._user = event.params._user
-  entity._permissions = event.params._permissions
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
 export function handleEntityMetaChanged (event: EntityMetaChangedEvent): void {
   let entity = new EntityMetaChanged(
     event.transaction.hash.concatI32(event.logIndex.toI32())
@@ -116,20 +139,6 @@ export function handleEntityMetaChanged (event: EntityMetaChangedEvent): void {
   entity.save()
 }
 
-export function handleEntityMoved (event: EntityMovedEvent): void {
-  let entity = new EntityMoved(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._fromParentId = event.params._fromParentId
-  entity._toParentId = event.params._toParentId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
 
 export function handleEntityShareMaxPermissionsChanged (
   event: EntityShareMaxPermissionsChangedEvent

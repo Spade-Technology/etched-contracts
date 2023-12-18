@@ -2,6 +2,7 @@ type Wallet @entity {
   id: Bytes!
   eoa: String!
   ownedFSEntities: [FSEntity!] @derivedFrom(field: "owner")
+  memberFSentities: [EntityUserPermission!] @derivedFrom(field: "_user")
   # ownedEtches: [EtchOwnership!] @derivedFrom(field: "owner")
   # ownedTeams: [TeamOwnership!] @derivedFrom(field: "owner")
   # ownedorganisations: [OrganisationOwnership!] @derivedFrom(field: "owner")
@@ -15,14 +16,23 @@ type Wallet @entity {
 }
 
 type FSEntity @entity(immutable: true) {
-  id: Bytes!
-  _entityId: BigInt! # uint256
+  id: String! # uint256
+  # _entityId: BigInt! # uint256
   _to: Bytes! # address
-  _parentId: BigInt! # uint256
+  _parent: FSEntity
+  _children: [FSEntity!] @derivedFrom(field: "_parent")
   _name: String! # string
   _type: Int! # uint8
   _basePermissions: Int! # uint8
+  userPermissions: [EntityUserPermission!] @derivedFrom(field: "_entity")
   owner: Wallet!
+}
+
+type EntityUserPermission @entity(immutable: true) {
+  id: String!
+  _entity: FSEntity! # uint256
+  _user: Wallet! # address
+  _permissions: Int! # uint8
 }
 
 type CommentOnEntity @entity(immutable: true) {
@@ -59,7 +69,7 @@ type EntityCreated @entity(immutable: true) {
 }
 
 type EntityIndividualUserPermissionsChanged @entity(immutable: true) {
-  id: Bytes!
+  id: String!
   _entityId: BigInt! # uint256
   _user: Bytes! # address
   _permissions: Int! # uint8
