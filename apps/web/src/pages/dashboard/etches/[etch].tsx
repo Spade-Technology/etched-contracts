@@ -11,6 +11,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+
 export const metadata: Metadata = {
   title: "Etch Viewer",
   description: "Etch Viewer",
@@ -22,6 +24,7 @@ export default function EtchPage() {
 
   // using window location because the query cannot be upheld, and the useRouter takes a few renders to initialize
   const { etch, isLoading, error } = useGetUniqueEtch(etchId);
+  const owner = useLoggedInAddress();
 
   if (!(router.query!.etch as string) || typeof (router.query!.etch as string) !== "string")
     return <div className="flex h-screen w-screen bg-white"> todo: add skeleton </div>;

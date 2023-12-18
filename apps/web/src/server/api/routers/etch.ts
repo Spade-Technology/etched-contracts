@@ -1,6 +1,7 @@
 import { camelCaseNetwork, contracts } from "@/contracts";
 import { lit } from "@/lit";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { encryptToIpfs } from "@/server/lit-encrypt";
 import { generateServerAuthSig, publicClient, walletClient } from "@/server/web3";
 import { defaultAccessControlConditions, defaultAccessControlConditionsUsingReadableID } from "@/utils/accessControlConditions";
 import { teamPermissions } from "@/utils/common";
@@ -52,20 +53,18 @@ export const etchRouter = createTRPCRouter({
 
             const file = await fetch(url).then((res) => res.blob());
 
-            const ipfsCid = await lit
-              .encryptToIpfs({
-                // authSig: authSig,
-                authSig: await generateServerAuthSig(),
-                file,
-                chain: camelCaseNetwork,
-                evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
-                metadata: { type },
-              })
-              .catch((err) => {
-                console.log(err);
-                console.log(err.stack);
-                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
-              });
+            const ipfsCid = await encryptToIpfs({
+              // authSig: authSig,
+              authSig: await generateServerAuthSig(),
+              file,
+              chain: camelCaseNetwork,
+              evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
+              metadata: { type },
+            }).catch((err) => {
+              console.log(err);
+              console.log(err.stack);
+              throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+            });
 
             ipfsCids.push(ipfsCid);
 
@@ -417,13 +416,10 @@ export const etchRouter = createTRPCRouter({
           abi: EtchABI,
         });
 
-        await publicClient.waitForTransactionReceipt({
-          hash: tx,
-        });
-
         return { tx };
       }
     ),
+
   setTeamPermissionsBulk: protectedProcedure
     .input(
       z.object({
@@ -464,10 +460,6 @@ export const etchRouter = createTRPCRouter({
             [calldata],
           ],
           abi: EtchABI,
-        });
-
-        await publicClient.waitForTransactionReceipt({
-          hash: tx,
         });
 
         return { tx };

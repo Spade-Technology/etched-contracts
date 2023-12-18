@@ -9,9 +9,6 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import Avatar from "boring-avatars";
 import { useEffect, useState } from "react";
-import { useContractRead } from "wagmi";
-import EtchesABI from "@/contracts/abi/Etches.json";
-import { contracts } from "@/contracts";
 import Image from "next/image";
 import { api } from "@/utils/api";
 
@@ -36,30 +33,27 @@ const Comment = ({ imgUrl, userName, description, commentedAt, addr }: CommentPr
           <div className="pt-2 text-base font-semibold text-muted-foreground">{userName}</div>
           <div className="font-nornal pt-2 text-base text-muted-foreground">{commentedAt}</div>
         </div>
-        <div className="whitespace-pre-wrap pt-2 text-base font-medium text-muted-foreground">{description}</div>
+        {description ? (
+          <div className="whitespace-pre-wrap pt-2 text-base font-medium text-muted-foreground">{description}</div>
+        ) : (
+          <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200"></div>
+        )}
       </div>
     </div>
   );
 };
 
-const Comments = ({ etch }: { etch: Partial<Etch> }) => {
-  const [comments, setComments] = useState<
-    Record<string, { comment: string; timestamp: number; owner: string; addr: string; imgUrl?: string }>
-  >({});
-
+const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWritePermission: boolean }) => {
+  const [comments, setComments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
+    {}
+  );
   const [profilePics, setProfilePics] = useState<Record<string, string | undefined>>({});
+
   const { addComment, isLoading, newComment, setNewComment } = useCommentEtch(etch?.documentName, etch.tokenId);
 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
   const { mutateAsync: getClerkUsers } = api.user.getClerkUser.useMutation();
-
-  const { data: hasWritePermission } = useContractRead({
-    abi: EtchesABI,
-    address: contracts.Etch,
-    functionName: "hasWritePermission",
-    args: [owner, etch?.tokenId],
-  });
 
   const handleComment = (evt: any) => {
     const input = evt.target.value;
@@ -126,9 +120,28 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
     getProfilePics(etch.comments || []);
   }, [etch.comments]);
 
+  const [_comments, set_Comments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
+    {}
+  );
+
+  useEffect(() => {
+    const commentsUpdate: Record<string, { comment: string; timestamp: number; owner: string; addr: string }> = {};
+    (etch?.comments || []).forEach((etch_comment) => {
+      const commentId = etch_comment.commentId.toString();
+      const commentData = comments[commentId] || { comment: "", timestamp: 0, owner: "", addr: "" };
+      commentsUpdate[commentId] = {
+        comment: commentData.comment,
+        timestamp: etch_comment.comment_timestamp as number,
+        addr: etch_comment.owner.id as string,
+        owner: etch_comment.owner.etchENS[0]?.name || shortenAddress({ address: etch_comment.owner.id }),
+      };
+    });
+    set_Comments(commentsUpdate);
+  }, [etch.comments, comments]);
+
   return (
     <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
-      <div className="text-xl font-semibold">{Object.keys(comments).length} Comments</div>
+      <div className="text-xl font-semibold">{Object.keys(_comments).length} Comments</div>
 
       <div className=" py-5">
         <div className="flex justify-start gap-3">
@@ -166,9 +179,9 @@ const Comments = ({ etch }: { etch: Partial<Etch> }) => {
         </div>
       </div>
 
-      {comments &&
-        Object.keys(comments).length > 0 &&
-        Object.values(comments).map(({ comment, timestamp, owner, addr }, idx) => {
+      {_comments &&
+        Object.keys(_comments).length > 0 &&
+        Object.values(_comments).map(({ comment, timestamp, owner, addr }, idx) => {
           return (
             <Comment
               userName={owner}

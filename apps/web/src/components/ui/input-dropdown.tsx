@@ -356,7 +356,7 @@ const UsersInputDropdown = ({ roleData, type, placeholder, selectedItems, setSel
           >
             <div className="custom-scrollbar max-h-[108px] overflow-auto overflow-x-hidden pr-2">
               {!!users.length ? (
-                users.map(({ id, name }) => <DropDownItem id={id} name={name} />)
+                users.map(({ id, name }) => <DropDownItem key={id} id={id} name={name} />)
               ) : (
                 <DropDownItem id={input?.value} name={""} />
               )}
