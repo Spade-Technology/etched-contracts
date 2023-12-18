@@ -1,6 +1,6 @@
 import { Etch } from "@/gql/graphql";
 import Image from "next/image";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
@@ -14,6 +14,12 @@ import filetype from "magic-bytes.js";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
 import { model_formats } from "@/utils/model-formats";
+import { useContractRead } from "wagmi";
+import EtchesABI from "@/contracts/abi/Etches.json";
+
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+
+import { contracts } from "@/contracts";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -21,6 +27,15 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const [fileType, setFileType] = useState("");
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { regenerateAuthSig } = useSignIn();
+
+  const owner = useLoggedInAddress();
+
+  const { data: hasWritePermission } = useContractRead({
+    abi: EtchesABI,
+    address: contracts.Etch,
+    functionName: "hasWritePermission",
+    args: [owner, etch?.tokenId],
+  });
 
   const decrypt = async () => {
     await lit.connect();
@@ -134,10 +149,15 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
           </div>
         </AspectRatio>
 
-        <Comments etch={etch || {}} />
+        <Comments etch={etch || {}} hasWritePermission={hasWritePermission as boolean} />
       </div>
       <div className="col-span-1">
-        <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} />
+        <Edit
+          setOpenAddUser={setOpenAddUser}
+          etch={etch}
+          isLoading={isLoading}
+          hasWritePermission={hasWritePermission as boolean}
+        />
         <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
       </div>
     </div>
