@@ -1,13 +1,13 @@
 {
-  "name": "true",
+  "name": "entities",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ true",
-    "create-local": "graph create --node http://localhost:8020/ true",
-    "remove-local": "graph remove --node http://localhost:8020/ true",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 true",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ entities",
+    "create-local": "graph create --node http://localhost:8020/ entities",
+    "remove-local": "graph remove --node http://localhost:8020/ entities",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 entities",
     "test": "graph test"
   },
   "dependencies": {
