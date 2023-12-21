@@ -23,6 +23,7 @@ import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
 import BgVector from "public/images/backgrounds/dashboard/vector.svg";
 import { Dispatch, SetStateAction, useState } from "react";
 import ProfileCard from "../../../../ui/profile-card";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 dayjs.extend(relativeTime);
 
@@ -30,6 +31,7 @@ type EditProps = {
   setOpenAddUser: Dispatch<SetStateAction<boolean>>;
   etch?: Partial<Etch>;
   isLoading?: boolean;
+  hasWritePermission: boolean;
 };
 
 const userPermissions: {
@@ -43,10 +45,12 @@ const userPermissions: {
   2: "read & write",
 };
 
-const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
+const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps) => {
   const [edit, setEdit] = useState(false);
   const [openTransferOwnerShipDialog, setOpenTransferOwnerShipDialog] = useState(false);
   const { isLoading: updateLoading, setDescription, setDocumentName, updateEtch: saveHandler } = useUpdateEtch(setEdit, etch);
+  const owner = useLoggedInAddress();
+
   return (
     <div
       className={` ${
@@ -89,7 +93,8 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
             <Button
               variant="default"
               onClick={() => setEdit(true)}
-              className="w-40 gap-2 rounded-full  bg-[#A1FFD3] px-3 text-base text-[#097B45]  "
+              className="w-40 gap-2 rounded-full  bg-[#A1FFD3] px-3 text-base text-[#097B45]"
+              disabled={!hasWritePermission}
             >
               Edit Etch <Image src={PenIcon} alt="penIcon" />
             </Button>
@@ -123,6 +128,13 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
               className={`${
                 edit ? "border-[#097B45] bg-transparent text-[#097B45]" : "border-[#A1FFD3] text-[#A1FFD3]"
               } gap-2 rounded-full  border-[1px] px-3 text-base`}
+              disabled={
+                !(
+                  etch?.ownership?.owner?.id === owner ||
+                  etch?.ownership?.team?.ownership?.owner?.id === owner ||
+                  etch?.ownership?.team?.ownership?.organisation?.ownership?.owner?.id === owner
+                )
+              }
             >
               <div>Transfer</div>
               <Icons.transferIcon color={edit ? "#097B45" : "#A1FFD3"} className="align-middle" />
@@ -209,6 +221,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading }: EditProps) => {
           <Button
             onClick={() => setOpenAddUser(true)}
             className="mt-10 w-full gap-3 rounded-3xl border-[2px] border-[#097B45] bg-transparent text-[#097B45] "
+            disabled={!hasWritePermission}
           >
             <Image src={AddIcon} alt="add-icon" /> Add more users
           </Button>

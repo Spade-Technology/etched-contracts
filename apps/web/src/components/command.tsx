@@ -76,26 +76,37 @@ export const commands = [
   },
 ];
 
-export const bsrtct = (shortcut: string) => {
-  try {
-    // the shortcut is passed as "⇧⌘K", if windows transform it to ⇧ + Ctrl + K
-    // ⌘ if mac, ctrl if windows
-    if (navigator.platform.indexOf("Win") != -1) {
-      // join all the characters with a + sign
-      shortcut = shortcut.split("").join(" + ");
-      shortcut = shortcut.replace("⌘", "Ctrl");
-    }
+export const useBsrtct = () => {
+  const [isWin, setIsWin] = useState(false);
 
-    return shortcut;
-  } catch (e) {
-    return shortcut;
+  function bsrtct(shortcut: string) {
+    try {
+      // the shortcut is passed as "⇧⌘K", if windows transform it to ⇧ + Ctrl + K
+      // ⌘ if mac, ctrl if windows
+      if (!isWin) {
+        // join all the characters with a + sign
+        shortcut = shortcut.split("").join(" + ");
+        shortcut = shortcut.replace("⌘", "Ctrl");
+      }
+
+      return shortcut;
+    } catch (e) {
+      return shortcut;
+    }
   }
+
+  useEffect(() => {
+    if (navigator.platform.indexOf("Win")) setIsWin(true);
+  }, []);
+
+  return { bsrtct };
 };
 
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
   const currentSearch = useState("");
   const router = useRouter();
+  const { bsrtct } = useBsrtct();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
