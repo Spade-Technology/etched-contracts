@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { shortenAddress } from "@/utils/hooks/address";
-import { signOut, useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { useSignOut, useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -119,6 +119,8 @@ export const SideBar = () => {
 };
 
 function UserSettings({ children }: { children: React.ReactNode }) {
+  const { signOut } = useSignOut();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>

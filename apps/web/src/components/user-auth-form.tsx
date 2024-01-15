@@ -5,8 +5,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 import { shortenAddress } from "@/utils/hooks/address";
-import { signOut, useSignIn } from "@/utils/hooks/useSignIn";
-import { SignIn, SignUp, useAuth } from "@clerk/nextjs";
+import { useSignOut, useSignIn } from "@/utils/hooks/useSignIn";
+import { SignIn, SignUp, useAuth, useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -23,6 +23,8 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) {
   const router = useRouter();
+  const { signOut } = useSignOut();
+
   const { status, data: session } = useSession();
 
   return (
@@ -89,16 +91,21 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
 export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProps) {
   const router = useRouter();
 
-  const { isLoaded, userId, sessionId, getToken, isSignedIn } = useAuth();
+  const { isLoaded, userId, sessionId, isSignedIn } = useAuth();
   const { logIn } = useSignIn();
 
   React.useEffect(() => {
-    console.log(sessionId, userId, isLoaded, isSignedIn);
+    console.log({ sessionId, userId, isLoaded, isSignedIn });
     if (sessionId && userId && isLoaded && isSignedIn) {
       logIn({
         isPatchWallet: true,
       });
     }
+    /*
+     * WORK AROUND FOR THIS BUG
+     * Clerk: “The <SignUp/> and <SignIn/> components cannot render when a user is already signed in, unless the application allows...
+     */
+    if (isLoaded) router.push("/auth");
   }, [userId, sessionId, isSignedIn, isLoaded, router.asPath]);
 
   return (
