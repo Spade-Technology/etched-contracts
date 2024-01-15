@@ -12,7 +12,7 @@
     "codegen": "dotenv -e ../../.env --  graphql-codegen"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.25.3",
+    "@clerk/nextjs": "^4.29.3",
     "@emailjs/browser": "^3.11.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.3.1",
