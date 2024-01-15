@@ -12,7 +12,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-
+import { Icons } from "./ui/icons";
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
 import dayjs from "dayjs";
@@ -91,8 +91,11 @@ export const CreateEtchButton = () => {
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="w-fit px-5 duration-500 hover:shadow-etched-1" onClick={() => setIsOpen(true)}>
-          + Create Etch
+        <Button
+          className="w-fit gap-1.5 px-5 text-base font-semibold text-white shadow-3xl duration-500"
+          onClick={() => setIsOpen(true)}
+        >
+          <Icons.plus /> Etch Now
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className={"max-h-screen overflow-y-scroll lg:max-w-screen-lg"}>

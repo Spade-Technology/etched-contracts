@@ -165,3 +165,7 @@
     background-position: right -40px top 0;
   }
 }
+
+input:checked + label .check-icon {
+  display: block;
+}

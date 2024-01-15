@@ -11,6 +11,7 @@ import {
 import { signOut } from "@/utils/hooks/useSignIn";
 import { Loader2Icon, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Icons } from "./ui/icons";
 
 import { Etch, Organisation, Team, Wallet } from "@/gql/graphql";
 import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
@@ -183,15 +184,15 @@ export function CommandMenu() {
   // these are some changes
 
   return (
-    <article className="">
+    <article className="ml-auto">
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="mx-auto flex w-fit cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500 max-[950px]:hidden"
+        className="flex w-fit cursor-text justify-start gap-2 rounded-sm py-2 px-4 text-slate-500 font-body !text-sm font-normal max-[950px]:hidden"
       >
-        <SearchIcon className="h-full scale-150" />
+        <Icons.search className="" />
         Type a Command, or use{" "}
-        {bsrtct(typeof window !== "undefined" && window?.navigator.userAgent.indexOf("Mac OS X") != -1 ? "⌘K" : "ctrl + K")}
+        {bsrtct("⌘K")}
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
