@@ -50,7 +50,8 @@ export const SideBar = () => {
     { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
     { url: "/dashboard/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
     { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: true },
-    { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
+    // { url: "/dashboard/profile", title: "Profile", Icon: Icons.user },
+    // { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
   ];
 
   const activePageIndex = pages.findIndex(({ url }) => url === path) === -1 ? 0 : pages.findIndex(({ url }) => url === path);
@@ -90,42 +91,18 @@ export const SideBar = () => {
           })}
         </ul>
         <div className="mt-auto">
-          <UserSettings>
-            <div className="max-lg flex w-full cursor-pointer justify-center rounded-lg py-2 hover:bg-slate-100 lg:justify-between lg:px-3">
-              <span className="my-auto text-sm font-medium text-black dark:text-white max-lg:hidden">
-                {loggedInAddress ? shortenAddress({ address: loggedInAddress ?? "" }) : "Loading..."}
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                aria-roledescription="more menu"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className=" h-12 w-12 rounded-lg py-2 text-black lg:px-3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                // className="lucide lucide-more-horizontal"
-              >
-                <circle cx="12" cy="12" r="1" />
-                <circle cx="19" cy="12" r="1" />
-                <circle cx="5" cy="12" r="1" />
-              </svg>
-            </div>
-          </UserSettings>
+         
         </div>
       </div>
     </aside>
   );
 };
 
-function UserSettings({ children }: { children: React.ReactNode }) {
+export const UserSettings=({ children }: { children: React.ReactNode })=> {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="ml-3 w-56">
+      <DropdownMenuContent className="mr-7 w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
