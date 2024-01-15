@@ -64,7 +64,7 @@ export const ChangePasword = ({ isModal, setIsModal }: { isModal: boolean; setIs
 };
 
 const Input = ({ title, value, form, setForm }: { title: string; value: string; form: form; setForm: React.Dispatch<form> }) => {
-  const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div>

@@ -10,7 +10,7 @@ export const Password = () => {
     <main>
       <ChangePasword {...props} />
       <header className="mb-5 text-xl font-semibold text-foreground">Change Password</header>
-      <Button onClick={() => setIsModal(true)} className="font-semibold text-white">
+      <Button onClick={() => setIsModal(true)} className="font-semibold text-white shadow-2xl">
         Change Password
       </Button>
     </main>
