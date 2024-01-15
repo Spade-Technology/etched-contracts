@@ -1,14 +1,14 @@
-import { AlertDialog, AlertDialogContent, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
+import { Label } from "@/components/ui/label";
 import { handleCopy } from "@/lib/utils";
 import React, { ReactNode, useEffect, useState } from "react";
 
 export const Paymaster = () => {
   const [addWallet, setAddWallet] = useState("");
   const [modal, setModal] = useState(false);
-  const [privateKey, setPrivateKey] = useState("");
-  const props = { modal, setModal, setAddWallet, setPrivateKey };
+  const props = { modal, setModal, setAddWallet };
 
   useEffect(() => {
     setTimeout(() => {
@@ -39,21 +39,20 @@ export const Paymaster = () => {
 
   return (
     <main>
-      <header className=" mb-5 text-xl font-semibold text-foreground">Paymaster Configuration</header>
-      <div className="mb-2 text-base font-semibold text-muted-foreground">Enter your private key string here</div>
-      <input
-        value={privateKey}
-        onChange={(e) => setPrivateKey(e.target.value)}
-        className="mb-4 flex h-10 w-80 items-center rounded border border-muted-foreground px-5 text-base font-normal text-foreground outline-primary duration-100"
-      />
-      <div className="flex gap-4">
-        <Button onClick={() => setPrivateKey("")} className="border border-primary bg-white font-semibold text-primary">
-          Clear
-        </Button>
+      <header className=" mb-5 text-xl font-semibold text-foreground">Gas Configuration</header>
+
+      <div className="flex h-14 w-80 items-center justify-between rounded-2xl bg-primary p-4">
+        <div className="font-body text-base font-medium text-primary-foreground">
+          Using <b>{"Etched.xyz"}</b> for gas
+        </div>
+        {/* <---------- modals & more ----------> */}
         <AddWallet {...props}>
-          <Button disabled={!privateKey} onClick={() => setModal(true)} className="font-semibold text-white">
-            Submit
-          </Button>
+          <div
+            onClick={() => setModal(true)}
+            className="ml-auto cursor-pointer rounded-full bg-white px-2 py-0.5 text-sm font-medium text-primary"
+          >
+            Change
+          </div>
         </AddWallet>
       </div>
     </main>
@@ -64,17 +63,17 @@ const AddWallet = ({
   modal,
   setModal,
   setAddWallet,
-  setPrivateKey,
   children,
 }: {
   modal: boolean;
   setModal: React.Dispatch<boolean>;
   setAddWallet: React.Dispatch<string>;
-  setPrivateKey: React.Dispatch<string>;
   children: ReactNode;
 }) => {
+  const [privateKey, setPrivateKey] = useState("");
 
-  const confirm = () => {
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
     setModal(false);
     setAddWallet("pending");
     setPrivateKey("");
@@ -83,21 +82,39 @@ const AddWallet = ({
   return (
     <AlertDialog open={modal}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent className={"block max-h-screen w-96"}>
-        <section>
-          <div className="text-base font-semibold text-primary">Confirm addWallet addition</div>
-          <div className="mt-3 text-base font-medium text-muted-foreground">
-            Once you confirm, you can’t change the addWallet.
-          </div>
-          <div className="mt-9 flex justify-end gap-1">
-            <Button onClick={() => setModal(false)} className=" bg-white font-semibold text-muted-foreground shadow-none">
+      <AlertDialogContent className={"max-h-screen !w-96"}>
+        <AlertDialogTitle className="font-body text-base text-primary">Enter your private key</AlertDialogTitle>
+        <div className="mt-3 font-body text-sm font-medium text-muted-foreground">
+          Enter your private key to add a new wallet. Please check and confirm. This action cannot be reversed.
+        </div>
+        <form onSubmit={handleSubmit}>
+          <Label className="font-body text-base font-semibold text-muted-foreground">Private key string</Label>
+          <input
+            autoFocus
+            required
+            type="text"
+            placeholder="Ex: shoe,unicorn,bag,phone,hammer,land,drain,super"
+            value={privateKey}
+            onChange={(e: any) => setPrivateKey(e.target.value)}
+            className="shadow-btn mt-1 flex h-10 w-full items-center gap-1 rounded border border-muted-foreground px-3 font-body font-body text-base text-base font-medium text-muted-foreground focus:outline-none"
+          />
+
+          <footer className="mt-10 flex items-center justify-end gap-5">
+            <div
+              onClick={() => {
+                setModal(false);
+              }}
+              className="cursor-pointer font-body text-base font-semibold text-muted-foreground hover:text-foreground"
+            >
               Cancel
-            </Button>
-            <Button onClick={confirm} className="font-semibold text-white">
-              Confirm
-            </Button>
-          </div>
-        </section>
+            </div>
+            <div>
+              <Button type="submit" className="text-white">
+                Confirm
+              </Button>
+            </div>
+          </footer>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   );
@@ -105,8 +122,11 @@ const AddWallet = ({
 
 const Wallet = ({ setAddWallet }: { setAddWallet: React.Dispatch<string> }) => {
   return (
+    <>
+      <header className="mb-5 text-xl font-semibold text-foreground">Wallet Configuration</header>
     <main className="w-80 rounded-2xl bg-primary p-4 font-body text-[#DBFFEE]">
-      <header className="flex items-center justify-between">
+
+      <section className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           ki290...1nDn <Icons.copy className="cursor-pointer" onClick={() => handleCopy("ki290...1nDn")} />
         </div>
@@ -116,9 +136,10 @@ const Wallet = ({ setAddWallet }: { setAddWallet: React.Dispatch<string> }) => {
         >
           Remove
         </div>
-      </header>
+      </section>
       <div className="mt-5 text-base font-semibold">Balance</div>
       <div className="text-3xl font-light">22.345 ETH</div>
     </main>
+    </>
   );
 };
