@@ -36,7 +36,7 @@ export const ManageDialog = () => {
             <div
               key={idx}
               onClick={() => (idx == 0 ? setOpenOrgModal(true) : setOpenTeamModal(true))}
-              className={`flex h-fit cursor-pointer items-center gap-3 border-[1px] border-primary px-5 py-[11px] text-base font-semibold text-primary shadow-3xl duration-300 hover:bg-primary hover:text-white `}
+              className={`flex h-fit cursor-pointer items-center gap-3 border-[1px] border-primary px-5 py-[11px] text-base font-semibold text-primary hover:shadow-3xl duration-300 hover:bg-primary hover:text-white `}
             >
               {name}
             </div>

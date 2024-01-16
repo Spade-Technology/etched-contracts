@@ -44,7 +44,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
           <Button
             ref={sortRef}
             variant={"ghost"}
-            className="flex h-[42px] w-fit gap-2 border-none bg-transparent bg-white text-base font-medium text-muted-foreground shadow"
+            className="flex h-[42px] w-fit gap-2 border-none bg-transparent bg-white text-base font-medium text-muted-foreground shadow-4xl"
           >
             Sort by:<span className="text-base font-semibold text-foreground">{sort || sortList[0]}</span>
             <Icons.dropdownIcon />
@@ -76,7 +76,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
           <Button
             ref={filterRef}
             variant={"ghost"}
-            className="flex h-[42px] w-fit gap-2 border-none bg-transparent bg-white text-base font-medium text-muted-foreground shadow"
+            className="flex h-[42px] w-fit gap-2 border-none bg-transparent bg-white text-base font-medium text-muted-foreground shadow-4xl"
           >
             Filter:<span className="text-base font-semibold text-foreground">{filter || "All"}</span>
             <Icons.dropdownIcon />
@@ -140,7 +140,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <aside className="ml-auto flex h-[42px] w-6/12 items-center justify-between gap-[13px] bg-white px-[18px] py-[11px] shadow lg:w-[423px]">
+      <aside className="ml-auto flex h-[42px] w-6/12 items-center justify-between gap-[13px] bg-white px-[18px] py-[11px] shadow-4xl lg:w-[423px]">
         <Icons.search className="h-5 w-5" />
         <input
           type="text"
