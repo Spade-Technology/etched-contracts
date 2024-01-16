@@ -19,7 +19,7 @@ export default function Community() {
 
   return (
     <PageBoilerplate>
-      <main className="mt-5 flex w-full gap-7 bg-white px-10 py-8 shadow">
+      <main className="mt-5 flex w-full gap-7 bg-white px-10 py-8 shadow-4xl">
         <SidebarDialog {...props} />
         <section className="ml-6 min-h-screen w-full border-l border-[#E0E0E0] pl-5">
           {tabs.map(

@@ -18,11 +18,11 @@ export const DashboardHeader = () => {
   ];
 
   return (
-    <div className="sticky top-0 z-10 flex h-16 w-full items-center justify- bg-white pl-6 shadow">
+    <div className="sticky top-0 z-10 flex h-16 w-full items-center bg-white pl-6 shadow-4xl">
       <CreateEtchButton />
       <CommandMenu />
 
-      <div className="border-l border-[#F5F6FA] flex h-full w-fit items-center gap-6 mx-6 pl-6">
+      <div className="mx-6 flex h-full w-fit items-center gap-6 border-l border-[#F5F6FA] pl-6">
         {/* Etched ENS */}
         <EtchedENS />
         <TeamSelector horizontal={true} className="w-fit py-2" />

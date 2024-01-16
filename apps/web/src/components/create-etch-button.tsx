@@ -98,7 +98,7 @@ export const CreateEtchButton = () => {
           <Icons.plus /> Etch Now
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className={"max-h-screen overflow-y-scroll lg:max-w-screen-lg"}>
+      <AlertDialogContent className={"max-h-screen max-w-3xl"}>
         <div className="w-full">
           {etchCreated ? (
             <>
@@ -158,7 +158,7 @@ export const CreateEtchButton = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="h-[33vh] w-1/2 overflow-scroll">
+                    <div className="w-1/2">
                       <Label>Create on Behalf of</Label>
                       <TeamSelector className="w-full " horizontal />
 
@@ -174,7 +174,7 @@ export const CreateEtchButton = () => {
                           clear
                         </span>
                       </div>
-                      <div className="mt-3 grid grid-cols-3 gap-4 overflow-scroll">
+                      <div className="mt-3 grid max-h-40 grid-cols-3 gap-4 overflow-auto custom-scrollbar pr-2">
                         {files.map((file, index) => (
                           <FilePreviewer file={file} index={index} isLoading={isLoading} setFiles={setFiles} files={files} />
                         ))}
