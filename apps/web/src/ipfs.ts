@@ -1,11 +1,4 @@
-import { create } from "ipfs-http-client";
+import pinataSDK from "@pinata/sdk";
+import { env } from "./env.mjs";
 
-const authorization =
-  "Basic " + Buffer.from(`${process.env.NEXT_PUBLIC_INFURA_ID}:${process.env.INFURA_API_SECRET}`).toString("base64");
-
-export const ipfsClient = create({
-  url: "https://ipfs.infura.io:5001/api/v0",
-  headers: {
-    authorization,
-  },
-});
+export const pinata = new pinataSDK({ pinataJWTKey: env.PINATA_API_JWT });

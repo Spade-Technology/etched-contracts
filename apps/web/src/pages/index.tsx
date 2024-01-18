@@ -64,9 +64,7 @@ export default function Home() {
   const showWaitlistUsing = (open: boolean | string) => {
     setShowWaitlist(!!open);
 
-    if (typeof open === "string") {
-      setEmail(open);
-    }
+    if (typeof open === "string") setEmail(open);
   };
 
   return (
