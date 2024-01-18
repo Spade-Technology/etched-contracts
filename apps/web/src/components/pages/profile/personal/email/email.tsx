@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { AddEmail, RemoveEmail, email } from "./email-modals";
+import { AddEmail, RemoveEmail, email } from "./modals/add-email";
+import { EditEmail } from "./modals/edit-email";
 
 export const Email = () => {
   const [isModal, setIsModal] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [removeEmail, setRemoveEmail] = useState(false);
   const [emails, setEmails] = useState<email[]>([
     { title: "Primary Email Address", value: "jimc.carlos1965@gmail.com" },
@@ -14,6 +16,7 @@ export const Email = () => {
     <main>
       {/* <---------- modals & more ----------> */}
       <AddEmail {...props} />
+      <EditEmail isModal={edit} setIsModal={setEdit} emails={emails}/>
       <RemoveEmail {...props} />
 
       <header className="mb-5 mt-3 text-xl font-semibold text-foreground">Email</header>
@@ -29,8 +32,11 @@ export const Email = () => {
               {value}
             </div>
             <div className={`${idx == 1 && value ? "flex" : "hidden"} mt-2 items-center gap-4`}>
-              <div className="cursor-pointer font-body text-sm font-medium text-primary">Edit</div>
-              <div onClick={() => setRemoveEmail(true)} className="flex h-5 w-16 cursor-pointer items-center justify-center gap-1 rounded-full border border-destructive bg-destructive font-body text-sm font-medium text-white ">
+              <div onClick={() => setEdit(true)} className="cursor-pointer font-body text-sm font-medium text-primary">Edit</div>
+              <div
+                onClick={() => setRemoveEmail(true)}
+                className="flex h-5 w-16 cursor-pointer items-center justify-center gap-1 rounded-full border border-destructive bg-destructive font-body text-sm font-medium text-white "
+              >
                 Remove
               </div>
             </div>

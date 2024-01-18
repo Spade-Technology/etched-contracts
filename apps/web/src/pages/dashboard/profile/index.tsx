@@ -1,6 +1,6 @@
 // import Index from "@/components/pages/community/3d";
 import { PageBoilerplate } from "@/components/page-boilerplate";
-import { Email, Password, Paymaster, Profile, TwoStep } from "@/components/pages/profile";
+import { BackUpCodes, Email, Password, Paymaster, Profile, TwoStep } from "@/components/pages/profile";
 import { SelectTheme } from "@/components/pages/profile/personal/select-theme";
 import { SidebarDialog } from "@/components/pages/profile/sidebar";
 import { useState } from "react";
@@ -11,7 +11,7 @@ export default function Community() {
   const tabs = [
     { tab: "Personal", contents: [<Profile />, <Email />, <SelectTheme />] },
     { tab: "Billing", contents: [] },
-    { tab: "Security", contents: [<Paymaster />, <Password />, , <TwoStep />] },
+    { tab: "Security", contents: [<Paymaster />, <Password />, <TwoStep />, <BackUpCodes />] },
     { tab: "Item", contents: [] },
   ];
 
