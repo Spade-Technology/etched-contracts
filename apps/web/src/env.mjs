@@ -64,6 +64,11 @@ export const env = createEnv({
     DOMAIN: z.string(),
 
     NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME: z.string(),
+
+    NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY: z.string().url(),
+    PINATA_API_KEY: z.string().min(1),
+    PINATA_API_SECRET: z.string().min(1),
+    PINATA_API_JWT: z.string().min(1),
   },
 
   /**
@@ -130,6 +135,12 @@ export const env = createEnv({
 
     // Lit
     DOMAIN: process.env.DOMAIN,
+
+    // IPFS
+    NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY: process.env.NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY,
+    PINATA_API_KEY: process.env.PINATA_API_KEY,
+    PINATA_API_SECRET: process.env.PINATA_API_SECRET,
+    PINATA_API_JWT: process.env.PINATA_API_JWT,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

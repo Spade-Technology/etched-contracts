@@ -41,7 +41,7 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
             <blockquote className="space-y-2">
               <p className="text-lg">
                 &ldquo;This service saved countless hours & headaches by adding simplicity and privacy to the legalities of my
-                busines&rdquo;
+                business&rdquo;
               </p>
               <footer className="text-sm">John Doe</footer>
             </blockquote>
