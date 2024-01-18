@@ -149,7 +149,7 @@ export const CreateEtchButton = () => {
                       <div>
                         <div
                           {...getRootProps()}
-                          className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
+                          className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 px-5  text-center text-slate-600 transition-all hover:border-gray-400 hover:text-slate-900"
                         >
                           <input {...getInputProps()} />
                           <p>
@@ -174,7 +174,7 @@ export const CreateEtchButton = () => {
                           clear
                         </span>
                       </div>
-                      <div className="mt-3 grid max-h-40 grid-cols-3 gap-4 overflow-auto custom-scrollbar pr-2">
+                      <div className="custom-scrollbar mt-3 grid max-h-40 grid-cols-3 gap-4 overflow-auto pr-2">
                         {files.map((file, index) => (
                           <FilePreviewer file={file} index={index} isLoading={isLoading} setFiles={setFiles} files={files} />
                         ))}
@@ -249,6 +249,8 @@ const FilePreviewer = ({
 
   const fileFormat = file.path?.slice(file.path.indexOf(".") + 1);
 
+  const filename = (file.nameOverride ?? file.name).split(".").slice(0, -1).join(".");
+
   // Check if file is 3d model
   useEffect(() => {
     const fetchData = async () => {
@@ -258,7 +260,7 @@ const FilePreviewer = ({
   }, []);
 
   return (
-    <div key={index} className="aspect-w-1 aspect-h-1 group relative">
+    <div key={index} className="aspect-w-1 aspect-h-1 group relative h-20">
       {file.type.startsWith("image/") ? (
         <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
       ) : file.type.startsWith("audio/") ? (
@@ -282,13 +284,13 @@ const FilePreviewer = ({
         </div>
       ) : null}
       <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
-        <span className="text-center text-sm text-white">
-          {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+        <span className="mt-7 text-center text-sm text-white">
+          {filename.length < 12 ? filename : `${filename.substring(0, 8)}...`}
         </span>
         {isLoading ? (
           <span className="text-white opacity-50"> {uploadProgress}% </span>
         ) : (
-          <span className="text-white opacity-50">
+          <span className="text-xs text-white opacity-70">
             {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB
           </span>
         )}

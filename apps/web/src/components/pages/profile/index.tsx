@@ -3,3 +3,4 @@ export * from "./security/change-password";
 export * from "./security/two-step-auth/index";
 export * from "./personal/profile";
 export * from "./personal/email/email";
+export * from './security/backup-codes/index'

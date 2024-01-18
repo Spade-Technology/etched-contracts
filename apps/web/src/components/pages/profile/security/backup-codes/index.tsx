@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-export interface form {
-  email?: string;
-  password?: string;
-  status?: boolean;
-}
-
-export const TwoStep = () => {
+export const BackUpCodes = () => {
   return (
     <main>
       <header className="mb-2 text-xl font-semibold text-foreground">Backup codes</header>
-      <div className="mb-5 text-sm font-semibold text-muted-foreground">
-        You can enable Two-step authentication for enhanced security
-      </div>
+      <section className="mt-2 w-fit rounded-2xl bg-muted p-5 text-foreground">
+        <div className="text-sm font-semibold">Regenerate backup codes</div>
+        <div className="mt-2">
+          <div className="w-72 text-xs font-medium">
+            Get a fresh set of secure backup codes. Prior backup codes will be deleted and cannot be used.
+          </div>
+        </div>
+        <div className="mt-2 cursor-pointer font-body text-sm font-semibold text-primary underline">Regenerate codes</div>
+      </section>
     </main>
   );
 };
