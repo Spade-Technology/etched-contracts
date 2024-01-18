@@ -1,29 +1,21 @@
 import { getOrCreateWallet } from "./wallet"
-import { upsertEntityUserPermission } from "./utils";
+import { upsertFileMeta, upsertEntityUserPermission, upsertShareMeta } from "./utils";
 
 import {
   CommentOnEntity as CommentOnEntityEvent,
   EntityBasePermissionsChanged as EntityBasePermissionsChangedEvent,
   EntityCreated as EntityCreatedEvent,
   EntityIndividualUserPermissionsChanged as EntityIndividualUserPermissionsChangedEvent,
-  EntityMetaChanged as EntityMetaChangedEvent,
+  FileMetaChanged as FileMetaChangedEvent,
   EntityMoved as EntityMovedEvent,
-  EntityShareMaxPermissionsChanged as EntityShareMaxPermissionsChangedEvent,
-  EntityTransferredToOrganization as EntityTransferredToOrganizationEvent,
-  OrganizationTransferredToIndividual as OrganizationTransferredToIndividualEvent,
+  EntityTransferredToIndividual as EntityTransferredToIndividualEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
-  Transfer as TransferEvent
+  Transfer as TransferEvent,
+  ShareMetaChanged as ShareMetaChangedEvent
 } from "../generated/FSEntityManager/FSEntityManager"
 import {
   FSEntity,
   CommentOnEntity,
-  EntityBasePermissionsChanged,
-  EntityCreated,
-  EntityIndividualUserPermissionsChanged,
-  EntityMetaChanged,
-  EntityMoved,
-  EntityShareMaxPermissionsChanged,
-  EntityTransferredToOrganization,
   OrganizationTransferredToIndividual,
   OwnershipTransferred,
   Transfer
@@ -51,19 +43,6 @@ export function handleEntityCreated (event: EntityCreatedEvent): void {
 }
 
 export function handleEntityMoved (event: EntityMovedEvent): void {
-  //DETAIL: Storing the currently-useless `EntityMoved` instance.
-  let entity = new EntityMoved(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._fromParentId = event.params._fromParentId
-  entity._toParentId = event.params._toParentId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
 
   //DETAIL: ADJUST ACTUAL FSEntity
   let fsEntity = FSEntity.load(event.params._entityId.toString())
@@ -77,144 +56,56 @@ export function handleEntityIndividualUserPermissionsChanged (
   event: EntityIndividualUserPermissionsChangedEvent
 ): void {
   let wallet = getOrCreateWallet(event.params._user);
-  const entityUserId = `${event.params._entityId}-${wallet.eoa}`;
-  let entity = upsertEntityUserPermission(entityUserId, `${event.params._entityId}`, wallet.id, event.params._permissions)
-
-  // entity._entityId = event.params._entityId.toString()
-  // entity._user = event.params._user
-  // entity._permissions = event.params._permissions
-
-  // entity.save()
+  let entity = upsertEntityUserPermission(event, wallet);
 }
 
 
 export function handleCommentOnEntity (event: CommentOnEntityEvent): void {
   let entity = new CommentOnEntity(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    event.params._commentIpfsCid
   )
   entity._entityId = event.params._entityId
   entity._commentIpfsCid = event.params._commentIpfsCid
   entity._timestamp = event.params._timestamp
-  entity._commentCount = event.params._commentCount
-
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
-
   entity.save()
+
 }
 
 export function handleEntityBasePermissionsChanged (
   event: EntityBasePermissionsChangedEvent
 ): void {
-  let entity = new EntityBasePermissionsChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._newPermissions = event.params._newPermissions
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  //DETAIL: Update comment count on main
+  let fsEntity = FSEntity.load(event.params._entityId.toString())
+  if (!!fsEntity) {
+    fsEntity._basePermissions = event.params._newPermissions
+    fsEntity.save()
+  }
 }
 
-export function handleEntityMetaChanged (event: EntityMetaChangedEvent): void {
-  let entity = new EntityMetaChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._creator = event.params._creator
-  entity._documentName = event.params._documentName
-  entity._documentDescription = event.params._documentDescription
-  entity._ipfsCid = event.params._ipfsCid
-  entity._commentsCount = event.params._commentsCount
-  entity._timestamp = event.params._timestamp
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+export function handleFileMetaChanged (event: FileMetaChangedEvent): void {
+  let entity = upsertFileMeta(event);
 }
 
 
-export function handleEntityShareMaxPermissionsChanged (
-  event: EntityShareMaxPermissionsChangedEvent
+export function handleShareMetaChanged (
+  event: ShareMetaChangedEvent
 ): void {
-  let entity = new EntityShareMaxPermissionsChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._newPermissions = event.params._newPermissions
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  //NOTE: This "meta" pertains to the `Entity` that is of type `Share`
+  let sMeta = upsertShareMeta(event);
 }
 
-export function handleEntityTransferredToOrganization (
-  event: EntityTransferredToOrganizationEvent
+export function handleEntityTransferredToIndividual (
+  event: EntityTransferredToIndividualEvent
 ): void {
-  let entity = new EntityTransferredToOrganization(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._orgId = event.params._orgId
+  let fsEntity = FSEntity.load(event.params._entityId.toString());
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  if (!!fsEntity) {
+    let wallet = getOrCreateWallet(event.params._user);
+    fsEntity.owner = wallet.id;
+    fsEntity.save();
+  }
 }
 
-export function handleOrganizationTransferredToIndividual (
-  event: OrganizationTransferredToIndividualEvent
-): void {
-  let entity = new OrganizationTransferredToIndividual(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._entityId = event.params._entityId
-  entity._userId = event.params._userId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleOwnershipTransferred (
-  event: OwnershipTransferredEvent
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleTransfer (event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.tokenId = event.params.tokenId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}

@@ -24,6 +24,8 @@ type FSEntity @entity(immutable: true) {
   _name: String! # string
   _type: Int! # uint8
   _basePermissions: Int! # uint8
+  _shareMeta: ShareMeta! @derivedFrom(field: "_fsEntity")
+  _fileMeta: FileMeta! @derivedFrom(field: "_fsEntity")
   userPermissions: [EntityUserPermission!] @derivedFrom(field: "_entity")
   owner: Wallet!
 }
@@ -36,11 +38,10 @@ type EntityUserPermission @entity(immutable: true) {
 }
 
 type CommentOnEntity @entity(immutable: true) {
-  id: Bytes!
+  id: String!
   _entityId: BigInt! # uint256
   _commentIpfsCid: String! # string
   _timestamp: BigInt! # uint256
-  _commentCount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -50,19 +51,6 @@ type EntityBasePermissionsChanged @entity(immutable: true) {
   id: Bytes!
   _entityId: BigInt! # uint256
   _newPermissions: Int! # uint8
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type EntityCreated @entity(immutable: true) {
-  id: Bytes!
-  _entityId: BigInt! # uint256
-  _to: Bytes! # address
-  _parentId: BigInt! # uint256
-  _name: String! # string
-  _type: Int! # uint8
-  _basePermissions: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -78,43 +66,27 @@ type EntityIndividualUserPermissionsChanged @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type EntityMetaChanged @entity(immutable: true) {
-  id: Bytes!
-  _entityId: BigInt! # uint256
+type FileMeta @entity(immutable: true) {
+  id: String!
+  _fsEntity: FSEntity! # uint256
   _creator: Bytes! # address
   _documentName: String! # string
   _documentDescription: String! # string
   _ipfsCid: String! # string
-  _commentsCount: BigInt! # uint256
   _timestamp: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
 }
 
-type EntityMoved @entity(immutable: true) {
-  id: Bytes!
-  _entityId: BigInt! # uint256
-  _fromParentId: BigInt! # uint256
-  _toParentId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type ShareMeta @entity(immutable: true) {
+  id: String!
+  _fsEntity: FSEntity! # uint256 //The share with which the metadata is associated
+  _originalEntity: FSEntity! # uint256 //The entity that the share references
+  _maxPermissionsPerOwner: Int! # uint8
 }
 
 type EntityShareMaxPermissionsChanged @entity(immutable: true) {
-  id: Bytes!
+  id: String!
   _entityId: BigInt! # uint256
   _newPermissions: Int! # uint8
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type EntityTransferredToOrganization @entity(immutable: true) {
-  id: Bytes!
-  _entityId: BigInt! # uint256
-  _orgId: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
