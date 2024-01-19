@@ -17,29 +17,37 @@ import {
   FSEntity,
   CommentOnEntity,
   OrganizationTransferredToIndividual,
-  OwnershipTransferred,
-  Transfer
 } from "../generated/schema"
+
+const hrTypes = [
+  "PersonalOrg",
+  "Organization",
+  "Team",
+  "Folder",
+  "File",
+  "Share"
+]
 
 export function handleEntityCreated (event: EntityCreatedEvent): void {
   let wallet = getOrCreateWallet(event.params._to);
 
-  let entity = new FSEntity(
+  let fsEntity = new FSEntity(
     event.params._entityId.toString()
   )
   // entity._entityId = event.params._entityId
-  entity._to = event.params._to
-  entity._parent = event.params._parentId.toString()
-  entity._name = event.params._name
-  entity._type = event.params._type
-  entity._basePermissions = event.params._basePermissions
-  entity.owner = wallet.id
+  fsEntity._to = event.params._to
+  fsEntity._parent = event.params._parentId.toString()
+  fsEntity._name = event.params._name
+  fsEntity._type = event.params._type
+  fsEntity._humanReadableType = hrTypes[event.params._type]
+    fsEntity._basePermissions = event.params._basePermissions
+  fsEntity.owner = wallet.id
 
   // entity.blockNumber = event.block.number
   // entity.blockTimestamp = event.block.timestamp
   // entity.transactionHash = event.transaction.hash
 
-  entity.save()
+  fsEntity.save()
 }
 
 export function handleEntityMoved (event: EntityMovedEvent): void {

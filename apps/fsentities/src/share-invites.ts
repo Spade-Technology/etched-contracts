@@ -3,16 +3,12 @@ import {
   InviteDeclined as InviteDeclinedEvent,
   InviteRevoked as InviteRevokedEvent,
   InviteSent as InviteSentEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
-  Transfer as TransferEvent
 } from "../generated/ShareInvites/ShareInvites"
 import {
   InviteAccepted,
   InviteDeclined,
   InviteRevoked,
-  InviteSent,
-  OwnershipTransferred,
-  Transfer
+  InviteSent
 } from "../generated/schema"
 
 
