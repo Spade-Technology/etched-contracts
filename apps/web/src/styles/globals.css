@@ -145,6 +145,14 @@
     margin-bottom: 1.5px;
   }
 }
+.shadow-btn {
+  transition: all 0.3s ease-in-out;
+}
+
+.shadow-btn:focus {
+  box-shadow: 0 0 0 3px rgb(7, 120, 68, 0.1);
+  border-color: var(--primary);
+}
 
 /* Skeleton loader animation */
 .skeleton {
@@ -164,4 +172,8 @@
   to {
     background-position: right -40px top 0;
   }
+}
+
+input:checked + label .check-icon {
+  display: block;
 }
