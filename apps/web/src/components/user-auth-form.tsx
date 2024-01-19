@@ -39,11 +39,11 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">
+              {/* <p className="text-lg">
                 &ldquo;This service saved countless hours & headaches by adding simplicity and privacy to the legalities of my
                 business&rdquo;
               </p>
-              <footer className="text-sm">John Doe</footer>
+              <footer className="text-sm">John Doe</footer> */}
             </blockquote>
           </div>
         </div>
