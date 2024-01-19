@@ -15,7 +15,7 @@ type Wallet @entity {
   etchENS: [EtchENS!]! @derivedFrom(field: "owner")
 }
 
-type FSEntity @entity(immutable: true) {
+type FSEntity @entity {
   id: String! # uint256
   # _entityId: BigInt! # uint256
   _to: Bytes! # address
@@ -23,21 +23,22 @@ type FSEntity @entity(immutable: true) {
   _children: [FSEntity!] @derivedFrom(field: "_parent")
   _name: String! # string
   _type: Int! # uint8
+  _humanReadableType: String #string
   _basePermissions: Int! # uint8
-  _shareMeta: ShareMeta! @derivedFrom(field: "_fsEntity")
-  _fileMeta: FileMeta! @derivedFrom(field: "_fsEntity")
+  _shareMeta: ShareMeta @derivedFrom(field: "_fsEntity")
+  _fileMeta: FileMeta @derivedFrom(field: "_fsEntity")
   userPermissions: [EntityUserPermission!] @derivedFrom(field: "_entity")
   owner: Wallet!
 }
 
-type EntityUserPermission @entity(immutable: true) {
+type EntityUserPermission @entity {
   id: String!
   _entity: FSEntity! # uint256
   _user: Wallet! # address
   _permissions: Int! # uint8
 }
 
-type CommentOnEntity @entity(immutable: true) {
+type CommentOnEntity @entity {
   id: String!
   _entityId: BigInt! # uint256
   _commentIpfsCid: String! # string
@@ -47,7 +48,7 @@ type CommentOnEntity @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type EntityBasePermissionsChanged @entity(immutable: true) {
+type EntityBasePermissionsChanged @entity {
   id: Bytes!
   _entityId: BigInt! # uint256
   _newPermissions: Int! # uint8
@@ -56,7 +57,7 @@ type EntityBasePermissionsChanged @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type EntityIndividualUserPermissionsChanged @entity(immutable: true) {
+type EntityIndividualUserPermissionsChanged @entity {
   id: String!
   _entityId: BigInt! # uint256
   _user: Bytes! # address
@@ -66,7 +67,7 @@ type EntityIndividualUserPermissionsChanged @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type FileMeta @entity(immutable: true) {
+type FileMeta @entity {
   id: String!
   _fsEntity: FSEntity! # uint256
   _creator: Bytes! # address
@@ -76,14 +77,14 @@ type FileMeta @entity(immutable: true) {
   _timestamp: BigInt! # uint256
 }
 
-type ShareMeta @entity(immutable: true) {
+type ShareMeta @entity {
   id: String!
   _fsEntity: FSEntity! # uint256 //The share with which the metadata is associated
   _originalEntity: FSEntity! # uint256 //The entity that the share references
   _maxPermissionsPerOwner: Int! # uint8
 }
 
-type EntityShareMaxPermissionsChanged @entity(immutable: true) {
+type EntityShareMaxPermissionsChanged @entity {
   id: String!
   _entityId: BigInt! # uint256
   _newPermissions: Int! # uint8
@@ -92,7 +93,7 @@ type EntityShareMaxPermissionsChanged @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type OrganizationTransferredToIndividual @entity(immutable: true) {
+type OrganizationTransferredToIndividual @entity {
   id: Bytes!
   _entityId: BigInt! # uint256
   _userId: Bytes! # address
@@ -101,26 +102,7 @@ type OrganizationTransferredToIndividual @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Transfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type InviteAccepted @entity(immutable: true) {
+type InviteAccepted @entity {
   id: Bytes!
   inviteId: BigInt! # uint256
   acceptedBy: Bytes! # address
@@ -129,7 +111,7 @@ type InviteAccepted @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type InviteDeclined @entity(immutable: true) {
+type InviteDeclined @entity {
   id: Bytes!
   inviteId: BigInt! # uint256
   declinedBy: Bytes! # address
@@ -138,7 +120,7 @@ type InviteDeclined @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type InviteRevoked @entity(immutable: true) {
+type InviteRevoked @entity {
   id: Bytes!
   inviteId: BigInt! # uint256
   revokedBy: Bytes! # address
@@ -147,7 +129,7 @@ type InviteRevoked @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type InviteSent @entity(immutable: true) {
+type InviteSent @entity {
   id: Bytes!
   from: Bytes! # address
   externalOrgOrTeamId: BigInt! # uint256
@@ -159,24 +141,6 @@ type InviteSent @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ShareInvitesOwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ShareInvitesTransfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
 type Approval @entity(immutable: true) {
   id: Bytes!
   owner: Bytes! # address

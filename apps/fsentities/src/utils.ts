@@ -58,6 +58,7 @@ export const upsertShareMeta = (event: ShareMetaChangedEvent): ShareMeta => {
   //NOTE: Relationship is 1-to-1 so we shouldn't have multiple "meta"s
   if (shareMeta == null) shareMeta = new ShareMeta(getShareMetaIdForEntity(event.params._shareId.toString()));
 
+  shareMeta._fsEntity = event.params._shareId.toString()
   shareMeta._originalEntity = event.params._originalEntityId.toString()
   shareMeta._maxPermissionsPerOwner = event.params._maxPermissionsPerOwner
   shareMeta.save();
