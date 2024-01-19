@@ -53,7 +53,6 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
-  const { mutateAsync: getClerkUsers } = api.user.getClerkUser.useMutation();
 
   const handleComment = (evt: any) => {
     const input = evt.target.value;

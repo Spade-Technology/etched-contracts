@@ -22,11 +22,11 @@ import { LogoAnimated } from "./icons/logo-long-animated";
 import { Icons } from "./ui/icons";
 
 const sideBarElementCn =
-  "cursor-pointer flex flex-col max-lg:mx-auto items-center justify-center rounded-lg max-lg:px-5 px-3 max-lg:w-fit py-5 text-[#9C9C9C] hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700";
+  "cursor-pointer relaive text-base flex flex-col max-lg:mx-auto items-center justify-center max-lg:px-5 px-3 max-lg:w-fit py-5 text-[#9C9C9C] duration-300 hover:bg-muted dark:text-white dark:hover:bg-slate-700";
 
 const activeClassName =
   sideBarElementCn +
-  "cursor-pointer !bg-primary-foreground  !text-primary before:absolute before:left-0 before:h-20 before:w-8 before:-translate-x-1/2 before:rounded-full lg:before:bg-primary";
+  "cursor-pointer !bg-primary-foreground !text-primary before:absolute max-lg:rounded-lg before:left-0 font-semibold before:h-24 before:w-8 before:-translate-x-1/2 before:rounded-full lg:before:bg-primary";
 
 enum activePage {
   DASHBOARD,
@@ -49,21 +49,21 @@ export const SideBar = () => {
     { url: "/dashboard/manage", title: "Organisation", Icon: Icons.organisation },
     { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
     { url: "/dashboard/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
-    { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: false },
-    { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
+    { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: true },
+    // { url: "/dashboard/profile", title: "Profile", Icon: Icons.user },
+    // { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
   ];
 
   const activePageIndex = pages.findIndex(({ url }) => url === path) === -1 ? 0 : pages.findIndex(({ url }) => url === path);
 
   return (
-    <aside id="sidebar" className="sticky left-0 top-0 h-screen w-fit px-3 transition-transform lg:w-52" aria-label="Sidebar">
-      <div className="flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900">
-        <LogoAnimated className="mx-auto mb-10 max-lg:w-[92px]" />
-
+    <aside id="sidebar" className="sticky left-0 top-0 h-screen w-fit transition-transform z-10 lg:w-52" aria-label="Sidebar">
+      <div className="custom-scrollbar flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900 max-lg:px-3">
+        <LogoAnimated className="mx-auto mb-10 max-lg:w-24" />
         <ul className="my-auto space-y-2 text-sm font-medium">
           {pages.map(({ url, title, Icon, disabled }, index) => {
             return (
-              <li key={title}>
+              <li key={title} className="pr-1 max-xl:pr-0">
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
@@ -74,45 +74,19 @@ export const SideBar = () => {
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
 
                   <div
-                    className={`absolute left-20 z-50 ml-3 flex w-[100px] items-center duration-300 group-hover:flex ${
+                    className={`absolute left-20 z-10 ml-3 flex w-36 w items-center duration-300 group-hover:flex ${
                       tooltip === title ? "visible scale-100 opacity-100 lg:hidden" : "invisible scale-50 opacity-0"
                     }`}
                   >
                     <div className={`-mr-2 h-3 w-3 rotate-45 bg-primary`}></div>
-                    <div className={`shado s z-10 flex w-fit bg-primary p-2 text-white shadow-lg`}> {title}</div>
+                    <div className={`z-10 flex w-fit bg-primary p-2 text-white shadow-lg`}> {title}</div>
                   </div>
                 </Link>
               </li>
             );
           })}
         </ul>
-        <div className="mt-auto">
-          <UserSettings>
-            <div className="max-lg flex w-full cursor-pointer justify-center rounded-lg py-2 hover:bg-slate-100 lg:justify-between lg:px-3">
-              <span className="my-auto text-sm font-medium text-black dark:text-white max-lg:hidden">
-                {loggedInAddress ? shortenAddress({ address: loggedInAddress ?? "" }) : "Loading..."}
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                aria-roledescription="more menu"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className=" h-12 w-12 rounded-lg py-2 text-black lg:px-3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                // className="lucide lucide-more-horizontal"
-              >
-                <circle cx="12" cy="12" r="1" />
-                <circle cx="19" cy="12" r="1" />
-                <circle cx="5" cy="12" r="1" />
-              </svg>
-            </div>
-          </UserSettings>
-        </div>
+        <div className="mt-auto"></div>
       </div>
     </aside>
   );
@@ -124,7 +98,7 @@ function UserSettings({ children }: { children: React.ReactNode }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="ml-3 w-56">
+      <DropdownMenuContent className="mr-7 w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -176,4 +150,4 @@ function UserSettings({ children }: { children: React.ReactNode }) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
