@@ -1,28 +1,44 @@
 import { AlertDialog, AlertDialogContent, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import Otp from "@/components/ui/otp";
 import { toast } from "@/components/ui/use-toast";
+import { useClerk } from "@clerk/nextjs";
 import { useState } from "react";
 
 export interface email {
   title: string;
   value: string;
+  id?: string;
+  verified?: string;
 }
 
 export const AddEmail = ({
   isModal,
   setIsModal,
   emails,
+  setVerify,
 }: {
   isModal: boolean;
   setIsModal: React.Dispatch<boolean>;
+  setVerify: React.Dispatch<boolean>;
   emails: email[];
 }) => {
+  const { user } = useClerk();
+
   const [inputVal, setInputVal] = useState("");
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const item: email | any = emails.find(({ title }) => title == "Secondary Email Address");
-    item.value = inputVal;
+    const emailAddress = await user?.createEmailAddress({ email: inputVal });
+    try {
+      await emailAddress?.prepareVerification({
+        strategy: "email_code",
+      });
+    } catch (error) {
+      console.log("error: ", error);
+      await emailAddress?.destroy();
+    }
+
     setIsModal(false);
     toast({
       title: "Success",
@@ -30,6 +46,7 @@ export const AddEmail = ({
       variant: "success",
     });
     setInputVal("");
+    setVerify(true);
   };
 
   return (
@@ -88,10 +105,17 @@ export const RemoveEmail = ({
   setRemoveEmail: React.Dispatch<boolean>;
   emails: email[];
 }) => {
-  const handleSubmit = (e: any) => {
+  const { user } = useClerk();
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const item: email | any = emails.find(({ title }) => title == "Secondary Email Address");
     item.value = "";
+    const emailAddress = user?.emailAddresses.find(({ id }) => id === item.id);
+    if (!emailAddress) {
+      return;
+    }
+    await emailAddress.destroy();
     setRemoveEmail(false);
     toast({
       title: "Success",
@@ -129,6 +153,59 @@ export const RemoveEmail = ({
             </Button>
           </div>
         </footer>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+export const VerifyEmail = ({
+  isModal,
+  setIsModal,
+  emailId,
+}: {
+  isModal: boolean;
+  setIsModal: React.Dispatch<boolean>;
+  emailId?: string;
+}) => {
+  const { user } = useClerk();
+  if (!user || !emailId) return;
+  const [verifyCode, setVerifyCode] = useState("pending");
+
+  const props = {
+    setSendCode: setIsModal,
+    verifyCode,
+    setVerifyCode,
+    verifyAccount: async (code: string) => {
+      const emailAddress = user?.emailAddresses.find(({ id }) => id === emailId);
+      if (!emailAddress) {
+        return;
+      }
+
+      await emailAddress.attemptVerification({ code });
+      setIsModal(false);
+    },
+    resendCode: async () => {
+      const emailAddress = user?.emailAddresses.find(({ id }) => id === emailId);
+
+      if (!emailAddress) {
+        return;
+      }
+      await emailAddress?.prepareVerification({
+        strategy: "email_code",
+      });
+    },
+  };
+
+  return (
+    <AlertDialog
+      open={isModal}
+      onOpenChange={() => {
+        setIsModal(!isModal);
+      }}
+    >
+      <AlertDialogContent className={`${verifyCode != "success" ? "max-w-[385px]" : "max-w-md"} px-5"`}>
+        <AlertDialogTitle className="text-base text-primary ">Verify Email</AlertDialogTitle>
+        <Otp {...props} />
       </AlertDialogContent>
     </AlertDialog>
   );

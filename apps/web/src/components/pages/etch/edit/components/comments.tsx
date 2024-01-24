@@ -45,7 +45,7 @@ const Comment = ({ imgUrl, userName, description, commentedAt, addr }: CommentPr
 
 const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWritePermission: boolean }) => {
   const [comments, setComments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
-    {}
+    {},
   );
   const [profilePics, setProfilePics] = useState<Record<string, string | undefined>>({});
 
@@ -53,6 +53,7 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
 
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
+  const { mutateAsync: getClerkUsers } = api.user.getClerkUser.useMutation();
 
   const handleComment = (evt: any) => {
     const input = evt.target.value;
@@ -120,7 +121,7 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
   }, [etch.comments]);
 
   const [_comments, set_Comments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
-    {}
+    {},
   );
 
   useEffect(() => {

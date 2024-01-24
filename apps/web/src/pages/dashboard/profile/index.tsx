@@ -3,9 +3,13 @@ import { PageBoilerplate } from "@/components/page-boilerplate";
 import { BackUpCodes, Email, Password, Paymaster, Profile, TwoStep } from "@/components/pages/profile";
 import { SelectTheme } from "@/components/pages/profile/personal/select-theme";
 import { SidebarDialog } from "@/components/pages/profile/sidebar";
+import { useClerk } from "@clerk/nextjs";
 import { useState } from "react";
 
 export default function Community() {
+  const { user } = useClerk();
+  console.log("MAMA user: ", user);
+
   const [activeTab, setActiveTab] = useState<string>("Personal");
 
   const tabs = [
