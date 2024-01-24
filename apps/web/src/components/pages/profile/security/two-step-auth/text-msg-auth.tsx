@@ -1,12 +1,13 @@
 import { DisableTwoStepAuth } from "@/components/disable-two-step-auth";
 import { EnableTwoStepAuth } from "@/components/enable-two-step-auth";
+import { useClerk } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 
-export default function TextMsgAuth() {
-  const [isModal, setIsModal] = useState(false);
-  const [twoStepAuth, setTwoStepAuth] = useState("disabled");
+export default function TextMsgAuth({ enabled }: { enabled: boolean }) {
+  const { user } = useClerk();
 
-  const props = { isModal, setIsModal, setTwoStepAuth };
+  const [isModal, setIsModal] = useState(false);
+  const [twoStepAuth, setTwoStepAuth] = useState(enabled ? "enabled" : "disabled");
 
   useEffect(() => {
     setIsModal(false);
@@ -18,7 +19,15 @@ export default function TextMsgAuth() {
         <div className="mt-2 flex gap-5">
           <div className="w-56 text-xs font-medium">We’ll send a code to the number that you choose.</div>
           <div
-            onClick={() => setIsModal(!isModal)}
+            onClick={async () => {
+              if (enabled) {
+                await user?.primaryPhoneNumber?.setReservedForSecondFactor({ reserved: false });
+              } else {
+                await user?.primaryPhoneNumber?.makeDefaultSecondFactor();
+                await user?.primaryPhoneNumber?.setReservedForSecondFactor({ reserved: true });
+                if (!user?.backupCodeEnabled) await user?.createBackupCode();
+              }
+            }}
             className={`flex h-7 w-14 cursor-pointer items-center justify-start rounded-full p-1 duration-500 ${
               twoStepAuth == "enabled" ? "bg-white" : " bg-neutral-200"
             }`}
@@ -31,12 +40,6 @@ export default function TextMsgAuth() {
           </div>
         </div>
       </section>
-      {/* <---------- modals & more ----------> */}
-      {twoStepAuth == "disabled" ? (
-        <EnableTwoStepAuth {...props} />
-      ) : twoStepAuth == "enabled" ? (
-        <DisableTwoStepAuth {...props} />
-      ) : null}
     </main>
   );
 }

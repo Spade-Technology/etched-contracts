@@ -6,23 +6,21 @@ import { Icons } from "./icons";
 export default function Otp({
   setSendCode,
   verifyCode,
-  setVerifyCode,
+  verifyAccount,
+  resendCode,
 }: {
   setSendCode: React.Dispatch<boolean>;
   verifyCode: string;
-  setVerifyCode: React.Dispatch<string>;
+  verifyAccount?: any;
+  resendCode?: any;
 }) {
   const [otp, setOtp] = useState(Array(6).fill(""));
 
-  const verify = (e: any) => {
+  const verify = async (e: any) => {
     e.preventDefault();
-    const emptyInput = otp.filter((item: string) => item != "5");
+    if (otp.find((el) => el === "")) return;
 
-    if (emptyInput.length < 1) {
-      setVerifyCode("success");
-    } else {
-      setVerifyCode("error");
-    }
+    await verifyAccount(otp.join(""));
   };
 
   const props = { verifyCode, otp, setOtp };
@@ -30,11 +28,21 @@ export default function Otp({
   return (
     <section className="px-3">
       <div className="mb-5 text-center font-body text-sm font-medium text-muted-foreground">
-        Enter the authentication code below that we sent to +1938402040
+        Enter the authentication code below that we sent you.
       </div>
       <form onSubmit={verify}>
         <OtpInputs {...props} />
-        <div className="mt-2 cursor-pointer text-center font-body text-xs font-semibold text-primary">Resend code</div>
+        {resendCode && (
+          <div
+            className="mt-2 cursor-pointer text-center font-body text-xs font-semibold text-primary"
+            onClick={() => {
+              resendCode();
+              setOtp(Array(6).fill(""));
+            }}
+          >
+            Resend code
+          </div>
+        )}
         <footer className="mt-10 flex items-center justify-end gap-5">
           <div onClick={() => setSendCode(false)} className="cursor-pointer text-sm font-semibold hover:text-foreground">
             Cancel

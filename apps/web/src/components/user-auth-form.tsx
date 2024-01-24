@@ -105,7 +105,7 @@ export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProp
      * WORK AROUND FOR THIS BUG
      * Clerk: “The <SignUp/> and <SignIn/> components cannot render when a user is already signed in, unless the application allows...
      */
-    if (isLoaded) router.push("/auth");
+    if (isLoaded && !router.asPath.includes("signup")) router.push("/auth");
   }, [userId, sessionId, isSignedIn, isLoaded, router.asPath]);
 
   return (

@@ -45,7 +45,7 @@ export const EnableTwoStepAuth = ({
                 required
                 type="email"
                 placeholder="example@gmail.com"
-                className="mb-7 flex h-10 w-full items-center gap-1 rounded border font-body border-muted-foreground px-3 text-base font-medium focus:outline-none focus:ring-0"
+                className="mb-7 flex h-10 w-full items-center gap-1 rounded border border-muted-foreground px-3 font-body text-base font-medium focus:outline-none focus:ring-0"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
@@ -56,7 +56,7 @@ export const EnableTwoStepAuth = ({
                   required
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   type={showPassword ? "text" : "password"}
-                  className="h-full w-full text-base font-body border-none focus:outline-none"
+                  className="h-full w-full border-none font-body text-base focus:outline-none"
                 />
                 {showPassword ? (
                   <Icons.hidePassword onClick={() => setShowPassword(!showPassword)} className=" cursor-pointer" />

@@ -57,7 +57,7 @@ export const SideBar = () => {
   const activePageIndex = pages.findIndex(({ url }) => url === path) === -1 ? 0 : pages.findIndex(({ url }) => url === path);
 
   return (
-    <aside id="sidebar" className="sticky left-0 top-0 h-screen w-fit transition-transform z-10 lg:w-52" aria-label="Sidebar">
+    <aside id="sidebar" className="sticky left-0 top-0 z-10 h-screen w-fit transition-transform lg:w-52" aria-label="Sidebar">
       <div className="custom-scrollbar flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900 max-lg:px-3">
         <LogoAnimated className="mx-auto mb-10 max-lg:w-24" />
         <ul className="my-auto space-y-2 text-sm font-medium">
@@ -74,7 +74,7 @@ export const SideBar = () => {
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
 
                   <div
-                    className={`absolute left-20 z-10 ml-3 flex w-36 w items-center duration-300 group-hover:flex ${
+                    className={`w absolute left-20 z-10 ml-3 flex w-36 items-center duration-300 group-hover:flex ${
                       tooltip === title ? "visible scale-100 opacity-100 lg:hidden" : "invisible scale-50 opacity-0"
                     }`}
                   >
@@ -92,7 +92,7 @@ export const SideBar = () => {
   );
 };
 
-function UserSettings({ children }: { children: React.ReactNode }) {
+export function UserSettings({ children }: { children: React.ReactNode }) {
   const { signOut } = useSignOut();
 
   return (
@@ -150,4 +150,4 @@ function UserSettings({ children }: { children: React.ReactNode }) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}
