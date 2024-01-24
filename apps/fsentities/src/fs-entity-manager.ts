@@ -40,7 +40,7 @@ export function handleEntityCreated (event: EntityCreatedEvent): void {
   fsEntity._name = event.params._name
   fsEntity._type = event.params._type
   fsEntity._humanReadableType = hrTypes[event.params._type]
-    fsEntity._basePermissions = event.params._basePermissions
+  fsEntity._basePermissions = event.params._basePermissions
   fsEntity.owner = wallet.id
 
   // entity.blockNumber = event.block.number
