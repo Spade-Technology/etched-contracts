@@ -1,7 +1,10 @@
 import { EnableTOTP } from "@/components/enable-totp";
+import { useClerk } from "@clerk/nextjs";
 import React, { useState } from "react";
 
 export default function GoogleAuth({ enabled }: { enabled: boolean }) {
+  const { user } = useClerk();
+
   const [isModal, setIsModal] = useState(false);
 
   return (
@@ -12,7 +15,13 @@ export default function GoogleAuth({ enabled }: { enabled: boolean }) {
         <div className="mt-2 flex gap-5">
           <div className="w-56 text-xs font-medium">You will get a login code from the Google Authenticator app.</div>
           <div
-            onClick={() => setIsModal(!isModal)}
+            onClick={async () => {
+              if (enabled) {
+                await user?.disableTOTP();
+              } else {
+                setIsModal(!isModal);
+              }
+            }}
             className={`flex h-7 w-14 cursor-pointer items-center justify-start rounded-full p-1 duration-500 ${
               enabled ? "bg-primary" : " bg-neutral-200"
             }`}

@@ -13,7 +13,7 @@ export const Email = () => {
   const [verify, setVerify] = useState(false);
   const [removeEmail, setRemoveEmail] = useState(false);
   const secondaryEmail = user?.emailAddresses.find(({ id }) => id !== user?.primaryEmailAddress?.id);
-  const [emails, setEmails] = useState<email[]>([
+  const emails = [
     { title: "Primary Email Address", value: user?.primaryEmailAddress?.emailAddress || "", id: user?.primaryEmailAddress?.id },
     {
       title: "Secondary Email Address",
@@ -21,7 +21,7 @@ export const Email = () => {
       id: secondaryEmail?.id,
       verified: secondaryEmail?.verification?.status || "",
     },
-  ]);
+  ];
   const [emailId, setEmailId] = useState<string>();
 
   const props = { isModal, setIsModal, removeEmail, setRemoveEmail, emails, emailId, setVerify };

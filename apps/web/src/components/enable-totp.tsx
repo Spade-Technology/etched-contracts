@@ -18,7 +18,7 @@ export const EnableTOTP = ({ isModal, setIsModal }: { isModal: boolean; setIsMod
   if (!user) return;
 
   useEffect(() => {
-    user?.createTOTP().then((topt) => setQr(topt?.uri));
+    if (isModal) user?.createTOTP().then((topt) => setQr(topt?.uri));
   }, []);
   const [form, setForm] = useState<form>({});
   const [sendCode, setSendCode] = useState(false);

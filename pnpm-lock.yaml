@@ -314,7 +314,7 @@ importers:
         specifier: ^2.0.12
         version: 2.0.12(react@18.2.0)
       react-unity-webgl:
-        specifier: 7.1.10
+        specifier: ^7.1.10
         version: 7.1.10
       screenfull:
         specifier: ^6.0.2
@@ -20533,12 +20533,6 @@ packages:
       react-fast-compare: 3.2.2
     dev: false
 
-  /react-promise-suspense@0.3.4:
-    resolution: {integrity: sha512-I42jl7L3Ze6kZaq+7zXWSunBa3b1on5yfvUW6Eo/3fFOj6dZ5Bqmcd264nJbTK/gn1HjjILAjSwnZbV4RpSaNQ==}
-    dependencies:
-      fast-deep-equal: 2.0.1
-    dev: false
-
   /react-qr-code@2.0.12(react@18.2.0):
     resolution: {integrity: sha512-k+pzP5CKLEGBRwZsDPp98/CAJeXlsYRHM2iZn1Sd5Th/HnKhIZCSg27PXO58zk8z02RaEryg+60xa4vyywMJwg==}
     peerDependencies:
@@ -20551,19 +20545,6 @@ packages:
       prop-types: 15.8.1
       qr.js: 0.0.0
       react: 18.2.0
-    dev: false
-
-  /react-reconciler@0.23.0(react@18.2.0):
-    resolution: {integrity: sha512-vV0KlLimP9a/NuRcM6GRVakkmT6MKSzhfo8K72fjHMnlXMOhz9GlPe+/tCp5CWBkg+lsMUt/CR1nypJBTPfwuw==}
-    engines: {node: '>=0.10.0'}
-    peerDependencies:
-      react: ^16.0.0
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      prop-types: 15.8.1
-      react: 18.2.0
-      scheduler: 0.17.0
     dev: false
 
   /react-remove-scroll-bar@2.3.4(@types/react@18.2.28)(react@18.2.0):
