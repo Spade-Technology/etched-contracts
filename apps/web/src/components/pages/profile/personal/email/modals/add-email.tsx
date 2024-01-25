@@ -39,7 +39,6 @@ export const AddEmail = ({
       await emailAddress?.destroy();
     }
 
-    setIsModal(false);
     toast({
       title: "Success",
       description: "Secondary email successfully added!",
@@ -47,6 +46,7 @@ export const AddEmail = ({
     });
     setInputVal("");
     setVerify(true);
+    setIsModal(false);
   };
 
   return (

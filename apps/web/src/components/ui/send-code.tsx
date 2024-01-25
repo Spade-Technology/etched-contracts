@@ -10,12 +10,12 @@ import { GoodIcon } from "../icons/good";
 import { regrex } from "@/lib/utils";
 
 export default function SendCode({
-  form,
-  setForm,
   setSendCode,
+  addPhone,
+  close,
 }: {
-  form: form;
-  setForm: React.Dispatch<form>;
+  close: any;
+  addPhone: any;
   setSendCode: React.Dispatch<boolean>;
 }) {
   const [country, setCountry] = useState<{ name?: string; dial_code?: string; code?: string }>({ code: "US" });
@@ -32,8 +32,10 @@ export default function SendCode({
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    addPhone(phoneNumber);
     setSendCode(true);
     setPhoneNumber("");
+    close();
   };
 
   return (
@@ -89,17 +91,17 @@ export default function SendCode({
             required
             autoFocus
             onChange={onChange}
-            maxLength={11}
+            maxLength={12}
             type="text"
             placeholder="+29038204083"
-            className="h-full text-base font-body font-medium w-full border-none focus:outline-none"
+            className="h-full w-full border-none font-body text-base font-medium focus:outline-none"
           />
         </div>
 
         <footer className="mt-10 flex items-center justify-end gap-5">
           <div
             onClick={() => {
-              setForm({ ...form, status: false });
+              close();
             }}
             className="cursor-pointer text-sm font-semibold hover:text-foreground"
           >
