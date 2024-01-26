@@ -8,7 +8,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useUploadThing } from "@/utils/uploadthing";
 import { EtchedENS } from "@/components/ens-button";
 
-const ChangeImage = ({ modal, openModal }: { modal: boolean; openModal: any }) => {
+const ChangeImage = ({ modal, openModal, reload }: { modal: boolean; openModal: any; reload: any }) => {
   const [file, setFile] = useState<any>();
   const { mutateAsync: setClerkProfileImage, isLoading } = api.user.setClerkProfileImage.useMutation();
   const { startUpload, isUploading } = useUploadThing("EtchUpload");
@@ -35,6 +35,34 @@ const ChangeImage = ({ modal, openModal }: { modal: boolean; openModal: any }) =
       "image/*": [],
     },
   });
+
+  const uploadImage = async () => {
+    const uploaded = await startUpload([file]);
+    toast({
+      title: "Uploading",
+      description: "Please Wait",
+      variant: "default",
+    });
+
+    if (!uploaded || !uploaded[0]?.url) {
+      toast({
+        title: "Upload failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+      return;
+    }
+    await setClerkProfileImage({ file: uploaded[0]?.url });
+
+    openModal(false);
+    setFile(null);
+    toast({
+      title: "Success!",
+      description: "Your profile picture got updated !",
+      variant: "success",
+    });
+    await reload();
+  };
   return (
     <AlertDialog
       open={modal}
@@ -73,36 +101,7 @@ const ChangeImage = ({ modal, openModal }: { modal: boolean; openModal: any }) =
             Cancel
           </Button>
           <div>
-            <Button
-              disabled={isLoading || isUploading}
-              onClick={async () => {
-                const uploaded = await startUpload([file]);
-                toast({
-                  title: "Uploading",
-                  description: "Please Wait",
-                  variant: "default",
-                });
-
-                if (!uploaded || !uploaded[0]?.url) {
-                  toast({
-                    title: "Upload failed",
-                    description: "Please try again",
-                    variant: "destructive",
-                  });
-                  return;
-                }
-                setClerkProfileImage({ file: uploaded[0]?.url });
-
-                openModal(false);
-                setFile(null);
-                toast({
-                  title: "Success!",
-                  description: "Your profile picture got updated !",
-                  variant: "success",
-                });
-              }}
-              // className="bg-destructive text-white !shadow-2xl"
-            >
+            <Button disabled={isLoading || isUploading} onClick={uploadImage}>
               Upload image
             </Button>
           </div>
@@ -115,15 +114,23 @@ const ChangeImage = ({ modal, openModal }: { modal: boolean; openModal: any }) =
 export const Profile = () => {
   const { user } = useClerk();
   const [change, setChange] = useState(false);
+  const [imgUrl, setImgUrl] = useState(user?.imageUrl);
 
   return (
     <main>
-      <ChangeImage modal={change} openModal={setChange} />
+      <ChangeImage
+        modal={change}
+        openModal={setChange}
+        reload={async () => {
+          const newUser = await user?.reload();
+          setImgUrl(newUser?.imageUrl);
+        }}
+      />
       <header className="mb-5 text-xl font-semibold text-foreground">Personal Profile</header>
       <section className=" w-80 overflow-hidden rounded-2xl bg-muted pl-5 pt-5">
         <div className="flex justify-center">
           <div className="">
-            <img src={user?.imageUrl} alt="" className="h-16 w-16 rounded-full bg-primary" />
+            <img src={imgUrl} alt="" className="h-16 w-16 rounded-full bg-primary" />
             <div
               className=" cursor-pointer text-center font-body text-xs font-medium text-primary"
               onClick={() => setChange(true)}

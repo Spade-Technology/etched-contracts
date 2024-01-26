@@ -34,7 +34,7 @@ export const SuccessDialog = ({
           </main>
           <footer className="flex h-8 w-full items-center justify-center gap-10 border-t border-primary">
             {icons.map((icon: JSX.Element | any, idx: number) => (
-              <>{icon}</>
+              <div key={idx}>{icon}</div>
             ))}
           </footer>
         </section>

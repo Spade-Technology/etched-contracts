@@ -1,18 +1,11 @@
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import { AlertDialogContent, AlertDialogTitle } from "./ui/alert-dialog";
 import { SetStateAction, useState } from "react";
-// import { form } from "./pages/profile";
 import { Button } from "./ui/button";
 import { Icons } from "./ui/icons";
 import { Label } from "@radix-ui/react-label";
 import { api } from "@/utils/api";
 import { toast } from "./ui/use-toast";
-
-interface form {
-  newPass: string;
-  comfirmPass: string;
-  value: string;
-}
 
 export const ChangePasword = ({ isModal, setIsModal }: { isModal: boolean; setIsModal: React.Dispatch<boolean> }) => {
   const [password, setPassword] = useState<string>();
