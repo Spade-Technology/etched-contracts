@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-import { AddEmail, RemoveEmail, VerifyEmail, email } from "../email/modals/add-email";
-import { EditEmail } from "../email/modals/edit-email";
 import { useClerk } from "@clerk/nextjs";
 import { AddPhone, RemovePhone, VerifyPhone } from "./modals";
 
 export const Phone = () => {
   const { user } = useClerk();
-  console.log("MAMA user?.: ", user?.phoneNumbers);
-  // TODO: ADD LOADING
-  if (!user) return;
 
   const [isModal, setIsModal] = useState(false);
   const [verify, setVerify] = useState(false);
@@ -21,6 +16,7 @@ export const Phone = () => {
   };
 
   const props = { isModal, setIsModal, removePhone, setRemovePhone, emails: phone, setVerify };
+  if (!user) return;
   return (
     <main>
       {/* <---------- modals & more ----------> */}
@@ -54,7 +50,7 @@ export const Phone = () => {
               onClick={() => {
                 setRemovePhone(true);
               }}
-              className="flex h-5 w-16 cursor-pointer items-center justify-center gap-1 rounded-full border border-destructive bg-destructive font-body text-sm font-medium text-white "
+              className="flex h-6 w-16 cursor-pointer items-center justify-center gap-1 rounded-full border border-destructive bg-destructive font-body text-sm font-medium text-white "
             >
               Remove
             </div>

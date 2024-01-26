@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import { AddEmail, RemoveEmail, VerifyEmail, email } from "./modals/add-email";
-import { EditEmail } from "./modals/edit-email";
+import { AddEmail, RemoveEmail, VerifyEmail } from "./modals/add-email";
 import { useClerk } from "@clerk/nextjs";
 
 export const Email = () => {
   const { user } = useClerk();
-  // TODO: ADD LOADING
-  if (!user) return;
 
   const [isModal, setIsModal] = useState(false);
-  const [edit, setEdit] = useState(false);
   const [verify, setVerify] = useState(false);
   const [removeEmail, setRemoveEmail] = useState(false);
-  const secondaryEmail = user?.emailAddresses.find(({ id }) => id !== user?.primaryEmailAddress?.id);
+  const [primaryEmail, setPrimaryEmail] = useState(user?.primaryEmailAddress);
+  const [secondaryEmail, setSecondaryEmail] = useState(
+    user?.emailAddresses.find(({ id }) => id !== user?.primaryEmailAddress?.id)
+  );
+
   const emails = [
-    { title: "Primary Email Address", value: user?.primaryEmailAddress?.emailAddress || "", id: user?.primaryEmailAddress?.id },
+    { title: "Primary Email Address", value: primaryEmail?.emailAddress || "", id: primaryEmail?.id },
     {
       title: "Secondary Email Address",
       value: secondaryEmail?.emailAddress || "",
@@ -25,6 +25,18 @@ export const Email = () => {
   const [emailId, setEmailId] = useState<string>();
 
   const props = { isModal, setIsModal, removeEmail, setRemoveEmail, emails, emailId, setVerify };
+
+  const setSecondaryAsPrimary = async () => {
+    if (secondaryEmail?.id) {
+      await user?.update({ primaryEmailAddressId: secondaryEmail.id });
+      const newUser = await user?.reload();
+      setPrimaryEmail(newUser?.primaryEmailAddress);
+      setSecondaryEmail(newUser?.emailAddresses.find(({ id }) => id !== newUser?.primaryEmailAddress?.id));
+    }
+  };
+
+  if (!user) return;
+
   return (
     <main>
       {/* <---------- modals & more ----------> */}
@@ -46,14 +58,7 @@ export const Email = () => {
             </div>
             <div className={`${idx == 1 && value ? "flex" : "hidden"} mt-2 items-center gap-4`}>
               {verified === "verified" ? (
-                <div
-                  onClick={async () => {
-                    if (secondaryEmail?.id) {
-                      await user?.update({ primaryEmailAddressId: secondaryEmail.id });
-                    }
-                  }}
-                  className="cursor-pointer font-body text-sm font-medium text-primary"
-                >
+                <div onClick={setSecondaryAsPrimary} className="cursor-pointer font-body text-sm font-medium text-primary">
                   Set as primary
                 </div>
               ) : (
@@ -72,7 +77,7 @@ export const Email = () => {
                   setEmailId(id);
                   setRemoveEmail(true);
                 }}
-                className="flex h-5 w-16 cursor-pointer items-center justify-center gap-1 rounded-full border border-destructive bg-destructive font-body text-sm font-medium text-white "
+                className="flex h-6 w-16 cursor-pointer items-center justify-center gap-1 rounded-full border border-destructive bg-destructive font-body text-sm font-medium text-white "
               >
                 Remove
               </div>

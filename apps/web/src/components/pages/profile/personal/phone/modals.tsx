@@ -1,6 +1,5 @@
 import { AlertDialog, AlertDialogContent, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import Otp from "@/components/ui/otp";
 import SendCode from "@/components/ui/send-code";
 import { toast } from "@/components/ui/use-toast";
@@ -28,8 +27,7 @@ export const AddPhone = ({
   const addPhone = async (inputVal: string) => {
     const phoneNumber = await user?.createPhoneNumber({ phoneNumber: inputVal });
     try {
-      const t = await phoneNumber?.prepareVerification();
-      console.log("MAMA t: ", t);
+      await phoneNumber?.prepareVerification();
     } catch (error) {
       console.log("error: ", error);
       await phoneNumber?.destroy();
@@ -116,7 +114,6 @@ export const RemovePhone = ({
 
 export const VerifyPhone = ({ isModal, setIsModal }: { isModal: boolean; setIsModal: React.Dispatch<boolean> }) => {
   const { user } = useClerk();
-  if (!user) return;
   const [verifyCode, setVerifyCode] = useState("pending");
 
   const props = {
@@ -131,6 +128,7 @@ export const VerifyPhone = ({ isModal, setIsModal }: { isModal: boolean; setIsMo
       await user?.phoneNumbers[0]?.prepareVerification();
     },
   };
+  if (!user) return;
 
   return (
     <AlertDialog

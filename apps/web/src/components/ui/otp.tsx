@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import { DialogDescription } from "./dialog";
 import { Button } from "./button";
 import { Icons } from "./icons";
+import { toast } from "./use-toast";
 
 export default function Otp({
   setSendCode,
@@ -15,12 +15,23 @@ export default function Otp({
   resendCode?: any;
 }) {
   const [otp, setOtp] = useState(Array(6).fill(""));
+  const [loading, setLoading] = useState(false);
 
   const verify = async (e: any) => {
     e.preventDefault();
-    if (otp.find((el) => el === "")) return;
-
-    await verifyAccount(otp.join(""));
+    try {
+      if (otp.find((el) => el === "")) return;
+      setLoading(true);
+      await verifyAccount(otp.join(""));
+      setLoading(false);
+      toast({
+        title: "Success",
+        description: "Verification succeeded!",
+        variant: "success",
+      });
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const props = { verifyCode, otp, setOtp };
@@ -47,7 +58,9 @@ export default function Otp({
           <div onClick={() => setSendCode(false)} className="cursor-pointer text-sm font-semibold hover:text-foreground">
             Cancel
           </div>
-          <Button type="submit">Verify</Button>
+          <Button type="submit" disabled={loading}>
+            Verify
+          </Button>
         </footer>
       </form>
     </section>

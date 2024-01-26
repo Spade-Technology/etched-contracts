@@ -1,29 +1,32 @@
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import { AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "./ui/alert-dialog";
 import { useEffect, useState } from "react";
-import { form } from "./pages/profile";
-import SendCode from "./ui/send-code";
 import Otp from "./ui/otp";
-import { SuccessDialog } from "./ui/two-step-auth-success";
 import { Button } from "./ui/button";
-import { Icons } from "./ui/icons";
-import { Label } from "@radix-ui/react-label";
 import QRCode from "react-qr-code";
 import { useClerk } from "@clerk/nextjs";
+import { ShowBackupCode } from "./pages/profile";
 
-export const EnableTOTP = ({ isModal, setIsModal }: { isModal: boolean; setIsModal: React.Dispatch<boolean> }) => {
+export const EnableTOTP = ({
+  isModal,
+  setIsModal,
+  setTwoStepAuth,
+}: {
+  isModal: boolean;
+  setIsModal: React.Dispatch<boolean>;
+  setTwoStepAuth: React.Dispatch<string>;
+}) => {
   const [qr, setQr] = useState<string>();
   const [otp, setOtp] = useState(false);
   const { user } = useClerk();
-  if (!user) return;
+  const [backup, setBackup] = useState<string[]>([]);
+  const [showBackup, setShowBackup] = useState(false);
 
   useEffect(() => {
     if (isModal) user?.createTOTP().then((topt) => setQr(topt?.uri));
-  }, []);
-  const [form, setForm] = useState<form>({});
-  const [sendCode, setSendCode] = useState(false);
+  }, [isModal]);
+
   const [verifyCode, setVerifyCode] = useState("pending");
-  const [showPassword, setShowPassword] = useState(false);
   const props = {
     setSendCode: setOtp,
     verifyCode,
@@ -31,14 +34,22 @@ export const EnableTOTP = ({ isModal, setIsModal }: { isModal: boolean; setIsMod
     verifyAccount: async (code: string) => {
       await user?.verifyTOTP({ code });
       if (!user?.backupCodeEnabled) {
-        await user?.createBackupCode();
+        const bc = await user?.createBackupCode();
+        setBackup(bc?.codes || []);
+        setShowBackup(true);
+        document.dispatchEvent(new CustomEvent("show-backup-code-card"));
       }
       setIsModal(false);
       setOtp(false);
+      setTwoStepAuth("enabled");
     },
   };
+  if (!user) return;
+
   return (
     <>
+      <ShowBackupCode backupCode={backup} isModal={showBackup} setIsModal={setShowBackup} />
+
       <AlertDialog
         open={isModal}
         onOpenChange={() => {

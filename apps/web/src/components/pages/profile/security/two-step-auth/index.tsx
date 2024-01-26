@@ -14,7 +14,6 @@ export interface form {
 
 export const TwoStep = () => {
   const { user } = useClerk();
-  const totpAuth = !!user?.totpEnabled && !!user?.twoFactorEnabled;
 
   return (
     <main>
@@ -23,7 +22,7 @@ export const TwoStep = () => {
         You can enable Two-step authentication for enhanced security
       </div>
       {user?.primaryPhoneNumber && <TextMsgAuth />}
-      <GoogleAuth enabled={totpAuth} />
+      <GoogleAuth />
     </main>
   );
 };
