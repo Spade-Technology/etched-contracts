@@ -108,7 +108,7 @@ export default function SendCode({
             Cancel
           </div>
           <div>
-            <Button type="submit">Verify</Button>
+            <Button type="submit">Add</Button>
           </div>
         </footer>
       </form>

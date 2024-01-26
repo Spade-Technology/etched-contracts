@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AddEmail, RemoveEmail, VerifyEmail, email } from "../email/modals/add-email";
 import { EditEmail } from "../email/modals/edit-email";
 import { useClerk } from "@clerk/nextjs";
-import { AddPhone, VerifyPhone } from "./modals";
+import { AddPhone, RemovePhone, VerifyPhone } from "./modals";
 
 export const Phone = () => {
   const { user } = useClerk();
@@ -11,9 +11,8 @@ export const Phone = () => {
   if (!user) return;
 
   const [isModal, setIsModal] = useState(false);
-  const [edit, setEdit] = useState(false);
   const [verify, setVerify] = useState(false);
-  const [removeEmail, setRemoveEmail] = useState(false);
+  const [removePhone, setRemovePhone] = useState(false);
   const phone = {
     title: "Phone Number",
     value: user?.phoneNumbers[0]?.phoneNumber || "",
@@ -21,14 +20,13 @@ export const Phone = () => {
     verified: user?.phoneNumbers[0]?.verification?.status === "verified",
   };
 
-  console.log("MAMA phone: ", phone);
-  const props = { isModal, setIsModal, removeEmail, setRemoveEmail, emails: phone, setVerify };
+  const props = { isModal, setIsModal, removePhone, setRemovePhone, emails: phone, setVerify };
   return (
     <main>
       {/* <---------- modals & more ----------> */}
       <AddPhone {...props} />
       <VerifyPhone isModal={verify} setIsModal={setVerify} />
-      {/* <RemoveEmail {...props} /> */}
+      <RemovePhone {...props} />
 
       <header className="mb-5 mt-3 text-xl font-semibold text-foreground">Phone</header>
       <section className="flex flex-col gap-5">
@@ -54,7 +52,7 @@ export const Phone = () => {
             )}
             <div
               onClick={() => {
-                setRemoveEmail(true);
+                setRemovePhone(true);
               }}
               className="flex h-5 w-16 cursor-pointer items-center justify-center gap-1 rounded-full border border-destructive bg-destructive font-body text-sm font-medium text-white "
             >

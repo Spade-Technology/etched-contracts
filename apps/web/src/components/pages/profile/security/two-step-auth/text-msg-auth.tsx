@@ -1,17 +1,12 @@
-import { DisableTwoStepAuth } from "@/components/disable-two-step-auth";
-import { EnableTwoStepAuth } from "@/components/enable-two-step-auth";
 import { useClerk } from "@clerk/nextjs";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-export default function TextMsgAuth({ enabled }: { enabled: boolean }) {
+export default function TextMsgAuth() {
   const { user } = useClerk();
+  const enabled = !!user?.phoneNumbers[0]?.defaultSecondFactor && !!user?.phoneNumbers[0]?.reservedForSecondFactor;
 
-  const [isModal, setIsModal] = useState(false);
   const [twoStepAuth, setTwoStepAuth] = useState(enabled ? "enabled" : "disabled");
 
-  useEffect(() => {
-    setIsModal(false);
-  }, [twoStepAuth]);
   return (
     <main>
       <section className="w-fit rounded-2xl bg-muted p-5 text-foreground">
@@ -21,15 +16,18 @@ export default function TextMsgAuth({ enabled }: { enabled: boolean }) {
           <div
             onClick={async () => {
               if (enabled) {
-                await user?.primaryPhoneNumber?.setReservedForSecondFactor({ reserved: false });
+                await user?.phoneNumbers[0]?.setReservedForSecondFactor({ reserved: false });
+                setTwoStepAuth("disabled");
               } else {
-                await user?.primaryPhoneNumber?.makeDefaultSecondFactor();
-                await user?.primaryPhoneNumber?.setReservedForSecondFactor({ reserved: true });
+                await user?.phoneNumbers[0]?.makeDefaultSecondFactor();
+                await user?.phoneNumbers[0]?.setReservedForSecondFactor({ reserved: true });
+                setTwoStepAuth("enabled");
+
                 if (!user?.backupCodeEnabled) await user?.createBackupCode();
               }
             }}
             className={`flex h-7 w-14 cursor-pointer items-center justify-start rounded-full p-1 duration-500 ${
-              twoStepAuth == "enabled" ? "bg-white" : " bg-neutral-200"
+              twoStepAuth == "enabled" ? "bg-primary" : " bg-neutral-200"
             }`}
           >
             <div

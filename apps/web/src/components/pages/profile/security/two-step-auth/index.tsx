@@ -14,7 +14,6 @@ export interface form {
 
 export const TwoStep = () => {
   const { user } = useClerk();
-  const smsAuth = !!user?.primaryPhoneNumber?.defaultSecondFactor && !!user?.primaryPhoneNumber?.reservedForSecondFactor;
   const totpAuth = !!user?.totpEnabled && !!user?.twoFactorEnabled;
 
   return (
@@ -23,7 +22,7 @@ export const TwoStep = () => {
       <div className="mb-5 text-sm font-semibold text-muted-foreground">
         You can enable Two-step authentication for enhanced security
       </div>
-      {user?.primaryPhoneNumber && <TextMsgAuth enabled={smsAuth} />}
+      {user?.primaryPhoneNumber && <TextMsgAuth />}
       <GoogleAuth enabled={totpAuth} />
     </main>
   );
