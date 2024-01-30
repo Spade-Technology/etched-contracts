@@ -57,6 +57,7 @@ export const OtpInputs = ({
 }) => {
   const inputs: React.MutableRefObject<any[]> = useRef([]);
 
+
   const handleChange = (e: any, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = e.target.value;
@@ -80,6 +81,7 @@ export const OtpInputs = ({
 
     setOtp(newOtp);
   };
+
 
   return (
     <main>
