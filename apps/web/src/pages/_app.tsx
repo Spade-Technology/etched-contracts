@@ -15,7 +15,14 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     <WagmiConfig config={config}>
       <RefetchProvider>
         <SessionProvider session={session}>
-          <ClerkProvider {...pageProps}>
+          <ClerkProvider
+            {...pageProps}
+            appearance={{
+              variables: {
+                colorPrimary: "#077844",
+              },
+            }}
+          >
             <Component {...pageProps} />
             <Toaster />
           </ClerkProvider>
