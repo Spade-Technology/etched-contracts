@@ -2,6 +2,7 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { pinata } from "./ipfs";
 import { keccak256, toBytes, toHex } from "viem";
 import { EncryptToIpfsProps, SymmetricKey, decryptToIpfsProps } from "./utils/litTypes";
+import { env } from "./env.mjs";
 
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
@@ -13,6 +14,8 @@ const client = new LitJsSdk.LitNodeClient({
   // Verbosity of the logging
   debug: false,
 });
+
+const ipfsPlublicClientUrl = process.env.NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY + "ipfs/" || "https://gateway.pinata.cloud/ipfs/";
 
 class Lit {
   public client: LitJsSdk.LitNodeClient | undefined;
@@ -31,7 +34,7 @@ class Lit {
   async decryptFromIpfs(props: decryptToIpfsProps) {
     await this.connect();
 
-    const ipfsData = await (await fetch(`https://gateway.pinata.cloud/ipfs/${props.ipfsCid}`)).json();
+    const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
 
     const symmetricKey = await client.getEncryptionKey({
       accessControlConditions: ipfsData.accessControlConditions,
@@ -56,7 +59,7 @@ class Lit {
   }
 
   async getMetadataFromIpfs(ipfsCid: string) {
-    const ipfsData = await (await fetch(`https://gateway.pinata.cloud/ipfs/${ipfsCid}`)).json();
+    const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${ipfsCid}`)).json();
 
     return ipfsData.metadata;
   }
