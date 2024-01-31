@@ -4,9 +4,12 @@ import { BackUpCodes, Email, Password, Paymaster, Profile, TwoStep } from "@/com
 import { Phone } from "@/components/pages/profile/personal/phone/phone";
 import { SelectTheme } from "@/components/pages/profile/personal/select-theme";
 import { SidebarDialog } from "@/components/pages/profile/sidebar";
+import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 
 export default function Community() {
+  const { isSignedIn } = useUser();
+
   const [activeTab, setActiveTab] = useState<string>("Personal");
 
   const tabs = [
@@ -17,7 +20,7 @@ export default function Community() {
   ];
 
   const props = { activeTab, setActiveTab };
-
+  if (!isSignedIn) return;
   return (
     <PageBoilerplate>
       <main className="mt-5 flex w-full gap-7 bg-white px-10 py-8 shadow-4xl">

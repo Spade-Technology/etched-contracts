@@ -7,14 +7,16 @@ import { EtchedENS } from "./ens-button";
 import { TeamSelector } from "./team-selector";
 import { Icons } from "./ui/icons";
 import { UserSettings } from "./sidebar";
+import { useUser } from "@clerk/nextjs";
 
 export const DashboardHeader = () => {
+  const { isSignedIn } = useUser();
   const router = useRouter();
   const pathname = usePathname();
 
   const icons = [
-    { Icon: Icons.userCircle, url: "/dashboard/profile" },
-    { Icon: Icons.bell, url: "/dashboard/manage" },
+    { Icon: Icons.userCircle, url: "/dashboard/profile", show: !!isSignedIn },
+    { Icon: Icons.bell, url: "/dashboard/manage", show: true },
   ];
 
   return (
@@ -34,23 +36,25 @@ export const DashboardHeader = () => {
 
       <div className="flex h-full">
         <div className="h-full border-[1px] border-[#F5F6FA]" />
-        {icons.map(({ Icon, url }, idx) => (
-          <div className="flex">
-            <div
-              key={idx}
-              onClick={() => router.push(url)}
-              className="relative flex h-full w-16 cursor-pointer items-center justify-center"
-            >
-              <Icon color={pathname == url ? "#097B45" : ""} />
+        {icons
+          .filter((icon) => icon.show)
+          .map(({ Icon, url }, idx) => (
+            <div className="flex">
               <div
-                className={`absolute bottom-0 left-0 h-1.5 w-16 rounded-tl-full rounded-tr-full bg-green-700 duration-500 ${
-                  pathname == url ? "visible" : "invisible"
-                }`}
-              />
+                key={idx}
+                onClick={() => router.push(url)}
+                className="relative flex h-full w-16 cursor-pointer items-center justify-center"
+              >
+                <Icon color={pathname == url ? "#097B45" : ""} />
+                <div
+                  className={`absolute bottom-0 left-0 h-1.5 w-16 rounded-tl-full rounded-tr-full bg-green-700 duration-500 ${
+                    pathname == url ? "visible" : "invisible"
+                  }`}
+                />
+              </div>
+              {idx < 1 && <div className="h-full border border-[#F5F6FA]" />}
             </div>
-            {idx < 1 && <div className="h-full border border-[#F5F6FA]" />}
-          </div>
-        ))}
+          ))}
         <div className="h-full border border-[#F5F6FA]" />
         <UserSettings>
           <div className="relative flex h-full w-16 cursor-pointer items-center justify-center">
