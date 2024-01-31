@@ -1,11 +1,16 @@
 import { ChangePasword } from "@/components/change-password";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@clerk/nextjs";
 import React, { useState } from "react";
 
 export const Password = () => {
+  const { user } = useUser();
+
   const [isModal, setIsModal] = useState(false);
 
   const props = { isModal, setIsModal };
+
+  if (!user?.passwordEnabled) return;
   return (
     <main>
       <ChangePasword {...props} />
