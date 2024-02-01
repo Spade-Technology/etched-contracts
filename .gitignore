@@ -38,3 +38,7 @@ yarn-error.log*
 
 *.icloud
 .DS_Store
+.env.backup
+.env.kourafLance
+.env.old
+.env.lance
