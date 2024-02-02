@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
 import { form } from "./pages/profile";
 import ScanQrCode from "./ui/scan-qr-code";
-import { SuccessDialog } from "./ui/two-step-auth-success";
+import { BackupCodesModal } from "./ui/two-step-auth-success";
 
 export const DisableTwoStepAuth = ({
   isModal,
@@ -95,7 +95,7 @@ export const DisableTwoStepAuth = ({
         ) : form.status && verifyCode != "success" ? (
           <ScanQrCode {...props} />
         ) : verifyCode === "success" ? (
-          <SuccessDialog
+          <BackupCodesModal
             title={"Successfully disabled"}
             description="Save this emergency backup code and store it somewhere safe. If you lose you phone, you can use this to sign in."
             backupCode={Array(12).fill("807 374")}

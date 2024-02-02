@@ -1,5 +1,5 @@
 import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
-import { ShowBackupCodes } from "@/components/ui/two-step-auth-success";
+import { BackupCodesModal } from "@/components/ui/two-step-auth-success";
 import { useClerk } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 
@@ -60,7 +60,7 @@ export const ShowBackupCode = ({
       }}
     >
       <AlertDialogContent>
-        <ShowBackupCodes
+        <BackupCodesModal
           description="Save your backup code"
           title="Backup Code"
           onClick={() => setIsModal(false)}
