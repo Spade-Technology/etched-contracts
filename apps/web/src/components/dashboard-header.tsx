@@ -39,9 +39,8 @@ export const DashboardHeader = () => {
         {icons
           .filter((icon) => icon.show)
           .map(({ Icon, url }, idx) => (
-            <div className="flex">
+            <div className="flex" key={idx}>
               <div
-                key={idx}
                 onClick={() => router.push(url)}
                 className="relative flex h-full w-16 cursor-pointer items-center justify-center"
               >
