@@ -21,7 +21,6 @@ import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 import { contracts } from "@/contracts";
 import dynamic from "next/dynamic";
-import Viewer from "@/components/ui/model-viewer/Viewer";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -93,7 +92,10 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   let ModelViewer: ComponentType<{ file: string; fileName: string }> = () => <></>;
   if (Object.keys(model_formats).includes(fileType)) {
-    ModelViewer = dynamic(() => import("@/components/model-viewer"), { ssr: false });
+    ModelViewer = dynamic(() => import("@/components/model-viewer"), {
+      loading: (loadingProps) => <p>Loading...</p>,
+      ssr: false,
+    });
   }
 
   if (isLoading) return <div>Loading...</div>;
@@ -107,7 +109,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
           className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-white bg-opacity-75"
           onClick={toggleFullScreen}
         >
-          <Viewer file={etchFile} />
+          <ModelViewer file={etchFile} fileName={`model`} />
           <ExitFullScreenIcon className="absolute right-5 top-5 h-6 w-6 cursor-pointer" />
           {etchFile && fileType.startsWith("image/") && (
             <img src={etchFile} alt="Etch image" className="max-h-full max-w-full rounded-sm" />

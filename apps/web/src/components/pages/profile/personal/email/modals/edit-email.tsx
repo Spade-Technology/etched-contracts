@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { useState } from "react";
+import { email } from "./add-email";
 
 export const EditEmail = ({
   isModal,
@@ -13,7 +14,7 @@ export const EditEmail = ({
   setIsModal: React.Dispatch<boolean>;
   emails: email[];
 }) => {
-  const [inputVal, setInputVal] = useState(emails[1].value );
+  const [inputVal, setInputVal] = useState(emails[1]?.value);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -28,10 +29,10 @@ export const EditEmail = ({
     setInputVal("");
   };
 
-  const cancel = ()=>{
-    setInputVal(emails[1].value)
-     setIsModal(false);
-  }
+  const cancel = () => {
+    setInputVal(emails[1]?.value);
+    setIsModal(false);
+  };
 
   return (
     <AlertDialog
@@ -43,7 +44,6 @@ export const EditEmail = ({
       <AlertDialogContent className="max-w-[361px]">
         <AlertDialogTitle className="font-body text-base text-primary">Edit secondary email address</AlertDialogTitle>
         <section>
-         
           <form onSubmit={handleSubmit}>
             <Label className="font-body text-base font-semibold text-muted-foreground">Email</Label>
             <input
@@ -75,4 +75,3 @@ export const EditEmail = ({
     </AlertDialog>
   );
 };
-

@@ -4,10 +4,11 @@ import { useState } from "react";
 import { form } from "./pages/profile";
 import SendCode from "./ui/send-code";
 import Otp from "./ui/otp";
-import { SuccessDialog } from "./ui/two-step-auth-success";
+import { BackupCodesModal } from "./ui/two-step-auth-success";
 import { Button } from "./ui/button";
 import { Icons } from "./ui/icons";
 import { Label } from "@radix-ui/react-label";
+import { AddPhone } from "./pages/profile/personal/phone/modals";
 
 export const EnableTwoStepAuth = ({
   isModal,
@@ -81,11 +82,11 @@ export const EnableTwoStepAuth = ({
             </form>
           </>
         ) : form.status && !sendCode ? (
-          <SendCode {...props} />
+          <SendCode setSendCode={setSendCode} addPhone={AddPhone} close={close} />
         ) : sendCode && verifyCode != "success" ? (
           <Otp {...props} />
         ) : verifyCode == "success" ? (
-          <SuccessDialog
+          <BackupCodesModal
             title={"Successfully enabled"}
             description="Your phone number is set to +1938402040 Authentication codes will be sent to this number for logging in"
             onClick={() => setTwoStepAuth("enabled")}

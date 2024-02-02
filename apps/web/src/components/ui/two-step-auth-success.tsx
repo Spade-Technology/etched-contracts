@@ -3,7 +3,7 @@ import { DialogDescription } from "./dialog";
 import { IconProps, Icons } from "./icons";
 import { handleCopy } from "./../../lib/utils";
 
-export const ShowBackupCodes = ({
+export const BackupCodesModal = ({
   title,
   description,
   onClick,
