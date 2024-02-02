@@ -8,11 +8,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Form } from "@/components/ui/form";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { ComponentType, useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-
+import { Icons } from "./ui/icons";
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
 import { refetchContext } from "@/utils/urql";
 import dayjs from "dayjs";
@@ -23,9 +23,9 @@ import { PDFViewer } from "./pdf-viewer";
 import { TeamSelector } from "./team-selector";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
-// import Viewer from "./ui/model-viewer/Viewer";
 import dynamic from "next/dynamic";
-const Viewer = dynamic(() => import("./ui/model-viewer/Viewer"), { ssr: false });
+import { model_formats } from "@/utils/model-formats";
+// import ModelViewer from "./model-viewer";
 
 export const CreateEtchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,14 +36,15 @@ export const CreateEtchButton = () => {
   const form = useForm<FormData>({});
 
   const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
-
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
     accept: {
+      ...model_formats,
       "image/*": [],
       "audio/*": [],
       "video/*": [],
       "application/pdf": [],
+      ...model_formats,
     },
     onDrop: (acceptedFiles: File[]) => {
       const newFiles = [
@@ -75,6 +76,10 @@ export const CreateEtchButton = () => {
   }, [files]);
 
   useEffect(() => {
+    console.log(files);
+  }, [files]);
+
+  useEffect(() => {
     document.addEventListener("create-etch", () => {
       setIsOpen(true);
     });
@@ -83,11 +88,14 @@ export const CreateEtchButton = () => {
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="w-fit px-5 duration-500 hover:shadow-etched-1" onClick={() => setIsOpen(true)}>
-          + Create Etch
+        <Button
+          className="w-fit gap-1.5 px-5 text-base font-semibold text-white shadow-3xl duration-500"
+          onClick={() => setIsOpen(true)}
+        >
+          <Icons.plus /> Etch Now
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className={"max-h-screen overflow-y-scroll lg:max-w-screen-lg"}>
+      <AlertDialogContent className={"max-h-screen max-w-3xl"}>
         <div className="w-full">
           {etchCreated ? (
             <>
@@ -138,7 +146,7 @@ export const CreateEtchButton = () => {
                       <div>
                         <div
                           {...getRootProps()}
-                          className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
+                          className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 px-5  text-center text-slate-600 transition-all hover:border-gray-400 hover:text-slate-900"
                         >
                           <input {...getInputProps()} />
                           <p>
@@ -147,7 +155,7 @@ export const CreateEtchButton = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="h-[33vh] w-1/2 overflow-scroll">
+                    <div className="w-1/2">
                       <Label>Create on Behalf of</Label>
                       <TeamSelector className="w-full " horizontal />
 
@@ -163,7 +171,7 @@ export const CreateEtchButton = () => {
                           clear
                         </span>
                       </div>
-                      <div className="mt-3 grid grid-cols-3 gap-4 overflow-scroll">
+                      <div className="custom-scrollbar mt-3 grid max-h-40 grid-cols-3 gap-4 overflow-auto pr-2">
                         {files.map((file, index) => (
                           <FilePreviewer file={file} index={index} isLoading={isLoading} setFiles={setFiles} files={files} />
                         ))}
@@ -204,8 +212,8 @@ export const CreateEtchButton = () => {
 type FilePreview = File & {
   preview: string;
   nameOverride?: string | undefined;
-  path?: string | undefined;
   description?: string | undefined;
+  path?: string;
 };
 
 const FilePreviewer = ({
@@ -225,6 +233,12 @@ const FilePreviewer = ({
 }) => {
   const audioPreviewRef = useRef<HTMLAudioElement>(null);
   const [time, setTime] = useState(0);
+  const [isModel, setIsModel] = useState(false);
+
+  let ModelViewer: ComponentType<{ file: string; fileName: string }> = () => <></>;
+  if (Object.keys(model_formats).includes(file.type) || files.some((file) => Object.keys(model_formats).includes(file.type))) {
+    ModelViewer = dynamic(() => import("./model-viewer"), { ssr: false });
+  }
 
   // on audioPreviewRef initialization, update state at timeupdate
   useEffect(() => {
@@ -237,8 +251,18 @@ const FilePreviewer = ({
 
   const fileFormat = file.path?.slice(file.path.indexOf(".") + 1);
 
+  const filename = (file.nameOverride ?? file.name).split(".").slice(0, -1).join(".");
+
+  // Check if file is 3d model
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetch(`/formats/${fileFormat?.toUpperCase()}/icon.png`, { method: "HEAD" }).then((res) => setIsModel(res.ok));
+    };
+    fetchData();
+  }, []);
+
   return (
-    <div key={index} className="aspect-w-1 aspect-h-1 group relative">
+    <div key={index} className="aspect-w-1 aspect-h-1 group relative h-20">
       {file.type.startsWith("image/") ? (
         <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
       ) : file.type.startsWith("audio/") ? (
@@ -256,19 +280,19 @@ const FilePreviewer = ({
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
           <FileTextIcon className="h-1/2 w-1/2 text-white" />
         </div>
-      ) : (
+      ) : isModel ? (
         <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
           <img src={`/formats/${fileFormat?.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
         </div>
-      )}
+      ) : null}
       <div className="absolute inset-0 flex  flex-col items-center justify-center rounded-lg bg-black bg-opacity-50 opacity-0 transition-opacity group-hover:opacity-100">
-        <span className="text-center text-sm text-white">
-          {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}
+        <span className="mt-7 text-center text-sm text-white">
+          {filename.length < 12 ? filename : `${filename.substring(0, 8)}...`}
         </span>
         {isLoading ? (
           <span className="text-white opacity-50"> {uploadProgress}% </span>
         ) : (
-          <span className="text-white opacity-50">
+          <span className="text-xs text-white opacity-70">
             {(file.nameOverride ?? file.name).split(".").pop()} | {(file.size / 1024 / 1024).toFixed(2)} MB
           </span>
         )}
@@ -384,6 +408,21 @@ const FilePreviewer = ({
           </DialogContent>
         </Dialog>
       )}
+
+      {Object.keys(model_formats).includes(file.type) && (
+        <Dialog>
+          <DialogTrigger className="absolute bottom-0 right-0 m-2 flex cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <EyeIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview {(file.nameOverride ?? file.name).split(".").slice(0, -1).join(".")}</DialogTitle>
+            </DialogHeader>
+            <ModelViewer file={file.preview} fileName={file.name} />
+          </DialogContent>
+        </Dialog>
+      )}
+
       <div
         className="w-23 absolute right-0 top-0 m-2 flex  cursor-pointer rounded-full p-0 text-white opacity-0 transition-opacity group-hover:opacity-100"
         onClick={() => setFiles(files.filter((_, i) => i !== index))}

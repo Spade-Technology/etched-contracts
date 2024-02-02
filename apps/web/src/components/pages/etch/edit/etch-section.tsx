@@ -1,6 +1,6 @@
 import { Etch } from "@/gql/graphql";
 import Image from "next/image";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, ComponentType } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
@@ -12,14 +12,16 @@ import { lit } from "@/lit";
 import { useSignIn } from "@/utils/hooks/useSignIn";
 import filetype from "magic-bytes.js";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
+import { model_formats } from "@/utils/model-formats";
 import { useContractRead } from "wagmi";
 import EtchesABI from "@/contracts/abi/Etches.json";
 
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
-import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
 import { contracts } from "@/contracts";
+import dynamic from "next/dynamic";
+import Viewer from "@/components/ui/model-viewer/Viewer";
 
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
   const [openAddUser, setOpenAddUser] = useState(false);
@@ -27,8 +29,6 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const [fileType, setFileType] = useState("");
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { regenerateAuthSig } = useSignIn();
-
-  const viewerRef = useRef<HTMLImageElement>(null);
 
   const owner = useLoggedInAddress();
 
@@ -58,11 +58,16 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
     if (!decryptedArrayBuffer) return;
 
-    const fileType = filetype(new Uint8Array(decryptedArrayBuffer as any));
+    const metadata = await lit.getMetadataFromIpfs(etch?.ipfsCid);
+    let fileType = metadata?.type;
+    console.log(metadata);
+
+    if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any))[0]?.mime;
+    console.log(URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)])));
 
     const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
     setEtchFile(image);
-    setFileType(fileType[0]?.mime || "");
+    setFileType(fileType || "");
 
     return {};
   };
@@ -84,17 +89,25 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const toggleFullScreen = useCallback(() => {
     setIsFullScreen(!isFullScreen);
   }, [isFullScreen]);
+  console.log(fileType);
+
+  let ModelViewer: ComponentType<{ file: string; fileName: string }> = () => <></>;
+  if (Object.keys(model_formats).includes(fileType)) {
+    ModelViewer = dynamic(() => import("@/components/model-viewer"), { ssr: false });
+  }
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="my-4 grid grid-cols-3 gap-4">
       {/* FullScreen overlay */}
+      {/* <Viewer file={"https://rufus31415.github.io/sandbox/3d-viewer/formats/BVH/models/01_01.bvh"} /> */}
       {isFullScreen && (
         <div
           className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-white bg-opacity-75"
           onClick={toggleFullScreen}
         >
+          <Viewer file={etchFile} />
           <ExitFullScreenIcon className="absolute right-5 top-5 h-6 w-6 cursor-pointer" />
           {etchFile && fileType.startsWith("image/") && (
             <img src={etchFile} alt="Etch image" className="max-h-full max-w-full rounded-sm" />
@@ -139,6 +152,11 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
                 )}
 
                 {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
+
+                {Object.keys(model_formats).includes(fileType) && (
+                  // @ts-ignore
+                  <ModelViewer file={etchFile} fileName={`model${model_formats[fileType][0]}`} />
+                )}
               </>
             ) : (
               <Skeleton className="h-full w-full rounded-2xl bg-[#097B45]" />
