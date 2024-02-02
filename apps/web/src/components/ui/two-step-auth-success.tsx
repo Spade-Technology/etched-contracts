@@ -3,7 +3,7 @@ import { DialogDescription } from "./dialog";
 import { IconProps, Icons } from "./icons";
 import { handleCopy } from "./../../lib/utils";
 
-export const SuccessDialog = ({
+export const ShowBackupCodes = ({
   title,
   description,
   onClick,
@@ -14,10 +14,23 @@ export const SuccessDialog = ({
   backupCode?: string[] | any;
   onClick: React.MouseEventHandler<any>;
 }) => {
+  const download = () => {
+    // create a text file with the backup codes seperated with a new line character
+    const element = document.createElement("a");
+    const file = new Blob([backupCode.join("\n")], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = "backup-codes.txt";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+
+    // remove the temporary element
+    document.body.removeChild(element);
+  };
+
   const icons = [
-    <Icons.download className="h-4 cursor-pointer" />,
-    <Icons.print className="h-4 cursor-pointer" />,
-    <Icons.copy color="green" className="h-4 cursor-pointer" onClick={handleCopy} />,
+    <Icons.download className="h-4 cursor-pointer" onClick={download} />,
+    <Icons.print className="h-4 cursor-pointer" onClick={() => window.print()} />,
+    <Icons.copy color="green" className="h-4 cursor-pointer" onClick={() => handleCopy(backupCode.join(", "))} />,
   ];
 
   return (
