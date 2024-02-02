@@ -40,6 +40,7 @@ export default function Document() {
         <meta property="og:site_name" content="Etched" />
         <meta property="og:url" content="https://etched.xyz" />
         <meta property="og:image" content="https://etched.xyz/icons/apple-touch-icon.png" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
       </Head>
       <body>
         <Main />

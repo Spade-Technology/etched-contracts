@@ -8,6 +8,7 @@ import { useSignIn } from "@/utils/hooks/useSignIn";
 import Image from "next/image";
 import { useAccount, useConnect } from "wagmi";
 import { Button } from "./ui/button";
+import { Icons } from "./ui/icons";
 
 interface ConnectWallet extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -48,7 +49,13 @@ export function ConnectWalletModalButtonWrapper({ className, ...props }: Connect
     </>
   ) : (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{props.children || <Button>Sign In with Wallet</Button>}</DialogTrigger>
+      <DialogTrigger asChild>
+        {props.children || (
+          <Button className="gap-4 rounded border border-muted bg-white text-sm font-normal text-muted-foreground">
+            Connect Wallet <Icons.wallet />
+          </Button>
+        )}
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Connect Using Your Wallet</DialogTitle>

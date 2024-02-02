@@ -196,7 +196,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
       <div className="flex items-center gap-5 py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="shadow-etched-2">
+            <Button variant="ghost" className="shadow-4xl">
               Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -220,7 +220,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="shadow-etched-2">
+            <Button variant="ghost" className="shadow-4xl">
               Filter <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -232,7 +232,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
           placeholder="Filter etches..."
           value={(table.getColumn("documentName")?.getFilterValue() as string) ?? ""}
           onChange={(event) => table.getColumn("documentName")?.setFilterValue(event.target.value)}
-          className="ml-auto max-w-sm rounded-none border-none shadow-etched-2"
+          className="ml-auto max-w-sm rounded-none border-none shadow-4xl"
         />
 
         {/* <CreateEtchButton className="shadow-etched-2" /> */}

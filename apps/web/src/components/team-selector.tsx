@@ -77,7 +77,7 @@ export const TeamSelector = ({
             (horizontal ? "flex-row items-center justify-center gap-1" : "flex-col items-start")
           }
         >
-          <span className="whitespace-nowrap text-sm font-semibold text-gray-800">{selectedBehalfOf.name}</span>
+          <span className="whitespace-nowrap font-body text-sm font-medium text-primary">{selectedBehalfOf.name}</span>
           <Separator orientation="vertical" />
           <span className="text text-ellipsis text-xs text-gray-500">{selectedBehalfOf.org}</span>
         </div>

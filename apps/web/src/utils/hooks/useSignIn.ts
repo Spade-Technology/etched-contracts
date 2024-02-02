@@ -14,17 +14,29 @@ import { env } from "@/env.mjs";
 import { hashMessageForLit } from "@/lit";
 import { api } from "../api";
 
-export function signOut() {
-  localStorage.clear();
-  // clear cookies
+export function useSignOut() {
+  const { signOut: clerkSignOut, sessionId } = useAuth();
 
-  _signOut({ callbackUrl: "/auth" });
+  const signOut = async () => {
+    try {
+      if (sessionId) await clerkSignOut({ sessionId });
+
+      localStorage.clear();
+
+      _signOut({ callbackUrl: "/auth" });
+    } catch (error) {
+      console.error("signOut error: ", error);
+    }
+  };
+
+  return { signOut };
 }
 
 export const useSignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { data: blockNumber } = useBlockNumber();
   const { address } = useAccount();
+  const { signOut } = useSignOut();
 
   const { signMessageAsync } = useSignMessage();
   const { mutateAsync: generatePatchSignature } = api.patch.signMessageForPatchWallet.useMutation();
@@ -70,7 +82,7 @@ export const useSignIn = () => {
       const signedIn = await signIn("credentials", {
         message: authSig.signedMessage,
         signature: authSig.sig,
-        userId: userId,
+        userId: _userId,
         derivedVia: authSig.derivedVia,
         blockchainMessage,
         blockchainSignature,
@@ -89,7 +101,7 @@ export const useSignIn = () => {
       localStorage.setItem("blockchainSignature", blockchainSignature);
       localStorage.setItem("blockchainMessage", blockchainMessage);
     } catch (error) {
-      console.error(error);
+      console.error("error login: ", error);
     }
 
     setIsLoading(false);
@@ -188,6 +200,7 @@ export const useSignIn = () => {
 
       return authSig;
     } catch (error) {
+      console.error("error regenerateAuthSig: ", error);
       signOut();
     }
   };

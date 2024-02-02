@@ -5,8 +5,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 import { shortenAddress } from "@/utils/hooks/address";
-import { signOut, useSignIn } from "@/utils/hooks/useSignIn";
-import { SignIn, SignUp, useAuth } from "@clerk/nextjs";
+import { useSignOut, useSignIn } from "@/utils/hooks/useSignIn";
+import { SignIn, SignUp, useAuth, useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -23,86 +23,83 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) {
   const router = useRouter();
+  const { signOut } = useSignOut();
+
   const { status, data: session } = useSession();
 
   return (
-    <>
-      <div className="md:hidden">
-        <Image src="/examples/auth-light.png" width={1280} height={843} alt="Authentication" className="block dark:hidden" />
-        <Image src="/examples/auth-dark.png" width={1280} height={843} alt="Authentication" className="hidden dark:block" />
-      </div>
-      <div className="container relative  h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-          <div className="absolute inset-0 bg-primary" />
-          <div className="relative z-20 flex items-center text-lg font-medium">
-            <Icons.logoLong color="white" className="mr-2 h-8 cursor-pointer" onClick={() => router.push("/")} />
-          </div>
-          <div className="relative z-20 mt-auto">
-            <blockquote className="space-y-2">
-              {/* <p className="text-lg">
-                &ldquo;This service saved countless hours & headaches by adding simplicity and privacy to the legalities of my
-                business&rdquo;
-              </p>
-              <footer className="text-sm">John Doe</footer> */}
-            </blockquote>
+    <main className="lg:flex">
+      <aside className="hidden h-screen w-7/12 items-center bg-[url('/images/login/Bg.svg')] bg-cover bg-center bg-no-repeat font-body text-white lg:flex">
+        <div className="mx-auto w-96">
+          <Icons.brightLogo className="h-9 cursor-pointer" onClick={() => router.push("/")} />
+          <div className="tracking-lighter my-5 text-base font-medium">The leading blockchain trademarking platform</div>
+          <div className="flex h-10 w-32 cursor-pointer items-center justify-center border-2 border-white text-base font-semibold shadow">
+            Learn more
           </div>
         </div>
-        <div className="lg:p-8">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-            <div className="flex flex-col space-y-2 text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {status === "authenticated" ? "You're all set" : "Create or Sign In to Your Account"}
-              </h1>
-              <p className="text-sm text-muted-foreground">Welcome to Etched!</p>
+      </aside>
+      <div className="bg-green500 mx-auto flex w-4/6 flex-col items-center justify-center py-10">
+        <div className="w-full sm:w-80">
+          <div className={`font-poppins text-2xl font-bold tracking-tight ${status === "authenticated" ? "text-center" : ""}`}>
+            {status === "authenticated" ? "You're all set" : isSignup ? "Create your account" : "Hello Again!"}
+          </div>
+          <p className={`text-sm text-muted-foreground ${status === "authenticated" ? "text-center" : ""}`}>
+            {isSignup ? "Create your account" : "Welcome to Etched!"}
+          </p>
+          {status === "authenticated" && session ? (
+            <div className="flex w-full flex-col items-center justify-center">
+              <Label> Logged in {session?.address && "as " + shortenAddress({ address: session?.address as string })}</Label>
+              <Button variant="outline" className="mt-4" onClick={() => router.push("/dashboard")}>
+                Continue to Dashboard
+              </Button>
+              <Button variant="destructive" className="mt-4" onClick={() => signOut()}>
+                Log Out
+              </Button>
             </div>
-            {status === "authenticated" && session ? (
-              <div className="flex w-full flex-col items-center justify-center">
-                <Label> Logged in {session?.address && "as " + shortenAddress({ address: session?.address as string })}</Label>
-                <Button variant="outline" className="mt-4" onClick={() => router.push("/dashboard")}>
-                  Continue to Dashboard
-                </Button>
-                <Button variant="destructive" className="mt-4" onClick={() => signOut()}>
-                  Log Out
-                </Button>
-              </div>
-            ) : (
-              <UserAuthForm isSignup={isSignup} />
-            )}
-            <p className="px-8 text-center text-sm text-muted-foreground">
-              By clicking continue, you agree to our{" "}
-              <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
-                Privacy Policy
-              </Link>
-              .
-            </p>
-          </div>
+          ) : (
+            <UserAuthForm isSignup={isSignup} />
+          )}
+          {/* <p className="px-8 text-center text-sm text-muted-foreground">
+            By clicking continue, you agree to our{" "}
+            <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+              Privacy Policy
+            </Link>
+            .
+          </p> */}
         </div>
       </div>
-    </>
+    </main>
   );
 }
 
 export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProps) {
   const router = useRouter();
 
-  const { isLoaded, userId, sessionId, getToken, isSignedIn } = useAuth();
+  const { isLoaded, userId, sessionId, isSignedIn } = useAuth();
   const { logIn } = useSignIn();
 
+  const icons = [<Icons.twitterBrand />, <img src="/images/login/image 451.svg" />, <Icons.facebook />];
+
   React.useEffect(() => {
-    console.log(sessionId, userId, isLoaded, isSignedIn);
+    console.log({ sessionId, userId, isLoaded, isSignedIn });
     if (sessionId && userId && isLoaded && isSignedIn) {
       logIn({
         isPatchWallet: true,
       });
     }
+    /*
+     * WORK AROUND FOR THIS BUG
+     * Clerk: “The <SignUp/> and <SignIn/> components cannot render when a user is already signed in, unless the application allows...
+     */
+    if (isLoaded && !router.asPath.includes("signup")) router.push("/auth");
   }, [userId, sessionId, isSignedIn, isLoaded, router.asPath]);
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
+    <div className={cn("grid gap-5", className)} {...props}>
       {sessionId ? (
         <div className="flex flex-col justify-center gap-4">
           <span className="text-center">{isSignup ? "Creating your account !" : "Logging you in..."}</span>
@@ -116,19 +113,19 @@ export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProp
       )}
       {!sessionId && !isSignup && (
         <>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
+          <span className="my-3 text-center font-body text-base font-normal text-muted-foreground">OR</span>
           <form>
             <div className="grid gap-2">
               <ConnectWalletModalButtonWrapper />
             </div>
           </form>
+          {/* <section className="flex justify-center gap-7">
+            {icons.map((icon) => (
+              <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-muted">
+                {icon}
+              </div>
+            ))}
+          </section> */}
         </>
       )}
     </div>

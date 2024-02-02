@@ -20,6 +20,7 @@ module.exports = {
       fontFamily: {
         campton: ["Campton", "sans-serif"],
         body: ["Quicksand", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
       colors: {
         border: "var(--border)",
@@ -67,7 +68,8 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        "3xl": "0 35px 60px -15px rgba(0, 0, 0, 0.3)",
+        "3xl": "0px 4px 13px 0px rgba(0, 0, 0, 0.25)",
+        "4xl": "0px 4px 20px 3px rgba(0, 0, 0, 0.1)",
         "etched-1": "rgba(17, 17, 26, 0.1) 0px 0px 16px",
         "etched-2": "rgba(17, 17, 26, 0.1) 0px 0px 32px",
       },
