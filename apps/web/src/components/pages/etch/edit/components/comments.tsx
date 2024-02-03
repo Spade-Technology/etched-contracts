@@ -1,5 +1,6 @@
-import { TeaxtArea } from "@/components/ui/autoresize-textarea";
+import { TextArea } from "@/components/ui/autoresize-textarea";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Etch, EtchCommentAdded } from "@/gql/graphql";
 import { lit } from "@/lit";
 import { api } from "@/utils/api";
@@ -9,6 +10,7 @@ import { useLoggedInAddress, useSignIn } from "@/utils/hooks/useSignIn";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import Avatar from "boring-avatars";
+import dayjs from "dayjs";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -16,7 +18,7 @@ type CommentProps = {
   imgUrl?: string;
   userName: string;
   description: string;
-  commentedAt: string;
+  commentedAt: number;
   addr: string;
 };
 
@@ -27,16 +29,33 @@ export const EtchedAvatar = ({ uid }: { uid: string }) => (
 const Comment = ({ imgUrl, userName, description, commentedAt, addr }: CommentProps) => {
   return (
     <div className="flex justify-start gap-3 py-5">
-      {imgUrl ? <Image src={imgUrl} width={40} height={40} alt={description} className="rounded" /> : <EtchedAvatar uid={addr} />}
-      <div>
+      {imgUrl ? (
+        <Image src={imgUrl} width={40} height={40} alt={description} className="mt-3 aspect-square h-10 w-10 rounded" />
+      ) : (
+        <EtchedAvatar uid={addr} />
+      )}
+      <div className="w-full">
         <div className="flex items-center gap-3">
           <div className="pt-2 text-base font-semibold text-muted-foreground">{userName}</div>
-          <div className="font-nornal pt-2 text-base text-muted-foreground">{commentedAt}</div>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="pt-2 text-base font-normal text-muted-foreground">
+                  <p>{dayjs.unix(commentedAt).format("YYYY.MM.DD HH:mm")}</p>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>{dayjs.unix(commentedAt).from(dayjs())}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         {description ? (
           <div className="whitespace-pre-wrap pt-2 text-base font-medium text-muted-foreground">{description}</div>
         ) : (
-          <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200"></div>
+          <div className="mt-2 w-full space-y-2">
+            <div className="h-4 w-3/4 animate-pulse rounded bg-gray-300"></div>
+            <div className="h-4 w-5/6 animate-pulse rounded bg-gray-300"></div>
+            <div className="h-4 w-2/3 animate-pulse rounded bg-gray-300"></div>
+          </div>
         )}
       </div>
     </div>
@@ -72,11 +91,11 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
     const authSig = await regenerateAuthSig();
 
     comments.forEach(async (comment) => {
-      const decryptedComment = (await LitJsSdk.decryptFromIpfs({
-        authSig,
-        ipfsCid: comment.comment_commentIpfsCid,
-        litNodeClient: lit.client as any,
-      })) as string;
+      const decryptedObject = await lit
+        .decryptFromIpfs({ authSig, ipfsCid: comment.comment_commentIpfsCid })
+        .catch((e) => alert(e.message));
+
+      const decryptedComment = decryptedObject?.data as string;
 
       if (decryptedComment) {
         setComments((old) => ({
@@ -153,7 +172,7 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
               colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]}
             />
           </div>
-          <TeaxtArea
+          <TextArea
             disabled={isLoading || !hasWritePermission}
             placeholder="Add a comment"
             value={newComment}
@@ -186,7 +205,7 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
             <Comment
               userName={owner}
               description={comment}
-              commentedAt={new Date(timestamp * 1000).toDateString()}
+              commentedAt={timestamp}
               key={idx}
               addr={addr}
               imgUrl={profilePics[addr]}

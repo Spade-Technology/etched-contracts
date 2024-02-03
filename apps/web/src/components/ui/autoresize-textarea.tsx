@@ -6,7 +6,7 @@ export interface InputProps extends React.TextareaHTMLAttributes<any> {
   className?: string;
 }
 
-const TeaxtArea = React.forwardRef<HTMLTextAreaElement, InputProps>(({ className, ...props }, ref) => {
+const TextArea = React.forwardRef<HTMLTextAreaElement, InputProps>(({ className, ...props }, ref) => {
   const textAreaRef = React.useRef<HTMLInputElement | any>();
 
   return (
@@ -24,6 +24,6 @@ const TeaxtArea = React.forwardRef<HTMLTextAreaElement, InputProps>(({ className
     />
   );
 });
-TeaxtArea.displayName = "TeaxtArea";
+TextArea.displayName = "TeaxtArea";
 
-export { TeaxtArea };
+export { TextArea };

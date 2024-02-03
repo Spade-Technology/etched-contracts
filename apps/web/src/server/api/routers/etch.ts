@@ -119,6 +119,26 @@ export const etchRouter = createTRPCRouter({
       }
     ),
 
+  uploadAndEncryptString: protectedProcedure
+    .input(
+      z.object({
+        str: z.string(),
+        etchId: z.string(),
+        authSig: z.any(),
+      })
+    )
+    .mutation(async ({ input: { str, etchId, authSig } }) => {
+      const ipfsCid = await encryptToIpfs({
+        authSig: authSig,
+        chain: camelCaseNetwork,
+        string: str,
+        evmContractConditions: defaultAccessControlConditionsUsingReadableID({ etchId }),
+        metadata: { type: "string" },
+      });
+
+      return { ipfsCid };
+    }),
+
   setMetadata: protectedProcedure
     .input(
       z.object({
@@ -211,35 +231,6 @@ export const etchRouter = createTRPCRouter({
         return { tx };
       }
     ),
-
-  uploadAndEncryptString: protectedProcedure
-    .input(
-      z.object({
-        str: z.string(),
-        etchId: z.string(),
-        authSig: z.any(),
-      })
-    )
-    .mutation(async ({ input: { str, etchId, authSig } }) => {
-      await lit.connect();
-
-      const ipfsCid = await LitJsSdk.encryptToIpfs({
-        authSig,
-        string: str,
-        chain: camelCaseNetwork,
-
-        infuraId: process.env.NEXT_PUBLIC_INFURA_ID as string,
-        infuraSecretKey: process.env.INFURA_API_SECRET as string,
-
-        litNodeClient: lit.client as any,
-
-        evmContractConditions: defaultAccessControlConditionsUsingReadableID({ etchId }),
-      }).catch((err) => {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
-      });
-
-      return { ipfsCid };
-    }),
 
   commentOnEtch: protectedProcedure
     .input(
