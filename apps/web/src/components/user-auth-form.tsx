@@ -14,6 +14,7 @@ import { ConnectWalletModalButtonWrapper } from "./connect-wallet";
 import { Button } from "./ui/button";
 import { Icons } from "./ui/icons";
 import { Label } from "./ui/label";
+import Link from "next/link";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   isSignup?: boolean;
@@ -26,6 +27,20 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
   const { status, data: session } = useSession();
   const { sessionId } = useAuth();
 
+  const [showLogin, setShowLogin] = React.useState(false);
+
+  React.useEffect(() => {
+    if (status === "authenticated" && session) router.push("/dashboard");
+  }, [status, session]);
+
+  React.useEffect(() => {
+    if (window?.matchMedia("(prefers-reduced-motion: reduce)").matches) setShowLogin(true);
+    else {
+      const timer = setTimeout(() => setShowLogin(true), 100);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <main className="lg:flex">
       <aside className="hidden h-screen w-7/12 items-center bg-[url('/images/login/Bg.svg')] bg-cover bg-center bg-no-repeat font-body text-white lg:flex">
@@ -37,18 +52,26 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
           </div>
         </div>
       </aside>
-      <div className="bg-green500 mx-auto flex w-4/6 flex-col items-center justify-center gap-4 py-10">
-        <div className="w-full sm:w-80">
-          <div className={`font-poppins text-2xl font-bold tracking-tight ${status === "authenticated" ? "text-center" : ""}`}>
-            {status === "authenticated" ? "You're all set" : isSignup ? "Create your account" : "Hello Again!"}
-          </div>
-          {sessionId ? (
-            <p className={`text-sm text-muted-foreground ${status === "authenticated" ? "text-center" : ""}`}>
-              {isSignup ? "Create your account" : "Welcome to Etched!"}
-            </p>
-          ) : (
-            <></>
+      <div
+        className={`mx-auto flex w-4/6 flex-col items-center justify-center gap-4 py-10 transition-opacity delay-500 duration-1000 ease-in-out ${
+          showLogin ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
+        }`}
+      >
+        <div className="w-full sm:w-[25rem]">
+          {!sessionId && (
+            <>
+              <div
+                className={`font-poppins text-2xl font-bold tracking-tight ${status === "authenticated" ? "text-center" : ""}`}
+              >
+                {status === "authenticated" ? "You're all set" : isSignup ? "Create your account" : "Hello Again!"}
+              </div>
+
+              <p className={`text-sm text-muted-foreground ${status === "authenticated" ? "text-center" : ""}`}>
+                {isSignup ? "Create your account" : "Welcome to Etched!"}
+              </p>
+            </>
           )}
+
           {status === "authenticated" && session ? (
             <div className="flex w-full flex-col items-center justify-center">
               <Label> Logged in {session?.address && "as " + shortenAddress({ address: session?.address as string })}</Label>
@@ -62,17 +85,20 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
           ) : (
             <UserAuthForm isSignup={isSignup} />
           )}
-          {/* <p className="px-8 text-center text-sm text-muted-foreground">
-            By clicking continue, you agree to our{" "}
-            <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
-              Privacy Policy
-            </Link>
-            .
-          </p> */}
+
+          <div className="mx-auto mt-10 flex w-full items-center justify-center">
+            <p className="text-center text-sm text-muted-foreground">
+              By using Etched, you agree to our{" "}
+              <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+          </div>
         </div>
       </div>
     </main>
@@ -115,19 +141,16 @@ export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProp
       )}
       {!sessionId && !isSignup && (
         <>
-          <span className="my-3 text-center font-body text-base font-normal text-muted-foreground">OR</span>
+          <div className="flex items-center justify-center">
+            <div className="flex-grow border-t border-gray-300"></div>
+            <span className="mx-3 text-center font-body text-base font-normal text-muted-foreground">OR</span>
+            <div className="flex-grow border-t border-gray-300"></div>
+          </div>
           <form>
             <div className="grid gap-2">
               <ConnectWalletModalButtonWrapper />
             </div>
           </form>
-          {/* <section className="flex justify-center gap-7">
-            {icons.map((icon) => (
-              <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-muted">
-                {icon}
-              </div>
-            ))}
-          </section> */}
         </>
       )}
     </div>
