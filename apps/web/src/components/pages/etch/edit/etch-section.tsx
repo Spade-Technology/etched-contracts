@@ -1,6 +1,6 @@
 import { Etch } from "@/gql/graphql";
 import Image from "next/image";
-import { ComponentType, useCallback, useEffect, useState } from "react";
+import { ComponentType, useCallback, useEffect, useMemo, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
@@ -39,35 +39,26 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   });
 
   const decrypt = async () => {
-    await lit.connect();
+    try {
+      await lit.connect();
+      if (!etch?.ipfsCid) return;
 
-    if (!lit.client || !etch?.ipfsCid) return;
+      const authSig = await regenerateAuthSig();
+      const decrypted = await lit.decryptFromIpfs({ authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
 
-    const authSig = await regenerateAuthSig();
+      if (!decrypted?.data) return;
 
-    const decrypted = await lit
-      .decryptFromIpfs({
-        authSig,
-        ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
-      })
-      .catch((e) => {
-        console.error(e);
-        if (e.errorKind == "Validation") alert("You are not authorized to view this document");
-        else alert(e.message || "Something went wrong");
-      });
+      const metadata = decrypted.metadata;
+      const detectedFileType =
+        metadata?.type || (typeof decrypted.data === "string" ? "string" : filetype(decrypted.data)[0]?.mime);
+      const image = typeof decrypted.data === "string" ? "" : URL.createObjectURL(new Blob([decrypted.data]));
 
-    if (!decrypted?.data) return;
-
-    const metadata = decrypted.metadata;
-    let fileType = metadata?.type;
-
-    if (!fileType) fileType = typeof decrypted.data === "string" ? "string" : filetype(decrypted.data)[0]?.mime;
-
-    const image = typeof decrypted.data === "string" ? "" : URL.createObjectURL(new Blob([decrypted.data]));
-    setEtchFile(image);
-    setFileType(fileType || "");
-
-    return {};
+      setEtchFile(image);
+      setFileType(detectedFileType || "");
+    } catch (e: any) {
+      console.error(e);
+      alert(e.errorKind === "Validation" ? "You are not authorized to view this document" : e.message || "Something went wrong");
+    }
   };
 
   useEffect(() => {
@@ -76,33 +67,58 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsFullScreen(false);
-      }
+      if (event.key === "Escape") setIsFullScreen(false);
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, []);
 
-  const toggleFullScreen = useCallback(() => {
-    setIsFullScreen(!isFullScreen);
-  }, [isFullScreen]);
-  console.log(fileType);
+  const toggleFullScreen = useCallback(() => setIsFullScreen((prevState) => !prevState), []);
 
-  let ModelViewer: ComponentType<{ file: string; fileName: string }> = () => <></>;
-  if (Object.keys(model_formats).includes(fileType)) {
-    ModelViewer = dynamic(() => import("@/components/model-viewer"), {
-      loading: (loadingProps) => <p>Loading...</p>,
-      ssr: false,
-    });
-  }
+  const ModelViewer = useMemo(() => {
+    return Object.keys(model_formats).includes(fileType)
+      ? dynamic(() => import("@/components/model-viewer"), { loading: () => <p>Loading...</p>, ssr: false })
+      : () => <></>;
+  }, [fileType]);
 
   if (isLoading) return <div>Loading...</div>;
 
+  const renderMedia = () => {
+    if (!etchFile) return <Skeleton className="h-full w-full rounded-2xl bg-[#097B45]" />;
+    const isImage = fileType.startsWith("image/");
+    const isVideo = fileType.startsWith("video/");
+    const isAudio = fileType.startsWith("audio/");
+    const isPDF = fileType.includes("pdf");
+    const isModel = Object.keys(model_formats).includes(fileType);
+
+    return (
+      <>
+        {isImage && (
+          <Image
+            src={etchFile}
+            alt="Etch image"
+            fill
+            className="rounded-2xl"
+            onError={(event) => (event.currentTarget.style.display = "none")}
+          />
+        )}
+        {isVideo && <VideoPlayer url={etchFile} />}
+        {isAudio && (
+          <audio controls onError={(event) => (event.currentTarget.style.display = "none")}>
+            <source src={etchFile} type={fileType} />
+            Your browser does not support the audio element.
+          </audio>
+        )}
+        {isPDF && <PDFViewer file={etchFile} navBarPosition="top" />}
+        {isModel && (
+          <ModelViewer file={etchFile} fileName={`model${model_formats[fileType as keyof typeof model_formats][0] || ""}`} />
+        )}
+      </>
+    );
+  };
+
   return (
     <div className="my-4 grid grid-cols-3 gap-4">
-      {/* FullScreen overlay */}
-      {/* <Viewer file={"https://rufus31415.github.io/sandbox/3d-viewer/formats/BVH/models/01_01.bvh"} /> */}
       {isFullScreen && (
         <div
           className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-white bg-opacity-75"
@@ -116,64 +132,14 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
         </div>
       )}
 
-      {/* etch section */}
       <div className="col-span-2">
         <AspectRatio ratio={16 / 9}>
-          <div className="flex h-full w-full items-center justify-center rounded-2xl bg-[#F3F5F5] ">
-            {etchFile ? (
-              <>
-                {!!fileType.startsWith("image/") && (
-                  <>
-                    <Image
-                      src={etchFile}
-                      alt="bgImage"
-                      fill
-                      className="col-span-2 mx-auto my-auto rounded-2xl"
-                      onError={(event) => {
-                        event.currentTarget.style.display = "none";
-                      }}
-                    />
-                    <EnterFullScreenIcon className="absolute right-5 top-5 h-6 w-6 cursor-pointer" onClick={toggleFullScreen} />
-                  </>
-                )}
-
-                {!!fileType.startsWith("video/") && <VideoPlayer url={etchFile} />}
-
-                {!!fileType.startsWith("audio/") && (
-                  <audio
-                    controls
-                    className="col-span-2"
-                    onError={(event) => {
-                      event.currentTarget.style.display = "none";
-                    }}
-                  >
-                    <source src={etchFile} type={fileType} />
-                    Your browser does not support the audio element.
-                  </audio>
-                )}
-
-                {!!fileType.includes("pdf") && <PDFViewer file={etchFile} navBarPosition="top" />}
-
-                {Object.keys(model_formats).includes(fileType) && (
-                  // @ts-ignore
-                  <ModelViewer file={etchFile} fileName={`model${model_formats[fileType][0]}`} />
-                )}
-              </>
-            ) : (
-              <Skeleton className="h-full w-full rounded-2xl bg-[#097B45]" />
-            )}
-          </div>
+          <div className="flex h-full w-full items-center justify-center rounded-2xl bg-[#F3F5F5]">{renderMedia()}</div>
         </AspectRatio>
-
-        <Comments etch={etch || {}} hasWritePermission={hasWritePermission as boolean} />
+        <Comments etch={etch || {}} hasWritePermission={!!hasWritePermission} />
       </div>
       <div className="col-span-1">
-        <Edit
-          setOpenAddUser={setOpenAddUser}
-          etch={etch}
-          isLoading={isLoading}
-          hasWritePermission={hasWritePermission as boolean}
-        />
+        <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} hasWritePermission={!!hasWritePermission} />
         <AddUser show={openAddUser} setShow={setOpenAddUser} etch={etch} />
       </div>
     </div>
