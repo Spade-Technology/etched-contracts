@@ -39,7 +39,6 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   });
 
   const decrypt = async () => {
-    console.log("first");
     await lit.connect();
 
     if (!lit.client || !etch?.ipfsCid) return;
