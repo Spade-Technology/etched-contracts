@@ -23,9 +23,7 @@ export default function SendCode({
   const countries = country_codes.filter(({ name }) => name.toLowerCase().includes(inputVal.toLowerCase()));
 
   const onChange = (e: any) => {
-    if (e.target.value === "" || regrex.test(e.target.value)) {
-      setPhoneNumber(e.target.value);
-    }
+    if (e.target.value === "" || /^(?=.*[+])[- +()0-9 ]+$/.test(e.target.value)) setPhoneNumber(e.target.value);
   };
 
   const handleSubmit = (e: any) => {
