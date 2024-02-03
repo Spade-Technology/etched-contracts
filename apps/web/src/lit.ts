@@ -63,6 +63,8 @@ class Lit {
       accessControlConditions: ipfsData.accessControlConditions,
     };
 
+    console.log(data);
+
     let decrypted;
 
     if (ipfsData.encryptedString) decrypted = await LitJsSdk.decryptToString(data, client);
