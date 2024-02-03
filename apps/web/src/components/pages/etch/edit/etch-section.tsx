@@ -39,12 +39,14 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   });
 
   const decrypt = async () => {
+    console.log("first");
     await lit.connect();
+
     if (!lit.client || !etch?.ipfsCid) return;
 
     const authSig = await regenerateAuthSig();
 
-    const decryptedArrayBuffer = await lit
+    const decrypted = await lit
       .decryptFromIpfs({
         authSig,
         ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
@@ -55,16 +57,14 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
         else alert("Something went wrong");
       });
 
-    if (!decryptedArrayBuffer) return;
+    if (!decrypted?.data) return;
 
-    const metadata = await lit.getMetadataFromIpfs(etch?.ipfsCid);
+    const metadata = decrypted.metadata;
     let fileType = metadata?.type;
-    console.log(metadata);
 
-    if (!fileType) fileType = filetype(new Uint8Array(decryptedArrayBuffer as any))[0]?.mime;
-    console.log(URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)])));
+    if (!fileType) fileType = typeof decrypted.data === "string" ? "string" : filetype(decrypted.data)[0]?.mime;
 
-    const image = URL.createObjectURL(new Blob([new Uint8Array(decryptedArrayBuffer as any)]));
+    const image = typeof decrypted.data === "string" ? "" : URL.createObjectURL(new Blob([decrypted.data]));
     setEtchFile(image);
     setFileType(fileType || "");
 
