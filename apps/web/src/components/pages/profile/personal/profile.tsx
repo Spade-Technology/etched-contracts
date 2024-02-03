@@ -1,12 +1,12 @@
-import { useCallback, useState } from "react";
-import { useClerk } from "@clerk/nextjs";
+import { EtchedENS } from "@/components/ens-button";
 import { AlertDialog, AlertDialogContent, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useDropzone } from "react-dropzone";
-import { api } from "@/utils/api";
 import { toast } from "@/components/ui/use-toast";
+import { api } from "@/utils/api";
 import { useUploadThing } from "@/utils/uploadthing";
-import { EtchedENS } from "@/components/ens-button";
+import { useClerk } from "@clerk/nextjs";
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
 
 const ChangeImage = ({ modal, openModal, reload }: { modal: boolean; openModal: any; reload: any }) => {
   const [file, setFile] = useState<any>();

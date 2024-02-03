@@ -1,10 +1,10 @@
+import { api } from "@/utils/api";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
-import { AlertDialogContent, AlertDialogTitle } from "./ui/alert-dialog";
+import { Label } from "@radix-ui/react-label";
 import { SetStateAction, useState } from "react";
+import { AlertDialogContent, AlertDialogTitle } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 import { Icons } from "./ui/icons";
-import { Label } from "@radix-ui/react-label";
-import { api } from "@/utils/api";
 import { toast } from "./ui/use-toast";
 
 export const ChangePasword = ({ isModal, setIsModal }: { isModal: boolean; setIsModal: React.Dispatch<boolean> }) => {

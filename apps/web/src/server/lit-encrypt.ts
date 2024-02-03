@@ -1,6 +1,6 @@
 import { pinata } from "@/ipfs";
 import { lit } from "@/lit";
-import { EncryptToIpfsProps, SymmetricKey } from "@/utils/litTypes";
+import { EncryptToIpfsProps } from "@/utils/litTypes";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
 export const encryptToIpfs = async (props: EncryptToIpfsProps) => {

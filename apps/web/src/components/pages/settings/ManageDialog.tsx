@@ -3,10 +3,10 @@ import { CreateTeamDialog } from "@/components/create-team-dialog";
 import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { OrgDialog } from "./OrgDialog";
 import { Teams } from "./Teams";
-import { usePathname } from "next/navigation";
 
 export const ManageDialog = () => {
   const [openOrgModal, setOpenOrgModal] = useState(false);
@@ -36,7 +36,7 @@ export const ManageDialog = () => {
             <div
               key={idx}
               onClick={() => (idx == 0 ? setOpenOrgModal(true) : setOpenTeamModal(true))}
-              className={`flex h-fit cursor-pointer items-center gap-3 border-[1px] border-primary px-5 py-[11px] text-base font-semibold text-primary hover:shadow-3xl duration-300 hover:bg-primary hover:text-white `}
+              className={`flex h-fit cursor-pointer items-center gap-3 border-[1px] border-primary px-5 py-[11px] text-base font-semibold text-primary duration-300 hover:bg-primary hover:text-white hover:shadow-3xl `}
             >
               {name}
             </div>

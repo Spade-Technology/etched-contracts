@@ -1,6 +1,6 @@
 import { EnableTOTP } from "@/components/enable-totp";
 import { useClerk } from "@clerk/nextjs";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function GoogleAuth() {
   const { user } = useClerk();

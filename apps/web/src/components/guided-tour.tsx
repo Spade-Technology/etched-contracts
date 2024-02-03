@@ -1,10 +1,9 @@
+import { Cross1Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { Logo } from "./icons/logo-long-animated";
-import { AlertDialog, AlertDialogContent } from "./ui/alert-dialog";
 import { Checkbox } from "./ui/checkbox";
-import { Icons } from "./ui/icons";
-import { Cross1Icon } from "@radix-ui/react-icons";
 import { Dialog, DialogContent } from "./ui/dialog";
+import { Icons } from "./ui/icons";
 
 export default function GuidedTour() {
   const [openModal, setOpenModal] = useState(false);

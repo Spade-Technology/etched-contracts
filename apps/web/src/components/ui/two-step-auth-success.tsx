@@ -1,7 +1,6 @@
-import { Button } from "./button";
-import { DialogDescription } from "./dialog";
-import { IconProps, Icons } from "./icons";
 import { handleCopy } from "./../../lib/utils";
+import { Button } from "./button";
+import { Icons } from "./icons";
 
 export const BackupCodesModal = ({
   title,

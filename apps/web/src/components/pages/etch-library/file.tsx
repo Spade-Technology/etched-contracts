@@ -1,6 +1,3 @@
-import { GoodIcon } from "@/components/icons/good";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,13 +6,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
+import MoveDialog from "@/components/ui/move-modal";
 import PropertiesDialog from "@/components/ui/properties";
-import { Etch } from "@/gql/graphql";
 import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
 import { FileLockIcon } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FileProps } from "./types";
-import MoveDialog from "@/components/ui/move-modal";
 const options = ["Move to >", "Rename", "Share", "Delete", "Properties"];
 
 export const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProps) => {

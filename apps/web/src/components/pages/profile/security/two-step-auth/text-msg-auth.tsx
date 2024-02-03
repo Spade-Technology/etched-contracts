@@ -1,5 +1,5 @@
 import { useClerk } from "@clerk/nextjs";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ShowBackupCode } from "../backup-codes";
 
 export default function TextMsgAuth() {

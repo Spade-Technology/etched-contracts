@@ -1,11 +1,11 @@
-import { AlertDialog } from "@radix-ui/react-alert-dialog";
-import { AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "./ui/alert-dialog";
-import { useEffect, useState } from "react";
-import Otp from "./ui/otp";
-import { Button } from "./ui/button";
-import QRCode from "react-qr-code";
 import { useClerk } from "@clerk/nextjs";
+import { AlertDialog } from "@radix-ui/react-alert-dialog";
+import { useEffect, useState } from "react";
+import QRCode from "react-qr-code";
 import { ShowBackupCode } from "./pages/profile";
+import { AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "./ui/alert-dialog";
+import { Button } from "./ui/button";
+import Otp from "./ui/otp";
 
 export const EnableTOTP = ({
   isModal,

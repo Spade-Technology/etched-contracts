@@ -1,6 +1,6 @@
 import { GoodIcon } from "@/components/icons/good";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { TeamInputDropdown, UsersInputDropdown } from "@/components/ui/input-dropdown";
 import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { Etch } from "@/gql/graphql";
 import { teamUser } from "@/types";
@@ -20,10 +20,8 @@ import { api } from "@/utils/api";
 import { shortenAddress } from "@/utils/hooks/address";
 import { removeAmpersandAndtransformToCamelCase } from "@/utils/team";
 import { findUserDifferences } from "@/utils/user";
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { link } from "fs";
 import { CopyIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
 import { privateKeyToAccount } from "viem/accounts";
 
 type UserProps = {

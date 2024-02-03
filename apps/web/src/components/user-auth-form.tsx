@@ -5,12 +5,10 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 import { shortenAddress } from "@/utils/hooks/address";
-import { useSignOut, useSignIn } from "@/utils/hooks/useSignIn";
-import { SignIn, SignUp, useAuth, useUser } from "@clerk/nextjs";
+import { useSignIn, useSignOut } from "@/utils/hooks/useSignIn";
+import { SignIn, SignUp, useAuth } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { ConnectWalletModalButtonWrapper } from "./connect-wallet";
 import { Button } from "./ui/button";

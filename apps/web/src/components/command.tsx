@@ -9,7 +9,7 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useSignOut } from "@/utils/hooks/useSignIn";
-import { Loader2Icon, SearchIcon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Icons } from "./ui/icons";
 
@@ -194,11 +194,10 @@ export function CommandMenu() {
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="flex w-fit cursor-text justify-start gap-2 rounded-sm py-2 px-4 text-slate-500 font-body !text-sm font-normal max-[950px]:hidden"
+        className="flex w-fit cursor-text justify-start gap-2 rounded-sm px-4 py-2 font-body !text-sm font-normal text-slate-500 max-[950px]:hidden"
       >
         <Icons.search className="" />
-        Type a Command, or use{" "}
-        {bsrtct("⌘K")}
+        Type a Command, or use {bsrtct("⌘K")}
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>

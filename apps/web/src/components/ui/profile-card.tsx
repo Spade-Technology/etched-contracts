@@ -5,12 +5,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { isEVMAddress, shortenAddress } from "@/utils/hooks/address";
 import Image from "next/image";
+import { EtchedAvatar } from "../pages/etch/edit/components/comments";
 import { Button } from "./button";
 import { Icons } from "./icons";
-import { isEVMAddress, shortenAddress } from "@/utils/hooks/address";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
-import { EtchedAvatar } from "../pages/etch/edit/components/comments";
 
 type ProfileProps = {
   image?: any;
