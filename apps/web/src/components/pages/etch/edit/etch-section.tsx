@@ -53,7 +53,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
       .catch((e) => {
         console.log(e);
         if (e.errorKind == "Validation") alert("You are not authorized to view this document");
-        else alert("Something went wrong");
+        else alert(e.message || "Something went wrong");
       });
 
     if (!decrypted?.data) return;
