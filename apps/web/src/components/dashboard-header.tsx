@@ -1,13 +1,13 @@
+import { useUser } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
 import { CommandMenu } from "./command";
 import { CreateEtchButton } from "./create-etch-button";
 import { CreateOrgDialog } from "./create-org-dialog";
 import { CreateTeamDialog } from "./create-team-dialog";
 import { EtchedENS } from "./ens-button";
+import { UserSettings } from "./sidebar";
 import { TeamSelector } from "./team-selector";
 import { Icons } from "./ui/icons";
-import { UserSettings } from "./sidebar";
-import { useUser } from "@clerk/nextjs";
 
 export const DashboardHeader = () => {
   const { isSignedIn } = useUser();

@@ -1,21 +1,21 @@
 import { Etch } from "@/gql/graphql";
 import Image from "next/image";
-import { useEffect, useState, useCallback, ComponentType } from "react";
+import { ComponentType, useCallback, useEffect, useState } from "react";
 import AddUser from "./components/add-user";
 import Comments from "./components/comments";
 import Edit from "./components/edit";
 
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { PDFViewer } from "@/components/pdf-viewer";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Skeleton } from "@/components/ui/skeleton";
+import EtchesABI from "@/contracts/abi/Etches.json";
 import { lit } from "@/lit";
 import { useSignIn } from "@/utils/hooks/useSignIn";
-import filetype from "magic-bytes.js";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
 import { model_formats } from "@/utils/model-formats";
+import { EnterFullScreenIcon, ExitFullScreenIcon } from "@radix-ui/react-icons";
+import filetype from "magic-bytes.js";
 import { useContractRead } from "wagmi";
-import EtchesABI from "@/contracts/abi/Etches.json";
 
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
@@ -51,7 +51,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
         ipfsCid: etch?.ipfsCid, // This is returned from the above encryption
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         if (e.errorKind == "Validation") alert("You are not authorized to view this document");
         else alert(e.message || "Something went wrong");
       });

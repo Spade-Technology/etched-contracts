@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { AddEmail, RemoveEmail, VerifyEmail } from "./modals/add-email";
 import { useClerk } from "@clerk/nextjs";
+import { useState } from "react";
+import { AddEmail, RemoveEmail, VerifyEmail } from "./modals/add-email";
 
 export const Email = () => {
   const { user } = useClerk();

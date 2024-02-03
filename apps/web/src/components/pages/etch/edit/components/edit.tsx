@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Etch } from "@/gql/graphql";
 import { formatUserFromWallet } from "@/utils/hooks/address";
 import { useTransferOwnershipEtch } from "@/utils/hooks/useEtchTransferOwnershipBackendOperation";
+import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { useUpdateEtch } from "@/utils/hooks/useUpdateEtchBackendOperation";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -17,13 +18,10 @@ import Image from "next/image";
 import Link from "next/link";
 import AddIcon from "public/icons/dashboard/editEtch/addIcon.svg";
 import PenIcon from "public/icons/dashboard/editEtch/pen.svg";
-import Placeholder1 from "public/icons/dashboard/placeholder1.svg";
-import Placeholder2 from "public/icons/dashboard/placeholder2.svg";
 import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
 import BgVector from "public/images/backgrounds/dashboard/vector.svg";
 import { Dispatch, SetStateAction, useState } from "react";
 import ProfileCard from "../../../../ui/profile-card";
-import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 
 dayjs.extend(relativeTime);
 

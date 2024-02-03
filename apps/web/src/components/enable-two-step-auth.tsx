@@ -1,14 +1,14 @@
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
-import { AlertDialogContent, AlertDialogTitle } from "./ui/alert-dialog";
+import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import { form } from "./pages/profile";
-import SendCode from "./ui/send-code";
-import Otp from "./ui/otp";
-import { BackupCodesModal } from "./ui/two-step-auth-success";
+import { AddPhone } from "./pages/profile/personal/phone/modals";
+import { AlertDialogContent, AlertDialogTitle } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 import { Icons } from "./ui/icons";
-import { Label } from "@radix-ui/react-label";
-import { AddPhone } from "./pages/profile/personal/phone/modals";
+import Otp from "./ui/otp";
+import SendCode from "./ui/send-code";
+import { BackupCodesModal } from "./ui/two-step-auth-success";
 
 export const EnableTwoStepAuth = ({
   isModal,

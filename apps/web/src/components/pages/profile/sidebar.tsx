@@ -1,7 +1,6 @@
 import { Icons } from "@/components/ui/icons";
-import { useState } from "react";
 
-export const SidebarDialog = ({ activeTab, setActiveTab }: { activeTab:string; setActiveTab :React.Dispatch<string>}) => {
+export const SidebarDialog = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: React.Dispatch<string> }) => {
   const tabs = [
     { Icon: Icons.userSettings, name: "Personal" },
     { Icon: Icons.dollar, name: "Billing" },

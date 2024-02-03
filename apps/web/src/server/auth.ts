@@ -10,8 +10,8 @@ import { publicClient } from "./web3";
 import { currentNetworkId } from "@/contracts";
 import { env } from "@/env.mjs";
 import { hashMessageForLit } from "@/lit";
-import { createERC6492Signature } from "./patch";
 import { clerkClient } from "@clerk/nextjs";
+import { createERC6492Signature } from "./patch";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

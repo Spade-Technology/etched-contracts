@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
-import { DialogDescription } from "./dialog";
+import React, { useState } from "react";
+import { form } from "../pages/profile";
 import { Button } from "./button";
 import { Icons } from "./icons";
 import { OtpInputs } from "./otp";
-import { form } from "../pages/profile";
 
 export default function ScanQrCode({
   verifyCode,

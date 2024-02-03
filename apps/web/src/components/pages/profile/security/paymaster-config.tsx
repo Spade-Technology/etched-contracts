@@ -124,22 +124,21 @@ const Wallet = ({ setAddWallet }: { setAddWallet: React.Dispatch<string> }) => {
   return (
     <>
       <header className="mb-5 text-xl font-semibold text-foreground">Wallet Configuration</header>
-    <main className="w-80 rounded-2xl bg-primary p-4 font-body text-[#DBFFEE]">
-
-      <section className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          ki290...1nDn <Icons.copy className="cursor-pointer" onClick={() => handleCopy("ki290...1nDn")} />
-        </div>
-        <div
-          onClick={() => setAddWallet("")}
-          className="ml-auto cursor-pointer rounded-full bg-white px-2 py-0.5 text-sm font-medium text-muted-foreground"
-        >
-          Remove
-        </div>
-      </section>
-      <div className="mt-5 text-base font-semibold">Balance</div>
-      <div className="text-3xl font-light">22.345 ETH</div>
-    </main>
+      <main className="w-80 rounded-2xl bg-primary p-4 font-body text-[#DBFFEE]">
+        <section className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            ki290...1nDn <Icons.copy className="cursor-pointer" onClick={() => handleCopy("ki290...1nDn")} />
+          </div>
+          <div
+            onClick={() => setAddWallet("")}
+            className="ml-auto cursor-pointer rounded-full bg-white px-2 py-0.5 text-sm font-medium text-muted-foreground"
+          >
+            Remove
+          </div>
+        </section>
+        <div className="mt-5 text-base font-semibold">Balance</div>
+        <div className="text-3xl font-light">22.345 ETH</div>
+      </main>
     </>
   );
 };

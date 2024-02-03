@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { DialogDescription } from "./dialog";
-import { Label } from "./label";
-import { form } from "../pages/profile";
-import { Button } from "./button";
-import { Icons } from "./icons";
 import { country_codes } from "@/lib/mock-data";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
-import { GoodIcon } from "../icons/good";
 import { regrex } from "@/lib/utils";
+import React, { useState } from "react";
+import { GoodIcon } from "../icons/good";
+import { Button } from "./button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
+import { Icons } from "./icons";
+import { Label } from "./label";
 
 export default function SendCode({
   setSendCode,

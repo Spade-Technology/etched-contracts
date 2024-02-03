@@ -1,10 +1,6 @@
-import { DisableTwoStepAuth } from "@/components/disable-two-step-auth";
-import { EnableTwoStepAuth } from "@/components/enable-two-step-auth";
-
-import React, { useEffect, useState } from "react";
-import TextMsgAuth from "./text-msg-auth";
-import GoogleAuth from "./google-auth";
 import { useClerk } from "@clerk/nextjs";
+import GoogleAuth from "./google-auth";
+import TextMsgAuth from "./text-msg-auth";
 
 export interface form {
   email?: string;

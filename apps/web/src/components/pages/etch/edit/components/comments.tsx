@@ -2,15 +2,15 @@ import { TeaxtArea } from "@/components/ui/autoresize-textarea";
 import { Button } from "@/components/ui/button";
 import { Etch, EtchCommentAdded } from "@/gql/graphql";
 import { lit } from "@/lit";
+import { api } from "@/utils/api";
 import { shortenAddress } from "@/utils/hooks/address";
 import { useCommentEtch } from "@/utils/hooks/useCommentBackendOperation";
 import { useLoggedInAddress, useSignIn } from "@/utils/hooks/useSignIn";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import Avatar from "boring-avatars";
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { api } from "@/utils/api";
+import { useEffect, useState } from "react";
 
 type CommentProps = {
   imgUrl?: string;
@@ -45,7 +45,7 @@ const Comment = ({ imgUrl, userName, description, commentedAt, addr }: CommentPr
 
 const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWritePermission: boolean }) => {
   const [comments, setComments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
-    {},
+    {}
   );
   const [profilePics, setProfilePics] = useState<Record<string, string | undefined>>({});
 
@@ -121,7 +121,7 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
   }, [etch.comments]);
 
   const [_comments, set_Comments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
-    {},
+    {}
   );
 
   useEffect(() => {

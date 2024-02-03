@@ -8,23 +8,23 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Form } from "@/components/ui/form";
-import React, { ComponentType, useContext, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Icons } from "./ui/icons";
 import { useCreateEtch } from "@/utils/hooks/useEtchBackendOperation";
+import { model_formats } from "@/utils/model-formats";
 import { refetchContext } from "@/utils/urql";
 import dayjs from "dayjs";
 import { EditIcon, EyeIcon, FileAudioIcon, FileTextIcon, PauseCircleIcon, PlayCircleIcon, Trash2, VideoIcon } from "lucide-react";
+import dynamic from "next/dynamic";
+import React, { ComponentType, useContext, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useForm } from "react-hook-form";
 import { VideoPlayer } from "./VideoPlayer";
 import { PDFViewer } from "./pdf-viewer";
 import { TeamSelector } from "./team-selector";
+import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Icons } from "./ui/icons";
 import { Input } from "./ui/input";
-import dynamic from "next/dynamic";
-import { model_formats } from "@/utils/model-formats";
+import { Label } from "./ui/label";
 // import ModelViewer from "./model-viewer";
 
 export const CreateEtchButton = () => {

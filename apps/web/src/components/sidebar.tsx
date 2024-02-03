@@ -12,9 +12,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { shortenAddress } from "@/utils/hooks/address";
-import { useSignOut, useLoggedInAddress } from "@/utils/hooks/useSignIn";
-import { useSession } from "next-auth/react";
+import { useLoggedInAddress, useSignOut } from "@/utils/hooks/useSignIn";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";

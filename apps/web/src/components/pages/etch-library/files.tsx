@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { modal, props } from "./types";
+import { useState } from "react";
 import { File } from "./file";
+import { modal, props } from "./types";
 
 export const FilesDialog = ({ files, isLoading }: props) => {
   const [activeModals, setActiveModals] = useState<modal>({ current: "", list: [] });

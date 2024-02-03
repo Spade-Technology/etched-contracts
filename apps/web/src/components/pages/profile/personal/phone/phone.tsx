@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { useClerk } from "@clerk/nextjs";
+import { useState } from "react";
 import { AddPhone, RemovePhone, VerifyPhone } from "./modals";
 
 export const Phone = () => {
