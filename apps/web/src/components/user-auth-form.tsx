@@ -18,6 +18,7 @@ import Link from "next/link";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   isSignup?: boolean;
+  factorTwo?: boolean;
 }
 
 export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) {
@@ -25,7 +26,7 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
   const { signOut } = useSignOut();
 
   const { status, data: session } = useSession();
-  const { sessionId } = useAuth();
+  const { sessionId, isLoaded } = useAuth();
 
   const [showLogin, setShowLogin] = React.useState(false);
 
@@ -40,6 +41,8 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
       return () => clearTimeout(timer);
     }
   }, []);
+
+  const factorTwo = (router.asPath.includes("sso-callback") || router.asPath.includes("factor-two")) && isLoaded;
 
   return (
     <main className="lg:flex">
@@ -58,7 +61,7 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
         }`}
       >
         <div className="w-full sm:w-[25rem]">
-          {!sessionId && (
+          {!(sessionId || !factorTwo) && (
             <>
               <div
                 className={`font-poppins text-2xl font-bold tracking-tight ${status === "authenticated" ? "text-center" : ""}`}
@@ -83,9 +86,9 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
               </Button>
             </div>
           ) : (
-            <UserAuthForm isSignup={isSignup} />
+            <UserAuthForm isSignup={isSignup} factorTwo={factorTwo} />
           )}
-          {!sessionId && (
+          {!(sessionId || factorTwo) && (
             <div className="mx-auto mt-10 flex w-full items-center justify-center">
               <p className="text-center text-sm text-muted-foreground">
                 By using Etched, you agree to our{" "}
@@ -106,11 +109,13 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
   );
 }
 
-export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, isSignup, factorTwo, ...props }: UserAuthFormProps) {
   const router = useRouter();
 
   const { isLoaded, userId, sessionId, isSignedIn } = useAuth();
   const { logIn } = useSignIn();
+  const [messageState, setMessageState] = React.useState("Verifying Wallet Abstraction...");
+  const [threeDots, setThreeDots] = React.useState("...");
 
   const icons = [<Icons.twitterBrand />, <img src="/images/login/image 451.svg" />, <Icons.facebook />];
 
@@ -118,14 +123,27 @@ export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProp
     if (sessionId && userId && isLoaded && isSignedIn) {
       logIn({
         isPatchWallet: true,
+        callback: setMessageState,
       });
     }
     /*
      * WORK AROUND FOR THIS BUG
      * Clerk: “The <SignUp/> and <SignIn/> components cannot render when a user is already signed in, unless the application allows...
      */
+
     if (isLoaded && !router.asPath.includes("signup")) router.push("/auth");
   }, [userId, sessionId, isSignedIn, isLoaded, router.asPath]);
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      setThreeDots((prevDots) => {
+        const dotCount = (prevDots.length % 3) + 1;
+        return ".".repeat(dotCount);
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div className={cn("grid gap-5", className)} {...props}>
@@ -133,6 +151,10 @@ export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProp
         <div className="flex flex-col justify-center gap-4">
           <span className="text-center">{isSignup ? "Creating your account !" : "Logging you in..."}</span>
           <Loader2 className="mx-auto h-6 w-6 animate-spin" />
+          <span className="text-center">
+            {messageState}
+            {threeDots}
+          </span>
         </div>
       ) : // if signUp=1, then it will be a sign up form
       isSignup ? (
@@ -140,7 +162,7 @@ export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProp
       ) : (
         <SignIn path="/auth" afterSignInUrl="/auth" afterSignUpUrl="/auth/signup" signUpUrl="/auth/signup" routing="virtual" />
       )}
-      {!sessionId && !isSignup && (
+      {!sessionId && !isSignup && !factorTwo && (
         <>
           <div className="flex items-center justify-center">
             <div className="flex-grow border-t border-gray-300"></div>
