@@ -26,6 +26,7 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
   const { signOut } = useSignOut();
 
   const { status, data: session } = useSession();
+  const { sessionId } = useAuth();
 
   return (
     <main className="lg:flex">
@@ -38,14 +39,18 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
           </div>
         </div>
       </aside>
-      <div className="bg-green500 mx-auto flex w-4/6 flex-col items-center justify-center py-10">
+      <div className="bg-green500 mx-auto flex w-4/6 flex-col items-center justify-center gap-4 py-10">
         <div className="w-full sm:w-80">
           <div className={`font-poppins text-2xl font-bold tracking-tight ${status === "authenticated" ? "text-center" : ""}`}>
             {status === "authenticated" ? "You're all set" : isSignup ? "Create your account" : "Hello Again!"}
           </div>
-          <p className={`text-sm text-muted-foreground ${status === "authenticated" ? "text-center" : ""}`}>
-            {isSignup ? "Create your account" : "Welcome to Etched!"}
-          </p>
+          {sessionId ? (
+            <p className={`text-sm text-muted-foreground ${status === "authenticated" ? "text-center" : ""}`}>
+              {isSignup ? "Create your account" : "Welcome to Etched!"}
+            </p>
+          ) : (
+            <></>
+          )}
           {status === "authenticated" && session ? (
             <div className="flex w-full flex-col items-center justify-center">
               <Label> Logged in {session?.address && "as " + shortenAddress({ address: session?.address as string })}</Label>
@@ -85,7 +90,6 @@ export function UserAuthForm({ className, isSignup, ...props }: UserAuthFormProp
   const icons = [<Icons.twitterBrand />, <img src="/images/login/image 451.svg" />, <Icons.facebook />];
 
   React.useEffect(() => {
-    console.log({ sessionId, userId, isLoaded, isSignedIn });
     if (sessionId && userId && isLoaded && isSignedIn) {
       logIn({
         isPatchWallet: true,

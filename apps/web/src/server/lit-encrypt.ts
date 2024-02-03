@@ -10,36 +10,18 @@ export const encryptToIpfs = async (props: EncryptToIpfsProps) => {
   await lit.connect();
   if (!lit.client) throw new Error(`Lit client is not connected`);
 
-  let encryptedData: Blob = new Blob();
-  let symmetricKey: SymmetricKey = "";
+  let encryptionResult;
 
-  if (props.file) {
-    const { encryptedFile, symmetricKey: symKey } = await LitJsSdk.encryptFile({ file: props.file });
-    symmetricKey = symKey;
-    encryptedData = encryptedFile;
-  } else if (props.string) {
-    const { encryptedString, symmetricKey: symKey } = await LitJsSdk.encryptString(props.string);
-    symmetricKey = symKey;
-    encryptedData = encryptedString;
-  }
+  if (props.file) encryptionResult = await LitJsSdk.encryptFile({ file: props.file, ...props }, lit.client);
+  else if (props.string) encryptionResult = await LitJsSdk.encryptString({ dataToEncrypt: props.string, ...props }, lit.client);
 
-  const encryptedSymmetricKeySaved = await lit.client.saveEncryptionKey({
-    accessControlConditions: props.accessControlConditions,
-    evmContractConditions: props.evmContractConditions,
-    symmetricKey,
-    authSig: props.authSig,
-    chain: props.chain,
-    solRpcConditions: props.solRpcConditions,
-    unifiedAccessControlConditions: props.unifiedAccessControlConditions,
-    sessionSigs: props.sessionSigs,
-  });
+  if (!encryptionResult) throw new Error(`Encryption failed`);
 
-  const encryptedSymmetricKey = LitJsSdk.uint8arrayToString(encryptedSymmetricKeySaved, "base16");
-  const encryptedDataJson = Buffer.from(await encryptedData.arrayBuffer()).toJSON();
+  const { ciphertext, dataToEncryptHash } = encryptionResult;
 
   const res = await pinata.pinJSONToIPFS({
-    [props.file ? "encryptedFile" : "encryptedString"]: encryptedDataJson,
-    encryptedSymmetricKeyString: encryptedSymmetricKey,
+    [props.file ? "encryptedFile" : "encryptedString"]: dataToEncryptHash,
+    ciphertext: ciphertext,
     accessControlConditions: props.accessControlConditions,
     evmContractConditions: props.evmContractConditions,
     solRpcConditions: props.solRpcConditions,
