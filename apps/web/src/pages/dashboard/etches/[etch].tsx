@@ -73,6 +73,14 @@ export default function EtchPage() {
                   >
                     <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
                   </Link>
+
+                  <Link
+                    href={`https://opensea.io/assets/matic/${contracts.Etch}/${etchId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image src="/icons/opensea.svg" alt="opensea" width={16} height={16} />
+                  </Link>
                 </div>
               )}
             </BreadcrumbItem>
