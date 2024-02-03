@@ -44,24 +44,25 @@ export const useSignIn = () => {
   const userId = _userId?.toLowerCase();
   const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
 
-  const logIn = async ({ isPatchWallet = false }: { isPatchWallet?: boolean }) => {
+  const logIn = async ({ isPatchWallet = false, callback }: { isPatchWallet?: boolean; callback?: (status: string) => void }) => {
     try {
       if (!blockNumber) return;
 
       setIsLoading(true);
       // Generate the message to be signed
 
-      console.log("Signing in...");
+      callback?.("Preparing your Folders");
 
       const authSig = await regenerateAuthSig(undefined, { isPatchWallet, patchUserId: userId || undefined });
 
       // example
-      console.log("AUTH SIG GENERATED");
 
       const blockchainMessage = await encodeAbiParameters(parseAbiParameters("uint256 blockNumber, address nodeAddress"), [
         10000000000n,
         currentNode! as Address,
       ]);
+
+      callback?.("Tidying your workspace");
 
       const walletClient = await getWalletClient({ chainId: Number(currentNetworkId!) });
       let blockchainSignature;
@@ -76,7 +77,7 @@ export const useSignIn = () => {
         blockchainSignature = _blockchainSignature.signature;
       } else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
 
-      console.log("BLOCKCHAIN SIGNATURE GENERATED");
+      callback?.("Making sure everything is in order");
 
       // Send the signature to the server to be verified, and sign in or sign up the user
       const signedIn = await signIn("credentials", {

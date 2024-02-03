@@ -180,7 +180,8 @@ input:checked + label .check-icon {
 
 /* clerk customization */
 .cl-signIn-start,
-.cl-signUp-start {
+.cl-signUp-start,
+.cl-card {
   padding: 0px !important;
   margin: 0px !important;
   box-shadow: none !important;
