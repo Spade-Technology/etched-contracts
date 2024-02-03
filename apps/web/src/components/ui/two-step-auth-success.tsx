@@ -38,10 +38,12 @@ export const BackupCodesModal = ({
       <div className="text-center text-sm font-semibold text-primary">{title}</div>
       <div className="mb-5 mt-6 text-center text-sm font-medium text-foreground">{description}</div>
       {backupCode?.length > 0 && (
-        <section className="mx-auto mb-10 w-full max-w-[206px] overflow-hidden rounded border border-[#C2FFE2] bg-success-foreground">
-          <main className="flex flex-wrap gap-5 p-5 font-body text-xs font-bold text-foreground opacity-70">
+        <div className="mx-auto mb-10 w-full max-w-[206px] overflow-hidden rounded border border-[#C2FFE2] bg-success-foreground">
+          <main className="grid grid-cols-2 gap-1 p-5 font-body text-xs font-bold text-foreground opacity-70">
             {backupCode?.map((code: string, idx: number) => (
-              <div key={idx}>{code}</div>
+              <div key={idx} className="flex items-center justify-center">
+                {code}
+              </div>
             ))}
           </main>
           <footer className="flex h-8 w-full items-center justify-center gap-10 border-t border-primary">
@@ -49,7 +51,7 @@ export const BackupCodesModal = ({
               <div key={idx}>{icon}</div>
             ))}
           </footer>
-        </section>
+        </div>
       )}
 
       <Button onClick={onClick} className="float-right">

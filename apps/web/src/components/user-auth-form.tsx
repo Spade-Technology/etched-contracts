@@ -85,20 +85,21 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
           ) : (
             <UserAuthForm isSignup={isSignup} />
           )}
-
-          <div className="mx-auto mt-10 flex w-full items-center justify-center">
-            <p className="text-center text-sm text-muted-foreground">
-              By using Etched, you agree to our{" "}
-              <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
-                Privacy Policy
-              </Link>
-              .
-            </p>
-          </div>
+          {!sessionId && (
+            <div className="mx-auto mt-10 flex w-full items-center justify-center">
+              <p className="text-center text-sm text-muted-foreground">
+                By using Etched, you agree to our{" "}
+                <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </main>

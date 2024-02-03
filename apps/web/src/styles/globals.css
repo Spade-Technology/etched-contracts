@@ -179,7 +179,8 @@ input:checked + label .check-icon {
 }
 
 /* clerk customization */
-.cl-signIn-start,.cl-signUp-start {
+.cl-signIn-start,
+.cl-signUp-start {
   padding: 0px !important;
   margin: 0px !important;
   box-shadow: none !important;
@@ -187,6 +188,7 @@ input:checked + label .check-icon {
 
 /* .cl-internal-1vr2rvv, */
 .cl-headerTitle,
-.cl-headerSubtitle {
+.cl-headerSubtitle,
+.cl-dividerText {
   display: none !important;
 }

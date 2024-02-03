@@ -1,7 +1,7 @@
 import { useClerk } from "@clerk/nextjs";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import { useEffect, useState } from "react";
-import QRCode from "react-qr-code";
+import { QRCode } from "react-qrcode-logo";
 import { ShowBackupCode } from "./pages/profile";
 import { AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
@@ -61,10 +61,33 @@ export const EnableTOTP = ({
             <Otp {...props} />
           ) : (
             <>
-              <AlertDialogTitle className="text-base text-primary ">Time-based One-time Password</AlertDialogTitle>
-              {qr && <QRCode size={256} value={qr} />}
+              <AlertDialogTitle className="mx-auto text-base text-primary">Time-based One-time Password</AlertDialogTitle>
+              {qr && (
+                <div className="mx-auto">
+                  <QRCode
+                    size={256}
+                    value={qr}
+                    logoImage="/icons/etched-logo-big.png"
+                    logoWidth={96}
+                    qrStyle="dots"
+                    ecLevel="M"
+                  />
+                </div>
+              )}
+              <p className="text-center text-sm text-muted-foreground">
+                Use{" "}
+                <a
+                  href="https://support.google.com/accounts/answer/1066447?hl=en"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  Google Authenticator
+                </a>{" "}
+                to scan the QR code and generate your authentication code.
+              </p>
               <AlertDialogFooter>
-                <footer className="mt-10 flex items-center justify-end gap-5">
+                <footer className="mt-5 flex items-center justify-end gap-5">
                   <div
                     onClick={() => {
                       setIsModal(false);
