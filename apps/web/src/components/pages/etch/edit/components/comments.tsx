@@ -12,7 +12,7 @@ import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import Avatar from "boring-avatars";
 import dayjs from "dayjs";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type CommentProps = {
   imgUrl?: string;
@@ -83,20 +83,49 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
     }
   };
 
+  // this is done this way so that if a second render calls the decrypt function before the first one is done,
+  // it will not call the decrypt function again, rather it will return the promise from the first call.
+  const memoizedDecrypt = useMemo(() => {
+    const cache = new Map();
+    const _decrypt = (comment: EtchCommentAdded) => {
+      if (cache.has(comment.commentId)) {
+        return Promise.resolve(cache.get(comment.commentId));
+      }
+
+      const decryptPromise = (async () => {
+        await lit.connect();
+
+        if (!lit.client) return;
+
+        const authSig = await regenerateAuthSig();
+
+        try {
+          const decryptedObject = await lit.decryptFromIpfs({ authSig, ipfsCid: comment.comment_commentIpfsCid });
+          const decryptedComment = decryptedObject?.data as string;
+
+          if (decryptedComment) {
+            cache.set(comment.commentId, decryptedComment);
+            return decryptedComment;
+          }
+        } catch (e) {
+          if (e instanceof Error) {
+            alert(e.message);
+          } else {
+            alert("An unknown error occurred during decryption.");
+          }
+        }
+      })();
+
+      cache.set(comment.commentId, decryptPromise);
+
+      return decryptPromise;
+    };
+    return _decrypt;
+  }, []); // Dependencies array is empty, meaning it will only compute this once
+
   const decrypt = async (comments: EtchCommentAdded[]) => {
-    await lit.connect();
-
-    if (!lit.client) return;
-
-    const authSig = await regenerateAuthSig();
-
-    comments.forEach(async (comment) => {
-      const decryptedObject = await lit
-        .decryptFromIpfs({ authSig, ipfsCid: comment.comment_commentIpfsCid })
-        .catch((e) => alert(e.message));
-
-      const decryptedComment = decryptedObject?.data as string;
-
+    for (const comment of comments) {
+      const decryptedComment = await memoizedDecrypt(comment);
       if (decryptedComment) {
         setComments((old) => ({
           ...old,
@@ -108,8 +137,9 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
           },
         }));
       }
-    });
+    }
   };
+
   const getProfilePics = async (comments: EtchCommentAdded[]) => {
     const extractUniqueWalletIds = (comments: EtchCommentAdded[]): string[] => {
       const uniqueWalletIdsSet = new Set<string>();
