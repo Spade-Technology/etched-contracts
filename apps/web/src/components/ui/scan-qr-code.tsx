@@ -33,10 +33,10 @@ export default function ScanQrCode({
       <div className="mb-5 px-8 text-center font-body text-sm font-medium text-muted-foreground">
         You will need Google Authenticator to complete this process.
       </div>
-      <section>
+      <div className="flex w-full items-center justify-center">
         <div className="mt-5 text-center font-body text-xs font-bold text-foreground">Scan QR Code into your app</div>
         <Icons.qrCode className="mx-auto" />
-      </section>
+      </div>
       <section className="mb-5 mt-8 h-[1px] w-full bg-muted" />
       <form onSubmit={verify} className="px-8">
         <div className="mb-4 px-8 text-center font-body text-xs font-bold text-foreground">
