@@ -62,9 +62,9 @@ export const TeamSelector = ({
     <Select
       onValueChange={(el) =>
         handleSelectTeam({
-          name: el,
-          organisation: behalfOf.find((team) => team.name === el)?.org ?? "Sole Team",
-          teamId: behalfOf.find((team) => team.name === el)?.teamId ?? "",
+          name: behalfOf.find((team) => team.teamId === el)?.name,
+          organisation: behalfOf.find((team) => team.teamId === el)?.org ?? "Sole Team",
+          teamId: el ?? "",
         })
       }
       open={isOpened}
@@ -102,7 +102,7 @@ export const TeamSelector = ({
                   {behalfOf
                     .filter((team) => team.org === org && team.teamId)
                     .map((team, index) => (
-                      <SelectItem key={index} value={team.name}>
+                      <SelectItem key={index} value={team.teamId}>
                         {team.name}
                       </SelectItem>
                     ))}

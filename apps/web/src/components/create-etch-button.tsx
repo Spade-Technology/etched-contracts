@@ -36,54 +36,48 @@ export const CreateEtchButton = () => {
   const form = useForm<FormData>({});
 
   const [files, setFiles] = useState<(File & { preview: string; nameOverride?: string; description?: string })[]>([]);
+
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
+    useFsAccessApi: false,
+
     accept: {
       ...model_formats,
       "image/*": [],
       "audio/*": [],
       "video/*": [],
       "application/pdf": [],
-      ...model_formats,
     },
-    onDrop: (acceptedFiles: File[]) => {
+
+    onDrop: (acceptedFiles: File[], rejections, event) => {
       const newFiles = [
         ...files,
-        ...acceptedFiles.map((file) =>
-          Object.assign(file, {
+        ...acceptedFiles.map((file) => {
+          const type_from_extension = file.name.split(".").pop();
+
+          let _file = file;
+          if (file.type.length === 0)
+            _file = new File([file], file.name, {
+              type:
+                type_from_extension !== ""
+                  ? Object.entries(model_formats).find(([key, value]) => value.includes("." + type_from_extension))?.[0]
+                  : "application/octet-stream",
+            });
+
+          return Object.assign(_file, {
             preview: URL.createObjectURL(file),
-          })
-        ),
+          });
+        }),
       ];
 
       if (newFiles.length > 10) alert("You cannot bulk upload more than 10 files at a time");
       else {
-        setFiles([
-          ...files,
-          ...acceptedFiles.map((file) =>
-            Object.assign(file, {
-              preview: URL.createObjectURL(file),
-            })
-          ),
-        ]);
-        console.log(acceptedFiles);
+        setFiles(newFiles);
       }
     },
   });
 
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
-
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
-
-  useEffect(() => {
-    document.addEventListener("create-etch", () => {
-      setIsOpen(true);
-    });
-  }, []);
+  useEffect(() => document.addEventListener("create-etch", () => setIsOpen(true)), []);
 
   return (
     <AlertDialog open={isOpen}>
