@@ -11,34 +11,34 @@ export default function ModelViewer({ file, fileName }: { file: string; fileName
   const [ready, setReady] = useState(false);
   const [unityContent, setUnityContent] = useState<UnityContent>();
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
-    const unityContent = new UnityContent("/model-viewer/build.json", "/model-viewer/UnityLoader.js", {
+    const _unityContent = new UnityContent("/model-viewer/build.json", "/model-viewer/UnityLoader.js", {
       adjustOnWindowResize: true,
     });
 
-    setUnityContent(unityContent);
-  }, []);
+    if (!_unityContent) return;
 
-  useEffect(() => {
-    if (!unityContent) return;
-
-    unityContent.on("canvas", function (canvas: any) {
+    _unityContent.on("canvas", function (canvas: any) {
       canvas.width = "100%";
       canvas.height = "50%";
     });
 
-    unityContent.on("Ready", () => {
+    _unityContent.on("Ready", () => {
       setReady(true);
       loadFile();
     });
-    unityContent.on("OnLoaded", () => {
+    _unityContent.on("OnLoaded", () => {
       try {
       } catch {}
     });
-    unityContent.on("OnError", (e: any) => {
+    _unityContent.on("OnError", (e: any) => {
       console.error(e);
     });
-  }, [unityContent]);
+
+    setUnityContent(_unityContent);
+  }, []);
 
   useEffect(() => {
     if (ready) loadFile();

@@ -35,6 +35,8 @@ export const useCreateEtch = () => {
   const [etchCreated, setEtchCreated] = useState(0);
 
   const onSubmit = async (data: FormData[]): Promise<void> => {
+    console.log(data[0].file.type);
+
     enableBeforeUnload();
 
     const opId = addOperation({
@@ -46,6 +48,7 @@ export const useCreateEtch = () => {
     });
 
     try {
+      console.log(data);
       const uploaded = await startUpload(data.map((d) => d.file));
 
       if (!uploaded || !uploaded[0]) {

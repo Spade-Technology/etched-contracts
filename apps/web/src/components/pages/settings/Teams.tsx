@@ -98,7 +98,7 @@ export const Teams = ({
                   organisations,
                   ownership,
                 };
-                return <TeamDialog {...props} />;
+                return <TeamDialog {...props} id={teamId} />;
               }
             )}
           </div>
