@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "organisationContract",
+        "name": "entityManagerContract",
         "type": "address"
       }
     ],
@@ -86,25 +86,94 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "inviteId",
         "type": "uint256"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
-        "name": "to",
+        "name": "acceptedBy",
+        "type": "address"
+      }
+    ],
+    "name": "InviteAccepted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "inviteId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "declinedBy",
+        "type": "address"
+      }
+    ],
+    "name": "InviteDeclined",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "inviteId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "revokedBy",
+        "type": "address"
+      }
+    ],
+    "name": "InviteRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "from",
         "type": "address"
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "externalOrgOrTeamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sourceEntityId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "maxSharePerms",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IShareInvites.EShareInviteStatus",
+        "name": "status",
+        "type": "uint8"
       }
     ],
-    "name": "EtchENSCreated",
+    "name": "InviteSent",
     "type": "event"
   },
   {
@@ -168,6 +237,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_inviteId",
+        "type": "uint256"
+      }
+    ],
+    "name": "acceptInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -276,6 +358,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_inviteId",
+        "type": "uint256"
+      }
+    ],
+    "name": "declineInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes",
@@ -314,37 +409,13 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "entities",
+    "outputs": [
       {
         "internalType": "address",
-        "name": "wallet",
+        "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "ensOfWallet",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "extension",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -364,25 +435,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      }
-    ],
-    "name": "getENS",
-    "outputs": [
-      {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
       }
     ],
     "stateMutability": "view",
@@ -409,6 +461,50 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "invite",
+        "type": "uint256"
+      }
+    ],
+    "name": "invites",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "externalOrgOrTeamId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "sourceEntityId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "maxSharePerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "enum IShareInvites.EShareInviteStatus",
+        "name": "status",
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -452,30 +548,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "name": "metadataOf",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -536,17 +608,12 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "_inviteId",
+        "type": "uint256"
       }
     ],
-    "name": "safeMint",
+    "name": "revokeInvite",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -605,6 +672,52 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_externalOrgOrTeamId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sourceEntityId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_ownerMaxAllowedPerms",
+        "type": "uint8"
+      }
+    ],
+    "name": "sendInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sourceEntityId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_ownerMaxAllowedPerms",
+        "type": "uint8"
+      }
+    ],
+    "name": "sendInviteToIndividual",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "operator",
         "type": "address"
@@ -649,6 +762,19 @@
         "type": "string"
       }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_inviteId",
+        "type": "uint256"
+      }
+    ],
+    "name": "testGrabInvite",
+    "outputs": [],
     "stateMutability": "view",
     "type": "function"
   },
@@ -705,25 +831,6 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "name": "walletOf",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]

@@ -1,12 +1,6 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "organisationContract",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -88,7 +82,7 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "orgId",
         "type": "uint256"
       },
       {
@@ -96,15 +90,28 @@
         "internalType": "address",
         "name": "to",
         "type": "address"
+      }
+    ],
+    "name": "OrganisationCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "string",
-        "name": "name",
+        "name": "newName",
         "type": "string"
       }
     ],
-    "name": "EtchENSCreated",
+    "name": "OrganisationRenamed",
     "type": "event"
   },
   {
@@ -124,6 +131,31 @@
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IOrganisation.EPermissions",
+        "name": "newPermission",
+        "type": "uint8"
+      }
+    ],
+    "name": "PermissionsUpdated",
     "type": "event"
   },
   {
@@ -276,6 +308,47 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum IOrganisation.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IOrganisation.userPermission[]",
+        "name": "users",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "createOrganisation",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "newOrgId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes",
@@ -316,43 +389,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "ensOfWallet",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "extension",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -370,19 +406,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      }
-    ],
-    "name": "getENS",
+    "inputs": [],
+    "name": "getNumberOfOrganisationsCreated",
     "outputs": [
       {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
+        "internalType": "uint256",
+        "name": "totalAmountOfOrganisations",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -402,13 +432,24 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getTotalSupply",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "orgId",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "isAdmin",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_isAdmin",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -441,6 +482,30 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "isMember",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_isMember",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "node",
         "type": "address"
@@ -458,30 +523,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "name": "metadataOf",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "name",
     "outputs": [
@@ -492,6 +533,40 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC721Received",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -527,18 +602,35 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "organisation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "permissionOf",
+    "outputs": [
+      {
+        "internalType": "enum IOrganisation.EPermissions",
+        "name": "permission",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
       },
       {
         "internalType": "string",
@@ -546,7 +638,14 @@
         "type": "string"
       }
     ],
-    "name": "safeMint",
+    "name": "renameOrganisation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -616,6 +715,59 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "enum IOrganisation.EPermissions",
+        "name": "permission",
+        "type": "uint8"
+      }
+    ],
+    "name": "setPermission",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum IOrganisation.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct IOrganisation.userPermission[]",
+        "name": "users",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setPermissionBulk",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -705,25 +857,6 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "name": "walletOf",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]
