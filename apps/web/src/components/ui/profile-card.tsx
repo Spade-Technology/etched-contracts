@@ -34,7 +34,7 @@ const ProfileCard = ({ image, name, link = "", uid = "", role, dropDownOn, dropD
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <a href={`https://etherscan.io/address/${link}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`https://polygonscan.com/address/${link}`} target="_blank" rel="noopener noreferrer">
                       {shortenAddress({ address: link })}
                     </a>
                   </TooltipTrigger>
