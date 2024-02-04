@@ -5,7 +5,7 @@ import { decryptToIpfsProps } from "./utils/litTypes";
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
   // litNetwork: "jalapeno",
-  litNetwork: process.env.NODE_ENV === "development" ? "cayenne" : "habenro",
+  litNetwork: process.env.NODE_ENV === "development" ? "cayenne" : "habanero",
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
