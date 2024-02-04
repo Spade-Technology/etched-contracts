@@ -67,7 +67,7 @@ export default function EtchPage() {
                   <span>#{etchId}</span>
 
                   <Link
-                    href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
+                    href={`https://polygonscan.com/address/${contracts.Etch}#readContract#F16`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
