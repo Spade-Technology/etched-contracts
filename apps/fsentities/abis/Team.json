@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "organisationContract",
+        "name": "organisationsContract",
         "type": "address"
       }
     ],
@@ -87,31 +87,6 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      }
-    ],
-    "name": "EtchENSCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
         "type": "address"
@@ -124,6 +99,69 @@
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ITeams.EPermissions",
+        "name": "newPermission",
+        "type": "uint8"
+      }
+    ],
+    "name": "PermissionsUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "TeamCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "newName",
+        "type": "string"
+      }
+    ],
+    "name": "TeamRenamed",
     "type": "event"
   },
   {
@@ -149,6 +187,25 @@
       }
     ],
     "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
+      }
+    ],
+    "name": "TransferToOrganisation",
     "type": "event"
   },
   {
@@ -276,6 +333,88 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "teamName",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ITeams.userPermissions[]",
+        "name": "users",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "createTeam",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "newTeamId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "teamName",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ITeams.userPermissions[]",
+        "name": "users",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "createTeamForOrganisation",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "newTeamId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "components": [
           {
             "internalType": "bytes",
@@ -316,43 +455,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "ensOfWallet",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "extension",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -370,19 +472,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      }
-    ],
-    "name": "getENS",
+    "inputs": [],
+    "name": "getNumberOfTeamsCreated",
     "outputs": [
       {
-        "internalType": "string[]",
-        "name": "",
-        "type": "string[]"
+        "internalType": "uint256",
+        "name": "totalAmountOfTeams",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -402,13 +498,29 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getTotalSupply",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "teamId",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "enum ITeams.EPermissions",
+        "name": "permission",
+        "type": "uint8"
+      }
+    ],
+    "name": "hasPermission",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "_hasPermission",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -458,23 +570,65 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "name",
+    "outputs": [
       {
         "internalType": "string",
-        "name": "ens",
+        "name": "",
         "type": "string"
       }
     ],
-    "name": "metadataOf",
-    "outputs": [
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
-        "name": "creator",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "timestamp",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC721Received",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "team",
+        "type": "uint256"
+      }
+    ],
+    "name": "organisationOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "organisation",
         "type": "uint256"
       }
     ],
@@ -483,12 +637,12 @@
   },
   {
     "inputs": [],
-    "name": "name",
+    "name": "organisations",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "address",
         "name": "",
-        "type": "string"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -527,26 +681,50 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "team",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "permissionsOfTeam",
+    "outputs": [
+      {
+        "internalType": "enum ITeams.EPermissions",
+        "name": "permission",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
       },
       {
         "internalType": "string",
-        "name": "name",
+        "name": "newName",
         "type": "string"
       }
     ],
-    "name": "safeMint",
+    "name": "renameTeam",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -616,6 +794,59 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "enum ITeams.EPermissions",
+        "name": "permission",
+        "type": "uint8"
+      }
+    ],
+    "name": "setPermission",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITeams.EPermissions",
+            "name": "permission",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ITeams.userPermissions[]",
+        "name": "users",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setPermissionBulk",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -710,20 +941,19 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "ens",
-        "type": "string"
-      }
-    ],
-    "name": "walletOf",
-    "outputs": [
+        "internalType": "uint256",
+        "name": "teamId",
+        "type": "uint256"
+      },
       {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "orgId",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "transferToOrganisation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

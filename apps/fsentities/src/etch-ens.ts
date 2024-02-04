@@ -2,7 +2,7 @@ import { EtchENSCreated as EtchENSCreatedEvent, Transfer as TransferEvent } from
 import { EtchENS, EtchENSCreated, EtchENSTransfer } from '../generated/schema';
 import { getOrCreateWallet } from './wallet';
 
-export function handleEtchENSCreated (event: EtchENSCreatedEvent): void {
+export function handleEtchENSCreated(event: EtchENSCreatedEvent): void {
   let entity = new EtchENSCreated(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.tokenId = event.params.tokenId;
   entity.to = event.params.to;
@@ -26,7 +26,7 @@ export function handleEtchENSCreated (event: EtchENSCreatedEvent): void {
   etchEns.save();
 }
 
-export function handleENSTransfer (event: TransferEvent): void {
+export function handleENSTransfer(event: TransferEvent): void {
   let entity = new EtchENSTransfer(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.from = event.params.from;
   entity.to = event.params.to;
