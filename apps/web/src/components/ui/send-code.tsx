@@ -1,5 +1,4 @@
 import { country_codes } from "@/lib/mock-data";
-import { regrex } from "@/lib/utils";
 import React, { useState } from "react";
 import { GoodIcon } from "../icons/good";
 import { Button } from "./button";
