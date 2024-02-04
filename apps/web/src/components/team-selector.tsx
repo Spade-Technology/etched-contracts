@@ -21,7 +21,7 @@ type TeamSelector = {
   id: string;
 };
 
-const emptyTeam = { name: "Private", org: "Yourself", id: "" };
+const emptyTeam = { name: "Private", org: "Sole Team", id: "Myself" };
 export const getSelectedTeam: () => TeamSelector = () =>
   JSON.parse(localStorage.getItem("selectedBehalfOf") || "false") ?? emptyTeam;
 
@@ -62,9 +62,9 @@ export const TeamSelector = ({
     <Select
       onValueChange={(el) =>
         handleSelectTeam({
-          name: el,
-          organisation: behalfOf.find((team) => team.name === el)?.org ?? "Sole Team",
-          teamId: behalfOf.find((team) => team.name === el)?.teamId ?? "",
+          name: behalfOf.find((team) => team.teamId === el)?.name ?? "Private",
+          organisation: behalfOf.find((team) => team.teamId === el)?.org ?? "Sole Team",
+          teamId: el ?? "",
         })
       }
       open={isOpened}
@@ -77,9 +77,9 @@ export const TeamSelector = ({
             (horizontal ? "flex-row items-center justify-center gap-1" : "flex-col items-start")
           }
         >
-          <span className="whitespace-nowrap text-sm font-semibold text-gray-800">{selectedBehalfOf.name}</span>
-          <Separator orientation="vertical" />
-          <span className="text text-ellipsis text-xs text-gray-500">{selectedBehalfOf.org}</span>
+          <span className="whitespace-nowrap font-body text-sm font-extrabold text-primary">{selectedBehalfOf.name}</span>
+          <Separator orientation="vertical" className="mr-[2px] h-1 w-1 rounded-xl" />
+          <span className="text-ellipsis font-body text-xs font-bold">{selectedBehalfOf.org}</span>
         </div>
       </SelectTrigger>
       <SelectContent>
@@ -102,8 +102,8 @@ export const TeamSelector = ({
                   {behalfOf
                     .filter((team) => team.org === org && team.teamId)
                     .map((team, index) => (
-                      <SelectItem key={index} value={team.name}>
-                        {team.name}
+                      <SelectItem key={index} value={team.teamId}>
+                        • {team.name}
                       </SelectItem>
                     ))}
                 </SelectGroup>

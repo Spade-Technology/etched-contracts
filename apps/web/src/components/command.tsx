@@ -8,73 +8,79 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
-import { signOut } from "@/utils/hooks/useSignIn";
-import { Loader2Icon, SearchIcon } from "lucide-react";
+import { useSignOut } from "@/utils/hooks/useSignIn";
+import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Icons } from "./ui/icons";
 
 import { Etch, Organisation, Team, Wallet } from "@/gql/graphql";
 import { useSearchGQL } from "@/utils/hooks/useSearchGQL";
 import { useRouter } from "next/router";
 import { Button } from "./ui/button";
 
-export const commands = [
-  {
-    shortcut: "k",
-    name: "Search",
-    hideOnDialog: true,
-    action: "open",
-    type: "misc",
-  },
-  {
-    shortcut: "o",
-    shift: true,
-    name: "Log Out",
-    action: () => {
-      signOut();
+export const useCommands = () => {
+  const { signOut } = useSignOut();
+  const commands = [
+    {
+      shortcut: "k",
+      name: "Search",
+      hideOnDialog: true,
+      action: "open",
+      type: "misc",
     },
-    type: "auth",
-  },
-  {
-    shortcut: "e",
-    name: "New Etch",
-    type: "create",
-    action: () => {
-      document.dispatchEvent(new CustomEvent("create-etch"));
+    {
+      shortcut: "o",
+      shift: true,
+      name: "Log Out",
+      action: () => {
+        signOut();
+      },
+      type: "auth",
     },
-  },
-  {
-    shortcut: "d",
-    name: "New Team",
-    type: "create",
-    action: () => {
-      document.dispatchEvent(new CustomEvent("create-team"));
+    {
+      shortcut: "e",
+      name: "New Etch",
+      type: "create",
+      action: () => {
+        document.dispatchEvent(new CustomEvent("create-etch"));
+      },
     },
-  },
-  {
-    shortcut: "o",
-    name: "New Organisation",
-    type: "create",
-    action: () => {
-      document.dispatchEvent(new CustomEvent("create-org"));
+    {
+      shortcut: "d",
+      name: "New Team",
+      type: "create",
+      action: () => {
+        document.dispatchEvent(new CustomEvent("create-team"));
+      },
     },
-  },
-  {
-    shortcut: "p",
-    name: "Profile",
-    shift: true,
-    type: "profile",
-  },
-  {
-    shortcut: "b",
-    name: "Billing",
-    type: "profile",
-  },
-  {
-    shortcut: "s",
-    name: "Settings",
-    type: "misc",
-  },
-];
+    {
+      shortcut: "o",
+      name: "New Organisation",
+      type: "create",
+      action: () => {
+        document.dispatchEvent(new CustomEvent("create-org"));
+      },
+    },
+    {
+      shortcut: "p",
+      name: "Profile",
+      shift: true,
+      type: "profile",
+    },
+    {
+      shortcut: "b",
+      name: "Billing",
+      type: "profile",
+    },
+    {
+      shortcut: "s",
+      name: "Settings",
+      type: "misc",
+    },
+  ];
+
+  return { commands };
+};
 
 export const useBsrtct = () => {
   const [isWin, setIsWin] = useState(false);
@@ -107,6 +113,7 @@ export function CommandMenu() {
   const currentSearch = useState("");
   const router = useRouter();
   const { bsrtct } = useBsrtct();
+  const { commands } = useCommands();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -183,13 +190,13 @@ export function CommandMenu() {
   // these are some changes
 
   return (
-    <article className="">
+    <article className="ml-auto">
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="mx-auto flex w-fit cursor-text justify-start gap-2 rounded-sm p-3 text-slate-500 max-[950px]:hidden"
+        className="flex w-fit cursor-text justify-start gap-2 rounded-sm border-[1.5px] border-input px-4 py-2 font-body !text-sm font-normal text-opacity-75 max-[950px]:hidden"
       >
-        <SearchIcon className="h-full scale-150" />
+        <Icons.search className="" />
         Type a Command, or use {bsrtct("⌘K")}
       </Button>
 

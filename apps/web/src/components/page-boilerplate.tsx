@@ -18,14 +18,14 @@ export const PageBoilerplate = ({ children }: { children: React.ReactNode }) => 
 
   // if (isMobile) {
   //   return (
-  //     <div className="flex h-screen w-screen flex-col bg-white">
+  //     <div className="flex h-screen w-screen flex-col bg-background">
   //       Etched is not supported on mobile devices yet. Please use a desktop browser.
   //     </div>
   //   );
   // }
 
   return (
-    <div className="flex w-full bg-white !font-body">
+    <div className="flex w-full bg-background !font-body">
       <SideBar />
       <div className="w-full p-3">
         <GuidedTour />

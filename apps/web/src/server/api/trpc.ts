@@ -9,6 +9,7 @@
 
 import { getServerAuthSession } from "@/server/auth";
 import { prisma } from "@/server/db";
+import { clerkClient } from "@clerk/nextjs";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
@@ -106,14 +107,19 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
+  const clerkUser = (
+    await clerkClient.users.getUserList({ externalId: [ctx.session.address?.toLocaleLowerCase() as string] })
+  )[0];
+
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { ...ctx.session, user: ctx.session.user, clerkUser: clerkUser },
     },
   });
 });

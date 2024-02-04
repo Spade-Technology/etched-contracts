@@ -12,7 +12,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
   const router = useRouter();
   return (
     <div className="mx-auto w-full max-w-[1280px] pt-[76px] text-center md:pt-[131px]">
-      <div className="text-[28px] font-semibold text-black md:text-[42px]">Key Features</div>
+      <div className="text-[28px] font-semibold text-foreground md:text-[42px]">Key Features</div>
       {/* FEATURES/BENEFITS */}
       <div className="relative -z-10 flex grid-cols-12 flex-col gap-[46px] pt-10 text-left sm:grid">
         {features.map(({ title, text, description, color, background, img }, index) => {
@@ -46,7 +46,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
           );
         })}
         <div className="absolute right-[-306px] top-16 -z-10 hidden h-[946px] w-[946px] bg-[url(/images/home/blur.svg)] bg-contain bg-center bg-no-repeat md:block">
-          <div className=" absolute left-0 top-0 -z-10 h-full w-full bg-white opacity-80 blur-[75px]"></div>
+          <div className=" absolute left-0 top-0 -z-10 h-full w-full bg-background opacity-80 blur-[75px]"></div>
         </div>
       </div>
       {/* bg-gradient-to-r from-green-400 to-cyan-500 */}
@@ -64,7 +64,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
         <div
           // onClick={() => router.push("/auth")}
           onClick={() => setShowWaitlist(true)}
-          className="flex w-fit cursor-pointer items-center gap-[21px] rounded-[52.293px] bg-white px-[39px] py-[19px] font-campton font-semibold text-black shadow-[0px_2.80141px_11.20565px_0px_rgba(20,20,43,0.10)] max-xs:px-5 max-xs:py-2"
+          className="flex w-fit cursor-pointer items-center gap-[21px] rounded-[52.293px] bg-background px-[39px] py-[19px] font-campton font-semibold text-foreground shadow-[0px_2.80141px_11.20565px_0px_rgba(20,20,43,0.10)] max-xs:px-5 max-xs:py-2"
         >
           Join Waitlist
           <Image src={BlackForward} alt="forward" />
@@ -75,7 +75,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
           height={350}
           width={485}
           alt="File_SS"
-          className="absolute bottom-[-10.5px] right-[-25.42px] w-[352px] rounded-r-none rounded-t-2xl bg-white max-md:h-[253px] md:bottom-[-24px] md:right-[-17px] md:w-[385px] lg:w-[485px]"
+          className="absolute bottom-[-10.5px] right-[-25.42px] w-[352px] rounded-r-none rounded-t-2xl bg-background max-md:h-[253px] md:bottom-[-24px] md:right-[-17px] md:w-[385px] lg:w-[485px]"
         />
       </div>
     </div>

@@ -14,17 +14,29 @@ import { env } from "@/env.mjs";
 import { hashMessageForLit } from "@/lit";
 import { api } from "../api";
 
-export function signOut() {
-  localStorage.clear();
-  // clear cookies
+export function useSignOut() {
+  const { signOut: clerkSignOut, sessionId } = useAuth();
 
-  _signOut({ callbackUrl: "/auth" });
+  const signOut = async () => {
+    try {
+      if (sessionId) await clerkSignOut({ sessionId });
+
+      localStorage.clear();
+
+      _signOut({ callbackUrl: "/auth" });
+    } catch (error) {
+      console.error("signOut error: ", error);
+    }
+  };
+
+  return { signOut };
 }
 
 export const useSignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { data: blockNumber } = useBlockNumber();
   const { address } = useAccount();
+  const { signOut } = useSignOut();
 
   const { signMessageAsync } = useSignMessage();
   const { mutateAsync: generatePatchSignature } = api.patch.signMessageForPatchWallet.useMutation();
@@ -32,24 +44,25 @@ export const useSignIn = () => {
   const userId = _userId?.toLowerCase();
   const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
 
-  const logIn = async ({ isPatchWallet = false }: { isPatchWallet?: boolean }) => {
+  const logIn = async ({ isPatchWallet = false, callback }: { isPatchWallet?: boolean; callback?: (status: string) => void }) => {
     try {
       if (!blockNumber) return;
 
       setIsLoading(true);
       // Generate the message to be signed
 
-      console.log("Signing in...");
+      callback?.("Preparing your Folders");
 
       const authSig = await regenerateAuthSig(undefined, { isPatchWallet, patchUserId: userId || undefined });
 
       // example
-      console.log("AUTH SIG GENERATED");
 
       const blockchainMessage = await encodeAbiParameters(parseAbiParameters("uint256 blockNumber, address nodeAddress"), [
         10000000000n,
         currentNode! as Address,
       ]);
+
+      callback?.("Tidying your workspace");
 
       const walletClient = await getWalletClient({ chainId: Number(currentNetworkId!) });
       let blockchainSignature;
@@ -64,13 +77,13 @@ export const useSignIn = () => {
         blockchainSignature = _blockchainSignature.signature;
       } else blockchainSignature = await walletClient!.signMessage({ message: { raw: keccak256(blockchainMessage) } });
 
-      console.log("BLOCKCHAIN SIGNATURE GENERATED");
+      callback?.("Making sure everything is in order");
 
       // Send the signature to the server to be verified, and sign in or sign up the user
       const signedIn = await signIn("credentials", {
         message: authSig.signedMessage,
         signature: authSig.sig,
-        userId: userId,
+        userId: _userId,
         derivedVia: authSig.derivedVia,
         blockchainMessage,
         blockchainSignature,
@@ -89,7 +102,7 @@ export const useSignIn = () => {
       localStorage.setItem("blockchainSignature", blockchainSignature);
       localStorage.setItem("blockchainMessage", blockchainMessage);
     } catch (error) {
-      console.error(error);
+      console.error("error login: ", error);
     }
 
     setIsLoading(false);
@@ -188,6 +201,7 @@ export const useSignIn = () => {
 
       return authSig;
     } catch (error) {
+      console.error("error regenerateAuthSig: ", error);
       signOut();
     }
   };

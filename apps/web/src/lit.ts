@@ -1,60 +1,76 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
-import { pinata } from "./ipfs";
 import { keccak256, toBytes, toHex } from "viem";
-import { EncryptToIpfsProps, SymmetricKey, decryptToIpfsProps } from "./utils/litTypes";
-import { env } from "./env.mjs";
+import { decryptToIpfsProps } from "./utils/litTypes";
 
 const client = new LitJsSdk.LitNodeClient({
-  litNetwork: "serrano",
+  // litNetwork: "serrano",
+  // litNetwork: "jalapeno",
+  litNetwork: process.env.NODE_ENV === "development" ? "cayenne" : "habanero",
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
 
   // Verbosity of the logging
   debug: false,
+
+  // checkNodeAttestation: true,
 });
 
 const ipfsPlublicClientUrl = process.env.NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY + "ipfs/" || "https://gateway.pinata.cloud/ipfs/";
 
 class Lit {
   public client: LitJsSdk.LitNodeClient | undefined;
+  private connectingLock: Promise<LitJsSdk.LitNodeClient> | undefined;
 
   async connect() {
-    if (this.client) return;
+    if (this.client) return this.client;
 
-    console.log("connecting to lit node");
+    if (!this.connectingLock) {
+      this.connectingLock = new Promise(async (resolve, reject) => {
+        console.log("connecting to lit node");
 
-    await client.connect();
+        try {
+          await client.connect();
+          if (!client) throw new Error(`Lit client is not connected`);
 
-    console.log("connected to lit node");
-    this.client = client;
+          console.log("connected to lit node");
+          console.log(client.config.litNetwork);
+
+          this.client = client;
+          resolve(this.client);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
+    return this.connectingLock;
   }
 
   async decryptFromIpfs(props: decryptToIpfsProps) {
-    await this.connect();
+    const client = await this.connect();
 
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
 
-    const symmetricKey = await client.getEncryptionKey({
-      accessControlConditions: ipfsData.accessControlConditions,
+    const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
+      authSig: props.authSig,
+      chain: ipfsData.chain,
+      ciphertext: ipfsData.ciphertext,
+      dataToEncryptHash: ipfsData.encryptedString || ipfsData.encryptedFile,
       evmContractConditions: ipfsData.evmContractConditions,
       solRpcConditions: ipfsData.solRpcConditions,
       unifiedAccessControlConditions: ipfsData.unifiedAccessControlConditions,
-      toDecrypt: ipfsData.encryptedSymmetricKeyString,
-      chain: ipfsData.chain,
-      authSig: props.authSig,
-      sessionSigs: props.sessionSigs,
-    });
+      accessControlConditions: ipfsData.accessControlConditions,
+    };
 
-    if (ipfsData.encryptedString) {
-      const encryptedStringBlob = new Blob([Buffer.from(ipfsData.encryptedString)], { type: "application/octet-stream" });
-      return LitJsSdk.decryptString(encryptedStringBlob, symmetricKey);
-    } else if (ipfsData.encryptedFile) {
-      const encryptedFileBlob = new Blob([Buffer.from(ipfsData.encryptedFile)], {
-        type: "application/octet-stream",
-      });
-      return LitJsSdk.decryptFile({ file: encryptedFileBlob, symmetricKey });
-    }
+    console.log(data);
+
+    let decrypted;
+
+    if (ipfsData.encryptedString) decrypted = await LitJsSdk.decryptToString(data, client);
+    else if (ipfsData.encryptedFile) decrypted = await LitJsSdk.decryptToFile(data, client);
+
+    return { data: decrypted, metadata: ipfsData.metadata };
   }
 
   async getMetadataFromIpfs(ipfsCid: string) {
