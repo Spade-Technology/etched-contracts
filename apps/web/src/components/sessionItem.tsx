@@ -11,7 +11,7 @@ export const SessionItem = ({ userSession, index }: any) => {
   };
 
   return (
-    <div className="mb-4 rounded-lg bg-white shadow">
+    <div className="mb-4 rounded-lg bg-background shadow">
       <div className="flex flex-wrap items-center justify-between border-b px-4 py-3 sm:flex-nowrap">
         <div>
           <h3 className="text-lg font-medium leading-6 text-gray-900">

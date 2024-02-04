@@ -2,15 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("./campton.css");
-
-@font-face {
-  font-family: "Quicksand";
-  src: url("/fonts/quicksand//Quicksand-Regular.ttf");
-
-  font-style: normal;
-  font-display: swap;
-}
+@import url("./fonts.css");
 
 @layer base {
   :root {
@@ -47,36 +39,47 @@
     --ring: #020817;
 
     --radius: 0.5rem;
+    --shadow-color-small: rgba(17, 17, 26, 0.1);
+    --shadow-color: rgba(17, 17, 26, 0.25);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: hsla(200, 15%, 8%, 1);
+    --foreground: hsla(0, 0%, 100%, 0.87);
+    --skeleton: hsl(204, 9%, 90%);
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: #2d3748;
+    --card-foreground: #cbd5e0;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: hsla(200, 15%, 8%, 1);
+    --popover-foreground: #e2e8f0;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: #077844; /* Slightly more vivid than normal mode */
+    --primary-foreground: #06472881; /* Slightly more vivid than normal mode */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: #4a5568;
+    --secondary-foreground: #a0aec0;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: rgb(49, 53, 55);
+    --muted-foreground: #e2e8f0;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: #1e3e2f; /* Slightly more vivid than normal mode */
+    --accent-foreground: #5ac092; /* Slightly more vivid than normal mode */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: #e53e3e; /* Vivid as normal mode */
+    --destructive-foreground: #fed7d7; /* Vivid as normal mode */
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --success: #38a169; /* Vivid as normal mode */
+    --success-foreground: #c6f6d5; /* Vivid as normal mode */
+
+    --border: #4a5568;
+    --input: #2d3748;
+    --ring: #cbd5e0;
+
+    --radius: 0.5rem;
+    --shadow-color-small: rgba(115, 115, 115, 0.15);
+    --shadow-color: rgba(115, 115, 115, 0.4);
+    --tw-shadow-color: var(--shadow-color-small);
   }
 }
 

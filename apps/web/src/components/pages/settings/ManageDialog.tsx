@@ -46,7 +46,7 @@ export const ManageDialog = () => {
 
       {isLoading ? (
         [1, 2, 3].map((item, idx) => (
-          <div key={idx} className="h-[105px] w-full bg-white px-10 shadow">
+          <div key={idx} className="h-[105px] w-full bg-background px-10 shadow">
             <div className="flex h-full animate-pulse items-center gap-5 ">
               <div className="h-6 w-2/12 rounded-md bg-gray-300 "></div>
               <div className="h-6 w-4/12 rounded-md bg-gray-300 "></div>

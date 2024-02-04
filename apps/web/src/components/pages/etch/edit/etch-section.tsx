@@ -121,7 +121,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
     <div className="my-4 grid grid-cols-3 gap-4">
       {isFullScreen && (
         <div
-          className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-white bg-opacity-75"
+          className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-background bg-opacity-75"
           onClick={toggleFullScreen}
         >
           <ModelViewer file={etchFile} fileName={`model`} />
@@ -134,7 +134,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
       <div className="col-span-2">
         <AspectRatio ratio={16 / 9}>
-          <div className="flex h-full w-full items-center justify-center rounded-2xl bg-[#F3F5F5]">{renderMedia()}</div>
+          <div className="flex h-full w-full items-center justify-center rounded-2xl bg-background">{renderMedia()}</div>
         </AspectRatio>
         <Comments etch={etch || {}} hasWritePermission={!!hasWritePermission} />
       </div>
