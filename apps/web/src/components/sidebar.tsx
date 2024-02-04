@@ -20,7 +20,7 @@ import { LogoAnimated } from "./icons/logo-long-animated";
 import { Icons } from "./ui/icons";
 
 const sideBarElementCn =
-  "cursor-pointer relaive text-base flex flex-col max-lg:mx-auto items-center justify-center max-lg:px-5 px-3 max-lg:w-fit py-5 text-[#9C9C9C] duration-300 hover:bg-muted dark:text-white dark:hover:bg-slate-700";
+  "cursor-pointer relaive text-base flex flex-col max-lg:mx-auto items-center justify-center max-lg:px-5 px-3 max-lg:w-fit py-5 text-[#9C9C9C] duration-300 hover:bg-muted dark:hover:bg-slate-700";
 
 const activeClassName =
   sideBarElementCn +
@@ -56,7 +56,7 @@ export const SideBar = () => {
 
   return (
     <aside id="sidebar" className="sticky left-0 top-0 z-10 h-screen w-fit transition-transform lg:w-52" aria-label="Sidebar">
-      <div className="custom-scrollbar flex h-full flex-col overflow-y-auto bg-white pb-4 pt-8 dark:border-slate-700 dark:bg-slate-900 max-lg:px-3">
+      <div className="custom-scrollbar flex h-full flex-col overflow-y-auto bg-background pb-4 pt-8 dark:border-slate-700 max-lg:px-3">
         <LogoAnimated className="mx-auto mb-10 max-lg:w-24" />
         <ul className="my-auto space-y-2 text-sm font-medium">
           {pages.map(({ url, title, Icon, disabled }, index) => {
@@ -68,16 +68,16 @@ export const SideBar = () => {
                   className={index === activePageIndex ? activeClassName : sideBarElementCn}
                   href={disabled ? "#" : url}
                 >
-                  <Icon color={url === path ? "#097B45" : "#9C9C9C"} className="h-6 w-6" />
+                  <Icon color={url === path ? "var(--primary)" : "var(--foreground)"} className="h-6 w-6" />
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
 
                   <div
-                    className={`w absolute left-20 z-10 ml-3 flex w-36 items-center duration-300 group-hover:flex ${
+                    className={`absolute left-20 z-10 ml-3 flex w-36 items-center duration-300 group-hover:flex ${
                       tooltip === title ? "visible scale-100 opacity-100 lg:hidden" : "invisible scale-50 opacity-0"
                     }`}
                   >
                     <div className={`-mr-2 h-3 w-3 rotate-45 bg-primary`}></div>
-                    <div className={`z-10 flex w-fit bg-primary p-2 text-white shadow-lg`}> {title}</div>
+                    <div className={`z-10 flex w-fit bg-primary p-2 text-foreground shadow-lg`}> {title}</div>
                   </div>
                 </Link>
               </li>

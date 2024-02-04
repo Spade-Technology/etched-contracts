@@ -17,7 +17,7 @@ export const TwoStep = () => {
       <div className="mb-5 text-sm font-semibold text-muted-foreground">
         You can enable Two-step authentication for enhanced security
       </div>
-      {user?.primaryPhoneNumber && <TextMsgAuth />}
+      <TextMsgAuth disabled={!user?.primaryPhoneNumber} />
       <GoogleAuth />
     </main>
   );

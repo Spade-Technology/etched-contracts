@@ -22,7 +22,7 @@ export default function index() {
       <div className="mt-[19px]">
         <HeaderDialog {...props} />
 
-        <main className="mt-[19px] flex flex-col gap-4 bg-white px-6 py-[34px] shadow-4xl">
+        <main className="mt-[19px] flex flex-col gap-4 bg-background px-6 py-[34px] shadow-4xl">
           <FilesDialog {...props} />
           {/* <FoldersDialog /> */}
         </main>

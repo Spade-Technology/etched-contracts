@@ -19,7 +19,7 @@ export const LogoAnimated = ({ className }: { className?: string }) => {
         viewBox="0 0 35 35"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={"transition-transform duration-700 " + (shake ? "animate-spin" : "animate-none")}
+        className={"transition-transform duration-700 ease-in-out " + (shake ? "animate-spin" : "animate-none")}
       >
         <path d="M0 16.4152L18.5848 0L21.8679 3.71697L3.28303 20.1321L0 16.4152Z" fill="#097B45" />
         <path d="M6.56607 23.8491L25.1509 7.43393L28.4339 11.1509L9.8491 27.5661L6.56607 23.8491Z" fill="#097B45" />

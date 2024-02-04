@@ -59,9 +59,7 @@ export const Teams = ({
     return (
       <article
         key={name}
-        className={`h-fit w-full bg-white px-10 shadow-[0px_7.11111px_35.55556px_5.33333px_rgba(0,0,0,0.10)] ${
-          accordion === name ? " pb-10" : ""
-        }`}
+        className={`h-fit w-full rounded-md bg-background px-10 shadow-lg ${accordion === name ? " pb-10" : ""}`}
       >
         <header onClick={openAccordion} className="flex h-[105px] cursor-pointer items-center justify-between">
           <div className="mr-4 text-xl font-bold capitalize text-foreground">
@@ -69,7 +67,7 @@ export const Teams = ({
           </div>
           <Icons.dropdown className={`${accordion === name ? "rotate-180" : "rotate-0"} mb-2.5 ml-[37px] w-6 duration-300`} />
         </header>
-        <main ref={ref} style={{ height: `${height}px` }} className="overflow-hidden bg-white duration-300">
+        <main ref={ref} style={{ height: `${height}px` }} className="overflow-hidden bg-background duration-300">
           <div className="mt-10 flex flex-col gap-5">
             {teams?.map(
               ({

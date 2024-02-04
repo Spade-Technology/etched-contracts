@@ -237,7 +237,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
 
         {/* <CreateEtchButton className="shadow-etched-2" /> */}
       </div>
-      <div className="shadow-etched-1">
+      <div className="rounded-md shadow-etched-1">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -263,7 +263,11 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow className="hover:bg-slate-50" key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  className="hover:bg-muted hover:bg-opacity-50"
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell className="cursor-pointer" key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -42,14 +42,14 @@ export const Paymaster = () => {
       <header className=" mb-5 text-xl font-semibold text-foreground">Gas Configuration</header>
 
       <div className="flex h-14 w-80 items-center justify-between rounded-2xl bg-primary p-4">
-        <div className="font-body text-base font-medium text-primary-foreground">
+        <div className="font-body text-base font-medium text-primary-foreground dark:font-bold">
           Using <b>{"Etched.xyz"}</b> for gas
         </div>
         {/* <---------- modals & more ----------> */}
         <AddWallet {...props}>
           <div
             onClick={() => setModal(true)}
-            className="ml-auto cursor-pointer rounded-full bg-white px-2 py-0.5 text-sm font-medium text-primary"
+            className="ml-auto cursor-pointer rounded-full bg-background px-2 py-0.5 text-sm font-medium text-primary"
           >
             Change
           </div>
@@ -131,7 +131,7 @@ const Wallet = ({ setAddWallet }: { setAddWallet: React.Dispatch<string> }) => {
           </div>
           <div
             onClick={() => setAddWallet("")}
-            className="ml-auto cursor-pointer rounded-full bg-white px-2 py-0.5 text-sm font-medium text-muted-foreground"
+            className="ml-auto cursor-pointer rounded-full bg-background px-2 py-0.5 text-sm font-medium text-muted-foreground"
           >
             Remove
           </div>

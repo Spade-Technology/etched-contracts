@@ -17,7 +17,7 @@ export default function SettingsPage() {
 
   return (
     <PageBoilerplate>
-      <div className="mt-5 flex w-full bg-white px-10 py-8 shadow-[0px_4px_20px_3px_rgba(0,0,0,0.10)]">
+      <div className="mt-5 flex w-full bg-background px-10 py-8 shadow-[0px_4px_20px_3px_rgba(0,0,0,0.10)]">
         <SidebarDialog />
         <ManageDialog />
       </div>

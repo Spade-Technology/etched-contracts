@@ -30,7 +30,7 @@ export default function GoogleAuth() {
           <div
             onClick={toggle}
             className={`flex h-7 w-14 cursor-pointer items-center justify-start rounded-full p-1 duration-500 ${
-              twoStepAuth == "enabled" ? "bg-primary" : " bg-neutral-200"
+              twoStepAuth == "enabled" ? "bg-primary" : " bg-neutral-200 dark:bg-neutral-700"
             }`}
           >
             <div

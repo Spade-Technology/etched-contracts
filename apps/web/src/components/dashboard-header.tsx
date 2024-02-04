@@ -20,11 +20,11 @@ export const DashboardHeader = () => {
   ];
 
   return (
-    <div className="sticky top-0 z-10 flex h-16 w-full items-center bg-white pl-6 shadow-4xl">
+    <div className="sticky top-0 z-10 flex h-16 w-full items-center bg-background pl-6 shadow-4xl">
       <CreateEtchButton />
       <CommandMenu />
 
-      <div className="mx-6 flex h-full w-fit items-center gap-6 border-l border-[#F5F6FA] pl-6">
+      <div className="mx-6 flex h-full w-fit items-center gap-6 border-l pl-6">
         {/* Etched ENS */}
         <EtchedENS />
         <TeamSelector horizontal={true} className="w-fit py-2" />
@@ -35,7 +35,7 @@ export const DashboardHeader = () => {
       <CreateOrgDialog />
 
       <div className="flex h-full">
-        <div className="h-full border-[1px] border-[#F5F6FA]" />
+        <div className="h-full border-l " />
         {icons
           .filter((icon) => icon.show)
           .map(({ Icon, url }, idx) => (
@@ -51,10 +51,10 @@ export const DashboardHeader = () => {
                   }`}
                 />
               </div>
-              {idx < 1 && <div className="h-full border border-[#F5F6FA]" />}
+              {idx < 1 && <div className="h-full border-l" />}
             </div>
           ))}
-        <div className="h-full border border-[#F5F6FA]" />
+        <div className="h-full border-l" />
         <UserSettings>
           <div className="relative flex h-full w-16 cursor-pointer items-center justify-center">
             <svg
