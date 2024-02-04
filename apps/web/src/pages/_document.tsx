@@ -42,7 +42,7 @@ export default function Document() {
         <meta property="og:image" content="https://etched.xyz/icons/apple-touch-icon.png" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
       </Head>
-      <body className="dark">
+      <body>
         <Main />
         <NextScript />
       </body>
