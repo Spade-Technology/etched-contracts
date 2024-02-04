@@ -3,6 +3,7 @@ import { CreateTeamDialog } from "@/components/create-team-dialog";
 import { useGetOrgsFromUser } from "@/utils/hooks/useGetOrgsFromUser";
 import { useGetTeamsFromUser } from "@/utils/hooks/useGetTeamsFromUser";
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { OrgDialog } from "./OrgDialog";
 import { Teams } from "./Teams";
@@ -18,8 +19,14 @@ export const ManageDialog = () => {
 
   const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
 
+  const pathname = usePathname();
+
   return (
-    <article className="flex min-h-screen w-full flex-col gap-7">
+    <article
+      className={`flex min-h-screen w-full flex-col gap-7 ${
+        pathname.includes("settings") && "ml-6 border-l border-[#E0E0E0] pl-5"
+      }`}
+    >
       {/*------------- Modals & More -------------*/}
       <CreateTeamDialog openTeamModal={openTeamModal} setOpenTeamModal={setOpenTeamModal} />
       <CreateOrgDialog openOrgModal={openOrgModal} setOpenOrgModal={setOpenOrgModal} />
@@ -29,7 +36,7 @@ export const ManageDialog = () => {
             <div
               key={idx}
               onClick={() => (idx == 0 ? setOpenOrgModal(true) : setOpenTeamModal(true))}
-              className={`flex h-fit cursor-pointer items-center gap-3 border-[1px] border-primary px-5 py-[11px] text-base font-semibold text-primary shadow-[0px_4px_13px_0px_rgba(0,0,0,0.25)] duration-300 hover:bg-primary hover:text-white `}
+              className={`flex h-fit cursor-pointer items-center gap-3 border-[1px] border-primary px-5 py-[11px] text-base font-semibold text-primary duration-300 hover:bg-primary hover:text-white hover:shadow-3xl `}
             >
               {name}
             </div>
@@ -39,7 +46,7 @@ export const ManageDialog = () => {
 
       {isLoading ? (
         [1, 2, 3].map((item, idx) => (
-          <div key={idx} className="h-[105px] w-full bg-white px-10 shadow">
+          <div key={idx} className="h-[105px] w-full bg-background px-10 shadow">
             <div className="flex h-full animate-pulse items-center gap-5 ">
               <div className="h-6 w-2/12 rounded-md bg-gray-300 "></div>
               <div className="h-6 w-4/12 rounded-md bg-gray-300 "></div>

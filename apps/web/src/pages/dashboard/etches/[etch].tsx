@@ -27,20 +27,20 @@ export default function EtchPage() {
   const owner = useLoggedInAddress();
 
   if (!(router.query!.etch as string) || typeof (router.query!.etch as string) !== "string")
-    return <div className="flex h-screen w-screen bg-white"> todo: add skeleton </div>;
+    return <div className="flex h-screen w-screen bg-background"> todo: add skeleton </div>;
 
   return (
     <PageBoilerplate>
       <div className="mt-6 flex flex-col px-6 pt-6 shadow-etched-1">
-        <div className="flex-col gap-2 text-xl font-bold text-neutral-700">
+        <div className="flex-col gap-2 text-xl font-bold text-opacity-75">
           <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-xl font-bold text-neutral-700" href="/dashboard">
+              <BreadcrumbLink className="text-xl font-bold text-opacity-75" href="/dashboard">
                 Dashboard
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <BreadcrumbLink className="text-xl font-bold text-neutral-700" href="/dashboard/">
+              <BreadcrumbLink className="text-xl font-bold text-opacity-75" href="/dashboard/">
                 Etches
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -53,7 +53,7 @@ export default function EtchPage() {
                       <Skeleton className="h-3 w-4" />
                     </>
                   ) : (
-                    <div className="text-xl font-bold text-neutral-700">
+                    <div className="text-xl font-bold text-opacity-75">
                       <span className="">{etch?.documentName}</span>
                     </div>
                   )}
@@ -67,11 +67,19 @@ export default function EtchPage() {
                   <span>#{etchId}</span>
 
                   <Link
-                    href={`https://etherscan.io/address/${contracts.Etch}#readContract#F16`}
+                    href={`https://polygonscan.com/address/${contracts.Etch}#readContract#F16`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Image src="/icons/etherscan.svg" alt="etherscan" width={16} height={16} />
+                  </Link>
+
+                  <Link
+                    href={`https://opensea.io/assets/matic/${contracts.Etch}/${etchId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image src="/icons/opensea.svg" alt="opensea" width={16} height={16} />
                   </Link>
                 </div>
               )}

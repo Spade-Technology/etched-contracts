@@ -46,6 +46,7 @@ export const useCreateEtch = () => {
     });
 
     try {
+      console.log(data);
       const uploaded = await startUpload(data.map((d) => d.file));
 
       if (!uploaded || !uploaded[0]) {

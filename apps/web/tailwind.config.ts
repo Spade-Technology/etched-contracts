@@ -20,6 +20,7 @@ module.exports = {
       fontFamily: {
         campton: ["Campton", "sans-serif"],
         body: ["Quicksand", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
       colors: {
         border: "var(--border)",
@@ -67,9 +68,15 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        "3xl": "0 35px 60px -15px rgba(0, 0, 0, 0.3)",
-        "etched-1": "rgba(17, 17, 26, 0.1) 0px 0px 16px",
-        "etched-2": "rgba(17, 17, 26, 0.1) 0px 0px 32px",
+        sm: "0 1px 2px 0 var(--shadow-color-small)",
+        md: "0 4px 6px -1px var(--shadow-color-small), 0 2px 4px -1px var(--shadow-color-small)",
+        lg: "0 10px 15px -3px var(--shadow-color-small), 0 4px 6px -2px var(--shadow-color-small)",
+        xl: "0 20px 25px -5px var(--shadow-color-small), 0 10px 10px -5px var(--shadow-color-small)",
+        "2xl": "0 25px 50px -12px var(--shadow-color)",
+        "3xl": "0px 4px 13px 0px var(--shadow-color)",
+        "4xl": "0px 4px 20px 3px var(--shadow-color-small)",
+        "etched-1": "var(--shadow-color-small) 0px 0px 16px",
+        "etched-2": "var(--shadow-color-small) 0px 0px 32px",
       },
       keyframes: {
         shake: {

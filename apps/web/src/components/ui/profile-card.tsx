@@ -5,12 +5,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { isEVMAddress, shortenAddress } from "@/utils/hooks/address";
 import Image from "next/image";
+import { EtchedAvatar } from "../pages/etch/edit/components/comments";
 import { Button } from "./button";
 import { Icons } from "./icons";
-import { isEVMAddress, shortenAddress } from "@/utils/hooks/address";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
-import { EtchedAvatar } from "../pages/etch/edit/components/comments";
 
 type ProfileProps = {
   image?: any;
@@ -34,7 +34,7 @@ const ProfileCard = ({ image, name, link = "", uid = "", role, dropDownOn, dropD
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <a href={`https://etherscan.io/address/${link}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`https://polygonscan.com/address/${link}`} target="_blank" rel="noopener noreferrer">
                       {shortenAddress({ address: link })}
                     </a>
                   </TooltipTrigger>

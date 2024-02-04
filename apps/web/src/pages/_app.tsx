@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import "@/styles/globals.css";
 import { api } from "@/utils/api";
+import { ThemeProvider } from "@/utils/theme";
 import { RefetchProvider, withUrql } from "@/utils/urql";
 import { config } from "@/utils/wagmi";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -15,17 +16,19 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     <WagmiConfig config={config}>
       <RefetchProvider>
         <SessionProvider session={session}>
-          <ClerkProvider
-            {...pageProps}
-            appearance={{
-              variables: {
-                colorPrimary: "#077844",
-              },
-            }}
-          >
-            <Component {...pageProps} />
-            <Toaster />
-          </ClerkProvider>
+          <ThemeProvider>
+            <ClerkProvider
+              {...pageProps}
+              appearance={{
+                variables: {
+                  colorPrimary: "#077844",
+                },
+              }}
+            >
+              <Component {...pageProps} />
+              <Toaster />
+            </ClerkProvider>
+          </ThemeProvider>
         </SessionProvider>
       </RefetchProvider>
     </WagmiConfig>

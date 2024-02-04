@@ -15,7 +15,7 @@ const HomeInfo = ({ setShowWaitlist }: Props) => {
 
   return (
     <div>
-      <div className="relative mx-auto max-w-[1280px] text-4xl font-bold text-black md:text-[80px] md:leading-[45px]  xl:leading-tight">
+      <div className="relative mx-auto max-w-[1280px] text-4xl font-bold text-foreground md:text-[80px] md:leading-[45px]  xl:leading-tight">
         <Image
           src={RightHeaderBg}
           alt=""

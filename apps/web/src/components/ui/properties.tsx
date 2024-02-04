@@ -110,15 +110,22 @@ export default function PropertiesDialog({
     };
   }, [shake]);
 
+  const currentPosition = activeModals.list.findIndex((idx: string) => idx === etch?.documentName);
+
   return (
     <main
       ref={ref}
       onMouseDown={onMouseDown}
+      style={{
+        top: `${(currentPosition + 1) * 40 + 150}px`,
+        transform: `translate(-${(currentPosition + 1) * 40}px)`,
+        zIndex: activeModals.current === etch?.documentName ? "50" : `${currentPosition + 10}`,
+      }}
       onClick={() => setActiveModals({ ...activeModals, current: data[0]?.value })}
-      className={`${shake && activeModals.current === data[0]?.value ? "shake" : ""} ${
-        activeModals.current === data[0]?.value ? "z-50" : "z-20"
-      } fixed right-10 top-[160px] grid w-[380px] cursor-grabbing gap-4 border bg-background p-6 shadow-2xl duration-200 focus:ring-0 ${
-        openPropertiesModal ? "visible translate-x-0" : "invisible z-0 !translate-x-full"
+      className={`${
+        shake && activeModals.current === data[0]?.value ? "shake" : ""
+      } fixed right-10 grid w-[380px] cursor-grabbing gap-4 border bg-background p-6 shadow-2xl duration-200 focus:ring-0 ${
+        openPropertiesModal ? "visible" : "invisible z-0 !translate-x-full"
       }`}
     >
       <Cross2Icon

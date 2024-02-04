@@ -10,6 +10,7 @@ import { publicClient } from "./web3";
 import { currentNetworkId } from "@/contracts";
 import { env } from "@/env.mjs";
 import { hashMessageForLit } from "@/lit";
+import { clerkClient } from "@clerk/nextjs";
 import { createERC6492Signature } from "./patch";
 
 /**
@@ -25,6 +26,8 @@ declare module "next-auth" {
       name: string | undefined | null;
       description: string | undefined | null;
       picture: string | undefined | null;
+      userId: string | undefined | null;
+
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -124,15 +127,13 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
         try {
           if (!credentials) return null;
 
-          console.log(credentials);
-
           // Verify the message
           const siwe = await verifySiweMessage(
             {
               message: credentials.message,
               signature: credentials.signature,
               derivedVia: credentials.derivedVia,
-              userId: credentials.userId,
+              userId: credentials.userId.toLowerCase(),
             },
             req
           );
@@ -146,9 +147,19 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           // If user doesn't exist, create it
           if (!user) user = await prisma.user.create({ data: { address: siwe.address } });
 
+          if (credentials.userId && credentials.userId !== "null") {
+            let clerkUser = await clerkClient.users.getUser(credentials.userId);
+
+            if (!clerkUser?.externalId)
+              clerkUser = await clerkClient.users.updateUser(credentials.userId, {
+                externalId: siwe.address.toLocaleLowerCase(),
+              });
+          }
+
           // Return the user info
           return { id: siwe.address };
         } catch (e) {
+          console.error(e);
           return null;
         }
       },

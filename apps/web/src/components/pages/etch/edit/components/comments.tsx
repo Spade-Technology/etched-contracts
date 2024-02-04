@@ -1,21 +1,23 @@
-import { TeaxtArea } from "@/components/ui/autoresize-textarea";
+import { TextArea } from "@/components/ui/autoresize-textarea";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Etch, EtchCommentAdded } from "@/gql/graphql";
 import { lit } from "@/lit";
+import { api } from "@/utils/api";
 import { shortenAddress } from "@/utils/hooks/address";
 import { useCommentEtch } from "@/utils/hooks/useCommentBackendOperation";
 import { useLoggedInAddress, useSignIn } from "@/utils/hooks/useSignIn";
-import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import Avatar from "boring-avatars";
-import Placeholder from "public/icons/dashboard/placeholder2.svg";
-import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 
 type CommentProps = {
-  image: any;
+  imgUrl?: string;
   userName: string;
   description: string;
-  commentedAt: string;
+  commentedAt: number;
   addr: string;
 };
 
@@ -23,108 +25,135 @@ export const EtchedAvatar = ({ uid }: { uid: string }) => (
   <Avatar size={40} name={uid.toLowerCase()} variant="beam" colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]} />
 );
 
-const Comment = ({ image, userName, description, commentedAt, addr }: CommentProps) => {
-  return (
-    <div className="flex justify-start gap-3 py-5">
+const Comment = ({ imgUrl, userName, description, commentedAt, addr }: CommentProps) => (
+  <div className="flex justify-start gap-3 py-5">
+    {imgUrl ? (
+      <Image src={imgUrl} width={40} height={40} alt={description} className="mt-3 aspect-square h-10 w-10 rounded" />
+    ) : (
       <EtchedAvatar uid={addr} />
-      <div>
-        <div className="flex items-center gap-3">
-          <div className="pt-2 text-base font-semibold text-muted-foreground">{userName}</div>
-          <div className="font-nornal pt-2 text-base text-muted-foreground">{commentedAt}</div>
-        </div>
-        {description ? (
-          <div className="whitespace-pre-wrap pt-2 text-base font-medium text-muted-foreground">{description}</div>
-        ) : (
-          <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200"></div>
-        )}
+    )}
+    <div className="w-full">
+      <div className="flex items-center gap-3">
+        <div className="pt-2 text-base font-semibold text-muted-foreground">{userName}</div>
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="pt-2 text-base font-normal text-muted-foreground">
+                <p>{dayjs.unix(commentedAt).format("YYYY.MM.DD HH:mm")}</p>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>{dayjs.unix(commentedAt).from(dayjs())}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
+      {description ? (
+        <div className="whitespace-pre-wrap pt-2 text-base font-medium text-muted-foreground">{description}</div>
+      ) : (
+        <div className="mt-2 w-full space-y-2">
+          <div className="h-4 w-3/4 animate-pulse rounded bg-gray-300"></div>
+          <div className="h-4 w-5/6 animate-pulse rounded bg-gray-300"></div>
+          <div className="h-4 w-2/3 animate-pulse rounded bg-gray-300"></div>
+        </div>
+      )}
     </div>
-  );
-};
+  </div>
+);
 
 const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWritePermission: boolean }) => {
   const [comments, setComments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
     {}
   );
+  const [profilePics, setProfilePics] = useState<Record<string, string | undefined>>({});
   const { addComment, isLoading, newComment, setNewComment } = useCommentEtch(etch?.documentName, etch.tokenId);
-
   const { regenerateAuthSig } = useSignIn();
   const owner = useLoggedInAddress();
+  const { mutateAsync: getClerkUsers } = api.user.getClerkUser.useMutation();
 
-  const handleComment = (evt: any) => {
-    const input = evt.target.value;
-    if (input && input.length > 0) {
-      setNewComment(input);
-    } else {
-      setNewComment("");
-    }
+  const handleComment = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewComment(evt.target.value);
   };
 
-  const decrypt = async (comments: EtchCommentAdded[]) => {
-    await lit.connect();
+  const memoizedDecrypt = useMemo(() => {
+    const cache = new Map();
+    const _decrypt = (comment: EtchCommentAdded) => {
+      if (cache.has(comment.commentId)) {
+        return Promise.resolve(cache.get(comment.commentId));
+      }
 
-    if (!lit.client) return;
+      const decryptPromise = (async () => {
+        await lit.connect();
 
-    const authSig = await regenerateAuthSig();
+        if (!lit.client) return;
 
-    comments.forEach(async (comment) => {
-      const decryptedComment = (await LitJsSdk.decryptFromIpfs({
-        authSig,
-        ipfsCid: comment.comment_commentIpfsCid,
-        litNodeClient: lit.client as any,
-      })) as string;
+        const authSig = await regenerateAuthSig();
 
-      if (decryptedComment)
-        setComments((old) => ({
-          ...old,
-          [comment.commentId]: {
+        try {
+          const decryptedObject = await lit.decryptFromIpfs({ authSig, ipfsCid: comment.comment_commentIpfsCid });
+          const decryptedComment = decryptedObject?.data as string;
+
+          if (decryptedComment) {
+            cache.set(comment.commentId, decryptedComment);
+            return decryptedComment;
+          }
+        } catch (e) {
+          if (e instanceof Error) {
+            alert(e.message);
+          } else {
+            alert("An unknown error occurred during decryption.");
+          }
+        }
+      })();
+
+      cache.set(comment.commentId, decryptPromise);
+
+      return decryptPromise;
+    };
+    return _decrypt;
+  }, []); // Dependencies array is empty, meaning it will only compute this once
+
+  useEffect(() => {
+    const decryptAndSetComments = async () => {
+      const decryptedComments = await Promise.all((etch.comments || []).map(memoizedDecrypt));
+      const commentsMap = decryptedComments.reduce((acc, decryptedComment, index) => {
+        const comment = etch.comments![index];
+        if (!comment?.commentId) return acc;
+        if (decryptedComment) {
+          acc[comment.commentId] = {
             comment: decryptedComment,
             timestamp: comment.comment_timestamp,
             addr: comment.owner.id,
             owner: comment.owner.etchENS[0]?.name || shortenAddress({ address: comment.owner.id }),
-          },
-        }));
-    });
-  };
+          };
+        }
+        return acc;
+      }, {} as Record<string, { comment: string; timestamp: number; owner: string; addr: string }>);
+      setComments(commentsMap);
+    };
 
-  useEffect(() => {
-    decrypt(etch.comments || []);
+    decryptAndSetComments();
   }, [etch.comments]);
 
-  const [_comments, set_Comments] = useState<Record<string, { comment: string; timestamp: number; owner: string; addr: string }>>(
-    {}
-  );
-
   useEffect(() => {
-    const commentsUpdate: Record<string, { comment: string; timestamp: number; owner: string; addr: string }> = {};
-    (etch?.comments || []).forEach((etch_comment) => {
-      const commentId = etch_comment.commentId.toString();
-      const commentData = comments[commentId] || { comment: "", timestamp: 0, owner: "", addr: "" };
-      commentsUpdate[commentId] = {
-        comment: commentData.comment,
-        timestamp: etch_comment.comment_timestamp as number,
-        addr: etch_comment.owner.id as string,
-        owner: etch_comment.owner.etchENS[0]?.name || shortenAddress({ address: etch_comment.owner.id }),
-      };
-    });
-    set_Comments(commentsUpdate);
-  }, [etch.comments, comments]);
+    const fetchProfilePics = async () => {
+      const uniqueWalletIds = Array.from(new Set(etch.comments?.map((comment) => comment.owner.id)));
+      const users = await getClerkUsers({ externalId: uniqueWalletIds });
+      const picsMap = users.reduce((acc, user) => {
+        acc[user.externalId as string] = user.imageUrl;
+        return acc;
+      }, {} as Record<string, string | undefined>);
+      setProfilePics(picsMap);
+    };
+
+    fetchProfilePics();
+  }, [etch.comments]);
 
   return (
     <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
-      <div className="text-xl font-semibold">{Object.keys(_comments).length} Comments</div>
-
-      <div className=" py-5">
+      <div className="text-xl font-semibold">{Object.keys(comments).length} Comments</div>
+      <div className="py-5">
         <div className="flex justify-start gap-3">
-          <div className="flex cursor-pointer gap-1">
-            <Avatar
-              size={40}
-              name={owner.toLowerCase()}
-              variant="beam"
-              colors={["#077844", "#147c60", "#f1f5f9", "#6b9568", "#64748b"]}
-            />
-          </div>
-          <TeaxtArea
+          <EtchedAvatar uid={owner} />
+          <TextArea
             disabled={isLoading || !hasWritePermission}
             placeholder="Add a comment"
             value={newComment}
@@ -132,38 +161,33 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
             className={!hasWritePermission ? "cursor-not-allowed" : ""}
           />
           {newComment && (
-            <div className="float-right">
-              <div className="flex justify-start gap-5">
-                <Button
-                  className={`rounded-lg duration-500 ${
-                    !newComment ? " translate-x-[-60px] opacity-0" : " translate-x-0 opacity-100"
-                  }
-                  `}
-                  onClick={addComment}
-                  isLoading={isLoading || !hasWritePermission}
-                >
-                  <PaperPlaneIcon />
-                </Button>
-              </div>
-            </div>
+            <Button
+              className="float-right rounded-lg duration-500"
+              onClick={addComment}
+              isLoading={isLoading || !hasWritePermission}
+            >
+              <PaperPlaneIcon />
+            </Button>
           )}
         </div>
       </div>
-
-      {_comments &&
-        Object.keys(_comments).length > 0 &&
-        Object.values(_comments).map(({ comment, timestamp, owner, addr }, idx) => {
-          return (
-            <Comment
-              image={Placeholder}
-              userName={owner}
-              description={comment}
-              commentedAt={new Date(timestamp * 1000).toDateString()}
-              key={idx}
-              addr={addr}
-            />
-          );
-        })}
+      {(etch.comments || []).map((rawCommentData, idx) => {
+        const decryptedCommentData = comments[rawCommentData.commentId];
+        return (
+          <Comment
+            key={idx}
+            userName={
+              decryptedCommentData
+                ? decryptedCommentData.owner
+                : rawCommentData.owner?.etchENS[0]?.name || shortenAddress({ address: rawCommentData.owner?.id })
+            }
+            description={decryptedCommentData ? decryptedCommentData.comment : ""}
+            commentedAt={decryptedCommentData ? decryptedCommentData.timestamp : rawCommentData.comment_timestamp}
+            addr={rawCommentData.owner?.id}
+            imgUrl={profilePics[rawCommentData.owner?.id]}
+          />
+        );
+      })}
     </div>
   );
 };

@@ -18,7 +18,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const teamId = router.query?.team;
 
-  if (!teamId || typeof teamId !== "string") return <div className="flex h-screen w-screen bg-white"> 404 </div>;
+  if (!teamId || typeof teamId !== "string") return <div className="flex h-screen w-screen bg-background"> 404 </div>;
 
   const { error, isLoading, team, etches } = useGetEtchesFromTeam(teamId);
 

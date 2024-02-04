@@ -65,7 +65,10 @@ export const EtchedENS = () => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <div className="flex  cursor-pointer items-center gap-2 rounded-md border-[1.5px] px-4 py-2" onClick={copy}>
+          <div
+            className="flex  cursor-pointer items-center gap-2 rounded-md border-[1.5px] border-input px-4 py-2"
+            onClick={copy}
+          >
             <EtchedWalletIcon />
             {isLoading ? (
               <Skeleton className="h-[10px] w-20 rounded-full" />
@@ -73,10 +76,10 @@ export const EtchedENS = () => {
               <>
                 <span className="text-sm font-medium text-primary opacity-0">{ens?.[0]}</span>
 
-                <div className="group/etched relative flex items-center justify-center">
+                <div className="group/etched relative flex items-center justify-center dark:font-bold ">
                   <span
                     className={
-                      "absolute -translate-x-1/2 text-sm font-medium text-primary transition-opacity group-hover/etched:opacity-0 " +
+                      "absolute -translate-x-1/2 text-sm text-primary transition-opacity group-hover/etched:opacity-0 " +
                       (copiedState && "!opacity-0")
                     }
                   >
@@ -84,7 +87,7 @@ export const EtchedENS = () => {
                   </span>
                   <span
                     className={
-                      "absolute -translate-x-1/2 text-sm font-medium text-primary opacity-0 transition-opacity group-hover/etched:opacity-100 " +
+                      "absolute -translate-x-1/2 text-sm text-primary opacity-0 transition-opacity group-hover/etched:opacity-100 " +
                       (copiedState && "!opacity-0")
                     }
                   >
@@ -92,7 +95,7 @@ export const EtchedENS = () => {
                   </span>
                   <span
                     className={
-                      "absolute -translate-x-1/2 text-sm font-medium text-primary opacity-0 transition-opacity " +
+                      "absolute -translate-x-1/2 text-sm text-primary opacity-0 transition-opacity " +
                       (copiedState && "!opacity-100")
                     }
                   >
@@ -103,15 +106,13 @@ export const EtchedENS = () => {
             )}
           </div>
         </TooltipTrigger>
-        <TooltipContent>
-          <p>Copy</p>
-        </TooltipContent>
+        <TooltipContent>Copy</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   ) : (
     <AlertDialog>
       <AlertDialogTrigger>
-        <div className="flex !w-[140px] items-center gap-2 rounded-md border-[1.5px] px-4 py-2">
+        <div className="flex !w-[140px] items-center gap-2 rounded-md border-[1.5px] border-input px-4 py-2">
           <EtchedWalletIcon />
           <span className="text-sm font-medium text-primary">Claim ENS</span>
         </div>
