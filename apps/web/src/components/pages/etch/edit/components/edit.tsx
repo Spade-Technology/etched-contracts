@@ -20,8 +20,9 @@ import AddIcon from "public/icons/dashboard/editEtch/addIcon.svg";
 import PenIcon from "public/icons/dashboard/editEtch/pen.svg";
 import BgEditVector from "public/images/backgrounds/dashboard/editVector.svg";
 import BgVector from "public/images/backgrounds/dashboard/vector.svg";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import ProfileCard from "../../../../ui/profile-card";
+import { ThemeContext } from "@/utils/theme";
 
 dayjs.extend(relativeTime);
 
@@ -49,10 +50,12 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
   const { isLoading: updateLoading, setDescription, setDocumentName, updateEtch: saveHandler } = useUpdateEtch(setEdit, etch);
   const owner = useLoggedInAddress();
 
+  const { theme } = useContext(ThemeContext);
+
   return (
     <div
       className={` ${
-        edit ? "bg-[#F3F5F5] text-[#6D6D6D]" : " bg-[#097B45] text-[#FBFBFB]"
+        edit ? "bg-[#F3F5F5] text-[#6D6D6D] dark:bg-background dark:shadow-sm" : " bg-[#097B45] text-[#FBFBFB]"
       } sticky top-20 w-[414px] basis-1/3 rounded-2xl transition-colors`}
     >
       <TransferOwnershipDialog
@@ -63,7 +66,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
       <Image
         src={edit ? BgEditVector : BgVector}
         alt=""
-        className="absolute right-0 -z-10 rounded-2xl bg-transparent transition-all"
+        className="absolute right-0 -z-10 rounded-2xl bg-transparent transition-all dark:opacity-10"
       />
       <div className="z-10 flex h-full flex-col p-7">
         <div className="flex justify-between gap-4">
@@ -74,7 +77,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
                 defaultValue={etch?.documentName}
                 onChange={(e) => setDocumentName(e.target.value)}
                 disabled={updateLoading}
-                className="w-full bg-[#F3F5F5]"
+                className="w-full bg-[#F3F5F5] dark:bg-background dark:shadow-sm"
               />
             </div>
           ) : (
@@ -175,7 +178,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
                 defaultValue={etch?.description || ""}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={updateLoading}
-                className="w-full bg-[#F3F5F5]"
+                className="w-full bg-[#F3F5F5] dark:bg-background  dark:shadow-sm"
               />
             </>
           ) : (
@@ -190,7 +193,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
           )}
         </div>
 
-        <div className={`${edit ? "bg-[#FFF]" : "bg-[#A1FFD3]"} mt-auto rounded-2xl p-4 text-[#6D6D6D]`}>
+        <div className={`${edit ? "bg-[#FFF]" : "bg-[#A1FFD3]"} mt-auto rounded-2xl p-4 text-foreground dark:bg-opacity-5`}>
           <div className="font-base font-semibold">Shared with</div>
           {etch?.permissions?.map((perm) => {
             if (perm.wallet)
@@ -218,10 +221,13 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
 
           <Button
             onClick={() => setOpenAddUser(true)}
-            className="mt-10 w-full gap-3 rounded-3xl border-[2px] border-[#097B45] bg-transparent text-[#097B45] "
+            className={`mt-10 w-full gap-3 rounded-3xl border-[2px] border-[#097B45] bg-transparent text-primary dark:bg-primary dark:text-foreground ${
+              edit ? "dark:text-primary-foreground" : ""
+            } `}
             disabled={!hasWritePermission}
           >
-            <Image src={AddIcon} alt="add-icon" /> Add more users
+            <Icons.plus className="" color={theme === "dark" ? "var(--primary-foreground)" : "var(--primary)"} />
+            Add more users
           </Button>
         </div>
 
