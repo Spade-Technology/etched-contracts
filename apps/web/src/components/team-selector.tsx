@@ -21,7 +21,7 @@ type TeamSelector = {
   id: string;
 };
 
-const emptyTeam = { name: "Private", org: "Sole Team", id: "Myself" };
+const emptyTeam = { name: "Private", org: "Sole Team", id: "0" };
 export const getSelectedTeam: () => TeamSelector = () =>
   JSON.parse(localStorage.getItem("selectedBehalfOf") || "false") ?? emptyTeam;
 
@@ -84,7 +84,7 @@ export const TeamSelector = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="Myself">Myself</SelectItem>
+          <SelectItem value="0">Myself</SelectItem>
           <SelectSeparator className="SelectSeparator" />
           {isLoading ? (
             <div className="flex flex-col gap-3">

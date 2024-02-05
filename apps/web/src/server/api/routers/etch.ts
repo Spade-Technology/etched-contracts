@@ -24,7 +24,7 @@ export const etchRouter = createTRPCRouter({
             type: z.string(),
           })
         ),
-        team: z.string().optional(),
+        team: z.bigint().optional(),
 
         blockchainMessage: z.string(),
         authSig: z.any(),

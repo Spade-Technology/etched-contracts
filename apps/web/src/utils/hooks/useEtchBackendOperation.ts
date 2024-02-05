@@ -46,7 +46,6 @@ export const useCreateEtch = () => {
     });
 
     try {
-      console.log(data);
       const uploaded = await startUpload(data.map((d) => d.file));
 
       if (!uploaded || !uploaded[0]) {
@@ -79,7 +78,7 @@ export const useCreateEtch = () => {
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         authSig,
-        team: getSelectedTeam().id,
+        team: BigInt(getSelectedTeam().id),
 
         files: data.map((d, i) => ({
           name: d.name,
