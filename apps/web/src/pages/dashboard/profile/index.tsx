@@ -14,9 +14,8 @@ export default function Community() {
 
   const tabs = [
     { tab: "Personal", contents: [<Profile />, <Email />, <Phone />, <SelectTheme />] },
-    { tab: "Billing", contents: [] },
     { tab: "Security", contents: [<Paymaster />, <Password />, <TwoStep />, <BackUpCodes />] },
-    { tab: "Item", contents: [] },
+    { tab: "Billing", contents: [] },
   ];
 
   const props = { activeTab, setActiveTab };
