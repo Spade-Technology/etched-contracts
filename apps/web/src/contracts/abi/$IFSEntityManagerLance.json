@@ -54,9 +54,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -85,9 +85,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -104,21 +104,21 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
+        "name": "_parentId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
         "internalType": "address",
         "name": "_to",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_parentId",
-        "type": "uint256"
       },
       {
         "indexed": false,
@@ -147,9 +147,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -172,21 +172,21 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_fromParentId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_toParentId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "EntityMoved",
@@ -197,9 +197,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -216,9 +216,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -253,15 +253,15 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_shareId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_originalEntityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -314,9 +314,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_existingEntityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "string",
@@ -324,9 +324,9 @@
         "type": "string"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_externalOrgOrTeamId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -359,14 +359,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_newParentId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "addEntityToParent",
@@ -377,9 +377,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -432,9 +432,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "address",
@@ -469,9 +469,9 @@
     "name": "commentMap",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "tokenId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "address",
@@ -495,9 +495,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_parentId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "enum IFSEntityManagerLance.ImmutableType",
@@ -545,9 +545,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_parentId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "string",
@@ -595,9 +595,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_parentId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "string",
@@ -720,9 +720,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_parentId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "string",
@@ -760,9 +760,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "entityCanReceiveShare",
@@ -779,9 +779,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "findOwnerOfEntityOrganization",
@@ -798,22 +798,22 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "fsId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "fsEntities",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "tokenId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "parentId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -871,9 +871,9 @@
     "name": "getPersonalOrg",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "stateMutability": "nonpayable",
@@ -884,9 +884,9 @@
     "name": "getTotalSupply",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -895,9 +895,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "address",
@@ -948,9 +948,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "fsId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "metadataOf",
@@ -982,14 +982,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_destId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "moveEntity",
@@ -1027,9 +1027,9 @@
     "name": "personalOrgs",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "personalOrgId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -1038,14 +1038,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_oldParentId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "removeEntityFromParent",
@@ -1125,9 +1125,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -1143,9 +1143,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "components": [
@@ -1173,9 +1173,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "string",
@@ -1196,9 +1196,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "address",
@@ -1219,17 +1219,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "fsId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "shareMetaOf",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "originalEntityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -1262,9 +1262,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "address",
@@ -1303,14 +1303,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_entityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_destOrgId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "transferItemToOrganization",
