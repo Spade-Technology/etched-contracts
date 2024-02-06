@@ -10,20 +10,6 @@ export const PageBoilerplate = ({ children }: { children: React.ReactNode }) => 
   // maybe a bit extra, should do the trick though, right
   useVerifyAuth();
 
-  // check for mobile aspect ratio
-  // const [isMobile, setIsMobile] = useState(false);
-  // useEffect(() => {
-  //   if (window.innerWidth / window.innerHeight < 1) setIsMobile(true);
-  // }, []);
-
-  // if (isMobile) {
-  //   return (
-  //     <div className="flex h-screen w-screen flex-col bg-background">
-  //       Etched is not supported on mobile devices yet. Please use a desktop browser.
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="flex w-full bg-background !font-body">
       <SideBar />

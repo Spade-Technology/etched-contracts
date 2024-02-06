@@ -25,7 +25,7 @@ export default function Community() {
     <PageBoilerplate>
       <main className="mt-5 flex w-full gap-7 bg-background px-10 py-8 shadow-4xl">
         <SidebarDialog {...props} />
-        <section className="ml-6 min-h-screen w-full border-l border-[#E0E0E0] pl-5">
+        <section className="ml-6 min-h-screen w-full border-l border-muted pl-5">
           {tabs.map(
             ({ tab, contents }, idx) =>
               tab == activeTab && (
