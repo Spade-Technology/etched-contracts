@@ -44,23 +44,27 @@ export const TeamDialog = ({
       <EditTeamDialog {...props} />
 
       <div className="flex justify-between">
-        <div className="text-base font-bold capitalize text-neutral-700">Team: {name}</div>
+        <div className="text-base font-bold capitalize text-muted-foreground  ">Team: {name}</div>
         <EditButton onClick={() => setOpenEditTeamModal(true)} title=" Modify" className="ml-[175px]" />
       </div>
       <div className="flex gap-[53px]">
         <div className="mt-2.5">
-          <div className=" text-base font-bold tracking-tight text-neutral-700">Members</div>
+          <div className=" text-base font-bold tracking-tight text-muted-foreground  ">Members</div>
           <div className="mt-[14px] flex flex-col gap-2">
             {members.map(({ name, id }) => {
-              return <div className=" text-sm font-medium text-neutral-500">{name || shortenAddress({ address: id })}</div>;
+              return (
+                <div className=" text-sm font-medium text-muted-foreground opacity-80">
+                  {name || shortenAddress({ address: id })}
+                </div>
+              );
             })}
           </div>
         </div>
         <div className="mt-2.5">
-          <div className=" text-base font-bold tracking-tight text-neutral-700">Access</div>
+          <div className=" text-base font-bold tracking-tight text-muted-foreground  ">Access</div>
           <div className="mt-[14px] flex flex-col gap-2">
             {members.map(({ role }) => {
-              return <div className=" text-sm font-medium text-neutral-500">{role}</div>;
+              return <div className=" text-sm font-medium text-muted-foreground opacity-80">{role}</div>;
             })}
           </div>
         </div>

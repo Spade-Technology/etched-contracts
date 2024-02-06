@@ -148,7 +148,7 @@ const Comments = ({ etch, hasWritePermission }: { etch: Partial<Etch>; hasWriteP
   }, [etch.comments]);
 
   return (
-    <div className="my-6 rounded-2xl bg-[#F3F5F5] p-7 text-[#6D6D6D]">
+    <div className="my-6 rounded-2xl bg-muted p-7 dark:bg-background">
       <div className="text-xl font-semibold">{Object.keys(comments).length} Comments</div>
       <div className="py-5">
         <div className="flex justify-start gap-3">
