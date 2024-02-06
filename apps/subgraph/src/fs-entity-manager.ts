@@ -1,5 +1,5 @@
 import { getOrCreateWallet } from './wallet';
-import { upsertFileMeta, upsertEntityUserPermission, upsertShareMeta } from './utils';
+import { upsertFileMeta, upsertEntityUserPermission, upsertShareMeta, decodeCidv0BytesToBase58String } from './utils';
 
 import {
   CommentOnEntity as CommentOnEntityEvent,
@@ -52,9 +52,9 @@ export function handleEntityIndividualUserPermissionsChanged(event: EntityIndivi
 }
 
 export function handleCommentOnEntity(event: CommentOnEntityEvent): void {
-  let entity = new CommentOnEntity(event.params._commentIpfsCid);
+  let entity = new CommentOnEntity(decodeCidv0BytesToBase58String(event.params._commentIpfsCid));
   entity._entityId = event.params._entityId;
-  entity._commentIpfsCid = event.params._commentIpfsCid;
+  entity._commentIpfsCid = decodeCidv0BytesToBase58String(event.params._commentIpfsCid);
   entity._timestamp = event.params._timestamp;
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;

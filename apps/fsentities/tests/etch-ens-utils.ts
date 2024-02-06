@@ -1,6 +1,6 @@
 import { newMockEvent } from "matchstick-as"
 import { ethereum, Address, BigInt } from "@graphprotocol/graph-ts"
-import {
+import {../../fsentities/generated/EtchENS/EtchENS
   Approval,
   ApprovalForAll,
   EtchENSCreated,

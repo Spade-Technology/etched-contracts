@@ -53,9 +53,9 @@ fi
 
 # launch the graph command
 if [[ $PROD == "y" || $PROD == "Y" ]]; then
-  graph deploy etched-mainnet --studio subgraph-mainnet.yaml -l prod-v-alpha-$VERSION
+  graph deploy etched-folders --studio subgraph-mainnet.yaml -l prod-v-alpha-$VERSION
 else
-  graph deploy etched --studio subgraph-dev.yaml -l dev-v-alpha-$VERSION
+  graph deploy etched-folders --studio subgraph-dev.yaml -l dev-v-alpha-$VERSION
 fi
 
 # write the new version to "./.version" or "./.versiondev" based on prod or dev

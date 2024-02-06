@@ -1,4 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
+
 import { Wallet } from '../generated/schema';
 
 export const getOrCreateWallet = (address: Address): Wallet => {

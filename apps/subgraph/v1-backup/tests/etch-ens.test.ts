@@ -1,6 +1,6 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { afterAll, assert, beforeAll, clearStore, describe, test } from 'matchstick-as/assembly/index';
-import { handleApproval } from '../src/etch-ens';
+import { handleApproval } from '../src-old/etch-ens';
 import { createApprovalEvent } from './etch-ens-utils';
 
 // Tests structure (matchstick-as >=0.5.0)

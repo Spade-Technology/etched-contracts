@@ -1,9 +1,9 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { afterAll, clearStore, describe, test } from 'matchstick-as';
 
-import { handleEtchCreated, handleEtchTransferedToTeam } from '../src/etch';
-import { handleOrganisationCreated } from '../src/organisation';
-import { handleTeamCreated, handleTransferToOrganisation } from '../src/team';
+import { handleEtchCreated, handleEtchTransferedToTeam } from '../src-old/etch';
+import { handleOrganisationCreated } from '../src-old/organisation';
+import { handleTeamCreated, handleTransferToOrganisation } from '../src-old/team';
 import { createEtchCreatedEvent, createEtchTransferedToTeamEvent } from './etch-utils';
 import { createOrganisationCreatedEvent } from './organisation-utils';
 import { createTeamCreatedEvent, createTransferToOrganisationEvent } from './team-utils';

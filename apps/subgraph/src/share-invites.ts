@@ -47,7 +47,7 @@ export function handleInviteSent(event: InviteSentEvent): void {
   entity.from = event.params.from;
   entity.externalOrgOrTeamId = event.params.externalOrgOrTeamId;
   entity.sourceEntityId = event.params.sourceEntityId;
-  entity.baseSharePerms = event.params.baseSharePerms;
+  entity.baseSharePerms = event.params.maxSharePerms;
   entity.status = event.params.status;
 
   entity.blockNumber = event.block.number;

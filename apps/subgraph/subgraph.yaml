@@ -3,12 +3,84 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: Etch
-    network: base-testnet
+    name: FSEntityManager
+    network: localhost
     source:
-      address: "0xeb74e636ED56ceDED3519fc8633430397BFd7FEF"
-      abi: Etch
-      startBlock: 12080400
+      address: "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+      abi: FSEntityManager
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FSEntity
+        - ShareMeta
+        - CommentOnEntity
+        - EntityBasePermissionsChanged
+        - EntityCreated
+        - EntityIndividualUserPermissionsChanged
+        - FileMeta
+        - ShareMetaChanged
+        
+      abis:
+        - name: FSEntityManager
+          file: ./abis/FSEntityManager.json
+      eventHandlers:
+        - event: CommentOnEntity(uint256,string,address,uint256)
+          handler: handleCommentOnEntity
+        - event: EntityBasePermissionsChanged(uint256,uint8)
+          handler: handleEntityBasePermissionsChanged
+        - event: EntityCreated(uint256,address,uint256,string,uint8,uint8)
+          handler: handleEntityCreated
+        - event: EntityIndividualUserPermissionsChanged(uint256,address,uint8)
+          handler: handleEntityIndividualUserPermissionsChanged
+        - event: FileMetaChanged(uint256,address,string,string,string,uint256)
+          handler: handleFileMetaChanged
+        - event: EntityMoved(uint256,uint256,uint256)
+          handler: handleEntityMoved
+        - event: ShareMetaChanged(uint256,uint256,uint8)
+          handler: handleShareMetaChanged
+        - event: EntityTransferredToIndividual(uint256,address)
+          handler: handleEntityTransferredToIndividual
+      file: ./src/fs-entity-manager.ts
+  - kind: ethereum
+    name: ShareInvites
+    network: localhost
+    source:
+      address: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
+      abi: ShareInvites
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - InviteAccepted
+        - InviteDeclined
+        - InviteRevoked
+        - InviteSent
+
+      abis:
+        - name: ShareInvites
+          file: ./abis/ShareInvites.json
+      eventHandlers:
+        - event: InviteAccepted(uint256,address)
+          handler: handleInviteAccepted
+        - event: InviteDeclined(uint256,address)
+          handler: handleInviteDeclined
+        - event: InviteRevoked(uint256,address)
+          handler: handleInviteRevoked
+        - event: InviteSent(address,uint256,uint256,uint8,uint8)
+          handler: handleInviteSent
+      file: ./src/share-invites.ts
+  - kind: ethereum
+    name: EtchENS
+    network: localhost
+    source:
+      address: "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
+      abi: EtchENS
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -16,130 +88,8 @@ dataSources:
       entities:
         - Approval
         - ApprovalForAll
-        - CommentAdded
-        - EtchCreated
-        - EtchTransferedToTeam
-        - InvididualPermissionsUpdated
-        - OwnershipTransferred
-        - Transfer
-        - EtchMetadataUpdated
-      abis:
-        - name: Etch
-          file: ./abis/Etch.json
-      eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256),indexed address)
-          handler: handleCommentAdded
-        - event: EtchCreated(indexed uint256,indexed address,string,string)
-          handler: handleEtchCreated
-        - event: EtchTransferedToTeam(indexed uint256,indexed address,indexed uint256)
-          handler: handleEtchTransferedToTeam
-        - event: InvididualPermissionsUpdated(indexed uint256,indexed address,uint8)
-          handler: handleInvididualPermissionsUpdated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-        - event: TeamPermissionsUpdated(indexed uint256,indexed uint256,uint8)
-          handler: handleTeamPermissionsUpdated
-        - event: EtchMetadataUpdated(indexed uint256,string,string,string)
-          handler: handleEtchMetadataUpdated
-      file: ./src/etch.ts
-  - kind: ethereum
-    name: Team
-    network: base-testnet
-    source:
-      address: "0xA3a6fC1cd9A9416954Defb37D5e63961bF8A1160"
-      abi: Team
-      startBlock: 12080400
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - TeamApproval
-        - TeamApprovalForAll
-        - TeamOwnershipTransferred
-        - PermissionsUpdated
-        - TeamCreated
-        - TeamTransfer
-        - TransferToOrganisation
-        - TeamRenamed
-      abis:
-        - name: Team
-          file: ./abis/Team.json
-      eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
-          handler: handlePermissionsUpdated
-        - event: TeamCreated(indexed uint256,indexed address)
-          handler: handleTeamCreated
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-        - event: TransferToOrganisation(indexed uint256,indexed uint256)
-          handler: handleTransferToOrganisation
-        - event: TeamRenamed(indexed uint256,string)
-          handler: handleTeamRenamed
-      file: ./src/team.ts
-  - kind: ethereum
-    name: Organisation
-    network: base-testnet
-    source:
-      address: "0x47B3C6ED47C2715fA75a9997D4F9779521790037"
-      abi: Organisation
-      startBlock: 12080400
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - OrganisationApproval
-        - OrganisationApprovalForAll
-        - OrganisationCreated
-        - OrganisationOwnershipTransferred
-        - OrganisationPermissionsUpdated
-        - OrganisationTransfer
-        - OrganisationRenamed
-      abis:
-        - name: Organisation
-          file: ./abis/Organisation.json
-      eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: OrganisationCreated(indexed uint256,indexed address)
-          handler: handleOrganisationCreated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
-          handler: handlePermissionsUpdated
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-        - event: OrganisationRenamed(indexed uint256,string)
-          handler: handleOrganisationRenamed
-      file: ./src/organisation.ts
-  - kind: ethereum
-    name: EtchENS
-    network: base-testnet
-    source:
-      address: "0x42f1240CABF1e2FC41724A4e2cf64fB2Ac2a639F"
-      abi: EtchENS
-      startBlock: 12080400
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - EtchTransferred
+        - EtchENSCreated
+        - EtchENSOwnershipTransferred
         - EtchENSTransfer
       abis:
         - name: EtchENS
@@ -147,6 +97,8 @@ dataSources:
       eventHandlers:
         - event: EtchENSCreated(indexed uint256,indexed address,string)
           handler: handleEtchENSCreated
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleENSTransfer
+        # - event: OwnershipTransferred(indexed address,indexed address)
+        #   handler: handleOwnershipTransferred
+        # - event: Transfer(indexed address,indexed address,indexed uint256)
+        #   handler: handleTransfer
       file: ./src/etch-ens.ts

@@ -4,5 +4,5 @@
   "compilerOptions": {
     "target": "es2020"
   },
-  "include": ["src", "tests", "prettier.config.cjs"]
+  "include": ["src-old", "tests", "prettier.config.cjs"]
 }
