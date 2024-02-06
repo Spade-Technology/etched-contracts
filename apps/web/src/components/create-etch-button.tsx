@@ -86,7 +86,7 @@ export const CreateEtchButton = () => {
           className="w-fit gap-1.5 px-5 text-base font-semibold !text-primary-foreground shadow-3xl duration-500"
           onClick={() => setIsOpen(true)}
         >
-          <Icons.plus /> Etch Now
+          <Icons.plus color="var(--primary-foreground)" /> Etch Now
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className={"max-h-screen max-w-3xl"}>
