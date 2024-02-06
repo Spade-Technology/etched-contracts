@@ -86,7 +86,7 @@ export const CreateEtchButton = () => {
           className="w-fit gap-1.5 px-5 text-base font-semibold !text-primary-foreground shadow-3xl duration-500"
           onClick={() => setIsOpen(true)}
         >
-          <Icons.plus color="var(--primary-foreground)" /> Etch Now
+          <Icons.plus color="rgb(var(--primary-foreground))" /> Etch Now
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className={"max-h-screen max-w-3xl"}>
@@ -140,7 +140,7 @@ export const CreateEtchButton = () => {
                       <div>
                         <div
                           {...getRootProps()}
-                          className="flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-muted px-5  text-center text-muted-foreground transition-all hover:border-gray-400 hover:text-muted-foreground"
+                          className="flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-muted-foreground bg-muted px-5  text-center text-muted-foreground transition-all hover:border-gray-400 hover:text-muted-foreground"
                         >
                           <input {...getInputProps()} />
                           <p>

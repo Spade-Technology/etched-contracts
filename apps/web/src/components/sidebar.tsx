@@ -24,7 +24,7 @@ const sideBarElementCn =
 
 const activeClassName =
   sideBarElementCn +
-  "cursor-pointer !abg-primary-foreground !text-primary before:absolute max-lg:rounded-lg before:left-0 font-semibold before:h-24 before:w-8 before:-translate-x-1/2 before:rounded-full lg:before:bg-primary";
+  "cursor-pointer !bg-primary/10 !text-primary before:absolute max-lg:rounded-lg before:left-0 font-semibold before:h-24 before:w-8 before:-translate-x-1/2 before:rounded-full lg:before:bg-primary";
 
 enum activePage {
   DASHBOARD,
@@ -63,10 +63,16 @@ export const SideBar = () => {
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
-                  className={(index === activePageIndex ? activeClassName : sideBarElementCn) + " bg-primary-foreground/50 "}
+                  className={
+                    index === activePageIndex ? activeClassName : sideBarElementCn + (disabled ? " cursor-context-menu" : "")
+                  }
                   href={disabled ? "#" : url}
                 >
-                  <Icon color={index === activePageIndex ? "var(--primary)" : "var(--foreground)"} className="h-6 w-6" />
+                  <Icon
+                    color={index === activePageIndex ? "rgb(var(--primary))" : "rgb(var(--foreground), 0.5)"}
+                    className="h-6 w-6"
+                  />
+
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
 
                   <div

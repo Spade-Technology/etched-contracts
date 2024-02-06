@@ -6,37 +6,37 @@
 
 @layer base {
   :root {
-    --background: hsla(0, 0%, 100%, 1);
-    --foreground: hsla(222.2, 84%, 4.9%, 1);
-    --skeleton: hsl(204, 9%, 90%);
+    --background: 255, 255, 255;
+    --foreground: 3, 8, 22;
+    --skeleton: 228, 230, 232;
 
-    --card: #ffffff;
-    --card-foreground: #020817;
+    --card: 255, 255, 255;
+    --card-foreground: 2, 8, 23;
 
-    --popover: #ffffff;
-    --popover-foreground: #020817;
+    --popover: 255, 255, 255;
+    --popover-foreground: 3, 8, 23;
 
-    --primary: #077844;
-    --primary-foreground: #dbffee;
+    --primary: 7, 120, 67;
+    --primary-foreground: 219, 255, 238;
 
-    --secondary: #f1f5f9;
-    --secondary-foreground: #0f172a;
+    --secondary: 241, 245, 249;
+    --secondary-foreground: 15, 23, 42;
 
-    --muted: #f1f5f9;
-    --muted-foreground: #64748b;
+    --muted: 241, 245, 249;
+    --muted-foreground: 100, 116, 139;
 
-    --accent: #f1f5f9;
-    --accent-foreground: #0f172a;
+    --accent: 241, 245, 249;
+    --accent-foreground: 15, 23, 42;
 
-    --destructive: #ef4444;
-    --destructive-foreground: #f8fafc;
+    --destructive: 239, 68, 68;
+    --destructive-foreground: 248, 250, 252;
 
-    --success: #077844;
-    --success-foreground: #dbffee;
+    --success: 7, 120, 68;
+    --success-foreground: 219, 255, 238;
 
-    --border: #e2e8f0;
-    --input: #e2e8f0;
-    --ring: #020817;
+    --border: 226, 232, 240;
+    --input: 226, 232, 240;
+    --ring: 2, 8, 23;
 
     --radius: 0.5rem;
     --shadow-color-small: rgba(17, 17, 26, 0.1);
@@ -44,37 +44,37 @@
   }
 
   .dark {
-    --background: hsla(200, 15%, 8%, 1);
-    --foreground: hsla(0, 0%, 100%, 0.87);
-    --skeleton: hsl(204, 9%, 90%);
+    --background: 18, 21, 23;
+    --foreground: 227, 227, 227;
+    --skeleton: 228, 230, 232;
 
-    --card: #2d3748;
-    --card-foreground: #cbd5e0;
+    --card: 45, 55, 72;
+    --card-foreground: 203, 213, 224;
 
-    --popover: hsla(200, 15%, 8%, 1);
-    --popover-foreground: #e2e8f0;
+    --popover: 18, 21, 23;
+    --popover-foreground: 226, 232, 240;
 
-    --primary: #077844; /* Slightly more vivid than normal mode */
-    --primary-foreground: #defbed; /* Slightly more vivid than normal mode */
+    --primary: 7, 120, 68; /* Slightly more vivid than normal mode */
+    --primary-foreground: 222, 251, 237; /* Slightly more vivid than normal mode */
 
-    --secondary: #4a5568;
-    --secondary-foreground: #a0aec0;
+    --secondary: 74, 85, 104;
+    --secondary-foreground: 160, 174, 192;
 
-    --muted: rgb(49, 53, 55);
-    --muted-foreground: #e2e8f0;
+    --muted: 49, 53, 55;
+    --muted-foreground: 226, 232, 240;
 
-    --accent: #1e3e2f; /* Slightly more vivid than normal mode */
-    --accent-foreground: #5ac092; /* Slightly more vivid than normal mode */
+    --accent: 30, 62, 47; /* Slightly more vivid than normal mode */
+    --accent-foreground: 90, 192, 146; /* Slightly more vivid than normal mode */
 
-    --destructive: #e53e3e; /* Vivid as normal mode */
-    --destructive-foreground: #fed7d7; /* Vivid as normal mode */
+    --destructive: 229, 62, 62; /* Vivid as normal mode */
+    --destructive-foreground: 254, 215, 215; /* Vivid as normal mode */
 
-    --success: #38a169; /* Vivid as normal mode */
-    --success-foreground: #c6f6d5; /* Vivid as normal mode */
+    --success: 56, 161, 105; /* Vivid as normal mode */
+    --success-foreground: 198, 246, 213; /* Vivid as normal mode */
 
-    --border: #4a5568;
-    --input: #2d3748;
-    --ring: #cbd5e0;
+    --border: 74, 85, 104;
+    --input: 45, 55, 72;
+    --ring: 203, 213, 224;
 
     --radius: 0.5rem;
     --shadow-color-small: rgba(115, 115, 115, 0.15);
