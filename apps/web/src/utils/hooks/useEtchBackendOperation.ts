@@ -74,11 +74,13 @@ export const useCreateEtch = () => {
 
       setEtchCreated(data.length);
 
+      console.log(data);
+
       const res = await bulkMintEtch({
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         authSig,
-        team: BigInt(getSelectedTeam().id),
+        team: BigInt(getSelectedTeam().id || 0n),
 
         files: data.map((d, i) => ({
           name: d.name,
