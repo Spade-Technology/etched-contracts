@@ -24,7 +24,7 @@ const sideBarElementCn =
 
 const activeClassName =
   sideBarElementCn +
-  "cursor-pointer !bg-primary-foreground !text-primary before:absolute max-lg:rounded-lg before:left-0 font-semibold before:h-24 before:w-8 before:-translate-x-1/2 before:rounded-full lg:before:bg-primary";
+  "cursor-pointer !bg-primary/10 !text-primary before:absolute max-lg:rounded-lg before:left-0 font-semibold before:h-24 before:w-8 before:-translate-x-1/2 before:rounded-full lg:before:bg-primary";
 
 enum activePage {
   DASHBOARD,
@@ -48,8 +48,6 @@ export const SideBar = () => {
     { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
     { url: "/dashboard/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
     { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: true },
-    // { url: "/dashboard/profile", title: "Profile", Icon: Icons.user },
-    // { url: "/dashboard/settings", title: "Settings", Icon: Icons.settings },
   ];
 
   const activePageIndex = pages.findIndex(({ url }) => url === path) === -1 ? 0 : pages.findIndex(({ url }) => url === path);
@@ -65,10 +63,16 @@ export const SideBar = () => {
                 <Link
                   onMouseOver={() => setTooltip(title)}
                   onMouseOut={() => setTooltip("")}
-                  className={index === activePageIndex ? activeClassName : sideBarElementCn}
+                  className={
+                    index === activePageIndex ? activeClassName : sideBarElementCn + (disabled ? " cursor-context-menu" : "")
+                  }
                   href={disabled ? "#" : url}
                 >
-                  <Icon color={url === path ? "var(--primary)" : "var(--foreground)"} className="h-6 w-6" />
+                  <Icon
+                    color={index === activePageIndex ? "rgb(var(--primary))" : "rgb(var(--foreground), 0.5)"}
+                    className="h-6 w-6"
+                  />
+
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
 
                   <div

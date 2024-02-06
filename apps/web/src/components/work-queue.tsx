@@ -24,8 +24,8 @@ export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
         <AccordionContent className="mb-0 flex flex-col !pb-0">
           {Object.values(operations)?.map((el, idx) => {
             return (
-              <div className="flex items-center justify-between text-xs text-slate-600" key={idx}>
-                <span> {el.name} </span>
+              <div className="flex items-center justify-between text-xs text-foreground" key={idx}>
+                <p className="text-opacity-50"> {el.name} </p>
                 <span> {el.statusType === "loading" && el.status} </span>
                 <div className="flex items-center gap-2">
                   {el.statusType === "loading" ? (

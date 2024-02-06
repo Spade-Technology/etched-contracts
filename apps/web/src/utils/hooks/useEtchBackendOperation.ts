@@ -46,7 +46,6 @@ export const useCreateEtch = () => {
     });
 
     try {
-      console.log(data);
       const uploaded = await startUpload(data.map((d) => d.file));
 
       if (!uploaded || !uploaded[0]) {
@@ -75,11 +74,13 @@ export const useCreateEtch = () => {
 
       setEtchCreated(data.length);
 
+      console.log(data);
+
       const res = await bulkMintEtch({
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         authSig,
-        team: getSelectedTeam().id,
+        team: BigInt(getSelectedTeam().id || 0n),
 
         files: data.map((d, i) => ({
           name: d.name,

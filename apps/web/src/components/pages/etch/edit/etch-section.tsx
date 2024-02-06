@@ -94,13 +94,16 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
     return (
       <>
         {isImage && (
-          <Image
-            src={etchFile}
-            alt="Etch image"
-            fill
-            className="rounded-2xl"
-            onError={(event) => (event.currentTarget.style.display = "none")}
-          />
+          <>
+            <Image
+              src={etchFile}
+              alt="Etch image"
+              fill
+              className="rounded-2xl"
+              onError={(event) => (event.currentTarget.style.display = "none")}
+            />
+            <EnterFullScreenIcon className="absolute right-5 top-5 h-6 w-6 cursor-pointer" onClick={toggleFullScreen} />
+          </>
         )}
         {isVideo && <VideoPlayer url={etchFile} />}
         {isAudio && (

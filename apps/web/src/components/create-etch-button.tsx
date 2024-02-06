@@ -83,10 +83,10 @@ export const CreateEtchButton = () => {
     <AlertDialog open={isOpen}>
       <AlertDialogTrigger asChild>
         <Button
-          className="w-fit gap-1.5 px-5 text-base font-semibold text-white shadow-3xl duration-500"
+          className="w-fit gap-1.5 px-5 text-base font-semibold !text-primary-foreground shadow-3xl duration-500"
           onClick={() => setIsOpen(true)}
         >
-          <Icons.plus /> Etch Now
+          <Icons.plus color="rgb(var(--primary-foreground))" /> Etch Now
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className={"max-h-screen max-w-3xl"}>
@@ -140,7 +140,7 @@ export const CreateEtchButton = () => {
                       <div>
                         <div
                           {...getRootProps()}
-                          className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 px-5  text-center text-slate-600 transition-all hover:border-gray-400 hover:text-slate-900"
+                          className="flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-muted-foreground bg-muted px-5  text-center text-muted-foreground transition-all hover:border-gray-400 hover:text-muted-foreground"
                         >
                           <input {...getInputProps()} />
                           <p>
@@ -179,6 +179,7 @@ export const CreateEtchButton = () => {
                     <Button
                       isLoading={isLoading}
                       disabled={files.length === 0}
+                      className="!text-primary-foreground"
                       onClick={(e) => {
                         e.preventDefault();
                         onSubmit(
@@ -256,7 +257,7 @@ const FilePreviewer = ({
   }, []);
 
   return (
-    <div key={index} className="aspect-w-1 aspect-h-1 group relative h-20">
+    <div key={index} className="group relative h-24 w-24">
       {file.type.startsWith("image/") ? (
         <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
       ) : file.type.startsWith("audio/") ? (

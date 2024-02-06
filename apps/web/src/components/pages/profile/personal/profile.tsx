@@ -127,7 +127,7 @@ export const Profile = () => {
         }}
       />
       <header className="mb-5 text-xl font-semibold text-foreground">Personal Profile</header>
-      <section className=" w-80 overflow-hidden rounded-2xl bg-muted pl-5 pt-5">
+      <section className="w-80 overflow-hidden rounded-2xl bg-muted/30 pl-5 pt-5  shadow-etched-2 ">
         <div className="flex justify-center">
           <div className="">
             <img src={imgUrl} alt="" className="h-16 w-16 rounded-full bg-primary" />
@@ -145,7 +145,7 @@ export const Profile = () => {
           </div>
         </div>
         <div className="ml-auto flex h-8 w-32 items-center justify-center gap-2.5 rounded-bl-full rounded-tl-full bg-primary text-xs font-medium text-white">
-          Creative License
+          Beta Trial License
         </div>
       </section>
     </main>

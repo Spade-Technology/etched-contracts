@@ -16,5 +16,15 @@
       "address": "0x3E989BF94f32605d72142de7F16613E058FdBf82",
       "startBlock": 11844031
     }
+  },
+  "fourier-base-goerli": {
+    "EntityManager": {
+      "address": "0x188d6c6dca6276da47e335ee6b7f86410baa4c1f",
+      "startBlock": 11538217
+    },
+    "ShareInvites": {
+      "address": "0x5a0b762772f4168079dcfebafa01e35084a5632e",
+      "startBlock": 11538217
+    }
   }
 }
