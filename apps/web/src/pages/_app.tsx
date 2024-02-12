@@ -8,30 +8,34 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
+import { Analytics } from "@vercel/analytics/react";
 
 import { WagmiConfig } from "wagmi";
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
-    <WagmiConfig config={config}>
-      <RefetchProvider>
-        <SessionProvider session={session}>
-          <ThemeProvider>
-            <ClerkProvider
-              {...pageProps}
-              appearance={{
-                variables: {
-                  colorPrimary: "#077844",
-                },
-              }}
-            >
-              <Component {...pageProps} />
-              <Toaster />
-            </ClerkProvider>
-          </ThemeProvider>
-        </SessionProvider>
-      </RefetchProvider>
-    </WagmiConfig>
+    <>
+      <WagmiConfig config={config}>
+        <RefetchProvider>
+          <SessionProvider session={session}>
+            <ThemeProvider>
+              <ClerkProvider
+                {...pageProps}
+                appearance={{
+                  variables: {
+                    colorPrimary: "#077844",
+                  },
+                }}
+              >
+                <Component {...pageProps} />
+                <Toaster />
+              </ClerkProvider>
+            </ThemeProvider>
+          </SessionProvider>
+        </RefetchProvider>
+      </WagmiConfig>
+      <Analytics />
+    </>
   );
 };
 
