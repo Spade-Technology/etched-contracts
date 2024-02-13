@@ -12,12 +12,15 @@
     {
       "path": "apps/subgraph"
     },
-		{
-			"path": "apps/entities"
-		},
+    {
+      "path": "apps/entities"
+    },
+    {
+      "path": "apps/desktop"
+    },
     {
       "path": "packages"
-    },
+    }
   ],
   "settings": {
     // "editor.formatOnSave": true,
