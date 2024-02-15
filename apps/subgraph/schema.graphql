@@ -25,6 +25,7 @@ type Etch @entity {
   comments: [EtchCommentAdded!] @derivedFrom(field: "etch")
   transfers: [EtchTransfer!] @derivedFrom(field: "etch")
   approvals: [EtchApproval!] @derivedFrom(field: "etch")
+  tags: [Tag!]!
 
   ipfsCid: String!
   documentName: String!
@@ -118,6 +119,44 @@ type OrganisationPermission @entity {
 }
 
 ## ETCH EVENTS ##
+
+type EtchTagAdded @entity {
+  id: ID!
+  tokenId: BigInt!
+  tag: String!
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtchTagModified @entity {
+  id: ID!
+  tokenId: BigInt!
+  oldTag: String!
+  newTag: String!
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtchTagRemoved @entity {
+  id: ID!
+  tokenId: BigInt!
+  tag: String!
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Tag @entity {
+  id: ID!
+  tag: String!
+  etches: [Etch!]! @derivedFrom(field: "tags")
+  owner: Wallet!
+}
 
 type EtchApproval @entity(immutable: true) {
   id: Bytes!

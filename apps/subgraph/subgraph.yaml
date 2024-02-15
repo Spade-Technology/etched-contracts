@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Etch
-    network: base-testnet
+    network: matic
     source:
-      address: "0xeb74e636ED56ceDED3519fc8633430397BFd7FEF"
+      address: '0x5Cb20896Fd863e2791f71Ea62F857A76cFA0387f'
       abi: Etch
-      startBlock: 12080400
+      startBlock: 152613300
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -47,14 +47,20 @@ dataSources:
           handler: handleTeamPermissionsUpdated
         - event: EtchMetadataUpdated(indexed uint256,string,string,string)
           handler: handleEtchMetadataUpdated
+        - event: TagAdded(indexed uint256,indexed string,indexed address)
+          handler: handleTagAdded
+        - event: TagModified(indexed uint256,indexed string,indexed address,string)
+          handler: handleTagModified
+        - event: TagRemoved(indexed uint256,indexed string,indexed address)
+          handler: handleTagRemoved
       file: ./src/etch.ts
   - kind: ethereum
     name: Team
-    network: base-testnet
+    network: matic
     source:
-      address: "0xA3a6fC1cd9A9416954Defb37D5e63961bF8A1160"
+      address: '0xBa2a653D364749b56877DA4621d1352494B5ef9F'
       abi: Team
-      startBlock: 12080400
+      startBlock: 152613300
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -91,11 +97,11 @@ dataSources:
       file: ./src/team.ts
   - kind: ethereum
     name: Organisation
-    network: base-testnet
+    network: matic
     source:
-      address: "0x47B3C6ED47C2715fA75a9997D4F9779521790037"
+      address: '0x9176E95Fe8d5b0933928147b772e2cb5CFb52Ab3'
       abi: Organisation
-      startBlock: 12080400
+      startBlock: 152613300
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -129,11 +135,11 @@ dataSources:
       file: ./src/organisation.ts
   - kind: ethereum
     name: EtchENS
-    network: base-testnet
+    network: matic
     source:
-      address: "0x42f1240CABF1e2FC41724A4e2cf64fB2Ac2a639F"
+      address: '0xc1e523115400bF0D4Dc34b9B0A3321e60F114593'
       abi: EtchENS
-      startBlock: 12080400
+      startBlock: 152613300
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

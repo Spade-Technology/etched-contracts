@@ -87,9 +87,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "inviteId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -106,9 +106,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "inviteId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -125,9 +125,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "inviteId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -150,15 +150,15 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "externalOrgOrTeamId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "sourceEntityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -168,7 +168,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum IShareInvites.EShareInviteStatus",
+        "internalType": "enum IShareInvitesLance.EShareInviteStatus",
         "name": "status",
         "type": "uint8"
       }
@@ -242,9 +242,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_inviteId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "acceptInvite",
@@ -358,9 +358,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_inviteId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "declineInvite",
@@ -458,9 +458,9 @@
     "name": "getTotalSupply",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -469,17 +469,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "invite",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "invites",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "tokenId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "address",
@@ -487,14 +487,14 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "externalOrgOrTeamId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "sourceEntityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -502,7 +502,7 @@
         "type": "uint8"
       },
       {
-        "internalType": "enum IShareInvites.EShareInviteStatus",
+        "internalType": "enum IShareInvitesLance.EShareInviteStatus",
         "name": "status",
         "type": "uint8"
       }
@@ -608,9 +608,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_inviteId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "revokeInvite",
@@ -672,14 +672,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_externalOrgOrTeamId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_sourceEntityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -700,9 +700,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_sourceEntityId",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint8",
@@ -768,9 +768,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "_inviteId",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "testGrabInvite",
