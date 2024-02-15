@@ -1,7 +1,7 @@
 import { currentNetworkId, currentNode } from "@/contracts";
 import { useAuth } from "@clerk/nextjs";
 import { getWalletClient } from "@wagmi/core";
-import { signOut as _signOut, signIn } from "next-auth/react";
+import { signOut as _signOut, signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import nacl from "tweetnacl";
@@ -13,6 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import { env } from "@/env.mjs";
 import { hashMessageForLit } from "@/lit";
 import { api } from "../api";
+import { useRouter } from "next/router";
 
 export function useSignOut() {
   const { signOut: clerkSignOut, sessionId } = useAuth();
@@ -43,6 +44,12 @@ export const useSignIn = () => {
   const { userId: _userId } = useAuth();
   const userId = _userId?.toLowerCase();
   const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
+  const { data: nextAuthSession } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (nextAuthSession && nextAuthSession.isApproved === "Pending") router.push("#");
+  }, [nextAuthSession]);
 
   const logIn = async ({ isPatchWallet = false, callback }: { isPatchWallet?: boolean; callback?: (status: string) => void }) => {
     try {
