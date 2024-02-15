@@ -44,7 +44,7 @@ export const WorkQueue = ({ children }: { children?: React.ReactNode }) => {
                     </>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <span className="text-base text-red-500">✗</span>
+                      <span className="text-base text-destructive">✗</span>
                       <HoverCard>
                         <HoverCardTrigger>Inspect Error</HoverCardTrigger>
                         <HoverCardContent>

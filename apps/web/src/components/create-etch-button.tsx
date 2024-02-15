@@ -95,7 +95,7 @@ export const CreateEtchButton = () => {
             <>
               <div className="flex flex-col items-center gap-8">
                 <h1 className="text-center text-3xl text-primary">Congratulations on your Etch{files.length && "es"}! 🎉</h1>
-                <div className="text-center text-slate-500">
+                <div className="text-center text-muted-foreground">
                   {files.length > 1 ? (
                     <>
                       Your <span className="font-semibold text-primary">{etchCreated} Etches</span>
@@ -154,7 +154,7 @@ export const CreateEtchButton = () => {
                       <TeamSelector className="w-full " horizontal />
 
                       <div className="my-3 flex justify-between">
-                        <div>
+                        <div className="">
                           {files.length} File{files.length === 1 ? "" : "s"} Selected |{" "}
                           {(files.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024).toFixed(2)} MB total
                         </div>
@@ -261,22 +261,22 @@ const FilePreviewer = ({
       {file.type.startsWith("image/") ? (
         <img src={file.preview} alt="Preview" className="rounded-lg object-cover shadow-lg" />
       ) : file.type.startsWith("audio/") ? (
-        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-muted">
           <FileAudioIcon className="h-1/2 w-1/2 text-white" />
           <audio className="rounded-lg shadow-lg" ref={audioPreviewRef}>
             <source src={file.preview} type={file.type} />
           </audio>
         </div>
       ) : file.type.startsWith("video/") ? (
-        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-muted">
           <VideoIcon className="h-1/2 w-1/2 text-white" />
         </div>
       ) : file.type.includes("pdf") ? (
-        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-muted">
           <FileTextIcon className="h-1/2 w-1/2 text-white" />
         </div>
       ) : isModel ? (
-        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-slate-300">
+        <div className="flex aspect-square h-full w-full items-center justify-center rounded-lg bg-muted">
           <img src={`/formats/${fileFormat?.toUpperCase()}/icon.png`} alt="" className="h-1/2 w-1/2 object-contain " />
         </div>
       ) : null}
