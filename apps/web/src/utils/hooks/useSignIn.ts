@@ -47,9 +47,11 @@ export const useSignIn = () => {
   const { data: nextAuthSession } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (nextAuthSession && nextAuthSession.isApproved === "Pending") router.push("#");
-  }, [nextAuthSession]);
+  console.log(router.asPath);
+
+  // useEffect(() => {
+  //   if (nextAuthSession && nextAuthSession.isApproved === "Pending") router.push("#");
+  // }, [nextAuthSession]);
 
   const logIn = async ({ isPatchWallet = false, callback }: { isPatchWallet?: boolean; callback?: (status: string) => void }) => {
     try {

@@ -67,12 +67,14 @@ export enum EID {
   Etch,
   Ownership,
   Permission,
+  Tag,
 }
 
 export function getEtchId(type: EID, tokenId: BigInt, walletOrTeamId: string = ''): string {
   if (type == EID.Etch) return tokenId.toString() + '-Etch';
   else if (type == EID.Ownership) return tokenId.toString() + '-Etch-Ownership';
   else if (type == EID.Permission) return tokenId.toString() + '-' + walletOrTeamId + '-Etch-Permission';
+  else if (type == EID.Tag) return tokenId.toString() + '-' + walletOrTeamId + '-Etch-Tag';
   else return '';
 }
 

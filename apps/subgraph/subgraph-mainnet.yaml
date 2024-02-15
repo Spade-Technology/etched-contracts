@@ -47,6 +47,12 @@ dataSources:
           handler: handleTeamPermissionsUpdated
         - event: EtchMetadataUpdated(indexed uint256,string,string,string)
           handler: handleEtchMetadataUpdated
+        - event: TagAdded(indexed uint256,indexed string,indexed address)
+          handler: handleTagAdded
+        - event: TagModified(indexed uint256,indexed string,indexed address,string)
+          handler: handleTagModified
+        - event: TagRemoved(indexed uint256,indexed string,indexed address)
+          handler: handleTagRemoved
       file: ./src/etch.ts
   - kind: ethereum
     name: Team
