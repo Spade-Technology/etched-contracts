@@ -253,7 +253,7 @@ export function DataTable({ data = [], isLoading }: { data: Team[]; isLoading?: 
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow className="hover:bg-slate-50" key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow className="hover:bg-muted" key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell className="cursor-pointer" key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

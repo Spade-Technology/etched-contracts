@@ -43,7 +43,7 @@ const Footer = () => {
                     return (
                       <Link
                         href={url}
-                        className={"text-slate-500 hover:underline " + (index === 0 ? "md:text-left" : "")}
+                        className={"text-muted-foreground hover:underline " + (index === 0 ? "md:text-left" : "")}
                         key={text}
                         target={url.startsWith("http") ? "_blank" : ""}
                       >

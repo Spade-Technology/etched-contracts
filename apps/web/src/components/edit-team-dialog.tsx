@@ -115,7 +115,7 @@ export const EditTeamDialog = ({
                               className={`flex cursor-pointer items-center justify-start gap-[7px] rounded-sm p-3 text-xs capitalize text-accent-foreground  ${
                                 idx < 1
                                   ? "hover:bg-accent"
-                                  : "rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                                  : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-destructive hover:rounded-sm hover:border-none hover:bg-destructive-foreground hover:!text-destructive"
                               }`}
                               textValue="Jim Carlos"
                             >
@@ -180,7 +180,7 @@ export const EditTeamDialog = ({
                                             className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
                                               idx < 2
                                                 ? "hover:bg-accent"
-                                                : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                                                : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-destructive hover:rounded-sm hover:border-none hover:bg-destructive-foreground hover:!text-destructive"
                                             }`}
                                             textValue="Jim Carlos"
                                           >
@@ -276,7 +276,7 @@ const ConfirmDelectDialog: React.FC<confirm> = ({ teamName, setDeleteTeam, setOp
   };
   return (
     <div>
-      <DialogTitle className="mb-6 text-center text-base text-[#f55]">Deleting Team Confirmation</DialogTitle>
+      <DialogTitle className="mb-6 text-center text-base text-destructive">Deleting Team Confirmation</DialogTitle>
       <div className="mx-auto w-[342px] text-center text-muted-foreground">
         Are you sure that you want to delete Team <span className="capitalize">“{teamName}”</span>?
       </div>

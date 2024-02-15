@@ -136,7 +136,7 @@ export const OtpInputs = ({
             className={`flex h-10 w-8 items-center justify-center ${
               value
                 ? isNaN(value as any) || value.length === 0
-                  ? "border-b-2 border-red-500"
+                  ? "border-b-2 border-destructive"
                   : "border-b-2 border-primary"
                 : "border-neutral-200"
             } bg-neutral-100 pl-3 font-body text-base font-semibold text-muted-foreground focus:outline-primary`}

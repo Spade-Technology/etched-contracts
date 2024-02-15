@@ -62,7 +62,7 @@ export default function EtchPage() {
 
               {!isLoading && (
                 <div className="mx-3 flex items-center gap-3">
-                  <div className="h-3 w-[1px] bg-slate-300"></div>
+                  <div className="h-3 w-[1px] bg-muted"></div>
 
                   <span>#{etchId}</span>
 
