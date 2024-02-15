@@ -152,10 +152,10 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                                         key={idx}
                                         // @ts-ignore
                                         onClick={() => (idx !== 2 ? editUserRole({ id, item }) : removeAccess(id))}
-                                        className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground  ${
+                                        className={`flex cursor-default items-center justify-center gap-[7px] rounded-sm p-1 text-xs capitalize text-accent-foreground ${
                                           idx < 2
                                             ? "hover:bg-accent"
-                                            : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-[#f55] hover:rounded-sm hover:border-none hover:bg-red-50 hover:!text-[#f55]"
+                                            : "cursor-pointer rounded-none border-t-[1px] border-black border-s-stone-50 text-destructive hover:rounded-sm hover:border-none hover:bg-destructive-foreground hover:!text-destructive"
                                         }`}
                                         textValue="Jim Carlos"
                                       >
