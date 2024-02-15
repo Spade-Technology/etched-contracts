@@ -22,6 +22,7 @@ import { createERC6492Signature } from "./patch";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     address: string | undefined | null;
+    isApproved: string | undefined | null;
     user: {
       name: string | undefined | null;
       description: string | undefined | null;
@@ -144,11 +145,9 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           // Fetch user by address
           let user = await prisma.user.findUnique({ where: { address: siwe.address } });
 
-          // If user doesn't exist, create it
-          if (!user) user = await prisma.user.create({ data: { address: siwe.address } });
-
+          let clerkUser;
           if (credentials.userId && credentials.userId !== "null") {
-            let clerkUser = await clerkClient.users.getUser(credentials.userId);
+            clerkUser = await clerkClient.users.getUser(credentials.userId);
 
             if (!clerkUser?.externalId)
               clerkUser = await clerkClient.users.updateUser(credentials.userId, {
@@ -156,8 +155,12 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
               });
           }
 
+          // If user doesn't exist, create it
+          if (!user)
+            user = await prisma.user.create({ data: { address: siwe.address, email: clerkUser?.primaryEmailAddressId } });
+
           // Return the user info
-          return { id: siwe.address };
+          return { id: siwe.address, isApproved: user.isAproved };
         } catch (e) {
           console.error(e);
           return null;
@@ -202,11 +205,12 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
   return {
     callbacks: {
       async session({ session, token }) {
-        // let user = await prisma.user.findUnique({
-        //   where: { address: token.sub },
-        // });
+        let user = await prisma.user.findUnique({
+          where: { address: token.sub },
+        });
 
         session.address = token.sub;
+        session.isApproved = user.isApproved || "Pending";
         return session;
       },
     },

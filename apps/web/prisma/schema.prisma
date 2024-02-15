@@ -3,6 +3,11 @@ generator client {
     previewFeatures = []
 }
 
+enum ApprovedStatus {
+    Pending
+    Approved
+}
+
 datasource db {
     provider          = "postgresql"
     url               = env("DATABASE_PRISMA_URL") // uses connection pooling
@@ -11,7 +16,10 @@ datasource db {
 }
 
 model User {
-    address String @id @unique
+    address String  @id @unique
+    email   String?
+
+    isAproved ApprovedStatus @default(Pending)
 }
 
 model Subscriber {
