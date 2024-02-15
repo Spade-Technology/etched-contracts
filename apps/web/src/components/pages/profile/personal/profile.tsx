@@ -77,7 +77,7 @@ const ChangeImage = ({ modal, openModal, reload }: { modal: boolean; openModal: 
         ) : (
           <div
             {...getRootProps()}
-            className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-slate-50 text-slate-600  transition-all hover:border-gray-400 hover:text-slate-900"
+            className="bg-primary-foreground-50 flex h-[33vh] cursor-pointer items-center justify-center rounded-lg border-[1px] border-dashed border-gray-600 bg-muted text-muted-foreground  transition-all hover:border-gray-400 hover:text-black"
           >
             <>
               <input {...getInputProps()} />

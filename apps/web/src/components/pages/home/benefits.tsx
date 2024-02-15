@@ -41,7 +41,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
               </div>
               <div className={`pb-4 pt-6 text-2xl font-semibold`}>{text}</div>
 
-              <div className="text-lg font-normal leading-7 tracking-[0.144px] text-slate-500">{description}</div>
+              <div className="text-lg font-normal leading-7 tracking-[0.144px] text-muted-foreground">{description}</div>
             </div>
           );
         })}
