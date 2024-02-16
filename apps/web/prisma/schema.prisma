@@ -19,7 +19,10 @@ model User {
     address String  @id @unique
     email   String?
 
-    isAproved ApprovedStatus @default(Pending)
+    isApproved ApprovedStatus @default(Pending)
+
+    userActivationCodes userActivationCode[]
+    isAdministrator     Boolean              @default(false)
 }
 
 model Subscriber {
@@ -29,4 +32,15 @@ model Subscriber {
     subscribed Boolean @default(true)
 
     subscribedAt DateTime @default(now())
+}
+
+model userActivationCode {
+    id String @id @default(uuid())
+
+    code       String
+    expiration DateTime
+
+    activatedBy User? @relation(fields: [userAddress], references: [address])
+
+    userAddress String?
 }

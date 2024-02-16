@@ -23,6 +23,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     address: string | undefined | null;
     isApproved: string | undefined | null;
+    isAdmin: boolean | undefined | null;
     user: {
       name: string | undefined | null;
       description: string | undefined | null;
@@ -159,7 +160,7 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
             user = await prisma.user.create({ data: { address: siwe.address, email: clerkUser?.primaryEmailAddressId } });
 
           // Return the user info
-          return { id: siwe.address, isApproved: user.isAproved };
+          return { id: siwe.address, isApproved: user.isApproved, isAdmin: user.isAdministrator };
         } catch (e) {
           console.error(e);
           return null;
@@ -209,7 +210,8 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
         });
 
         session.address = token.sub;
-        session.isApproved = user.isApproved || "Pending";
+        session.isApproved = user?.isApproved || "Pending";
+        session.isAdmin = user?.isAdministrator || false;
         return session;
       },
     },

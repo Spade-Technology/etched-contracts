@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
+import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { prisma } from "@/server/db";
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
@@ -37,6 +37,44 @@ const passwordValidation = z.string().refine(
       "Invalid password. It must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
   }
 );
+
+async function retrieveStoredCode(code: string) {
+  const userCode = await prisma.userActivationCode.findFirstOrThrow({
+    where: { code, userAddress: null },
+  });
+
+  return {
+    storedCode: userCode?.code,
+    expiration: userCode?.expiration,
+  };
+}
+
+async function invalidateStoredCode(code: string, userAddress: string) {
+  await prisma.userActivationCode.updateMany({
+    where: { code },
+    data: { userAddress },
+  });
+}
+
+async function createStoredCode() {
+  const generateRandomPart = () =>
+    String.fromCharCode(
+      ...Array(5)
+        .fill(null)
+        .map(() => Math.floor(Math.random() * 26) + 65)
+    );
+  const code = `${generateRandomPart()}-${generateRandomPart()}-${generateRandomPart()}`;
+  const expiration = new Date();
+
+  // 30d
+  expiration.setDate(expiration.getDate() + 30);
+
+  await prisma.userActivationCode.create({
+    data: { code, expiration },
+  });
+
+  return { code, expiration };
+}
 
 export const userRouter = createTRPCRouter({
   subscribeToNewsletter: publicProcedure
@@ -131,4 +169,40 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+
+  sendActivationCode: protectedProcedure
+    .input(z.object({ code: z.string() }))
+    .mutation(async ({ input: { code }, ctx: { session } }) => {
+      // Assuming you have a method to retrieve the stored code and its expiration
+      try {
+        const { storedCode, expiration } = await retrieveStoredCode(code);
+        const currentTime = new Date();
+
+        if (!storedCode) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "No activation code found." });
+        }
+
+        if (currentTime > expiration) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "The activation code has expired." });
+        }
+      } catch (error) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "The activation code is invalid." });
+      }
+
+      // Invalidate or delete the code after successful verification
+      await invalidateStoredCode(code, session.address!);
+
+      await prisma.user.update({
+        where: { address: session.address! },
+        data: { isApproved: "Approved" },
+      });
+
+      return { success: true, message: "Activation code verified successfully." };
+    }),
+
+  createActivationCode: adminProcedure.mutation(async ({ ctx: { session } }) => {
+    const { code, expiration } = await createStoredCode();
+
+    return { code, expiration };
+  }),
 });

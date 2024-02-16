@@ -1,11 +1,14 @@
 import { Icons } from "@/components/ui/icons";
+import { useSession } from "next-auth/react";
 
 export const SidebarDialog = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: React.Dispatch<string> }) => {
+  const { data } = useSession();
+
   const tabs = [
     { Icon: Icons.userSettings, name: "Personal" },
     { Icon: Icons.security, name: "Security" },
+    ...(data?.isAdmin ? [{ Icon: Icons.pnpm, name: "Admin Panel", admin: true }] : []),
     { Icon: Icons.dollar, name: "Billing (Soon)", disabled: true },
-    // { Icon: Icons.bar, name: "Item 4" },
   ];
 
   return (

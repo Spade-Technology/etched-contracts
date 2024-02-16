@@ -45,11 +45,12 @@ export const useSignIn = () => {
   const userId = _userId?.toLowerCase();
   const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
   const { data: nextAuthSession } = useSession();
+  const { isSignedIn } = useAuth();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (nextAuthSession && nextAuthSession.isApproved === "Pending") router.push("#");
-  // }, [nextAuthSession]);
+  useEffect(() => {
+    if (nextAuthSession && nextAuthSession.isApproved === "Pending" && isSignedIn) router.push("/auth/waitlist");
+  }, [nextAuthSession, isSignedIn]);
 
   const logIn = async ({ isPatchWallet = false, callback }: { isPatchWallet?: boolean; callback?: (status: string) => void }) => {
     try {
