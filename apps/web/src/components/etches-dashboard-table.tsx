@@ -80,12 +80,15 @@ export const columns: EtchColumnDef[] = [
     },
     cell: ({ row, column, table }) => (
       <div className="flex gap-2">
+        <Link className="hover:underline" href={`/dashboard/etches/${row.getValue("tokenId")}`}>
+          {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
+        </Link>
         {row.original.tags
           ?.filter((el) => el.tag.length > 0)
           .map((el) => (
             <Badge
               style={{ backgroundColor: deterministicTextToColor(el.tag) }}
-              className="cursor-pointer font-bold hover:bg-opacity-50 hover:underline"
+              className="cursor-pointer font-bold hover:bg-opacity-50 hover:underline "
               onClick={(e) => {
                 table
                   .getColumn("tag")
@@ -97,9 +100,6 @@ export const columns: EtchColumnDef[] = [
               {el.tag}
             </Badge>
           )) ?? <Skeleton className="h-3 w-8" />}
-        <Link className="hover:underline" href={`/dashboard/etches/${row.getValue("tokenId")}`}>
-          {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
-        </Link>
       </div>
     ),
   },
