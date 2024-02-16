@@ -148,7 +148,6 @@ export const createERC6492Signature = async ({
   const patchId = baseProvider + ":" + userId;
   const salt = keccak256(toBytes(patchId + `:kernel-account`));
 
-  console.log("Encoding function data...");
   const factoryCreationCalldata = encodeFunctionData({
     functionName: "createAccount",
     abi: PATCH_FACTORY_ABI,

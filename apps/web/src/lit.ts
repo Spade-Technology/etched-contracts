@@ -2,10 +2,14 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { keccak256, toBytes, toHex } from "viem";
 import { decryptToIpfsProps } from "./utils/litTypes";
 
+import { LitContracts } from "@lit-protocol/contracts-sdk";
+
+export const litNetwork = process.env.NODE_ENV === "development" ? "cayenne" : "habanero";
+// "habanero";
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
   // litNetwork: "jalapeno",
-  litNetwork: process.env.NODE_ENV === "development" ? "cayenne" : "habanero",
+  litNetwork: litNetwork,
 
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
@@ -13,7 +17,7 @@ const client = new LitJsSdk.LitNodeClient({
   // Verbosity of the logging
   debug: false,
 
-  // checkNodeAttestation: true,
+  checkNodeAttestation: true,
 });
 
 const ipfsPlublicClientUrl = process.env.NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY + "ipfs/" || "https://gateway.pinata.cloud/ipfs/";
@@ -62,8 +66,6 @@ class Lit {
       unifiedAccessControlConditions: ipfsData.unifiedAccessControlConditions,
       accessControlConditions: ipfsData.accessControlConditions,
     };
-
-    console.log(data);
 
     let decrypted;
 

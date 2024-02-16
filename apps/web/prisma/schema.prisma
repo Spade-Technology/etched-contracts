@@ -44,3 +44,11 @@ model userActivationCode {
 
     userAddress String?
 }
+
+model capacityCredit {
+    id String @id @default(uuid())
+
+    capacityTokenId           String
+    creditAmountPerKilosecond Int
+    expiration                DateTime
+}
