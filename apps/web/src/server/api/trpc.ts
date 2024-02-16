@@ -133,3 +133,9 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = publicProcedure.use(enforceUserIsAuthed);
+
+export const adminProcedure = protectedProcedure.use(async ({ ctx: { session }, next }) => {
+  if (!session.isAdmin) throw new TRPCError({ code: "FORBIDDEN", message: "You are not authorized to perform this action." });
+
+  return next();
+});
