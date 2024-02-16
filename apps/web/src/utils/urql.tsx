@@ -50,6 +50,10 @@ export const refetchContext = createContext({
 
 export const RefetchProvider = ({ children }: any) => {
   const [state, setState] = useState({
+    refetchTagsOfOwner: () => {},
+
+    refetchTagsOfEtchAndOwner: () => {},
+
     refetchEtches: () => {},
 
     refetchEtch: () => {},
@@ -64,6 +68,10 @@ export const RefetchProvider = ({ children }: any) => {
   });
 
   const mutations = {
+    setRefetchTagsOfOwner: (refetchTagsOfOwner: () => void) => setState({ ...state, refetchTagsOfOwner }),
+
+    setRefetchTagsOfEtchAndOwner: (refetchTagsOfEtchAndOwner: () => void) => setState({ ...state, refetchTagsOfEtchAndOwner }),
+
     setRefetchEtches: (refetchEtches: () => void) => setState({ ...state, refetchEtches }),
 
     setRefetchEtch: (refetchEtch: () => void) => setState({ ...state, refetchEtch }),
