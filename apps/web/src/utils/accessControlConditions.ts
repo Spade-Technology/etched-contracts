@@ -43,14 +43,10 @@ export const defaultAccessControlConditionsUsingReadableID = ({ etchId }: { etch
   return [
     {
       conditionType: "evmContract",
-
       contractAddress: contracts.Etch,
 
       functionName: fn,
-      method: fn,
       functionParams: [":userAddress", etchId],
-      params: [":userAddress", etchId],
-      parameters: [":userAddress", etchId],
       functionAbi: EtchABI.find((abi) => abi.name === fn) as FunctionABI,
 
       chain: camelCaseNetwork,
@@ -72,10 +68,7 @@ export const defaultAccessControlConditions = ({ etchUID }: { etchUID: string })
       contractAddress: contracts.Etch,
 
       functionName: fn,
-      method: fn,
       functionParams: [":userAddress", etchUID],
-      params: [":userAddress", etchUID],
-      parameters: [":userAddress", etchUID],
       functionAbi: EtchABI.find((abi) => abi.name === fn) as FunctionABI,
 
       chain: camelCaseNetwork,

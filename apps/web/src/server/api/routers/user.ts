@@ -1,43 +1,27 @@
+import { lit, litNetwork } from "@/lit";
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { prisma } from "@/server/db";
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
+import { Wallet, getDefaultProvider, providers } from "ethers";
 import { z } from "zod";
+import { LitContracts } from "@lit-protocol/contracts-sdk";
+import { generateContractsClient, walletWithCapacityCredit } from "@/litContracts";
 
-const passwordValidation = z.string().refine(
-  (password) => {
-    if (password.length < 8) {
-      return false;
+const passwordValidation = z
+  .string()
+  .refine(
+    (password) =>
+      password.length >= 8 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /\d/.test(password) &&
+      /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password),
+    {
+      message:
+        "Invalid password. It must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
     }
-
-    // At least one uppercase letter
-    if (!/[A-Z]/.test(password)) {
-      return false;
-    }
-
-    // At least one lowercase letter
-    if (!/[a-z]/.test(password)) {
-      return false;
-    }
-
-    // At least one number
-    if (!/\d/.test(password)) {
-      return false;
-    }
-
-    // At least one special character
-    if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password)) {
-      return false;
-    }
-
-    return true;
-  },
-  {
-    message:
-      "Invalid password. It must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
-  }
-);
-
+  );
 async function retrieveStoredCode(code: string) {
   const userCode = await prisma.userActivationCode.findFirstOrThrow({
     where: { code, userAddress: null },
@@ -200,9 +184,73 @@ export const userRouter = createTRPCRouter({
       return { success: true, message: "Activation code verified successfully." };
     }),
 
+  requestCapacityDelegationAuthSig: protectedProcedure.input(z.object({})).mutation(async ({ input: {}, ctx: { session } }) => {
+    const user = await prisma.user.findUnique({ where: { address: session.address! } });
+
+    if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    if (user.isApproved !== "Approved") throw new TRPCError({ code: "FORBIDDEN", message: "User is not approved." });
+
+    let capacityCreditId: string;
+    const capacityCredit = await prisma.capacityCredit.findFirst({
+      where: { expiration: { gte: new Date() } },
+    });
+
+    if (!capacityCredit) capacityCreditId = (await regenerateCapacityCredits()).capacityTokenIdStr;
+    else capacityCreditId = capacityCredit.capacityTokenId;
+
+    await lit.connect();
+
+    const response = await lit.client?.createCapacityDelegationAuthSig({
+      capacityTokenId: capacityCreditId,
+      dAppOwnerWallet: walletWithCapacityCredit,
+      delegateeAddresses: [user.address],
+      uses: "100",
+    });
+
+    return response;
+  }),
+
+  regenerateCapacityCredits: adminProcedure.mutation(async ({ ctx: { session } }) => {
+    return await regenerateCapacityCredits();
+  }),
+
   createActivationCode: adminProcedure.mutation(async ({ ctx: { session } }) => {
     const { code, expiration } = await createStoredCode();
 
     return { code, expiration };
   }),
 });
+
+const regenerateCapacityCredits = async () => {
+  const contractClient = await generateContractsClient();
+
+  const requestsPerKilosecond = 1000;
+  const daysUntilUTCMidnightExpiration = 2;
+  // WARNING: Is this the correct way to get the UTC midnight time???
+  const dateTimeUTCMidnightExpiration = new Date(
+    Date.UTC(
+      new Date().getUTCFullYear(),
+      new Date().getUTCMonth(),
+      new Date().getUTCDate() + daysUntilUTCMidnightExpiration,
+      0,
+      0,
+      0
+    )
+  );
+
+  // this identifier will be used in delegation requests.
+  const { capacityTokenIdStr } = await contractClient.mintCapacityCreditsNFT({
+    requestsPerKilosecond,
+    daysUntilUTCMidnightExpiration,
+  });
+
+  await prisma.capacityCredit.create({
+    data: {
+      capacityTokenId: capacityTokenIdStr,
+      creditAmountPerKilosecond: requestsPerKilosecond,
+      expiration: dateTimeUTCMidnightExpiration,
+    },
+  });
+
+  return { capacityTokenIdStr };
+};
