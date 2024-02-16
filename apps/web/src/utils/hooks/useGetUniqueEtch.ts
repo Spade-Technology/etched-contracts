@@ -36,6 +36,15 @@ const FullEtchFragment = graphql(`
         name
       }
     }
+
+    tags {
+      id
+      tag
+      owner {
+        eoa
+      }
+    }
+
     permissions {
       id
       etch {
@@ -111,6 +120,8 @@ export const useGetUniqueEtch = (etchId?: string) => {
   if (!etchData) return { etch: undefined, isLoading: fetching, error };
 
   const etch = etchData.etches[0] as Partial<Etch>; // Should only be one etch
+
+  console.log(etch);
 
   return { etch, isLoading: fetching, error };
 };

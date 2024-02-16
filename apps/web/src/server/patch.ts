@@ -117,7 +117,6 @@ export const signMessageUsingPatchWallet = async ({
   });
 
   const isValidSignature = callResponse.data === "0x01";
-  console.log({ isValidSignature });
 
   if (result.status !== 200) throw new Error(`Failed to sign message for user ${userId}`);
 

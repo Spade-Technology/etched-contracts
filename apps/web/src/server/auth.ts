@@ -100,7 +100,6 @@ export async function verifySiweMessage(
       if (isNaN(signingDate.getTime()) || signingDate > new Date()) invalidSigningDate = true;
 
       verified = { success: isValidSignature && !expiredMessage && !invalidSigningDate && !invalidChainId };
-      console.log({ isValidSignature, expiredMessage, invalidSigningDate, invalidChainId });
     } catch (e) {
       console.log(e);
     }

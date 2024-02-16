@@ -30,10 +30,13 @@ import { Etch, EtchOwnership } from "@/gql/graphql";
 import { shortenAddress } from "@/utils/hooks/address";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Loader2 } from "lucide-react";
+import { Loader2, TagIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Skeleton } from "./ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { deterministicTextToColor } from "@/lib/utils";
+import { DataTableFacetedFilter } from "./ui/faceted-filter-data-table";
 
 dayjs.extend(relativeTime);
 
@@ -75,11 +78,47 @@ export const columns: EtchColumnDef[] = [
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <Link className="hover:underline" href={`/dashboard/etches/${row.getValue("tokenId")}`}>
-        {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
-      </Link>
+    cell: ({ row, column, table }) => (
+      <div className="flex gap-2">
+        {row.original.tags
+          ?.filter((el) => el.tag.length > 0)
+          .map((el) => (
+            <Badge
+              style={{ backgroundColor: deterministicTextToColor(el.tag) }}
+              className="cursor-pointer font-bold hover:bg-opacity-50 hover:underline"
+              onClick={(e) => {
+                table
+                  .getColumn("tag")
+                  ?.setFilterValue([...((table.getColumn("tag")?.getFilterValue() as string[]) || []), el.tag]);
+                e.stopPropagation();
+              }}
+            >
+              <TagIcon className="mr-1 h-3 w-3" />
+              {el.tag}
+            </Badge>
+          )) ?? <Skeleton className="h-3 w-8" />}
+        <Link className="hover:underline" href={`/dashboard/etches/${row.getValue("tokenId")}`}>
+          {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
+        </Link>
+      </div>
     ),
+  },
+  {
+    accessorKey: "tag",
+    headerName: "Tag",
+    header: ({ column }) => (
+      <></>
+      // <Button variant="ghost" onClick={(e) => column.setFilterValue(undefined)}>
+      //   Tag {!!column?.getFilterValue() && `(reset)`}
+      // </Button>
+    ),
+
+    filterFn: (row, _, filterValue) => {
+      return ((filterValue as string[]) || []).every((filter) => row.original.tags?.some((tag) => tag.tag === filter));
+    },
+    cell: ({ row, column }) => {
+      return <></>;
+    },
   },
   {
     accessorKey: "createdAt",
@@ -168,8 +207,6 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
     pageSize: 20,
   });
 
-  const router = useRouter();
-
   const table = useReactTable({
     data,
     columns,
@@ -208,7 +245,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
+                    className="font-body capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >
@@ -219,14 +256,15 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="shadow-4xl">
-              Filter <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem className="capitalize">No Options</DropdownMenuItem>
-          </DropdownMenuContent>
+          <DataTableFacetedFilter
+            column={table.getColumn("tag")}
+            title="Tag"
+            options={data
+              .flatMap((el) => el.tags)
+              .map((el) => el.tag)
+              .filter((el, i, arr) => arr.indexOf(el) === i)
+              .map((tag) => ({ label: tag, value: tag }))}
+          />
         </DropdownMenu>
         <Input
           placeholder="Filter etches..."

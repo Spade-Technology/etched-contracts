@@ -47,8 +47,6 @@ export const useSignIn = () => {
   const { data: nextAuthSession } = useSession();
   const router = useRouter();
 
-  console.log(router.asPath);
-
   // useEffect(() => {
   //   if (nextAuthSession && nextAuthSession.isApproved === "Pending") router.push("#");
   // }, [nextAuthSession]);

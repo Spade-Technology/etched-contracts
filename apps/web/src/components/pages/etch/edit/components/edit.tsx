@@ -23,6 +23,8 @@ import BgVector from "public/images/backgrounds/dashboard/vector.svg";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import ProfileCard from "../../../../ui/profile-card";
 import { ThemeContext } from "@/utils/theme";
+import MultipleSelector from "@/components/ui/multi-select";
+import { TagIcon, TagsIcon } from "lucide-react";
 
 dayjs.extend(relativeTime);
 
@@ -47,7 +49,14 @@ const userPermissions: {
 const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps) => {
   const [edit, setEdit] = useState(false);
   const [openTransferOwnerShipDialog, setOpenTransferOwnerShipDialog] = useState(false);
-  const { isLoading: updateLoading, setDescription, setDocumentName, updateEtch: saveHandler } = useUpdateEtch(setEdit, etch);
+  const {
+    isLoading: updateLoading,
+    setDescription,
+    setDocumentName,
+    updateEtch: saveHandler,
+    tags,
+    setTags,
+  } = useUpdateEtch(setEdit, etch);
   const owner = useLoggedInAddress();
 
   const { theme } = useContext(ThemeContext);
@@ -154,7 +163,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className={`pt-1 text-base font-normal ${edit ? "#6D6D6D" : "text-[#E2E2E2]"}`}>
+                  <div className={`pt-1 text-base font-normal ${!edit && "text-[#E2E2E2]"}`}>
                     {new Date(etch?.createdAt * 1000).toLocaleString("en-US", {
                       hour: "numeric",
                       minute: "numeric",
@@ -167,6 +176,32 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
                 <TooltipContent>{dayjs.unix(etch?.createdAt).from(dayjs())}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
+          )}
+        </div>
+
+        <div>
+          <div className="flex pb-2 pt-5 text-base font-semibold">
+            <TagsIcon className="mr-1 mt-auto h-5 w-5" /> Tags
+          </div>
+          {tags.length > 0 || edit ? (
+            <MultipleSelector
+              className={edit ? "bg-muted dark:bg-background dark:shadow-sm" : "border-0 p-0 !text-white"}
+              defaultOptions={[]}
+              placeholder="Tags"
+              creatable
+              maxSelected={5}
+              disabled={!edit}
+              badgeDeterministicColor={true}
+              inputProps={{ className: edit ? "" : "placeholder:text-opacity-0" }}
+              badgeClassName="font-bold"
+              value={tags}
+              onChange={(e) =>
+                setTags(e.map((tag) => (tag.label == tag.value ? { label: tag.label, value: tag.value, toCreate: true } : tag)))
+              }
+              prefix={<TagIcon className="mr-1 h-3 w-3" />}
+            />
+          ) : (
+            <div className="text-base font-normal text-muted">No tags</div>
           )}
         </div>
 
