@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { api } from "@/utils/api";
+import { useSignOut } from "@/utils/hooks/useSignIn";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -36,6 +37,8 @@ export default function Approval() {
     }
   };
 
+  const { signOut } = useSignOut();
+
   return (
     <div className="bg-primary">
       <div className=""></div>
@@ -52,6 +55,10 @@ export default function Approval() {
               Hi, You have been added to the <b className="text-primary">Waiting list</b>. You will receive an email when you are
               accepted into the beta programme.
             </div>
+
+            <Button className="h-8 w-full rounded-sm" onClick={signOut}>
+              Go back to home
+            </Button>
 
             <Separator orientation="horizontal" className="my-8" />
 

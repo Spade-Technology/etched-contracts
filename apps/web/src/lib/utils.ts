@@ -13,7 +13,7 @@ export function getValidChildren(children: React.ReactNode) {
   return React.Children.toArray(children).filter((child) => React.isValidElement(child)) as React.ReactElement[];
 }
 
-export const deterministicTextToColor = (text: string, saturation: number = 100, lightness: number = 45) => {
+export const deterministicTextToColor = (text: string, saturation: number = 50, lightness: number = 50) => {
   const hue = parseInt(keccak256(hashMessage(text)).slice(2, 8), 16) % 360;
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
