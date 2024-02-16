@@ -106,19 +106,12 @@ export const columns: EtchColumnDef[] = [
   {
     accessorKey: "tag",
     headerName: "Tag",
-    header: ({ column }) => (
-      <></>
-      // <Button variant="ghost" onClick={(e) => column.setFilterValue(undefined)}>
-      //   Tag {!!column?.getFilterValue() && `(reset)`}
-      // </Button>
-    ),
+    header: ({ column }) => <></>,
 
     filterFn: (row, _, filterValue) => {
       return ((filterValue as string[]) || []).every((filter) => row.original.tags?.some((tag) => tag.tag === filter));
     },
-    cell: ({ row, column }) => {
-      return <></>;
-    },
+    cell: ({ row, column }) => <></>,
   },
   {
     accessorKey: "createdAt",
