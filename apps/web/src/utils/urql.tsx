@@ -19,6 +19,12 @@ type operation = {
 } & operationInput;
 
 export const refetchContext = createContext({
+  refetchTagsOfOwner: () => {},
+  setRefetchTagsOfOwner: (refetchTagsOfOwner: () => void) => {},
+
+  refetchTagsOfEtchAndOwner: () => {},
+  setRefetchTagsOfEtchAndOwner: (refetchTagsOfEtchAndOwner: () => void) => {},
+
   refetchEtches: () => {},
   setRefetchEtches: (refetchEtches: () => void) => {},
 

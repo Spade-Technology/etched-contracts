@@ -5,6 +5,7 @@ import { encryptToIpfs } from "@/server/lit-encrypt";
 import { generateServerAuthSig, publicClient, walletClient } from "@/server/web3";
 import { defaultAccessControlConditions, defaultAccessControlConditionsUsingReadableID } from "@/utils/accessControlConditions";
 import { teamPermissions } from "@/utils/common";
+import { getTagsOfEtchAndOwner } from "@/utils/hooks/useGetTagsOfEtchAndOwner";
 import { urqlConfig } from "@/utils/urql";
 import EtchABI from "@abis/Etches.json";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
@@ -166,52 +167,24 @@ export const etchRouter = createTRPCRouter({
       }) => {
         let tagsCalldata: `0x${string}`[] = [];
         if (tags) {
-          const client = new Client(urqlConfig);
+          const { data } = await getTagsOfEtchAndOwner(etchId, address!);
 
-          const document = gql`
-            query GetTagsOfEtchAndOwner($owner: String!, $id: ID!) {
-              etch(id: $id) {
-                id
-                tags(where: { owner: $owner }) {
-                  tag
-                  id
-                  owner {
-                    eoa
-                  }
-                }
-              }
-            }
-          `;
+          if (data?.etch) {
+            const actionableTags = [
+              ...tags.filter((tag) => tag.toCreate),
+              ...data.etch.tags
+                .filter((tag: any) => !(tags.find((newTag: any) => newTag.id === tag.id) && tag.owner.eoa === address))
+                .map((tag: any) => ({ label: tag.tag, value: tag.id, toDelete: true, toCreate: false })),
+            ];
 
-          const { data } = await client.query(document, {
-            id: etchId + "-Etch",
-            owner: address,
-          });
-
-          const actionableTags = [
-            ...tags.filter((tag) => tag.toCreate),
-            ...data.etch.tags
-              .filter((tag: any) => !(tags.find((newTag: any) => newTag.id === tag.id) && tag.owner.eoa === address))
-              .map((tag: any) => ({ label: tag.tag, value: tag.id, toDelete: true })),
-          ];
-
-          console.log(actionableTags);
-
-          console.log(
-            actionableTags.map((tag) => ({
-              abi: EtchABI,
-              functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
-              args: [etchId, tag.label],
-            }))
-          );
-
-          tagsCalldata = actionableTags.map((tag) =>
-            encodeFunctionData({
-              abi: EtchABI,
-              functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
-              args: [etchId, tag.label],
-            })
-          );
+            tagsCalldata = actionableTags.map((tag) =>
+              encodeFunctionData({
+                abi: EtchABI,
+                functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
+                args: [etchId, tag.label],
+              })
+            );
+          }
         }
 
         const calldata = encodeFunctionData({

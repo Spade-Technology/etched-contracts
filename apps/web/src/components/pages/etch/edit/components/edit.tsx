@@ -25,6 +25,8 @@ import ProfileCard from "../../../../ui/profile-card";
 import { ThemeContext } from "@/utils/theme";
 import MultipleSelector from "@/components/ui/multi-select";
 import { TagIcon, TagsIcon } from "lucide-react";
+import { useGetTagsOfEtchAndOwner } from "@/utils/hooks/useGetTagsOfEtchAndOwner";
+import { useGetTagsOfOwner } from "@/utils/hooks/useGetTagsOfOwner";
 
 dayjs.extend(relativeTime);
 
@@ -58,6 +60,8 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
     setTags,
   } = useUpdateEtch(setEdit, etch);
   const owner = useLoggedInAddress();
+
+  const { data: availableTags } = useGetTagsOfOwner(owner);
 
   const { theme } = useContext(ThemeContext);
 
@@ -186,7 +190,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
           {tags.length > 0 || edit ? (
             <MultipleSelector
               className={edit ? "bg-muted dark:bg-background dark:shadow-sm" : "border-0 p-0 !text-white"}
-              defaultOptions={[]}
+              defaultOptions={availableTags.map((tag: { tag: string; id: string }) => ({ label: tag.tag, value: tag.id }))}
               placeholder="Tags"
               creatable
               maxSelected={5}
