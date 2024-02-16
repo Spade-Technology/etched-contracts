@@ -190,7 +190,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
           {tags.length > 0 || edit ? (
             <MultipleSelector
               className={edit ? "bg-muted dark:bg-background dark:shadow-sm" : "border-0 p-0 !text-white"}
-              defaultOptions={availableTags.map((tag: { tag: string; id: string }) => ({ label: tag.tag, value: tag.id }))}
+              defaultOptions={availableTags?.map((tag: { tag: string; id: string }) => ({ label: tag.tag, value: tag.id }))}
               placeholder="Tags"
               creatable
               maxSelected={5}
