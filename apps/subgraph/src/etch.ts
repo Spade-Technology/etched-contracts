@@ -34,7 +34,7 @@ import {
 } from '../generated/schema';
 import { getOrCreateWallet } from './wallet';
 
-import { EID, ETID, getEtchId, getTeamId } from './utils';
+import { EID, ETID, getEtchId, getTagId, getTeamId } from './utils';
 import { store } from '@graphprotocol/graph-ts';
 
 enum EtchPermissionLevel {
@@ -76,17 +76,17 @@ export function handleTagAdded(event: TagAdded): void {
   entity.save();
 
   // Create the Tag Entity
-  const tag = new Tag(getEtchId(EID.Tag, event.params.tokenId, event.params.owner.toHexString() + '-' + event.params.tag.toString()));
-  tag.tag = entity.tag;
-  tag.save();
-
-  // Update the Etch Entity
-  const etch = Etch.load(getEtchId(EID.Etch, event.params.tokenId));
-  if (etch) {
-    if (etch.tags) etch.tags.unshift(tag.id);
-    else etch.tags = [tag.id];
-    etch.save();
+  let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
+  if (!tag) {
+    tag = new Tag(getTagId(event.params.owner, event.params.tag.toString()));
+    tag.tag = entity.tag;
+    tag.owner = entity.owner;
+    tag.etches = [];
   }
+
+  tag.etches = tag.etches.concat([getEtchId(EID.Etch, event.params.tokenId)]);
+
+  tag.save();
 }
 
 export function handleTagModified(event: TagModified): void {
@@ -105,27 +105,12 @@ export function handleTagModified(event: TagModified): void {
   entity.save();
 
   // Load the existing tag using the old tag value and the owner's wallet
-  let tag = Tag.load(getEtchId(EID.Tag, event.params.tokenId, event.params.owner.toHexString() + '-' + event.params.oldTag.toString()));
-  if (!tag) tag = new Tag(getEtchId(EID.Tag, event.params.tokenId, event.params.owner.toHexString() + '-' + event.params.newTag.toString()));
-  else tag.id = getEtchId(EID.Tag, event.params.tokenId, event.params.owner.toHexString() + '-' + event.params.newTag.toString());
+  let tag = Tag.load(getTagId(event.params.owner, event.params.oldTag));
+  if (!tag) tag = new Tag(getTagId(event.params.owner, event.params.newTag.toString()));
+  else tag.id = getTagId(event.params.owner, event.params.newTag.toString());
 
   tag.tag = entity.newTag;
   tag.save();
-
-  // Update the Etch Entity
-  const etch = Etch.load(getEtchId(EID.Etch, event.params.tokenId));
-  if (etch) {
-    let filteredTags = [] as string[];
-    if (etch.tags) {
-      for (let i = 0; i < etch.tags.length; i++) {
-        if (etch.tags[i] != getEtchId(EID.Tag, event.params.tokenId, event.params.oldTag.toString())) {
-          filteredTags.push(etch.tags[i]);
-        }
-      }
-    }
-    etch.tags = [tag.id].concat(filteredTags);
-    etch.save();
-  }
 }
 
 export function handleTagRemoved(event: TagRemoved): void {
@@ -143,22 +128,12 @@ export function handleTagRemoved(event: TagRemoved): void {
 
   entity.save();
 
-  // Update the Etch Entity
-  const etch = Etch.load(getEtchId(EID.Etch, event.params.tokenId));
-  if (etch) {
-    let updatedTags = [] as string[];
-    for (let i = 0; i < (etch.tags || []).length; i++) {
-      if ((etch.tags || [])[i] != getEtchId(EID.Tag, event.params.tokenId, event.params.tag.toString())) {
-        updatedTags.push((etch.tags || [])[i]);
-      }
-    }
-    etch.tags = updatedTags;
+  let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
+  if (!tag) return;
 
-    etch.save();
-  }
+  tag.etches = tag.etches.filter((id) => id != getEtchId(EID.Etch, event.params.tokenId));
 
-  // Remove the Tag Entity
-  store.remove('Tag', getEtchId(EID.Tag, event.params.tokenId, event.params.owner.toHexString() + '-' + event.params.tag.toString()));
+  if (tag.etches.length === 0) store.remove('Tag', tag.id);
 }
 
 export function handleEtchCreated(event: EtchCreatedEvent): void {
@@ -195,7 +170,6 @@ export function handleEtchCreated(event: EtchCreatedEvent): void {
   etch.ipfsCid = event.params.ipfsCid;
   etch.documentName = event.params.documentName;
   etch.createdAt = event.block.timestamp;
-  etch.tags = [] as string[];
 
   etch.save();
 }

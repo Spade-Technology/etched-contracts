@@ -48,19 +48,6 @@ export default function Home() {
     });
   };
 
-  // const templateParams = {
-  //   email: email,
-  //   company: company,
-  // };
-  // emailjs.send("service_5qb9qlk", "template_326w3y1", templateParams, "DVByqzTZ6WrqYWvD2").then(
-  //   function (response) {
-  //     console.log("SUCCESS!", response.status, response.text);
-  //   },
-  //   function (error) {
-  //     console.log("FAILED...", error);
-  //   }
-  // );
-
   const showWaitlistUsing = (open: boolean | string) => {
     setShowWaitlist(!!open);
 
@@ -70,7 +57,6 @@ export default function Home() {
   return (
     <div className="w-full overflow-hidden font-campton">
       <div className="mx-5 md:mx-10 xl:mx-24">
-        {/* <Button onClick={() => router.push("/auth")}>Authenticate</Button> */}
         <Header setShowWaitlist={showWaitlistUsing} />
         <div className="mx-auto text-center align-middle ">
           <WaitlistDialog

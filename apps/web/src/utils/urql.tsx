@@ -3,7 +3,7 @@ import { withUrqlClient } from "next-urql";
 import { createContext, useEffect, useState } from "react";
 
 import { devtoolsExchange } from "@urql/devtools";
-import { fetchExchange } from "urql";
+import { Client, fetchExchange } from "urql";
 
 type operationInput = {
   name: string;
@@ -121,8 +121,9 @@ export const RefetchProvider = ({ children }: any) => {
   return <refetchContext.Provider value={{ ...mutations, ...state }}>{children}</refetchContext.Provider>;
 };
 
-export const withUrql = (index: any) =>
-  withUrqlClient((ssrExchange) => ({
-    url: process.env.NEXT_PUBLIC_THEGRAPH_URL as string,
-    exchanges: [devtoolsExchange, cacheExchange({}), fetchExchange],
-  }))(index);
+export const urqlConfig = {
+  url: process.env.NEXT_PUBLIC_THEGRAPH_URL as string,
+  exchanges: [devtoolsExchange, cacheExchange({}), fetchExchange],
+};
+
+export const withUrql = (index: any) => withUrqlClient((ssrExchange) => urqlConfig)(index);

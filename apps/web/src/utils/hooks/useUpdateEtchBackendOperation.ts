@@ -19,9 +19,21 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
   const { addOperation, setOperation, refetchEtch } = useContext(refetchContext);
   const [documentName, setDocumentName] = useState(etch?.documentName || "");
   const [description, setDescription] = useState(etch?.description || "");
+  const [tags, setTags] = useState(
+    etch?.tags?.map((el) => ({
+      label: el.tag,
+      value: el.id,
+    })) || []
+  );
+
+  console.log(etch);
 
   const updateEtch = async () => {
-    if (documentName === etch?.documentName && description === (etch?.description || "")) {
+    if (
+      documentName === etch?.documentName &&
+      description === (etch?.description || "") &&
+      JSON.stringify(tags) === JSON.stringify(etch?.tags?.map((el) => ({ label: el.tag, value: el.id })) || [])
+    ) {
       setEdit(false);
 
       return;
@@ -42,6 +54,7 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
         description: description || etch?.description || "",
         blockchainSignature: localStorage.getItem("blockchainSignature")!,
         blockchainMessage: localStorage.getItem("blockchainMessage")!,
+        tags,
       });
       setOperation(opId, {
         name,
@@ -78,5 +91,5 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
     setEdit(false);
   };
 
-  return { updateEtch, isLoading, setDocumentName, setDescription };
+  return { updateEtch, isLoading, setDocumentName, setDescription, tags, setTags };
 };

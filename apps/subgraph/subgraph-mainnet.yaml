@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Etch
-    network: arbitrum-one
+    network: matic
     source:
-      address: '0x1e413589C4933037f1b136dDE143346dCfC2bA63'
+      address: '0x19c1F37680dD0f36B8cAA7870BAB2D6455F192e1'
       abi: Etch
-      startBlock: 152613300
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -47,20 +47,20 @@ dataSources:
           handler: handleTeamPermissionsUpdated
         - event: EtchMetadataUpdated(indexed uint256,string,string,string)
           handler: handleEtchMetadataUpdated
-        - event: TagAdded(indexed uint256,indexed string,indexed address)
+        - event: TagAdded(indexed uint256,indexed address,string)
           handler: handleTagAdded
-        - event: TagModified(indexed uint256,indexed string,indexed address,string)
+        - event: TagModified(indexed uint256,indexed address,string,string)
           handler: handleTagModified
-        - event: TagRemoved(indexed uint256,indexed string,indexed address)
+        - event: TagRemoved(indexed uint256,indexed address,string)
           handler: handleTagRemoved
       file: ./src/etch.ts
   - kind: ethereum
     name: Team
-    network: arbitrum-one
+    network: matic
     source:
-      address: '0xb46B46c136F85Fbd6657B8DF47cAccd4F8065932'
+      address: '0xfE200b6b888Ff20F2162FAaeE55E163bc72B975F'
       abi: Team
-      startBlock: 152613300
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -97,11 +97,11 @@ dataSources:
       file: ./src/team.ts
   - kind: ethereum
     name: Organisation
-    network: arbitrum-one
+    network: matic
     source:
-      address: '0x4e3F5840956fCB276faB524B092Eec115eb116C4'
+      address: '0xc300717c650a0F9aB3BbC53D0A3C1dD1660d1976'
       abi: Organisation
-      startBlock: 152613300
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -135,11 +135,11 @@ dataSources:
       file: ./src/organisation.ts
   - kind: ethereum
     name: EtchENS
-    network: arbitrum-one
+    network: matic
     source:
-      address: '0x2B9786adeA8dd24cbb36036919884271Abb0dAbF'
+      address: '0xc8582f29d4C9e01825d7D08c91224E22C9dAcBF6'
       abi: EtchENS
-      startBlock: 152613300
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

@@ -267,15 +267,15 @@
       },
       {
         "indexed": true,
-        "internalType": "string",
-        "name": "tag",
-        "type": "string"
-      },
-      {
-        "indexed": true,
         "internalType": "address",
         "name": "owner",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "tag",
+        "type": "string"
       }
     ],
     "name": "TagAdded",
@@ -292,15 +292,15 @@
       },
       {
         "indexed": true,
-        "internalType": "string",
-        "name": "newTag",
-        "type": "string"
-      },
-      {
-        "indexed": true,
         "internalType": "address",
         "name": "owner",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "newTag",
+        "type": "string"
       },
       {
         "indexed": false,
@@ -323,15 +323,15 @@
       },
       {
         "indexed": true,
-        "internalType": "string",
-        "name": "tag",
-        "type": "string"
-      },
-      {
-        "indexed": true,
         "internalType": "address",
         "name": "owner",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "tag",
+        "type": "string"
       }
     ],
     "name": "TagRemoved",

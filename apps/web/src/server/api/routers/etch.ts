@@ -5,9 +5,11 @@ import { encryptToIpfs } from "@/server/lit-encrypt";
 import { generateServerAuthSig, publicClient, walletClient } from "@/server/web3";
 import { defaultAccessControlConditions, defaultAccessControlConditionsUsingReadableID } from "@/utils/accessControlConditions";
 import { teamPermissions } from "@/utils/common";
+import { urqlConfig } from "@/utils/urql";
 import EtchABI from "@abis/Etches.json";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { TRPCError } from "@trpc/server";
+import { Client, gql } from "urql";
 import { Address, decodeEventLog, encodeFunctionData, encodePacked, keccak256 } from "viem";
 import { z } from "zod";
 const random = require("random-bigint");
@@ -139,70 +141,79 @@ export const etchRouter = createTRPCRouter({
       return { ipfsCid };
     }),
 
-  setMetadata: protectedProcedure
-    .input(
-      z.object({
-        fileName: z.string(),
-        description: z.string(),
-        etchId: z.string(),
-        ipfsCid: z.string(),
-        blockchainSignature: z.string(),
-        blockchainMessage: z.string(),
-      })
-    )
-    .mutation(
-      async ({
-        input: { etchId, fileName, ipfsCid, description, blockchainSignature, blockchainMessage },
-        ctx: {
-          session: { address },
-        },
-      }) => {
-        const calldata = encodeFunctionData({
-          abi: EtchABI,
-          functionName: "setMetadata",
-          args: [etchId, fileName, description, ipfsCid],
-        });
-
-        const tx = await walletClient.writeContract({
-          address: contracts.Etch,
-          functionName: "delegateCallsToSelf",
-          args: [
-            [
-              blockchainMessage as Address,
-              keccak256(blockchainMessage as Address),
-              blockchainSignature as Address,
-              address as Address,
-            ],
-            [calldata],
-          ],
-          abi: EtchABI,
-        });
-
-        await publicClient.waitForTransactionReceipt({
-          hash: tx,
-        });
-
-        return { tx };
-      }
-    ),
-
   updateMetadata: protectedProcedure
     .input(
       z.object({
         fileName: z.string(),
         description: z.string(),
         etchId: z.string(),
+        tags: z
+          .array(
+            z.object({ label: z.string(), value: z.string(), toCreate: z.boolean().optional(), toDelete: z.boolean().optional() })
+          )
+          .max(5)
+          .optional(),
         blockchainSignature: z.string(),
         blockchainMessage: z.string(),
       })
     )
     .mutation(
       async ({
-        input: { etchId, fileName, description, blockchainSignature, blockchainMessage },
+        input: { etchId, fileName, description, blockchainSignature, blockchainMessage, tags },
         ctx: {
           session: { address },
         },
       }) => {
+        let tagsCalldata: `0x${string}`[] = [];
+        if (tags) {
+          const client = new Client(urqlConfig);
+
+          const document = gql`
+            query GetTagsOfEtchAndOwner($owner: String!, $id: ID!) {
+              etch(id: $id) {
+                id
+                tags(where: { owner: $owner }) {
+                  tag
+                  id
+                  owner {
+                    eoa
+                  }
+                }
+              }
+            }
+          `;
+
+          const { data } = await client.query(document, {
+            id: etchId + "-Etch",
+            owner: address,
+          });
+
+          const actionableTags = [
+            ...tags.filter((tag) => tag.toCreate),
+            ...data.etch.tags
+              .filter((tag: any) => !(tags.find((newTag: any) => newTag.id === tag.id) && tag.owner.eoa === address))
+              .map((tag: any) => ({ label: tag.tag, value: tag.id, toDelete: true })),
+          ];
+
+          console.log(actionableTags);
+
+          console.log(
+            actionableTags.map((tag) => ({
+              abi: EtchABI,
+              functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
+              args: [etchId, tag.label],
+            }))
+          );
+
+          tagsCalldata = actionableTags.map((tag) =>
+            encodeFunctionData({
+              abi: EtchABI,
+              functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
+              args: [etchId, tag.label],
+            })
+          );
+        }
+
         const calldata = encodeFunctionData({
           abi: EtchABI,
           functionName: "updateMetadata",
@@ -219,7 +230,7 @@ export const etchRouter = createTRPCRouter({
               blockchainSignature as Address,
               address as Address,
             ],
-            [calldata],
+            [calldata, ...tagsCalldata],
           ],
           abi: EtchABI,
         });
