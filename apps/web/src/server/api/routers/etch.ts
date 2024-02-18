@@ -168,8 +168,6 @@ export const etchRouter = createTRPCRouter({
         if (tags) {
           const { data } = await getTagsOfEtchAndOwner(etchId, address!);
 
-          console.log(data, tags);
-
           if (data?.etch) {
             const actionableTags = [
               // to delete
@@ -182,6 +180,13 @@ export const etchRouter = createTRPCRouter({
                 .filter((newTag: any) => !data.etch.tags.find((tag: any) => tag.tag === newTag.label))
                 .map((tag: any) => ({ label: tag.label, toDelete: false, toCreate: true })),
             ];
+
+            console.debug(
+              actionableTags.map((tag) => ({
+                functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
+                args: [etchId, tag.label],
+              }))
+            );
 
             tagsCalldata = actionableTags.map((tag) =>
               encodeFunctionData({

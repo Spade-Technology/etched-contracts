@@ -131,7 +131,15 @@ export function handleTagRemoved(event: TagRemoved): void {
   let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
   if (!tag) return;
 
-  tag.etches = tag.etches.filter((id) => id != getEtchId(EID.Etch, event.params.tokenId));
+  let filteredEtches = [] as string[];
+  for (let i = 0; i < tag.etches.length; i++) {
+    if (tag.etches[i] !== getEtchId(EID.Etch, event.params.tokenId)) {
+      filteredEtches.push(tag.etches[i]);
+    }
+  }
+
+  tag.etches = filteredEtches;
+  tag.save();
 
   if (tag.etches.length === 0) store.remove('Tag', tag.id);
 }
