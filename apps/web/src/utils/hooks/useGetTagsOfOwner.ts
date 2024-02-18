@@ -42,5 +42,5 @@ export const useGetTagsOfOwner = (address?: string) => {
     }
   }, [operation, setRefetchTagsOfOwner]);
 
-  return { data: data?.tags.filter((tag: any) => tag?.tag?.length > 0), fetching, error, refetch };
+  return { data: data?.tagLinks.filter((tag: any) => tag?.label?.length > 0), fetching, error, refetch };
 };

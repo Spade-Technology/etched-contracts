@@ -121,7 +121,7 @@ type OrganisationPermission @entity {
 
 type TagLink @entity {
   id: ID!
-  tag: Tag!
+  tag: Tag
   etch: Etch!
   owner: Wallet!
 }
