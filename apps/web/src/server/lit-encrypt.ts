@@ -1,9 +1,11 @@
 import { pinata } from "@/ipfs";
 import { lit } from "@/lit";
-import { EncryptToIpfsProps } from "@/utils/litTypes";
+
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 
-export const encryptToIpfs = async (props: EncryptToIpfsProps) => {
+type ParameterType = Omit<Parameters<typeof LitJsSdk.encryptFile>[0], "file">;
+
+export const encryptToIpfs = async (props: ParameterType & { string?: string; file?: File | Blob; metadata: any }) => {
   if (props.string && props.file) throw new Error(`You can't encrypt a file and a string`);
   if (!props.string && !props.file) throw new Error(`File and String are both undefined`);
 
@@ -12,7 +14,12 @@ export const encryptToIpfs = async (props: EncryptToIpfsProps) => {
 
   let encryptionResult;
 
-  if (props.file) encryptionResult = await LitJsSdk.encryptFile({ file: props.file, ...props }, lit.client);
+  // file
+  if (props?.file !== undefined) {
+    const encryptionProps = { ...props, file: props.file }; // Ensure file is not undefined
+    encryptionResult = await LitJsSdk.encryptFile(encryptionProps, lit.client);
+  }
+  // string
   else if (props.string) encryptionResult = await LitJsSdk.encryptString({ dataToEncrypt: props.string, ...props }, lit.client);
 
   if (!encryptionResult) throw new Error(`Encryption failed`);

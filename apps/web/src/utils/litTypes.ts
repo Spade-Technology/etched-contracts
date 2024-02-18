@@ -1,8 +1,8 @@
-interface ABIParams {
+export interface ABIParams {
   name: string;
   type: string;
 }
-interface FunctionABI {
+export interface FunctionABI {
   name: string;
   type?: string;
   stateMutability: string;
@@ -11,8 +11,38 @@ interface FunctionABI {
   constant?: string | boolean;
   payable?: boolean;
 }
-type ConditionType = "solRpc" | "evmBasic" | "evmContract" | "cosmos";
-interface AccsRegularParams {
+
+export interface EncryptStringRequest extends EncryptRequestBase {
+  dataToEncrypt: string;
+}
+export interface EncryptRequestBase {
+  accessControlConditions?: AccessControlConditions;
+  evmContractConditions?: EvmContractConditions;
+  solRpcConditions?: SolRpcConditions;
+  unifiedAccessControlConditions?: UnifiedAccessControlConditions;
+  chain: string;
+  authSig?: AuthSig;
+  sessionSigs?: SessionSigsMap;
+}
+
+export interface SessionSigsMap {
+  [nodeAddress: string]: SessionSig;
+}
+
+export interface SessionSig {
+  sig: string;
+  derivedVia: string;
+  signedMessage: string;
+  address: string;
+  algo?: string;
+}
+
+export interface EncryptFileRequest extends EncryptRequestBase {
+  file: AcceptedFileType;
+}
+
+export type ConditionType = "solRpc" | "evmBasic" | "evmContract" | "cosmos";
+export interface AccsRegularParams {
   conditionType?: ConditionType;
   returnValueTest: {
     key?: string;
@@ -23,29 +53,35 @@ interface AccsRegularParams {
   params?: any[];
   chain: string;
 }
-interface AccsEVMParams extends AccsRegularParams {
+export interface AccsEVMParams extends AccsRegularParams {
   functionAbi: FunctionABI;
   contractAddress: string;
   functionName: string;
   functionParams: any[];
 }
-type EvmContractConditions = AccsEVMParams[];
+export type EvmContractConditions = AccsEVMParams[];
 
-interface AccsDefaultParams extends AccsRegularParams {
+export interface AccsDefaultParams extends AccsRegularParams {
   contractAddress?: string;
   standardContractType?: string;
   parameters?: any;
 }
 
-type AccessControlConditions = AccsRegularParams[] | AccsDefaultParams[];
+export interface LPACC_EVM_BASIC {
+  contractAddress: string;
+  standardContractType: string;
+  parameters: any[];
+}
 
-interface AuthSig {
+export declare type AccessControlConditions = (AccsDefaultParams | AccsOperatorParams | AccessControlConditions)[];
+
+export interface AuthSig {
   sig: any;
   derivedVia: string;
   signedMessage: string;
   address: string;
 }
-interface AccsSOLV2Params extends AccsRegularParams {
+export interface AccsSOLV2Params extends AccsRegularParams {
   pdaKey: string;
   pdaInterface: {
     offset: string | number;
@@ -53,17 +89,17 @@ interface AccsSOLV2Params extends AccsRegularParams {
   };
   pdaParams: [];
 }
-type SolRpcConditions = AccsSOLV2Params[];
+export type SolRpcConditions = AccsSOLV2Params[];
 
-interface AccsCOSMOSParams extends AccsRegularParams {
+export interface AccsCOSMOSParams extends AccsRegularParams {
   path: string;
   method?: string;
   parameters?: string[];
 }
-interface AccsOperatorParams {
+export interface AccsOperatorParams {
   operator: string;
 }
-type UnifiedAccessControlConditions = (
+export type UnifiedAccessControlConditions = (
   | AccsRegularParams
   | AccsDefaultParams
   | AccsEVMParams
@@ -72,8 +108,9 @@ type UnifiedAccessControlConditions = (
   | AccsOperatorParams
 )[];
 
-type AcceptedFileType = File | Blob;
-interface Metadata {
+export type AcceptedFileType = File | Blob;
+
+export interface Metadata {
   type: string;
 }
 
