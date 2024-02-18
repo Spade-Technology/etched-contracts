@@ -167,7 +167,14 @@ export const CreateEtchButton = () => {
                       </div>
                       <div className="custom-scrollbar mt-3 grid max-h-40 grid-cols-3 gap-4 overflow-auto pr-2">
                         {files.map((file, index) => (
-                          <FilePreviewer file={file} index={index} isLoading={isLoading} setFiles={setFiles} files={files} />
+                          <FilePreviewer
+                            key={index}
+                            file={file}
+                            index={index}
+                            isLoading={isLoading}
+                            setFiles={setFiles}
+                            files={files}
+                          />
                         ))}
                       </div>
                     </div>

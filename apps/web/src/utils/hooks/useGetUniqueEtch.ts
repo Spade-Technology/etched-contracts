@@ -121,7 +121,5 @@ export const useGetUniqueEtch = (etchId?: string) => {
 
   const etch = etchData.etches[0] as Partial<Etch>; // Should only be one etch
 
-  console.log(etch);
-
   return { etch, isLoading: fetching, error };
 };

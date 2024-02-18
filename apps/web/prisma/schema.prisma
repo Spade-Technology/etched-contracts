@@ -23,6 +23,8 @@ model User {
 
     userActivationCodes userActivationCode[]
     isAdministrator     Boolean              @default(false)
+
+    capacityCredits capacityCredit[]
 }
 
 model Subscriber {
@@ -51,4 +53,9 @@ model capacityCredit {
     capacityTokenId           String
     creditAmountPerKilosecond Int
     expiration                DateTime
+
+    createdAt DateTime @default(now())
+
+    receiver    User?   @relation(fields: [userAddress], references: [address])
+    userAddress String?
 }
