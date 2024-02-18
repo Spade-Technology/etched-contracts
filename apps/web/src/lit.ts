@@ -15,7 +15,7 @@ const client = new LitJsSdk.LitNodeClient({
   // Verbosity of the logging
   debug: false,
 
-  checkNodeAttestation: process.env.NODE_ENV === "development",
+  checkNodeAttestation: process.env.NODE_ENV !== "development",
 });
 
 const ipfsPlublicClientUrl = process.env.NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY + "ipfs/" || "https://gateway.pinata.cloud/ipfs/";
