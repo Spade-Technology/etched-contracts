@@ -3,7 +3,7 @@ import { keccak256, toBytes, toHex } from "viem";
 import { decryptToIpfsProps } from "./utils/litTypes";
 
 export const litNetwork = process.env.NODE_ENV === "development" ? "cayenne" : "habanero";
-// "habanero";
+
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
   // litNetwork: "jalapeno",
@@ -35,8 +35,7 @@ class Lit {
           await client.connect();
           if (!client) throw new Error(`Lit client is not connected`);
 
-          console.log("connected to lit node");
-          console.log(client.config.litNetwork);
+          console.log("connected to lit node: ", client.config.litNetwork);
 
           this.client = client;
           resolve(this.client);
