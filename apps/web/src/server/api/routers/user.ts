@@ -1,12 +1,12 @@
-import { lit, litNetwork } from "@/lit";
+import { lit } from "@/lit";
+import { walletWithCapacityCredit } from "@/litContracts";
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { prisma } from "@/server/db";
+import { regenerateCapacityCredits } from "@/server/user-operations";
+
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
-import { Wallet, getDefaultProvider, providers } from "ethers";
 import { z } from "zod";
-import { LitContracts } from "@lit-protocol/contracts-sdk";
-import { generateContractsClient, walletWithCapacityCredit } from "@/litContracts";
 
 const passwordValidation = z
   .string()
@@ -22,6 +22,7 @@ const passwordValidation = z
         "Invalid password. It must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
     }
   );
+
 async function retrieveStoredCode(code: string) {
   const userCode = await prisma.userActivationCode.findFirstOrThrow({
     where: { code, userAddress: null },
@@ -220,37 +221,3 @@ export const userRouter = createTRPCRouter({
     return { code, expiration };
   }),
 });
-
-const regenerateCapacityCredits = async () => {
-  const contractClient = await generateContractsClient();
-
-  const requestsPerKilosecond = 1000;
-  const daysUntilUTCMidnightExpiration = 2;
-  // WARNING: Is this the correct way to get the UTC midnight time???
-  const dateTimeUTCMidnightExpiration = new Date(
-    Date.UTC(
-      new Date().getUTCFullYear(),
-      new Date().getUTCMonth(),
-      new Date().getUTCDate() + daysUntilUTCMidnightExpiration,
-      0,
-      0,
-      0
-    )
-  );
-
-  // this identifier will be used in delegation requests.
-  const { capacityTokenIdStr } = await contractClient.mintCapacityCreditsNFT({
-    requestsPerKilosecond,
-    daysUntilUTCMidnightExpiration,
-  });
-
-  await prisma.capacityCredit.create({
-    data: {
-      capacityTokenId: capacityTokenIdStr,
-      creditAmountPerKilosecond: requestsPerKilosecond,
-      expiration: dateTimeUTCMidnightExpiration,
-    },
-  });
-
-  return { capacityTokenIdStr };
-};

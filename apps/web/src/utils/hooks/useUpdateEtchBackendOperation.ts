@@ -26,8 +26,6 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
     })) || []
   );
 
-  console.log(etch);
-
   const updateEtch = async () => {
     if (
       documentName === etch?.documentName &&

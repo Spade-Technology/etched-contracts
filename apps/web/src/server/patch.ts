@@ -97,8 +97,6 @@ export const signMessageUsingPatchWallet = async ({
 
   const _signature = await result.json();
 
-  console.log(_signature);
-
   const signature = await createERC6492Signature({
     baseProvider,
     userId,

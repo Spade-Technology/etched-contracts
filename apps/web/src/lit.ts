@@ -4,7 +4,7 @@ import { decryptToIpfsProps } from "./utils/litTypes";
 
 import { LitContracts } from "@lit-protocol/contracts-sdk";
 
-export const litNetwork = process.env.NODE_ENV === "development" ? "cayenne" : "habanero";
+export const litNetwork = process.env.NODE_ENV !== "development" ? "cayene" : "habanero";
 // "habanero";
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
@@ -17,7 +17,7 @@ const client = new LitJsSdk.LitNodeClient({
   // Verbosity of the logging
   debug: false,
 
-  checkNodeAttestation: true,
+  checkNodeAttestation: process.env.NODE_ENV === "development",
 });
 
 const ipfsPlublicClientUrl = process.env.NEXT_PUBLIC_IPFS_PUBLIC_GATEWAY + "ipfs/" || "https://gateway.pinata.cloud/ipfs/";

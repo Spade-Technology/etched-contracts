@@ -9,9 +9,10 @@ import { publicClient } from "./web3";
 
 import { currentNetworkId } from "@/contracts";
 import { env } from "@/env.mjs";
-import { hashMessageForLit } from "@/lit";
+import { hashMessageForLit, litNetwork } from "@/lit";
 import { clerkClient } from "@clerk/nextjs";
 import { createERC6492Signature } from "./patch";
+import { regenerateCapacityCredits } from "./user-operations";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -121,6 +122,17 @@ export async function verifySiweMessage(
   return null;
 }
 
+// this is quite dirty, unfortunately Lit doesn't support sessions with account abstraction and their IEP1271 implementation is not yet ready.
+async function temporaryMintNFTAllocation(address: string) {
+  // 7 days expiration
+  const expiration_time = 60 * 60 * 24 * 7;
+  const requests_per_kiloseconds = 1000;
+
+  if (litNetwork === "cayene") return;
+
+  await regenerateCapacityCredits(address);
+}
+
 export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
   const providers = [
     CredentialsProvider({
@@ -158,6 +170,15 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           // If user doesn't exist, create it
           if (!user)
             user = await prisma.user.create({ data: { address: siwe.address, email: clerkUser?.primaryEmailAddressId } });
+
+          const capacityCredit = await prisma.capacityCredit.findFirst({
+            where: {
+              receiver: { address: siwe.address },
+              expiration: { gt: new Date(Date.now() + 60 * 60 * 24 * 1000) },
+            },
+          });
+
+          if (!capacityCredit) await temporaryMintNFTAllocation(siwe.address);
 
           // Return the user info
           return { id: siwe.address, isApproved: user.isApproved, isAdmin: user.isAdministrator };
