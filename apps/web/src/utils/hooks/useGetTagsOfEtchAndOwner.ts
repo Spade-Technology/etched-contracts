@@ -11,10 +11,11 @@ const TAG_OF_ETCH_AND_OWNER = gql`
     etch(id: $id) {
       id
       tags(where: { owner: $owner }) {
-        tag
-        id
-        owner {
-          eoa
+        tag {
+          id
+          owner {
+            eoa
+          }
         }
       }
     }

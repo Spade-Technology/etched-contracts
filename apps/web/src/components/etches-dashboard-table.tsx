@@ -84,10 +84,10 @@ export const columns: EtchColumnDef[] = [
           {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
         </Link>
         {row.original.tags
-          ?.filter((el) => el.tag.length > 0)
+          ?.filter((el) => el.tag.tag.length > 0)
           .map((el) => (
             <Badge
-              style={{ backgroundColor: deterministicTextToColor(el.tag) }}
+              style={{ backgroundColor: deterministicTextToColor(el.tag.tag) }}
               className="cursor-pointer font-bold hover:bg-opacity-50 hover:underline "
               onClick={(e) => {
                 table
@@ -97,7 +97,7 @@ export const columns: EtchColumnDef[] = [
               }}
             >
               <TagIcon className="mr-1 h-3 w-3" />
-              {el.tag}
+              {el.tag.tag}
             </Badge>
           )) ?? <Skeleton className="h-3 w-8" />}
       </div>
@@ -109,7 +109,7 @@ export const columns: EtchColumnDef[] = [
     header: ({ column }) => <></>,
 
     filterFn: (row, _, filterValue) => {
-      return ((filterValue as string[]) || []).every((filter) => row.original.tags?.some((tag) => tag.tag === filter));
+      return ((filterValue as string[]) || []).every((filter) => row.original.tags?.some((tag) => tag.tag.tag === filter));
     },
     cell: ({ row, column }) => <></>,
   },
@@ -254,7 +254,7 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
             title="Tag"
             options={data
               .flatMap((el) => el.tags)
-              .map((el) => el.tag)
+              .map((el) => el!.tag.tag)
               .filter((el, i, arr) => arr.indexOf(el) === i)
               .map((tag) => ({ label: tag, value: tag }))}
           />

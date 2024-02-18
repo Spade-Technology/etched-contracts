@@ -81,6 +81,10 @@ export function getTagId(owner: Bytes, tag: string): string {
   return owner.toString() + '-' + tag + '-Etch-Tag';
 }
 
+export function getTagLinkId(owner: Bytes, tag: string, etch: string): string {
+  return owner.toString() + '-' + tag + etch + '-Etch-TagLink';
+}
+
 export enum ETID {
   Team,
   Ownership,

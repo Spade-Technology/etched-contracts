@@ -13,7 +13,10 @@ const EtchFragment = graphql(`
     description
 
     tags(where: { owner: $userId }) {
-      tag
+      tag {
+        id
+        tag
+      }
     }
 
     ownership {

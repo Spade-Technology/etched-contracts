@@ -21,8 +21,8 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
   const [description, setDescription] = useState(etch?.description || "");
   const [tags, setTags] = useState(
     etch?.tags?.map((el) => ({
-      label: el.tag,
-      value: el.id,
+      label: el.tag.tag,
+      value: el.tag.id,
     })) || []
   );
 
