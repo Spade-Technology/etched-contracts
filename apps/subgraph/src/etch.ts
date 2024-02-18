@@ -88,7 +88,7 @@ export function handleTagAdded(event: TagAdded): void {
   let tagLink = TagLink.load(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
   if (!tagLink) tagLink = new TagLink(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
 
-  tagLink.tag = tag.id;
+  tagLink.tag = getTagId(event.params.owner, event.params.tag.toString());
   tagLink.etch = getEtchId(EID.Etch, event.params.tokenId);
   tagLink.owner = entity.owner;
 
@@ -134,15 +134,15 @@ export function handleTagRemoved(event: TagRemoved): void {
 
   entity.save();
 
-  let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
-  if (!tag) return;
+  // let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
+  // if (!tag) return;
 
-  // Remove all TagLink entities associated with the tag being removed
-  let tagLink = TagLink.load(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
-  if (tagLink) store.remove('TagLink', tagLink.id);
+  // // Remove all TagLink entities associated with the tag being removed
+  // let tagLink = TagLink.load(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
+  // if (tagLink) store.remove('TagLink', tagLink.id);
 
-  // Check if the tag has any links left
-  if (tag.tagLinks.entries.length == 0) store.remove('Tag', tag.id);
+  // // Check if the tag has any links left
+  // if (tag.tagLinks.entries.length == 0) store.remove('Tag', tag.id);
 }
 
 export function handleEtchCreated(event: EtchCreatedEvent): void {
