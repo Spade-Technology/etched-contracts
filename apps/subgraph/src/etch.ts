@@ -80,9 +80,10 @@ export function handleTagAdded(event: TagAdded): void {
   let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
   if (!tag) {
     tag = new Tag(getTagId(event.params.owner, event.params.tag.toString()));
-    tag.tag = entity.tag;
+    tag.label = entity.tag;
     tag.owner = entity.owner;
   }
+  tag.save();
 
   let tagLink = TagLink.load(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
   if (!tagLink) tagLink = new TagLink(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
@@ -92,7 +93,6 @@ export function handleTagAdded(event: TagAdded): void {
   tagLink.owner = entity.owner;
 
   tagLink.save();
-  tag.save();
 }
 
 export function handleTagModified(event: TagModified): void {
@@ -115,7 +115,7 @@ export function handleTagModified(event: TagModified): void {
   if (!tag) tag = new Tag(getTagId(event.params.owner, event.params.newTag.toString()));
   else tag.id = getTagId(event.params.owner, event.params.newTag.toString());
 
-  tag.tag = entity.newTag;
+  tag.label = entity.newTag;
   tag.save();
 }
 

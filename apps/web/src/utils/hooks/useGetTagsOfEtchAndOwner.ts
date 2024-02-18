@@ -10,7 +10,7 @@ const TAG_OF_ETCH_AND_OWNER = gql`
   query GetTagsOfEtchAndOwner($owner: String!, $id: ID!) {
     etch(id: $id) {
       id
-      tags(where: { owner: $owner }) {
+      tagLinks(where: { owner: $owner }) {
         tag {
           id
           owner {

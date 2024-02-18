@@ -13,7 +13,7 @@ type Wallet @entity {
   OrganisationPermissions: [OrganisationPermission!] @derivedFrom(field: "wallet")
 
   etchENS: [EtchENS!]! @derivedFrom(field: "owner")
-  tags: [Tag!]! @derivedFrom(field: "owner")
+  tags: [TagLink!]! @derivedFrom(field: "owner")
 }
 
 ## ETCH, TEAM, organisation ENTITIES ##
@@ -26,7 +26,7 @@ type Etch @entity {
   comments: [EtchCommentAdded!] @derivedFrom(field: "etch")
   transfers: [EtchTransfer!] @derivedFrom(field: "etch")
   approvals: [EtchApproval!] @derivedFrom(field: "etch")
-  tags: [TagLink!] @derivedFrom(field: "etch")
+  tagLinks: [TagLink!] @derivedFrom(field: "etch")
 
   ipfsCid: String!
   documentName: String!
@@ -161,7 +161,7 @@ type EtchTagRemoved @entity {
 
 type Tag @entity {
   id: ID!
-  tag: String!
+  label: String!
   owner: Wallet!
 
   tagLinks: [TagLink!] @derivedFrom(field: "tag")

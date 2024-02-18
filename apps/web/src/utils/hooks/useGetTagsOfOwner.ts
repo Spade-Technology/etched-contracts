@@ -7,11 +7,13 @@ import { urqlConfig } from "../urql";
 
 const TAGS_OF_OWNER = gql`
   query GetTagsOfOwner($owner: String!) {
-    tags(where: { owner: $owner }) {
-      tag
-      id
-      owner {
-        eoa
+    tagLinks(where: { owner: $owner }) {
+      tag {
+        label
+        id
+        owner {
+          eoa
+        }
       }
     }
   }

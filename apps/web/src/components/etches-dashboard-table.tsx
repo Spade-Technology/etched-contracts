@@ -83,11 +83,11 @@ export const columns: EtchColumnDef[] = [
         <Link className="hover:underline" href={`/dashboard/etches/${row.getValue("tokenId")}`}>
           {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
         </Link>
-        {row.original.tags
-          ?.filter((el) => el.tag.tag.length > 0)
+        {row.original.tagLinks
+          ?.filter((el) => el.tag.label.length > 0)
           .map((el) => (
             <Badge
-              style={{ backgroundColor: deterministicTextToColor(el.tag.tag) }}
+              style={{ backgroundColor: deterministicTextToColor(el.tag.label) }}
               className="cursor-pointer font-bold hover:bg-opacity-50 hover:underline "
               onClick={(e) => {
                 table
@@ -97,7 +97,7 @@ export const columns: EtchColumnDef[] = [
               }}
             >
               <TagIcon className="mr-1 h-3 w-3" />
-              {el.tag.tag}
+              {el.tag.label}
             </Badge>
           )) ?? <Skeleton className="h-3 w-8" />}
       </div>
@@ -109,7 +109,7 @@ export const columns: EtchColumnDef[] = [
     header: ({ column }) => <></>,
 
     filterFn: (row, _, filterValue) => {
-      return ((filterValue as string[]) || []).every((filter) => row.original.tags?.some((tag) => tag.tag.tag === filter));
+      return ((filterValue as string[]) || []).every((filter) => row.original.tagLinks?.some((tag) => tag.tag.label === filter));
     },
     cell: ({ row, column }) => <></>,
   },
@@ -253,8 +253,8 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
             column={table.getColumn("tag")}
             title="Tag"
             options={data
-              .flatMap((el) => el.tags)
-              .map((el) => el!.tag.tag)
+              .flatMap((el) => el.tagLinks)
+              .map((el) => el!.tag.label)
               .filter((el, i, arr) => arr.indexOf(el) === i)
               .map((tag) => ({ label: tag, value: tag }))}
           />

@@ -20,8 +20,8 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
   const [documentName, setDocumentName] = useState(etch?.documentName || "");
   const [description, setDescription] = useState(etch?.description || "");
   const [tags, setTags] = useState(
-    etch?.tags?.map((el) => ({
-      label: el.tag.tag,
+    etch?.tagLinks?.map((el) => ({
+      label: el.tag.label,
       value: el.tag.id,
     })) || []
   );
@@ -30,7 +30,7 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
     if (
       documentName === etch?.documentName &&
       description === (etch?.description || "") &&
-      JSON.stringify(tags) === JSON.stringify(etch?.tags?.map((el) => ({ label: el.tag, value: el.id })) || [])
+      JSON.stringify(tags) === JSON.stringify(etch?.tagLinks?.map((el) => ({ label: el.tag.label, value: el.tag.id })) || [])
     ) {
       setEdit(false);
 
