@@ -57,7 +57,6 @@ export const etchRouter = createTRPCRouter({
             const file = await fetch(url).then((res) => res.blob());
 
             const ipfsCid = await encryptToIpfs({
-              // authSig: authSig,
               authSig: await generateServerAuthSig(),
               file,
               chain: camelCaseNetwork,

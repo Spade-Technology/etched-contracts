@@ -31,7 +31,7 @@ export const RegenerateCapacityCredits = () => {
   const handleAllocateMyselfCredits = async () => {
     try {
       const result = await allocateMyselfCredits.mutateAsync({});
-      setAllocationSig(result);
+      setAllocationSig("Allocated Successfully");
       toast({
         title: "Success",
         description: "Capacity Credits NFT regenerated successfully.",
