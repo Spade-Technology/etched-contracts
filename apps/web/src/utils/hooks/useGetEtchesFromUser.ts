@@ -12,10 +12,10 @@ const EtchFragment = graphql(`
     documentName
     description
 
-    tags(where: { owner: $userId }) {
+    tagLinks(where: { owner: $userId }) {
       tag {
         id
-        tag
+        label
       }
     }
 

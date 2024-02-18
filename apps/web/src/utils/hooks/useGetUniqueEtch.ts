@@ -37,10 +37,10 @@ const FullEtchFragment = graphql(`
       }
     }
 
-    tags {
+    tagLinks {
       tag {
         id
-        tag
+        label
         owner {
           eoa
         }
