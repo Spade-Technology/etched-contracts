@@ -31,10 +31,11 @@ import {
   EtchTransfer,
   EtchTransferedToTeam,
   Tag,
+  TagLink,
 } from '../generated/schema';
 import { getOrCreateWallet } from './wallet';
 
-import { EID, ETID, getEtchId, getTagId, getTeamId } from './utils';
+import { EID, ETID, getEtchId, getTagId, getTagLinkId, getTeamId } from './utils';
 import { store } from '@graphprotocol/graph-ts';
 
 enum EtchPermissionLevel {
@@ -81,11 +82,16 @@ export function handleTagAdded(event: TagAdded): void {
     tag = new Tag(getTagId(event.params.owner, event.params.tag.toString()));
     tag.tag = entity.tag;
     tag.owner = entity.owner;
-    tag.etches = [];
   }
 
-  tag.etches = tag.etches.concat([getEtchId(EID.Etch, event.params.tokenId)]);
+  let tagLink = TagLink.load(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
+  if (!tagLink) tagLink = new TagLink(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
 
+  tagLink.tag = tag.id;
+  tagLink.etch = getEtchId(EID.Etch, event.params.tokenId);
+  tagLink.owner = entity.owner;
+
+  tagLink.save();
   tag.save();
 }
 
@@ -131,17 +137,12 @@ export function handleTagRemoved(event: TagRemoved): void {
   let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
   if (!tag) return;
 
-  let filteredEtches = [] as string[];
-  for (let i = 0; i < tag.etches.length; i++) {
-    if (tag.etches[i] !== getEtchId(EID.Etch, event.params.tokenId)) {
-      filteredEtches.push(tag.etches[i]);
-    }
-  }
+  // Remove all TagLink entities associated with the tag being removed
+  let tagLink = TagLink.load(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
+  if (tagLink) store.remove('TagLink', tagLink.id);
 
-  tag.etches = filteredEtches;
-  tag.save();
-
-  if (tag.etches.length === 0) store.remove('Tag', tag.id);
+  // Check if the tag has any links left
+  if (tag.tagLinks.entries.length == 0) store.remove('Tag', tag.id);
 }
 
 export function handleEtchCreated(event: EtchCreatedEvent): void {

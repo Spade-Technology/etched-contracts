@@ -38,10 +38,12 @@ const FullEtchFragment = graphql(`
     }
 
     tags {
-      id
-      tag
-      owner {
-        eoa
+      tag {
+        id
+        tag
+        owner {
+          eoa
+        }
       }
     }
 

@@ -26,7 +26,7 @@ type Etch @entity {
   comments: [EtchCommentAdded!] @derivedFrom(field: "etch")
   transfers: [EtchTransfer!] @derivedFrom(field: "etch")
   approvals: [EtchApproval!] @derivedFrom(field: "etch")
-  tags: [Tag!]! @derivedFrom(field: "etches")
+  tags: [TagLink!] @derivedFrom(field: "etch")
 
   ipfsCid: String!
   documentName: String!
@@ -119,6 +119,13 @@ type OrganisationPermission @entity {
   permissionLevel: Int! # uint8, possibly Enum
 }
 
+type TagLink @entity {
+  id: ID!
+  tag: Tag!
+  etch: Etch!
+  owner: Wallet!
+}
+
 ## ETCH EVENTS ##
 
 type EtchTagAdded @entity {
@@ -156,7 +163,8 @@ type Tag @entity {
   id: ID!
   tag: String!
   owner: Wallet!
-  etches: [Etch!]!
+
+  tagLinks: [TagLink!] @derivedFrom(field: "tag")
 }
 
 type EtchApproval @entity(immutable: true) {
