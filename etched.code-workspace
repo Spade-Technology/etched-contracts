@@ -16,9 +16,6 @@
       "path": "apps/entities"
     },
     {
-      "path": "apps/desktop"
-    },
-    {
       "path": "packages"
     }
   ],

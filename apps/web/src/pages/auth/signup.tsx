@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import AuthenticationPage from "@/components/user-auth-form";
+import { useRouter } from "next/router";
 
 export const metadata: Metadata = {
   title: "Authentication",
@@ -8,5 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function SignInAuthenticationPage() {
-  return <AuthenticationPage isSignup={true} />;
+  const router = useRouter();
+  const { electron } = router.query;
+  return <AuthenticationPage isSignup={true} electron={!!electron} />;
 }

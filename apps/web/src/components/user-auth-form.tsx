@@ -19,9 +19,10 @@ import Link from "next/link";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   isSignup?: boolean;
   factorTwo?: boolean;
+  electron?: boolean;
 }
 
-export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) {
+export default function AuthenticationPage({ isSignup, electron }: { isSignup: boolean; electron?: boolean }) {
   const router = useRouter();
   const { signOut } = useSignOut();
 
@@ -86,7 +87,7 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
               </Button>
             </div>
           ) : (
-            <UserAuthForm isSignup={isSignup} factorTwo={factorTwo} />
+            <UserAuthForm electron={!!electron} isSignup={isSignup} factorTwo={factorTwo} />
           )}
           {!(sessionId || factorTwo) && (
             <div className="mx-auto mt-10 flex w-full items-center justify-center">
@@ -109,10 +110,11 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
   );
 }
 
-export function UserAuthForm({ className, isSignup, factorTwo, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, isSignup, factorTwo, electron, ...props }: UserAuthFormProps) {
   const router = useRouter();
 
   const { isLoaded, userId, sessionId, isSignedIn } = useAuth();
+
   const { logIn } = useSignIn();
   const [messageState, setMessageState] = React.useState("Verifying Wallet Abstraction...");
   const [threeDots, setThreeDots] = React.useState("...");
@@ -131,7 +133,7 @@ export function UserAuthForm({ className, isSignup, factorTwo, ...props }: UserA
      * Clerk: “The <SignUp/> and <SignIn/> components cannot render when a user is already signed in, unless the application allows...
      */
 
-    if (isLoaded && !router.asPath.includes("signup")) router.push("/auth");
+    if (isLoaded && !router.asPath.includes("signup") && !electron) router.push("/auth");
   }, [userId, sessionId, isSignedIn, isLoaded, router.asPath]);
 
   React.useEffect(() => {
@@ -159,6 +161,14 @@ export function UserAuthForm({ className, isSignup, factorTwo, ...props }: UserA
       ) : // if signUp=1, then it will be a sign up form
       isSignup ? (
         <SignUp path="/auth/signup" redirectUrl="/auth" afterSignUpUrl="/auth" signInUrl="/auth" routing="virtual" />
+      ) : electron ? (
+        <Button
+          onClick={() => {
+            window.ipc.send("login", "");
+          }}
+        >
+          Login
+        </Button>
       ) : (
         <SignIn path="/auth" afterSignInUrl="/auth" afterSignUpUrl="/auth/signup" signUpUrl="/auth/signup" routing="virtual" />
       )}
