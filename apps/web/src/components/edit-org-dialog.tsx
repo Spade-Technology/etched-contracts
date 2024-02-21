@@ -247,13 +247,13 @@ export const EditOrgDialog = ({
                       <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
                       <div className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{orgName}</div>
-                        <div className="">Owner</div>
+                        <div>Owner</div>
                       </div>
                       {orgData?.orgMembers?.map(({ id, name, role }: orgUser) => {
                         return (
                           <div key={id} className="flex items-center justify-between ">
                             <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
-                            <div className="">{role}</div>
+                            <div>{role}</div>
                           </div>
                         );
                       })}

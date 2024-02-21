@@ -265,7 +265,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
             } `}
             disabled={!hasWritePermission}
           >
-            <Icons.plus className="" color={theme === "dark" ? "rgb(var(--primary-foreground))" : "rgb(var(--primary))"} />
+            <Icons.plus color={theme === "dark" ? "rgb(var(--primary-foreground))" : "rgb(var(--primary))"} />
             Add more users
           </Button>
         </div>

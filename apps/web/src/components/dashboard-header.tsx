@@ -66,7 +66,7 @@ export const DashboardHeader = () => {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className=" h-12 w-12 rounded-lg py-2 text-[#9C9C9C] lg:px-3"
+              className="h-12 w-12 rounded-lg py-2 text-foreground/40 lg:px-3"
               strokeLinecap="round"
               strokeLinejoin="round"
               // className="lucide lucide-more-horizontal"

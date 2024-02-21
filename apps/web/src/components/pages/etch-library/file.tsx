@@ -42,13 +42,10 @@ export const File = ({ documentName, tokenId, activeModals, setActiveModals }: F
       <PropertiesDialog {...props} />
       <MoveDialog openMoveModal={openMoveModal} setOpenMoveModal={setOpenMoveModal} />
 
-      <main
-        key={tokenId}
-        className="flex h-[44px] w-full cursor-pointer items-center gap-[17px] rounded-lg bg-accent pr-[12px] !font-body"
-      >
+      <main key={tokenId} className="flex h-11 w-full cursor-pointer items-center gap-4 rounded-lg bg-accent pr-3 !font-body">
         <div onClick={propertyModal} className="flex h-full w-10/12 items-center justify-end gap-3 pl-4">
           <div className="flex items-center justify-end">
-            <FileLockIcon className="h-[18px] w-6" />
+            <FileLockIcon className="h-4 w-6" />
           </div>
           <div className="w-full truncate text-base font-medium text-neutral-500">{documentName}</div>
         </div>
@@ -56,10 +53,10 @@ export const File = ({ documentName, tokenId, activeModals, setActiveModals }: F
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="ml-auto flex h-full w-7 items-center justify-center">
-              <Icons.singleBar className="h-5 w-[4.35px] cursor-pointer" />
+              <Icons.singleBar className="h-5 w-1 cursor-pointer" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="mr-[194px] w-[209px] px-2.5 py-1.5 shadow-etched-1">
+          <DropdownMenuContent className="mr-48 w-52 px-2.5 py-1.5 shadow-etched-1">
             <DropdownMenuGroup>
               {options.map((item, idx) => {
                 return (
