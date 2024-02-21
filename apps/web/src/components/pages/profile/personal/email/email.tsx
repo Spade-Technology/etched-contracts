@@ -50,7 +50,7 @@ export const Email = () => {
         {emails
           .filter((email) => email.show)
           .map(({ title, value, id, verified }, idx) => (
-            <div key={idx} className="">
+            <div key={idx}>
               <div className=" text-base font-semibold text-muted-foreground">{title}</div>
               <div
                 className={`${

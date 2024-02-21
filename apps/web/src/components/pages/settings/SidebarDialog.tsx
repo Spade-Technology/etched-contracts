@@ -29,7 +29,7 @@ export const SidebarDialog = () => {
           </div>
         );
       })}
-      <div className=""></div>
+      <div></div>
     </aside>
   );
 };

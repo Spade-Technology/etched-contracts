@@ -165,7 +165,7 @@ function NewTeam() {
                         <div key={id} className="cursor-default text-sm transition-colors hover:text-accent-foreground ">
                           {name}
                         </div>
-                        <div className="">{role}</div>
+                        <div>{role}</div>
                       </div>
                     );
                   })}

@@ -196,7 +196,7 @@ export function CommandMenu() {
         onClick={() => setOpen(true)}
         className="flex w-fit cursor-text justify-start gap-2 rounded-sm border-[1.5px] border-input px-4 py-2 font-body !text-sm font-normal text-opacity-75 max-[950px]:hidden"
       >
-        <Icons.search className="" />
+        <Icons.search />
         Type a Command, or use {bsrtct("⌘K")}
       </Button>
 

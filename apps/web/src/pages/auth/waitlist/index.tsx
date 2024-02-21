@@ -41,7 +41,7 @@ export default function Approval() {
 
   return (
     <div className="bg-primary">
-      <div className=""></div>
+      <div></div>
       <div
         style={{ backgroundColor: "#0ea05c" }}
         className=" flex h-screen w-screen items-center justify-center bg-[url('/images/pending/BG.svg')] bg-cover bg-center bg-no-repeat"

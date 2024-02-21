@@ -211,7 +211,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                     return (
                       <div key={id} className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
-                        <div className="">{role}</div>
+                        <div>{role}</div>
                       </div>
                     );
                   })}

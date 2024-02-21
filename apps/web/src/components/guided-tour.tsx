@@ -56,16 +56,16 @@ export default function GuidedTour() {
           </header>
           <div className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
             <Icons.info className="h-4 w-4" />
-            <div className="">Interactive lesson available</div>
+            <div >Interactive lesson available</div>
             <div className="ml-auto cursor-pointer text-base text-primary">Start learning</div>
           </div>
           <div className="flex h-[204px] flex-col px-4 py-3">
             {tips.map(({ title, description }, idx) => {
               if (idx === tip) {
                 return (
-                  <div className="" key={idx}>
+                  <div  key={idx}>
                     <div className="mb-3 text-xl capitalize text-foreground">{title}</div>
-                    <div className="">{description}</div>
+                    <div >{description}</div>
                   </div>
                 );
               }
