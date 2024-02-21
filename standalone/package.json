@@ -1,0 +1,29 @@
+{
+  "name": "etched-standalone",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main/dist/main.js",
+  "author": {
+    "name": "spadetech",
+    "email": "info@spadetech.io"
+  },
+  "homepage": "https://www.spadetech.io/",
+  "scripts": {
+    "dev:standalone": "yarn clean && yarn build:main && electron .",
+    "build:main": "tsc -p main",
+    "lint": "next lint renderer",
+    "clean": "rimraf main/dist out/",
+    "package:standalone": "yarn clean && yarn build:main && electron-builder build -c"
+  },
+  "dependencies": {
+    "electron-serve": "^1.3.0",
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "electron": "^28.2.2",
+    "electron-builder": "^24.9.1",
+    "rimraf": "^5.0.5",
+    "typescript": "^5"
+  }
+}

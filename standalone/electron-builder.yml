@@ -1,0 +1,23 @@
+appId: com.etched-standalone.spade
+productName: etched-standalone
+directories:
+  output: out
+protocols:
+  name: Foorier Protocol
+  schemes:
+    - foorier
+linux:
+  category: Utility
+  icon: ressources/logo.png
+  mimeTypes: [x-scheme-handler/foorier] # Define MimeType for linux
+  desktop:
+    exec: etched-standalone %u
+  target:
+    - target: deb
+      arch:
+        - x64
+mac:
+  category: Utility
+  icon: ressources/logo.png
+win:
+  icon: ressources/logo.png
