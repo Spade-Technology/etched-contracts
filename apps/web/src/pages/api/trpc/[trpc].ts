@@ -3,6 +3,8 @@ import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
+export const maxDuration = 60;
+
 // export API handler
 export default createNextApiHandler({
   router: appRouter,
