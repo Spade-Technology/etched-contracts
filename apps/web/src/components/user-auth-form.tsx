@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { Icons } from "./ui/icons";
 import { Label } from "./ui/label";
 import Link from "next/link";
+import { env } from "process";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   isSignup?: boolean;
@@ -161,16 +162,16 @@ export function UserAuthForm({ className, isSignup, factorTwo, electron, ...prop
       ) : // if signUp=1, then it will be a sign up form
       isSignup ? (
         <SignUp path="/auth/signup" redirectUrl="/auth" afterSignUpUrl="/auth" signInUrl="/auth" routing="virtual" />
-      ) : electron ? (
-        <Button
-          onClick={() => {
-            window.ipc.send("login", "");
-          }}
-        >
-          Login
-        </Button>
       ) : (
-        <SignIn path="/auth" afterSignInUrl="/auth" afterSignUpUrl="/auth/signup" signUpUrl="/auth/signup" routing="virtual" />
+        <SignIn
+          path="/auth"
+          afterSignInUrl={
+            electron ? `foorier://${env.NODE_ENV === "development" ? "localhost:3000" : "etched.xyz"}/auth` : "/auth"
+          }
+          afterSignUpUrl="/auth/signup"
+          signUpUrl="/auth/signup"
+          routing="virtual"
+        />
       )}
       {!sessionId && !isSignup && !factorTwo && (
         <>

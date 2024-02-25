@@ -25,8 +25,8 @@ const isProd = process.env.NODE_ENV === "production";
     },
   });
 
-  // await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
-  await mainWindow.loadURL(`https://etched.xyz/auth?electron=true`);
+  await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
+  // await mainWindow.loadURL(`https://etched.xyz/auth?electron=true`);
   if (!isProd) {
     mainWindow.webContents.openDevTools();
   }
@@ -37,15 +37,16 @@ const isProd = process.env.NODE_ENV === "production";
     app.quit();
   } else {
     app.on("second-instance", async (_, commandLine, __) => {
+      console.log("MAMA: ", {
+        _,
+        commandLine,
+        __,
+      });
       const jwtRegex = /\[([^\]]+)\]/;
       const match = commandLine[2].match(jwtRegex);
-      let extractedJwt = "";
+      if (!match) return;
+      const extractedJwt = match[1];
 
-      if (match) {
-        extractedJwt = match[1];
-      } else {
-        console.log("JWT not found in the input string.");
-      }
       // Someone tried to run a second instance, we should focus our window.
       if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore();
@@ -53,8 +54,8 @@ const isProd = process.env.NODE_ENV === "production";
       }
 
       const cookie = {
-        // url: "http://localhost:3000/dashboard",
-        url: "https://etched.xyz/dashboard",
+        url: "http://localhost:3000/dashboard",
+        // url: "https://etched.xyz/dashboard",
         name: "__clerk_db_jwt",
         value: extractedJwt,
       };
@@ -76,10 +77,39 @@ const isProd = process.env.NODE_ENV === "production";
       await mainWindow.webContents.executeJavaScript(
         `localStorage.setItem("clerk-db-jwt", "${extractedJwt}")`
       );
-      // await mainWindow.loadURL(`http://localhost:3000/auth`);
-      await mainWindow.loadURL(`https://etched.xyz/auth`);
+      await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
+      // await mainWindow.loadURL(`https://etched.xyz/auth`);
     });
   }
+
+  mainWindow.webContents.on("did-redirect-navigation", async (event) => {
+    const url = new URL(event.url);
+    const newUrl = new URL(
+      "https://accounts.google.com/o/oauth2/auth/oauthchooseaccount"
+    );
+    newUrl.searchParams.set(
+      "access_type",
+      url.searchParams.get("access_type") || ""
+    );
+    newUrl.searchParams.set(
+      "client_id",
+      url.searchParams.get("client_id") || ""
+    );
+    newUrl.searchParams.set(
+      "redirect_uri",
+      url.searchParams.get("redirect_uri") || ""
+    );
+    newUrl.searchParams.set(
+      "response_type",
+      url.searchParams.get("response_type") || ""
+    );
+    newUrl.searchParams.set("scope", url.searchParams.get("scope") || "");
+    newUrl.searchParams.set("state", url.searchParams.get("state") || "");
+
+    event.preventDefault();
+    shell.openExternal(newUrl.href);
+    await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
+  });
 })();
 
 app.on("window-all-closed", () => {
@@ -90,8 +120,4 @@ app.on("window-all-closed", () => {
 
 ipcMain.on("message", async (event, arg) => {
   event.reply("message", `${arg} World!`);
-});
-ipcMain.on("login", async () => {
-  // shell.openExternal("http://localhost:3000/auth/electron");
-  shell.openExternal("https://etched.xyz/auth/electron");
 });
