@@ -25,8 +25,8 @@ const isProd = process.env.NODE_ENV === "production";
     },
   });
 
-  await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
-  // await mainWindow.loadURL(`https://etched.xyz/auth?electron=true`);
+  // await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
+  await mainWindow.loadURL(`https://etched.xyz/auth?electron=true`);
   if (!isProd) {
     mainWindow.webContents.openDevTools();
   }
@@ -54,8 +54,8 @@ const isProd = process.env.NODE_ENV === "production";
       }
 
       const cookie = {
-        url: "http://localhost:3000/dashboard",
-        // url: "https://etched.xyz/dashboard",
+        // url: "http://localhost:3000/dashboard",
+        url: "https://etched.xyz/dashboard",
         name: "__clerk_db_jwt",
         value: extractedJwt,
       };
@@ -77,8 +77,8 @@ const isProd = process.env.NODE_ENV === "production";
       await mainWindow.webContents.executeJavaScript(
         `localStorage.setItem("clerk-db-jwt", "${extractedJwt}")`
       );
-      await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
-      // await mainWindow.loadURL(`https://etched.xyz/auth`);
+      // await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
+      await mainWindow.loadURL(`https://etched.xyz/auth?electron=true`);
     });
   }
 
@@ -108,7 +108,8 @@ const isProd = process.env.NODE_ENV === "production";
 
     event.preventDefault();
     shell.openExternal(newUrl.href);
-    await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
+    // await mainWindow.loadURL(`http://localhost:3000/auth?electron=true`);
+    await mainWindow.loadURL(`https://etched.xyz/auth?electron=true`);
   });
 })();
 
