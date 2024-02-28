@@ -20,3 +20,12 @@ export interface FileProps extends Etch {
   activeModals: modal;
   setActiveModals: React.Dispatch<modal>;
 }
+
+export interface plan {
+  price?: string;
+  title?: string;
+  subtitle?: string;
+  period?: string;
+  recommended?: boolean;
+  features?: string[];
+}

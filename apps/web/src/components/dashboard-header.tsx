@@ -12,7 +12,7 @@ import { useState } from "react";
 import Plan from "./ui/plan";
 
 export const DashboardHeader = () => {
-  const [planModal, setPlanModal] = useState(true);
+  const [planModal, setPlanModal] = useState(false);
   const { isSignedIn } = useUser();
   const router = useRouter();
   const pathname = usePathname();

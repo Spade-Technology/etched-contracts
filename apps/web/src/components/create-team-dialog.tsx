@@ -128,7 +128,7 @@ export const CreateTeamDialog = ({
             <DialogDescription>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <Label className="font-semibold">Select Organization</Label>
+                  <Label className="font-semibold">Select Organisation</Label>
                   <FormField
                     control={form.control}
                     name="teamOrganisation"

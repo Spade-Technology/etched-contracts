@@ -56,16 +56,16 @@ export default function GuidedTour() {
           </header>
           <div className="flex items-center gap-3 border-b border-t border-muted-foreground bg-accent px-4 py-3 text-sm text-muted-foreground">
             <Icons.info className="h-4 w-4" />
-            <div >Interactive lesson available</div>
+            <div>Interactive lesson available</div>
             <div className="ml-auto cursor-pointer text-base text-primary">Start learning</div>
           </div>
           <div className="flex h-[204px] flex-col px-4 py-3">
             {tips.map(({ title, description }, idx) => {
               if (idx === tip) {
                 return (
-                  <div  key={idx}>
+                  <div key={idx}>
                     <div className="mb-3 text-xl capitalize text-foreground">{title}</div>
-                    <div >{description}</div>
+                    <div>{description}</div>
                   </div>
                 );
               }
@@ -126,7 +126,7 @@ const tips = [
     title: "Search Everywhere",
     description: (
       <div className="leading-[28px] tracking-wide">
-        Press {label("Ctrl")} {label("K")} to search for files/etches, actions, new organizations, UI elements, new teams and
+        Press {label("Ctrl")} {label("K")} to search for files/etches, actions, new organisations, UI elements, new teams and
         comments across your profile
       </div>
     ),
@@ -143,7 +143,7 @@ const tips = [
     title: "New organiztion",
     description: (
       <div className="leading-[28px] tracking-wide">
-        Press {label("Ctrl")} {label("O")} to create new organization
+        Press {label("Ctrl")} {label("O")} to create new organisation
       </div>
     ),
   },
