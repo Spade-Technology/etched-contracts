@@ -102,15 +102,15 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
       <DialogContent className={"max-w-[440px]"}>
         {!creationDone ? (
           <>
-            <DialogTitle className="text-base text-primary">New Organization</DialogTitle>
+            <DialogTitle className="text-base text-primary">New Organisation</DialogTitle>
             <DialogDescription>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <Label className="font-semibold">Organization Name</Label>
+                  <Label className="font-semibold">Organisation Name</Label>
                   <Input
                     disabled={isLoading}
                     id="text"
-                    placeholder="Name your organization"
+                    placeholder="Name your organisation"
                     className="col-span-3 mb-7"
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
@@ -201,7 +201,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
         ) : (
           <>
             <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
-              New Organization {orgName} has been created! 🎉
+              New Organisation {orgName} has been created! 🎉
             </DialogTitle>
             {!!orgMembers.length && (
               <DialogDescription>

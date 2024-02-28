@@ -89,7 +89,7 @@ export const OrgDialog = ({
         <div className="mr-4 text-xl font-bold capitalize text-foreground">{name}</div>
         <div className="mr-[27px] text-sm font-medium text-muted-foreground">{orgId}</div>
         <div className="max text-sm font-medium text-muted-foreground max-lg:hidden">{date}</div>
-        <EditButton onClick={() => setOpenEditOrgModal(true)} title=" Modify organization" />
+        <EditButton onClick={() => setOpenEditOrgModal(true)} title=" Modify organisation" />
 
         <Icons.dropdown className={`${accordion === name ? "rotate-180" : "rotate-0"} mb-2.5 ml-[37px] w-6 duration-300`} />
       </header>

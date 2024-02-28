@@ -56,7 +56,7 @@ export const useTransferOwnershipTeam = ({
       timestamp: Date.now(),
     });
     try {
-      if (owner === "organization") {
+      if (owner === "organisation") {
         const { orgId } = newOrg[0] as Organisation;
 
         await transferToOrganisationAsync({

@@ -109,7 +109,7 @@ export const EditOrgDialog = ({
               // EDIT TEAM FORM
               <>
                 <div className="flex justify-between">
-                  <DialogTitle className="text-base text-primary">Modify Organization</DialogTitle>
+                  <DialogTitle className="text-base text-primary">Modify Organisation</DialogTitle>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <div
@@ -146,7 +146,7 @@ export const EditOrgDialog = ({
                 </div>
                 <DialogDescription>
                   <form onSubmit={onSubmit}>
-                    <Label className="font-semibold">Organization Name</Label>
+                    <Label className="font-semibold">Organisation Name</Label>
                     <Input
                       disabled={isLoading}
                       id="text"
@@ -295,9 +295,9 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
 
   return (
     <div>
-      <DialogTitle className="mb-6 text-center text-base text-destructive">Deleting Organization Confirmation</DialogTitle>
+      <DialogTitle className="mb-6 text-center text-base text-destructive">Deleting Organisation Confirmation</DialogTitle>
       <div className="mx-auto w-[342px] text-center text-muted-foreground">
-        Are you sure that you want to delete Organization <span className="capitalize">“{orgName}”</span>?
+        Are you sure that you want to delete Organisation <span className="capitalize">“{orgName}”</span>?
       </div>
 
       <footer className="mt-10 flex items-center justify-center gap-5">

@@ -321,7 +321,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
         <form onSubmit={transferOwnership}>
           <Label className="font-semibold">Select</Label>
           <div className="mb-7 mt-[9px] flex gap-5">
-            {["individual", "organization"].map((item, id) => {
+            {["individual", "organisation"].map((item, id) => {
               return (
                 <div
                   key={id}
@@ -361,9 +361,9 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
             </>
           )}
 
-          {owner === "organization" && (
+          {owner === "organisation" && (
             <>
-              <Label className="font-semibold">Organization Name</Label>
+              <Label className="font-semibold">Organisation Name</Label>
               <OrgInputDropdown
                 type={"singleSelect"}
                 orgs={organisations as Organisation[]}

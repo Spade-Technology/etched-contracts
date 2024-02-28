@@ -69,10 +69,10 @@ function NewTeam() {
             <>
               <DialogTitle className="text-base text-primary">New Team</DialogTitle>
               <DialogDescription>
-                <Label className="font-semibold">Select Organization</Label>
+                <Label className="font-semibold">Select Organisation</Label>
                 <Input
                   id="text"
-                  placeholder="Name your organization"
+                  placeholder="Name your organisation"
                   className="col-span-3 mb-7"
                   value={orgName}
                   onChange={(e) => setOrgName(e.target.value)}
@@ -154,7 +154,7 @@ function NewTeam() {
             // INVITED USERS
             <>
               <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
-                New Organization {inviteUsers.name} has been created! 🎉
+                New Organisation {inviteUsers.name} has been created! 🎉
               </DialogTitle>
               <DialogDescription>
                 <div className="mt-3 flex flex-col gap-4 rounded-[6px] bg-[#F3F5F5] p-3">
