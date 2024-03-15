@@ -1,0 +1,158 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Etch
+    network: matic
+    source:
+      address: '0xb9E3aA4aef51961474d0AC19249Eb91954B8B63F'
+      abi: Etch
+      startBlock: 53551596
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - CommentAdded
+        - EtchCreated
+        - EtchTransferedToTeam
+        - InvididualPermissionsUpdated
+        - OwnershipTransferred
+        - Transfer
+        - EtchMetadataUpdated
+      abis:
+        - name: Etch
+          file: ./abis/Etch.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256),indexed address)
+          handler: handleCommentAdded
+        - event: EtchCreated(indexed uint256,indexed address,string,string)
+          handler: handleEtchCreated
+        - event: EtchTransferedToTeam(indexed uint256,indexed address,indexed uint256)
+          handler: handleEtchTransferedToTeam
+        - event: InvididualPermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handleInvididualPermissionsUpdated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TeamPermissionsUpdated(indexed uint256,indexed uint256,uint8)
+          handler: handleTeamPermissionsUpdated
+        - event: EtchMetadataUpdated(indexed uint256,string,string,string)
+          handler: handleEtchMetadataUpdated
+        - event: TagAdded(indexed uint256,indexed address,string)
+          handler: handleTagAdded
+        - event: TagModified(indexed uint256,indexed address,string,string)
+          handler: handleTagModified
+        - event: TagRemoved(indexed uint256,indexed address,string)
+          handler: handleTagRemoved
+      file: ./src/etch.ts
+  - kind: ethereum
+    name: Team
+    network: matic
+    source:
+      address: '0xb81413e2A8CBa37f5f01269D21738f0A7E909c74'
+      abi: Team
+      startBlock: 53551596
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TeamApproval
+        - TeamApprovalForAll
+        - TeamOwnershipTransferred
+        - PermissionsUpdated
+        - TeamCreated
+        - TeamTransfer
+        - TransferToOrganisation
+        - TeamRenamed
+      abis:
+        - name: Team
+          file: ./abis/Team.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handlePermissionsUpdated
+        - event: TeamCreated(indexed uint256,indexed address)
+          handler: handleTeamCreated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TransferToOrganisation(indexed uint256,indexed uint256)
+          handler: handleTransferToOrganisation
+        - event: TeamRenamed(indexed uint256,string)
+          handler: handleTeamRenamed
+      file: ./src/team.ts
+  - kind: ethereum
+    name: Organisation
+    network: matic
+    source:
+      address: '0xbfFd8Ce3FF8E2051F02b99A97AE76ee9609ce7F8'
+      abi: Organisation
+      startBlock: 53551596
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OrganisationApproval
+        - OrganisationApprovalForAll
+        - OrganisationCreated
+        - OrganisationOwnershipTransferred
+        - OrganisationPermissionsUpdated
+        - OrganisationTransfer
+        - OrganisationRenamed
+      abis:
+        - name: Organisation
+          file: ./abis/Organisation.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OrganisationCreated(indexed uint256,indexed address)
+          handler: handleOrganisationCreated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PermissionsUpdated(indexed uint256,indexed address,uint8)
+          handler: handlePermissionsUpdated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: OrganisationRenamed(indexed uint256,string)
+          handler: handleOrganisationRenamed
+      file: ./src/organisation.ts
+  - kind: ethereum
+    name: EtchENS
+    network: matic
+    source:
+      address: '0x6b5E8b6EB81c135d325397A215C0D38E5B433A04'
+      abi: EtchENS
+      startBlock: 53551596
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EtchTransferred
+        - EtchENSTransfer
+      abis:
+        - name: EtchENS
+          file: ./abis/EtchENS.json
+      eventHandlers:
+        - event: EtchENSCreated(indexed uint256,indexed address,string)
+          handler: handleEtchENSCreated
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleENSTransfer
+      file: ./src/etch-ens.ts
