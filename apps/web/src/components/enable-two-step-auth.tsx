@@ -60,9 +60,9 @@ export const EnableTwoStepAuth = ({
                   className="h-full w-full border-none font-body text-base focus:outline-none"
                 />
                 {showPassword ? (
-                  <Icons.hidePassword onClick={() => setShowPassword(!showPassword)} className=" cursor-pointer" />
+                  <Icons.hidePassword onClick={() => setShowPassword(!showPassword)} className="cursor-pointer" />
                 ) : (
-                  <Icons.openEye onClick={() => setShowPassword(!showPassword)} className=" cursor-pointer" />
+                  <Icons.openEye onClick={() => setShowPassword(!showPassword)} className="cursor-pointer" />
                 )}
               </div>
 

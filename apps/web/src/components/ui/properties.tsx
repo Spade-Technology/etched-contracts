@@ -166,7 +166,7 @@ export default function PropertiesDialog({
           <div className="flex flex-col gap-4 bg-accent p-3 pt-4">
             {permissions.map(({ name, address, role, img }) => {
               return (
-                <main className=" flex items-center gap-3">
+                <main className="flex items-center gap-3">
                   <img src={img} alt="" className="h-10 w-10" />
                   <div>
                     <div className="w-44 truncate text-lg text-foreground">{name}</div>

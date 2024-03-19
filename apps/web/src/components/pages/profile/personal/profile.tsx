@@ -132,7 +132,7 @@ export const Profile = () => {
           <div>
             <img src={imgUrl} alt="" className="h-16 w-16 rounded-full bg-primary" />
             <div
-              className=" cursor-pointer text-center font-body text-xs font-medium text-primary"
+              className="cursor-pointer text-center font-body text-xs font-medium text-primary"
               onClick={() => setChange(true)}
             >
               Change

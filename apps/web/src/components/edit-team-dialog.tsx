@@ -156,7 +156,7 @@ export const EditTeamDialog = ({
                               <div key={id} className="flex items-center justify-between">
                                 <div
                                   // onClick={() => inviteUser({ id, name, role })}
-                                  className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                                  className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
                                   {name || shortenAddress({ address: id })}
                                 </div>
@@ -169,7 +169,7 @@ export const EditTeamDialog = ({
                                       {role} <Icons.dropdownIcon />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className=" items-start p-1">
+                                  <DropdownMenuContent className="items-start p-1">
                                     <DropdownMenuGroup>
                                       {[...roleData, "Remove access"].map((item, idx) => {
                                         return (

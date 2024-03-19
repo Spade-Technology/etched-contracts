@@ -96,7 +96,7 @@ function NewTeam() {
                           <div
                             key={id}
                             // onClick={() => inviteUser({ id, name, role })}
-                            className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                            className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                           >
                             {name || shortenAddress({ address: id })}
                           </div>
@@ -109,7 +109,7 @@ function NewTeam() {
                                 {role} <Icons.dropdownIcon />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className=" items-start p-1">
+                            <DropdownMenuContent className="items-start p-1">
                               <DropdownMenuGroup>
                                 {roleData.map((item, idx) => {
                                   return (
