@@ -3,7 +3,7 @@ import OrgABI from "@/contracts/abi/Organisations.json";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { publicClient, walletClient } from "@/server/web3";
 import EtchABI from "@abis/Etches.json";
-import { Address, encodeFunctionData, keccak256 } from "viem";
+import { Address, encodeFunctionData, keccak256, parseGwei } from "viem";
 import { z } from "zod";
 
 const userPermissions = {
@@ -42,6 +42,7 @@ export const orgRouter = createTRPCRouter({
         });
 
         const tx = await walletClient.writeContract({
+          // gasPrice: parseGwei('20'), //CONSIDER: (Michael) need this for local test
           address: contracts.Org,
           functionName: "delegateCallsToSelf",
           args: [

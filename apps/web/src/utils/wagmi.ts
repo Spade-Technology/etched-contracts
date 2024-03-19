@@ -1,6 +1,6 @@
 import { providers } from "ethers";
 import { Chain, WalletClient, configureChains, createConfig } from "wagmi";
-import { polygon } from "wagmi/chains";
+import { polygon, } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 export const currentChain = polygon;
@@ -12,7 +12,7 @@ export const config = createConfig({
   webSocketPublicClient,
 });
 
-export function walletClientToProviderAndSigner(walletClient: WalletClient, chain: Chain) {
+export function walletClientToProviderAndSigner (walletClient: WalletClient, chain: Chain) {
   const { account, transport } = walletClient;
 
   const network = {

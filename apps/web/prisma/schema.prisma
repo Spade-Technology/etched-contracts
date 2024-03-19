@@ -8,6 +8,12 @@ enum ApprovedStatus {
     Approved
 }
 
+enum SubscriptionStatus {
+    Pending
+    Accepted
+    Cancelled
+}
+
 datasource db {
     provider          = "postgresql"
     url               = env("DATABASE_PRISMA_URL") // uses connection pooling
@@ -25,6 +31,29 @@ model User {
     isAdministrator     Boolean              @default(false)
 
     capacityCredits capacityCredit[]
+    subscriberId    String //For payments (stripe, etc).  Not related to newsletters
+}
+
+model PaidSubscriptions {
+    subscriberId   String
+    subscriptionId String
+    quantity       Int
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+
+    @@id([subscriberId, subscriptionId])
+}
+
+model GiftedSubscriptions {
+    //Intentionally basing on combo-id rather than a single unique id -- in the event that a sub is somehow deleted then restored
+    donorSubId     String //donor's subscriberId
+    recipientSubId String //recipients' subscriberId
+    subscriptionId String
+    status         SubscriptionStatus @default(Pending)
+
+    //Only allowed to have a single sub from any individual donor.  Otherwise we'll need to add subscriptionId field
+    //Probably should limit to just recipient so that we don't risk multiple assignments from other individuals
+    @@id([donorSubId, recipientSubId])
 }
 
 model Subscriber {

@@ -6,9 +6,9 @@ dataSources:
     name: Etch
     network: matic
     source:
-      address: '0xbfFd8Ce3FF8E2051F02b99A97AE76ee9609ce7F8'
+      address: '0x0E801D84Fa97b50751Dbf25036d067dCf18858bF'
       abi: Etch
-      startBlock: 54817974
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -31,15 +31,11 @@ dataSources:
           handler: handleApproval
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
-        - event: >-
-            CommentAdded(indexed uint256,indexed
-            uint256,(string,uint256),indexed address)
+        - event: CommentAdded(indexed uint256,indexed uint256,(string,uint256),indexed address)
           handler: handleCommentAdded
         - event: EtchCreated(indexed uint256,indexed address,string,string)
           handler: handleEtchCreated
-        - event: >-
-            EtchTransferedToTeam(indexed uint256,indexed address,indexed
-            uint256)
+        - event: EtchTransferedToTeam(indexed uint256,indexed address,indexed uint256)
           handler: handleEtchTransferedToTeam
         - event: InvididualPermissionsUpdated(indexed uint256,indexed address,uint8)
           handler: handleInvididualPermissionsUpdated
@@ -62,9 +58,9 @@ dataSources:
     name: Team
     network: matic
     source:
-      address: '0xBD09e4aE2644025183BcC792167b68F9C520EFb1'
+      address: '0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf'
       abi: Team
-      startBlock: 54817974
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -103,9 +99,9 @@ dataSources:
     name: Organisation
     network: matic
     source:
-      address: '0x235D3488B11Cff3166C529f8F24146829a6511cD'
+      address: '0xf5059a5D33d5853360D16C683c16e67980206f36'
       abi: Organisation
-      startBlock: 54817974
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -143,7 +139,7 @@ dataSources:
     source:
       address: '0x70e0bA845a1A0F2DA3359C97E0285013525FFC49'
       abi: EtchENS
-      startBlock: 54817974
+      startBlock: 53551596
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

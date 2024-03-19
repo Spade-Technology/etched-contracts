@@ -22,6 +22,9 @@ const config = {
     // This is for react-pdf.
     config.resolve.alias.canvas = false;
 
+    // config.experiments = {
+    //   topLevelAwait: true,
+    // };
     return config;
   },
 

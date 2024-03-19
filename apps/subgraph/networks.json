@@ -26,5 +26,23 @@
       "address": "0x5a0b762772f4168079dcfebafa01e35084a5632e",
       "startBlock": 11538217
     }
+  },
+  "matic": {
+    "Etch": {
+      "address": "0xbfFd8Ce3FF8E2051F02b99A97AE76ee9609ce7F8",
+      "startBlock": 54817974
+    },
+    "Team": {
+      "address": "0xBD09e4aE2644025183BcC792167b68F9C520EFb1",
+      "startBlock": 54817974
+    },
+    "Organisation": {
+      "address": "0x235D3488B11Cff3166C529f8F24146829a6511cD",
+      "startBlock": 54817974
+    },
+    "EtchENS": {
+      "address": "0x75513e591b7e64a4680fBb42492952F6f2b8c70A",
+      "startBlock": 54817974
+    }
   }
 }
