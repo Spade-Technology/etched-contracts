@@ -13,10 +13,10 @@ export default function Plan({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen
     >
       <DialogContent className={"max-w-3xl p-5 font-body"}>
         <DialogDescription>
-          <DialogTitle className=" mb-1 font-semibold text-primary">Renew your subscription</DialogTitle>
+          <DialogTitle className="mb-1 font-semibold text-primary">Renew your subscription</DialogTitle>
           <header className="text-xs font-medium leading-4">Select a plan that suits your needs</header>
-          <section className=" mt-7 flex items-center gap-2">
-            <div className=" text-base font-semibold leading-5 text-foreground">Choose Plan</div>
+          <section className="mt-7 flex items-center gap-2">
+            <div className="text-base font-semibold leading-5 text-foreground">Choose Plan</div>
             <div className="flex overflow-hidden rounded-md bg-foreground/10 text-xs font-semibold">
               <div className="flex h-8 items-center justify-center px-5">Monthly</div>
               <div className="flex h-8 items-center justify-center gap-1 bg-success-foreground px-3">
@@ -41,7 +41,7 @@ export default function Plan({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen
                 <>
                   <div className="mt-5 text-4xl font-semibold text-foreground/80">{price}</div>
                   <div className="text-xs font-medium leading-4">{period}</div>
-                  <div className=" my-4 flex w-full cursor-pointer items-center justify-center rounded bg-primary py-1 text-sm font-semibold text-white shadow-3xl">
+                  <div className="my-4 flex w-full cursor-pointer items-center justify-center rounded bg-primary py-1 text-sm font-semibold text-white shadow-3xl">
                     Get Started
                   </div>
                 </>

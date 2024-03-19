@@ -53,7 +53,7 @@ const ProfileCard = ({ image, name, link = "", uid = "", role, dropDownOn, dropD
             <DropdownMenuTrigger asChild>
               <Button
                 variant={"ghost"}
-                className=" float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D]"
+                className="float-right flex justify-between gap-2 border-none bg-transparent text-[#6D6D6D]"
               >
                 {role ? role : dropDownItems && dropDownItems[0]} <Icons.dropdownIcon />
               </Button>

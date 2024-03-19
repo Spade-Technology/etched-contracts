@@ -89,7 +89,7 @@ export default function GuidedTour() {
           <footer className="border-forground flex items-center justify-between border-t p-4">
             <div className="flex items-center gap-2">
               <Checkbox />
-              <div className=" text-foreground">Don't show this tip again</div>
+              <div className="text-foreground">Don't show this tip again</div>
             </div>
             <aside className="flex gap-3">
               {["back", "next", "close"].map((name, idx) => {

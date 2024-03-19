@@ -244,7 +244,7 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                           <div className="flex items-center justify-between">
                             <div
                               key={id}
-                              className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                              className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                             >
                               {name || shortenAddress({ address: id })}
                             </div>
@@ -283,7 +283,7 @@ const AddUser = ({ show, setShow, etch }: UserProps) => {
                           <div className="flex items-center justify-between">
                             <div
                               key={id}
-                              className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                              className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                             >
                               {name}
                             </div>
