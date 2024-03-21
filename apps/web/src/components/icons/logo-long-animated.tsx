@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-export const LogoAnimated = ({ className }: { className?: string }) => {
+export const LogoAnimated = ({ className, onClick }: { className?: string; onClick?: any }) => {
   const [shake, setShake] = useState(false);
 
   const animate = () => {
+    onClick();
     if (shake) return;
     setShake(true);
     setTimeout(() => {

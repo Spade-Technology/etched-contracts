@@ -27,7 +27,7 @@ export const SidebarDialog = ({ activeTab, setActiveTab }: { activeTab: string; 
           </div>
         );
       })}
-      <div className=""></div>
+      <div ></div>
     </aside>
   );
 };

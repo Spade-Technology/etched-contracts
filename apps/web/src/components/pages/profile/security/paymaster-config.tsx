@@ -39,7 +39,7 @@ export const Paymaster = () => {
 
   return (
     <main>
-      <header className=" mb-5 text-xl font-semibold text-foreground">Gas Configuration</header>
+      <header className="mb-5 text-xl font-semibold text-foreground">Gas Configuration</header>
 
       <div className="flex h-14 w-80 items-center justify-between rounded-2xl bg-primary p-4">
         <div className="font-body text-base font-medium text-primary-foreground dark:font-bold">

@@ -102,15 +102,15 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
       <DialogContent className={"max-w-[440px]"}>
         {!creationDone ? (
           <>
-            <DialogTitle className="text-base text-primary">New Organization</DialogTitle>
+            <DialogTitle className="text-base text-primary">New Organisation</DialogTitle>
             <DialogDescription>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <Label className="font-semibold">Organization Name</Label>
+                  <Label className="font-semibold">Organisation Name</Label>
                   <Input
                     disabled={isLoading}
                     id="text"
-                    placeholder="Name your organization"
+                    placeholder="Name your organisation"
                     className="col-span-3 mb-7"
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
@@ -131,7 +131,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                             <div
                               key={id}
                               // onClick={() => inviteUser({ id, name, role })}
-                              className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                              className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                             >
                               {name || shortenAddress({ address: id })}
                             </div>
@@ -144,7 +144,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                                   {role} <Icons.dropdownIcon />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent className=" items-start p-1">
+                              <DropdownMenuContent className="items-start p-1">
                                 <DropdownMenuGroup>
                                   {[...roleData, "Remove access"].map((item, idx) => {
                                     return (
@@ -201,7 +201,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
         ) : (
           <>
             <DialogTitle className="mx-auto max-w-[226px] text-center text-base text-primary">
-              New Organization {orgName} has been created! 🎉
+              New Organisation {orgName} has been created! 🎉
             </DialogTitle>
             {!!orgMembers.length && (
               <DialogDescription>
@@ -211,7 +211,7 @@ export const CreateOrgDialog = ({ openOrgModal, setOpenOrgModal }: { openOrgModa
                     return (
                       <div key={id} className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
-                        <div className="">{role}</div>
+                        <div>{role}</div>
                       </div>
                     );
                   })}

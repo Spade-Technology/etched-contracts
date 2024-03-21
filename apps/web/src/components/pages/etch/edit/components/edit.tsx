@@ -84,7 +84,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
       <div className="z-10 flex h-full flex-col p-7">
         <div className="flex justify-between gap-4">
           {edit ? (
-            <div className=" w-full">
+            <div className="w-full">
               <div>{etch?.documentName}</div>
               <Input
                 defaultValue={etch?.documentName}
@@ -265,7 +265,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
             } `}
             disabled={!hasWritePermission}
           >
-            <Icons.plus className="" color={theme === "dark" ? "rgb(var(--primary-foreground))" : "rgb(var(--primary))"} />
+            <Icons.plus color={theme === "dark" ? "rgb(var(--primary-foreground))" : "rgb(var(--primary))"} />
             Add more users
           </Button>
         </div>

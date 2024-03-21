@@ -128,7 +128,7 @@ export const CreateTeamDialog = ({
             <DialogDescription>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <Label className="font-semibold">Select Organization</Label>
+                  <Label className="font-semibold">Select Organisation</Label>
                   <FormField
                     control={form.control}
                     name="teamOrganisation"
@@ -186,7 +186,7 @@ export const CreateTeamDialog = ({
                             <div className="flex items-center justify-between">
                               <div
                                 key={id}
-                                className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                                className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                               >
                                 {name || shortenAddress({ address: id })}
                               </div>
@@ -199,7 +199,7 @@ export const CreateTeamDialog = ({
                                     {role} <Icons.dropdownIcon />
                                   </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className=" items-start p-1">
+                                <DropdownMenuContent className="items-start p-1">
                                   <DropdownMenuGroup>
                                     {[...roleData, "Remove access"].map((item, idx) => {
                                       return (
@@ -267,7 +267,7 @@ export const CreateTeamDialog = ({
                     return (
                       <div key={id} className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
-                        <div className="">{role}</div>
+                        <div>{role}</div>
                       </div>
                     );
                   })}

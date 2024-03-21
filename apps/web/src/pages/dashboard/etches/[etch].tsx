@@ -54,7 +54,7 @@ export default function EtchPage() {
                     </>
                   ) : (
                     <div className="text-xl font-bold text-opacity-75">
-                      <span className="">{etch?.documentName}</span>
+                      <span>{etch?.documentName}</span>
                     </div>
                   )}
                 </div>

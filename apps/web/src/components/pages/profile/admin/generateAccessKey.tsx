@@ -39,7 +39,7 @@ export const GenerateAccessKey = () => {
   };
 
   return (
-    <div className="flex flex-col  space-y-4">
+    <div className="flex flex-col space-y-4">
       {code ? (
         <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-lg">
           <p className="text-lg font-semibold">
@@ -47,9 +47,7 @@ export const GenerateAccessKey = () => {
           </p>
           <p className="text-sm text-gray-600">Expires on: {expiration}</p>
           <div className="mt-2 flex gap-2">
-            <Button onClick={handleCopyCode} className="">
-              Copy Code
-            </Button>
+            <Button onClick={handleCopyCode}>Copy Code</Button>
             <Button onClick={handleGenerateCode} className="w-full sm:w-auto" isLoading={createActivationCode.isLoading}>
               Generate Another Activation Code
             </Button>

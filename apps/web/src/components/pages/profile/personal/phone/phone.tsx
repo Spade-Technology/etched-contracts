@@ -26,8 +26,8 @@ export const Phone = () => {
 
       <header className="mb-5 mt-3 text-xl font-semibold text-foreground">Phone</header>
       <section className="flex flex-col gap-5">
-        <div className="">
-          <div className=" text-base font-semibold text-muted-foreground">{phone.title}</div>
+        <div>
+          <div className="text-base font-semibold text-muted-foreground">{phone.title}</div>
           <div
             className={`${
               phone.value ? "flex" : "hidden"

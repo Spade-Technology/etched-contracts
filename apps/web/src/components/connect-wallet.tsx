@@ -51,7 +51,7 @@ export function ConnectWalletModalButtonWrapper({ className, ...props }: Connect
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {props.children || (
-          <Button className="gap-4 rounded border border-muted bg-background text-sm font-normal text-muted-foreground">
+          <Button className="gap-4 hover:text-white rounded border border-muted bg-background text-sm font-normal text-muted-foreground">
             Connect Wallet <Icons.wallet />
           </Button>
         )}
