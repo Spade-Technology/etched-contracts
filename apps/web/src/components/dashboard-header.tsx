@@ -8,15 +8,18 @@ import { EtchedENS } from "./ens-button";
 import { UserSettings } from "./sidebar";
 import { TeamSelector } from "./team-selector";
 import { Icons } from "./ui/icons";
+import { useState } from "react";
+import Plan from "./ui/plan";
 
 export const DashboardHeader = () => {
+  const [planModal, setPlanModal] = useState(false);
   const { isSignedIn } = useUser();
   const router = useRouter();
   const pathname = usePathname();
 
   const icons = [
     { Icon: Icons.userCircle, url: "/dashboard/profile", show: !!isSignedIn },
-    { Icon: Icons.bell, url: "/dashboard/manage", show: true },
+    { Icon: Icons.bell, show: true },
   ];
 
   return (
@@ -33,6 +36,7 @@ export const DashboardHeader = () => {
       {/* Modals & More */}
       <CreateTeamDialog />
       <CreateOrgDialog />
+      <Plan isOpen={planModal} setIsOpen={setPlanModal} />
 
       <div className="flex h-full">
         <div className="h-full border-l " />
@@ -41,7 +45,7 @@ export const DashboardHeader = () => {
           .map(({ Icon, url }, idx) => (
             <div className="flex" key={idx}>
               <div
-                onClick={() => router.push(url)}
+                onClick={() => (url ? router.push(url) : null)}
                 className="relative flex h-full w-16 cursor-pointer items-center justify-center"
               >
                 <Icon color={pathname == url ? "#097B45" : ""} />
@@ -66,7 +70,7 @@ export const DashboardHeader = () => {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className=" h-12 w-12 rounded-lg py-2 text-[#9C9C9C] lg:px-3"
+              className="h-12 w-12 rounded-lg py-2 text-foreground/40 lg:px-3"
               strokeLinecap="round"
               strokeLinejoin="round"
               // className="lucide lucide-more-horizontal"

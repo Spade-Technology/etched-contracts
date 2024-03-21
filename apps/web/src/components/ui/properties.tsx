@@ -124,7 +124,7 @@ export default function PropertiesDialog({
       onClick={() => setActiveModals({ ...activeModals, current: data[0]?.value })}
       className={`${
         shake && activeModals.current === data[0]?.value ? "shake" : ""
-      } fixed right-10 grid w-[380px] cursor-grabbing gap-4 border bg-background p-6 shadow-2xl duration-200 focus:ring-0 ${
+      } fixed right-10 grid w-96 cursor-grabbing gap-4 border bg-background p-6 shadow-2xl duration-200 focus:ring-0 ${
         openPropertiesModal ? "visible" : "invisible z-0 !translate-x-full"
       }`}
     >
@@ -166,10 +166,10 @@ export default function PropertiesDialog({
           <div className="flex flex-col gap-4 bg-accent p-3 pt-4">
             {permissions.map(({ name, address, role, img }) => {
               return (
-                <main className=" flex items-center gap-3">
+                <main className="flex items-center gap-3">
                   <img src={img} alt="" className="h-10 w-10" />
-                  <div className="">
-                    <div className="w-[170px] truncate text-lg text-foreground">{name}</div>
+                  <div>
+                    <div className="w-44 truncate text-lg text-foreground">{name}</div>
                     <div className="text-base">{address}</div>
                   </div>
                   <div className="ml-auto text-lg font-light capitalize text-muted-foreground">{role}</div>

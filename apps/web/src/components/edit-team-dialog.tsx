@@ -156,7 +156,7 @@ export const EditTeamDialog = ({
                               <div key={id} className="flex items-center justify-between">
                                 <div
                                   // onClick={() => inviteUser({ id, name, role })}
-                                  className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                                  className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
                                   {name || shortenAddress({ address: id })}
                                 </div>
@@ -169,7 +169,7 @@ export const EditTeamDialog = ({
                                       {role} <Icons.dropdownIcon />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className=" items-start p-1">
+                                  <DropdownMenuContent className="items-start p-1">
                                     <DropdownMenuGroup>
                                       {[...roleData, "Remove access"].map((item, idx) => {
                                         return (
@@ -233,13 +233,13 @@ export const EditTeamDialog = ({
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">
                           {teamOrganisation}
                         </div>
-                        <div className="">Owner</div>
+                        <div>Owner</div>
                       </div>
                       {teamMembers?.map(({ id, name, role }: teamUser) => {
                         return (
                           <div key={id} className="flex items-center justify-between ">
                             <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
-                            <div className="">{role}</div>
+                            <div>{role}</div>
                           </div>
                         );
                       })}
@@ -321,7 +321,7 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
         <form onSubmit={transferOwnership}>
           <Label className="font-semibold">Select</Label>
           <div className="mb-7 mt-[9px] flex gap-5">
-            {["individual", "organization"].map((item, id) => {
+            {["individual", "organisation"].map((item, id) => {
               return (
                 <div
                   key={id}
@@ -361,9 +361,9 @@ const TransferOwnershipDialog: React.FC<confirm> = ({
             </>
           )}
 
-          {owner === "organization" && (
+          {owner === "organisation" && (
             <>
-              <Label className="font-semibold">Organization Name</Label>
+              <Label className="font-semibold">Organisation Name</Label>
               <OrgInputDropdown
                 type={"singleSelect"}
                 orgs={organisations as Organisation[]}

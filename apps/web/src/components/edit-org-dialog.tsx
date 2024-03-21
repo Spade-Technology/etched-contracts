@@ -109,7 +109,7 @@ export const EditOrgDialog = ({
               // EDIT TEAM FORM
               <>
                 <div className="flex justify-between">
-                  <DialogTitle className="text-base text-primary">Modify Organization</DialogTitle>
+                  <DialogTitle className="text-base text-primary">Modify Organisation</DialogTitle>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <div
@@ -146,7 +146,7 @@ export const EditOrgDialog = ({
                 </div>
                 <DialogDescription>
                   <form onSubmit={onSubmit}>
-                    <Label className="font-semibold">Organization Name</Label>
+                    <Label className="font-semibold">Organisation Name</Label>
                     <Input
                       disabled={isLoading}
                       id="text"
@@ -172,7 +172,7 @@ export const EditOrgDialog = ({
                               <div key={id} className="flex items-center justify-between">
                                 <div
                                   // onClick={() => inviteUser({ id, name, role })}
-                                  className=" flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
+                                  className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:text-accent-foreground "
                                 >
                                   {name || shortenAddress({ address: id })}
                                 </div>
@@ -185,7 +185,7 @@ export const EditOrgDialog = ({
                                       {role} <Icons.dropdownIcon />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className=" items-start p-1">
+                                  <DropdownMenuContent className="items-start p-1">
                                     <DropdownMenuGroup>
                                       {[...roleData, "Remove access"].map((item, idx) => {
                                         return (
@@ -247,13 +247,13 @@ export const EditOrgDialog = ({
                       <div className="items-center rounded-sm text-sm transition-colors">Invited users</div>
                       <div className="flex items-center justify-between ">
                         <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{orgName}</div>
-                        <div className="">Owner</div>
+                        <div>Owner</div>
                       </div>
                       {orgData?.orgMembers?.map(({ id, name, role }: orgUser) => {
                         return (
                           <div key={id} className="flex items-center justify-between ">
                             <div className="cursor-default text-sm transition-colors hover:text-accent-foreground ">{name}</div>
-                            <div className="">{role}</div>
+                            <div>{role}</div>
                           </div>
                         );
                       })}
@@ -295,9 +295,9 @@ const ConfirmDelectDialog: React.FC<confirmDelete> = ({ orgName, setDeleteTeam, 
 
   return (
     <div>
-      <DialogTitle className="mb-6 text-center text-base text-destructive">Deleting Organization Confirmation</DialogTitle>
+      <DialogTitle className="mb-6 text-center text-base text-destructive">Deleting Organisation Confirmation</DialogTitle>
       <div className="mx-auto w-[342px] text-center text-muted-foreground">
-        Are you sure that you want to delete Organization <span className="capitalize">“{orgName}”</span>?
+        Are you sure that you want to delete Organisation <span className="capitalize">“{orgName}”</span>?
       </div>
 
       <footer className="mt-10 flex items-center justify-center gap-5">

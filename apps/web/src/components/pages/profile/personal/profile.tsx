@@ -129,10 +129,10 @@ export const Profile = () => {
       <header className="mb-5 text-xl font-semibold text-foreground">Personal Profile</header>
       <section className="w-80 overflow-hidden rounded-2xl bg-muted/30 pl-5 pt-5  shadow-etched-2 ">
         <div className="flex justify-center">
-          <div className="">
+          <div>
             <img src={imgUrl} alt="" className="h-16 w-16 rounded-full bg-primary" />
             <div
-              className=" cursor-pointer text-center font-body text-xs font-medium text-primary"
+              className="cursor-pointer text-center font-body text-xs font-medium text-primary"
               onClick={() => setChange(true)}
             >
               Change

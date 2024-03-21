@@ -8,7 +8,7 @@ export const FilesDialog = ({ files, isLoading }: props) => {
   const skeletons = "Lorem ipsum dolor sit, amet";
 
   return (
-    <main className="">
+    <main >
       <div className="mb-4 text-xl font-bold text-muted-foreground">
         {!isLoading && files.length < 1 ? "Please create a file/Etch" : "Files"}
       </div>
@@ -18,11 +18,11 @@ export const FilesDialog = ({ files, isLoading }: props) => {
               return (
                 <main
                   key={index}
-                  className="flex h-[44px] w-full cursor-default items-center gap-[17px] rounded-lg bg-[rgba(0,0,0,.02)] px-[12px] !font-body"
+                  className="flex h-11 w-full cursor-default items-center gap-4 rounded-lg bg-accent/50 px-3 !font-body"
                 >
                   {" "}
-                  <div className="skeleton flex h-[18px] w-6 items-center justify-end bg-skeleton"></div>
-                  <div className="skeleton h-5  w-full truncate bg-skeleton text-base font-medium text-muted-foreground"></div>
+                  <div className="skeleton flex h-4 w-6 items-center justify-end bg-skeleton"></div>
+                  <div className="skeleton h-5 w-full truncate bg-skeleton text-base font-medium text-muted-foreground"></div>
                 </main>
               );
             })

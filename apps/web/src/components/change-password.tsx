@@ -97,7 +97,7 @@ const Input = ({
 
   return (
     <div>
-      <Label className=" font-body text-base font-semibold opacity-60">{title}</Label>
+      <Label className="font-body text-base font-semibold opacity-60">{title}</Label>
       <div className="mt-2 flex h-10 w-full items-center gap-1 overflow-hidden rounded border border-muted-foreground px-3">
         <input
           value={value}
@@ -108,9 +108,9 @@ const Input = ({
           className="flex h-full w-full items-center border-none font-body text-base placeholder:mt-10 focus:outline-none"
         />
         {showPassword ? (
-          <Icons.hidePassword onClick={() => setShowPassword(!showPassword)} className=" cursor-pointer" />
+          <Icons.hidePassword onClick={() => setShowPassword(!showPassword)} className="cursor-pointer" />
         ) : (
-          <Icons.openEye onClick={() => setShowPassword(!showPassword)} className=" cursor-pointer" />
+          <Icons.openEye onClick={() => setShowPassword(!showPassword)} className="cursor-pointer" />
         )}
       </div>
     </div>

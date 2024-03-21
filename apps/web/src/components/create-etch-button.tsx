@@ -154,7 +154,7 @@ export const CreateEtchButton = () => {
                       <TeamSelector className="w-full " horizontal />
 
                       <div className="my-3 flex justify-between">
-                        <div className="">
+                        <div>
                           {files.length} File{files.length === 1 ? "" : "s"} Selected |{" "}
                           {(files.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024).toFixed(2)} MB total
                         </div>
