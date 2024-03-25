@@ -15,7 +15,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
   const [width, setWidth] = useState(0);
   const [FilterWidth, setFilterWidth] = useState(0);
 
-  const sortList = ["Latest first", "File type", "Oldest fist", "Alphabetically"];
+  const sortList = ["Latest first", "File type", "Oldest first", "Alphabetically"];
   const filterList = ["Private", "Public", "Tom Robins", "Ariana Gordon", "Tom Robins", "Ariana Gordon"];
 
   const sortRef: React.MutableRefObject<any> = useRef();
@@ -38,13 +38,13 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
   }, [sort, filter]);
 
   return (
-    <header className="justify- flex gap-5">
+    <header className="flex gap-5">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             ref={sortRef}
             variant={"ghost"}
-            className="flex h-[42px] w-fit gap-2 border-none bg-background bg-transparent text-base font-medium text-muted-foreground shadow-4xl"
+            className="flex h-10 w-fit gap-2 border-none bg-background bg-transparent text-base font-medium text-muted-foreground shadow-4xl"
           >
             Sort by:<span className="text-base font-semibold text-foreground">{sort || sortList[0]}</span>
             <Icons.dropdownIcon />
@@ -57,7 +57,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
                 <DropdownMenuItem
                   key={idx}
                   onClick={() => setSort(item)}
-                  className={`flex cursor-default items-center justify-between gap-[7px] rounded-sm p-2 text-base capitalize text-muted-foreground  hover:bg-accent ${
+                  className={`flex cursor-default items-center justify-between gap-2 rounded-sm p-2 text-base capitalize text-muted-foreground  hover:bg-accent ${
                     filter === item ? "font-semibold" : "font-medium"
                   }`}
                   textValue="Jim Carlos"
@@ -76,16 +76,13 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
           <Button
             ref={filterRef}
             variant={"ghost"}
-            className="flex h-[42px] w-fit gap-2 border-none bg-background bg-transparent text-base font-medium text-muted-foreground shadow-4xl"
+            className="flex h-10 w-fit gap-2 border-none bg-background bg-transparent text-base font-medium text-muted-foreground shadow-4xl"
           >
             Filter:<span className="text-base font-semibold text-foreground">{filter || "All"}</span>
             <Icons.dropdownIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          style={{ left: `${-FilterWidth / 2}px` }}
-          className={"!absolute !w-[237px] rounded-none px-2 py-2.5"}
-        >
+        <DropdownMenuContent style={{ left: `${-FilterWidth / 2}px` }} className={"!absolute !w-60 rounded-none px-2 py-2.5"}>
           <DropdownMenuGroup>
             {filterList.map(
               (item, idx) =>
@@ -93,7 +90,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
                   <DropdownMenuItem
                     key={idx}
                     onClick={() => setFilter(item)}
-                    className={`flex cursor-default items-center justify-between gap-[7px] rounded-sm px-2 py-1 text-base capitalize text-muted-foreground  hover:bg-accent ${
+                    className={`flex cursor-default items-center justify-between gap-2 rounded-sm px-2 py-1 text-base capitalize text-muted-foreground  hover:bg-accent ${
                       filter === item ? "font-semibold" : "font-medium"
                     }`}
                     textValue="Jim Carlos"
@@ -103,7 +100,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
                   </DropdownMenuItem>
                 )
             )}
-            <div className={` flex cursor-default items-center justify-between px-2 py-1 text-base  text-muted-foreground`}>
+            <div className={` flex cursor-default items-center justify-between px-2 py-1 text-base text-muted-foreground`}>
               Shared with {">"}
             </div>
             {filterList.map(
@@ -112,12 +109,12 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
                   <DropdownMenuItem
                     key={idx}
                     onClick={() => setFilter(item)}
-                    className={`flex cursor-default items-center justify-between gap-[7px] rounded-sm px-2 py-2 text-sm font-medium capitalize  text-muted-foreground hover:bg-accent `}
+                    className={`flex cursor-default items-center justify-between gap-2 rounded-sm px-2 py-2 text-sm font-medium capitalize  text-muted-foreground hover:bg-accent `}
                     textValue="Jim Carlos"
                   >
-                    <div className=" flex items-center justify-center gap-1">
+                    <div className="flex items-center justify-center gap-1">
                       <div
-                        className={` flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white ${
+                        className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white ${
                           idx % 2 === 0 ? "bg-indigo-400 " : "bg-emerald-300"
                         }`}
                       >
@@ -140,7 +137,7 @@ export const HeaderDialog = ({ sort, setSort, filter, setFilter, searchValue, se
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <aside className="ml-auto flex h-[42px] w-6/12 items-center justify-between gap-[13px] bg-background px-[18px] py-[11px] shadow-4xl lg:w-[423px]">
+      <aside className="ml-auto flex h-10 w-6/12 items-center justify-between gap-3 bg-background px-4 py-2.5 shadow-4xl lg:max-w-md">
         <Icons.search className="h-5 w-5" />
         <input
           type="text"

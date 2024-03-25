@@ -41,10 +41,10 @@ export default function Approval() {
 
   return (
     <div className="bg-primary">
-      <div className=""></div>
+      <div></div>
       <div
         style={{ backgroundColor: "#0ea05c" }}
-        className=" flex h-screen w-screen items-center justify-center bg-[url('/images/pending/BG.svg')] bg-cover bg-center bg-no-repeat"
+        className="flex h-screen w-screen items-center justify-center bg-[url('/images/pending/BG.svg')] bg-cover bg-center bg-no-repeat"
       >
         <main
           className={`tilt-in-top-1 w-11/12 max-w-2xl rounded-md bg-white/20 p-3 shadow-2xl backdrop-blur-[10px] duration-300`}

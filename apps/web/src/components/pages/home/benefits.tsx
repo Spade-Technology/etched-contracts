@@ -46,7 +46,7 @@ const Benefits = ({ setShowWaitlist }: Props) => {
           );
         })}
         <div className="absolute right-[-306px] top-16 -z-10 hidden h-[946px] w-[946px] bg-[url(/images/home/blur.svg)] bg-contain bg-center bg-no-repeat md:block">
-          <div className=" absolute left-0 top-0 -z-10 h-full w-full bg-background opacity-80 blur-[75px]"></div>
+          <div className="absolute left-0 top-0 -z-10 h-full w-full bg-background opacity-80 blur-[75px]"></div>
         </div>
       </div>
       {/* bg-gradient-to-r from-green-400 to-cyan-500 */}

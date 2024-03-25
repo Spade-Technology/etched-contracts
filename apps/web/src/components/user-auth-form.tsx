@@ -49,7 +49,7 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
       <aside className="hidden h-screen w-7/12 items-center bg-[url('/images/login/Bg.svg')] bg-cover bg-center bg-no-repeat font-body text-white lg:flex">
         <div className="mx-auto w-96">
           <Icons.brightLogo className="h-9 cursor-pointer" onClick={() => router.push("/")} />
-          <div className="tracking-lighter my-5 text-base font-medium">The leading blockchain trademarking platform</div>
+          <div className="tracking-lighter my-5 text-base font-medium">The leading blockchain intellectual property platform</div>
           <div className="flex h-10 w-32 cursor-pointer items-center justify-center border-2 border-white text-base font-semibold shadow">
             Learn more
           </div>

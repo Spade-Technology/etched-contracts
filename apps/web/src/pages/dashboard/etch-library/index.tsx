@@ -19,9 +19,9 @@ export default function index() {
 
   return (
     <PageBoilerplate>
-      <div className="mt-[19px]">
+      <div className="mt-5">
         <HeaderDialog {...props} />
-        <main className="my-5 flex flex-col gap-4 bg-background px-6 py-[34px] shadow-4xl">
+        <main className="my-5 flex flex-col gap-4 bg-background px-6 py-7 shadow-4xl">
           <FilesDialog {...props} />
           {/* <FoldersDialog /> */}
         </main>

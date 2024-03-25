@@ -41,7 +41,6 @@ export const SideBar = () => {
   const loggedInAddress = useLoggedInAddress();
 
   const path = router.asPath;
-
   const pages = [
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
     { url: "/dashboard/manage", title: "Organisation", Icon: Icons.organisation },
@@ -55,7 +54,7 @@ export const SideBar = () => {
   return (
     <aside id="sidebar" className="sticky left-0 top-0 z-10 h-screen w-fit transition-transform lg:w-52" aria-label="Sidebar">
       <div className="custom-scrollbar flex h-full flex-col overflow-y-auto bg-background pb-4 pt-8 dark:border-muted-foreground max-lg:px-3">
-        <LogoAnimated className="mx-auto mb-10 max-lg:w-24" />
+        <LogoAnimated onClick={() => router.push("/dashboard")} className="mx-auto mb-10 max-lg:w-24" />
         <ul className="my-auto space-y-2 text-sm font-medium">
           {pages.map(({ url, title, Icon, disabled }, index) => {
             return (
@@ -76,12 +75,28 @@ export const SideBar = () => {
                   <span className="mt-2 hidden whitespace-nowrap lg:block">{title}</span>
 
                   <div
-                    className={`absolute left-20 z-10 ml-3 flex w-36 items-center duration-300 group-hover:flex ${
-                      tooltip === title ? "visible scale-100 opacity-100 lg:hidden" : "invisible scale-50 opacity-0"
+                    className={`absolute left-20 ${
+                      disabled ? "w-56 cursor-help lg:left-44" : " w-36"
+                    } z-10 ml-3 flex items-center duration-300 group-hover:flex ${
+                      tooltip == title
+                        ? `visible scale-100 opacity-100 ${disabled ? "" : " lg:hidden"}`
+                        : "invisible scale-50 opacity-0"
                     }`}
                   >
-                    <div className={`-mr-2 h-3 w-3 rotate-45 bg-primary`}></div>
-                    <div className={`z-10 flex w-fit bg-primary p-2 text-white shadow-lg`}> {title}</div>
+                    <div className={`-mr-2 h-3 w-3 rotate-45 ${disabled ? "bg-muted-foreground" : " bg-primary"}`}></div>
+                    <div
+                      className={`${
+                        disabled ? "rounded bg-muted-foreground px-3 py-2" : "bg-primary p-2"
+                      } z-10 flex w-fit text-white shadow-lg`}
+                    >
+                      {disabled ? (
+                        <div>
+                          <b>Feature coming soon</b> <br /> Please check back later for updates.
+                        </div>
+                      ) : (
+                        title
+                      )}
+                    </div>
                   </div>
                 </Link>
               </li>
@@ -100,7 +115,8 @@ export function UserSettings({ children }: { children: React.ReactNode }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="mr-7 w-56">
+
+      <DropdownMenuContent className="mr-3 w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

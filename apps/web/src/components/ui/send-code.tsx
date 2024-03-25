@@ -47,7 +47,7 @@ export default function SendCode({
                 {country.code} <Icons.dropdown className="h-2 w-3" />
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className=" w-48 items-start p-2">
+            <DropdownMenuContent className="w-48 items-start p-2">
               <DropdownMenuGroup>
                 <div className="mb-1 flex h-10 items-center gap-1 rounded border px-2">
                   <input
@@ -58,7 +58,7 @@ export default function SendCode({
                     placeholder="Search..."
                     className="h-full w-full border-none capitalize focus:outline-none"
                   />
-                  <Icons.search className=" cursor-pointer" />
+                  <Icons.search className="cursor-pointer" />
                 </div>
                 {countries.map(({ name, code, dial_code }, idx) => {
                   if (idx < 5) {

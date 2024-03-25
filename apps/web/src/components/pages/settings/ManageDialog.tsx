@@ -17,7 +17,7 @@ export const ManageDialog = () => {
 
   const { teams } = useGetTeamsFromUser(loggedInAddress.toLowerCase());
 
-  const buttons = [{ name: "+ Create Organization" }, { name: "+ Create Team" }];
+  const buttons = [{ name: "+ Create Organisation" }, { name: "+ Create Team" }];
 
   const pathname = usePathname();
 

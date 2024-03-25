@@ -33,7 +33,7 @@ export default function Community() {
               tab == activeTab && (
                 <div key={idx} className="flex flex-col gap-7">
                   {contents.map((content) => (
-                    <div className="">{content}</div>
+                    <div>{content}</div>
                   ))}
                 </div>
               )
