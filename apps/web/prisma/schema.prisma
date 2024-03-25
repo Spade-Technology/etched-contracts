@@ -24,14 +24,11 @@ datasource db {
 model User {
     address String  @id @unique
     email   String?
-
     isApproved ApprovedStatus @default(Pending)
-
     userActivationCodes userActivationCode[]
     isAdministrator     Boolean              @default(false)
-
     capacityCredits capacityCredit[]
-    subscriberId    String //For payments (stripe, etc).  Not related to newsletters
+    subscriberId    String? //For payments (stripe, etc).  Not related to newsletters
 }
 
 model PaidSubscriptions {
@@ -40,7 +37,6 @@ model PaidSubscriptions {
     quantity       Int
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
-
     @@id([subscriberId, subscriptionId])
 }
 

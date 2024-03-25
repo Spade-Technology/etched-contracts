@@ -5,6 +5,7 @@ import { orgRouter } from "./routers/org";
 import { patchRouter } from "./routers/patch";
 import { teamRouter } from "./routers/team";
 import { userRouter } from "./routers/user";
+import { stripeRouter } from "./routers/stripe";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   ens: ensRouter,
   patch: patchRouter,
   user: userRouter,
+  stripe: stripeRouter
 });
 
 // export type definition of API

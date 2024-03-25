@@ -1,5 +1,5 @@
 import { prisma } from "@/server/db";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import { IncomingMessage } from "http";
 import { type GetServerSidePropsContext } from "next";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
@@ -26,6 +26,7 @@ declare module "next-auth" {
     address: string | undefined | null;
     isApproved: string | undefined | null;
     isAdmin: boolean | undefined | null;
+    subscriberId: string | undefined | null;
     user: {
       name: string | undefined | null;
       description: string | undefined | null;
@@ -169,8 +170,12 @@ export function getAuthOptions (req: IncomingMessage): NextAuthOptions {
           }
 
           // If user doesn't exist, create it
-          if (!user)
-            user = await prisma.user.create({ data: { address: siwe.address, email: clerkUser?.primaryEmailAddressId, subscriberId: nanoid() } });
+          if (!user) {
+            //create in db
+            user = await prisma.user.create({ data: { address: siwe.address, email: clerkUser?.primaryEmailAddressId } });
+            //TODO: link with stripe
+
+          }
 
           const capacityCredit = await prisma.capacityCredit.findFirst({
             where: {
@@ -234,6 +239,7 @@ export function getAuthOptions (req: IncomingMessage): NextAuthOptions {
         session.address = token.sub;
         session.isApproved = user?.isApproved || "Pending";
         session.isAdmin = user?.isAdministrator || false;
+        session.subscriberId = user?.subscriberId;
         return session;
       },
     },
