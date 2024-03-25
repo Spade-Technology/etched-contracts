@@ -1,3 +1,4 @@
+import React from "react";
 import { GoodIcon } from "@/components/icons/good";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -383,4 +384,4 @@ const RoleDropdown = ({ id, role, editRole, removeAccess }: { id: string; role: 
   );
 };
 
-export default AddUser;
+export default React.memo(AddUser);
