@@ -26,7 +26,7 @@ declare module "next-auth" {
     address: string | undefined | null;
     isApproved: string | undefined | null;
     isAdmin: boolean | undefined | null;
-    subscriberId: string | undefined | null;
+    customerId: string | undefined | null;
     user: {
       name: string | undefined | null;
       description: string | undefined | null;
@@ -239,7 +239,7 @@ export function getAuthOptions (req: IncomingMessage): NextAuthOptions {
         session.address = token.sub;
         session.isApproved = user?.isApproved || "Pending";
         session.isAdmin = user?.isAdministrator || false;
-        session.subscriberId = user?.subscriberId;
+        session.customerId = user?.customerId;
         return session;
       },
     },

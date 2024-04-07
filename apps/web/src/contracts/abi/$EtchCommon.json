@@ -71,7 +71,33 @@
   },
   {
     "inputs": [],
-    "name": "$PERM_DENY",
+    "name": "$PERM_DENY_READ",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$PERM_DENY_SHARE",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$PERM_DENY_WRITE",
     "outputs": [
       {
         "internalType": "uint8",

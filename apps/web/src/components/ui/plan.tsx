@@ -47,8 +47,8 @@ export default function Plan({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen
                 </>
 
                 <section className="flex flex-col gap-2">
-                  {features?.map((text) => (
-                    <div className="flex gap-3">
+                  {features?.map((text, idx) => (
+                    <div key={`${idx}-${text}`} className="flex gap-3">
                       <div>
                         <Icons.checked className="mt-0.5" />
                       </div>

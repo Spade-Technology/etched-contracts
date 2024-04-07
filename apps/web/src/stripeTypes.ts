@@ -1,3 +1,10 @@
+export type SubscriptionStatus = 'incomplete' | 'incomplete_expired' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'unpaid' | 'paused' | undefined;
+export type SubscriptionItem = {
+  priceId: string,
+  quantity: number
+}
+export type SubscriptionItems = Array<SubscriptionItem>
+
 
 export type Product = {
   id?: string | null;
