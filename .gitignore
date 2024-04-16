@@ -42,3 +42,6 @@ yarn-error.log*
 .env.kourafLance
 .env.old
 .env.lance
+
+#graph items
+**/graph-docker/data

@@ -1,0 +1,399 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "payable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "_permissions",
+        "type": "uint8"
+      }
+    ],
+    "name": "EntityIndividualUserPermissionsChanged",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "$DIAMOND_SHARED_CONTEXT_STORAGE_POSITION",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$_isFacetConversation",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "ret0",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$_msgData",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "ret0",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$_msgSender",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "ret0",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "_currentPerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_sharePerms",
+        "type": "uint8"
+      }
+    ],
+    "name": "$combineCurrentAndSharePermissions",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "ret0",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$diamondSharedContextStorage",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "_msgSenderOverride",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "_isNodeProtected",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DiamondSharedContext.DiamondSharedContextData",
+        "name": "ds",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$enforceIsNodeProtected",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "__hh_exposed_bytecode_marker",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_desiredPermissions",
+        "type": "uint8"
+      }
+    ],
+    "name": "canPerform",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "getUserPermissionsForEntity",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_destId",
+        "type": "uint64"
+      }
+    ],
+    "name": "isCircularReference",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_currentPerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_desiredPerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "checked",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "processShares",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "uint8",
+            "name": "permissions",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct EntityStructs.SPermissions[]",
+        "name": "_permissions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "setBulkUserPermissionsForEntity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_permissions",
+        "type": "uint8"
+      }
+    ],
+    "name": "setUserPermissionsForEntity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "name": "walkParentsForOwnerMatch",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_tPerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_desiredPerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "checked",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "walkUpPermissionsAndStopShort",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
+]

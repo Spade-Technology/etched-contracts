@@ -1,0 +1,116 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: FacetEntityCore
+    network: mainnet
+    source:
+      address: '0x172076e0166d1f9cc711c77adf8488051744980c'
+      abi: FacetEntityCore
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FSEntity
+        - ShareMeta
+        - EntityBasePermissionsChanged
+        - EntityCreated
+        - FileMeta
+        - ShareMetaChanged
+      abis:
+        - name: FacetEntityCore
+          file: ./src/contracts/abi/FacetEntityCore.json
+      eventHandlers:
+        - event: EntityBasePermissionsChanged(uint64,uint8)
+          handler: handleEntityBasePermissionsChanged
+        - event: EntityCreated(uint64,address,uint64,string,uint8,uint8)
+          handler: handleEntityCreated
+        - event: FileMetaChanged(uint64,address,string,bytes32,uint256)
+          handler: handleFileMetaChanged
+        - event: EntityMoved(uint64,uint64,uint64)
+          handler: handleEntityMoved
+        - event: ShareMetaChanged(uint64,uint64,uint8)
+          handler: handleShareMetaChanged
+        - event: EntityTransferredToIndividual(uint64,address)
+          handler: handleEntityTransferredToIndividual
+      file: ./src/facet-entity-core.ts
+  - kind: ethereum
+    name: FacetEntityPermissions
+    network: mainnet
+    source:
+      address: '0x4ee6ecad1c2dae9f525404de8555724e3c35d07b'
+      abi: FacetEntityPermissions
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EntityIndividualUserPermissionsChanged
+      abis:
+        - name: FacetEntityPermissions
+          file: ./src/contracts/abi/FacetEntityPermissions.json
+      eventHandlers:
+        - event: >-
+            EntityIndividualUserPermissionsChanged(indexed uint64,indexed
+            address,uint8)
+          handler: handleEntityIndividualUserPermissionsChanged
+      file: ./src/facet-entity-core.ts
+  - kind: ethereum
+    name: FacetShareInvites
+    network: mainnet
+    source:
+      address: '0xbec49fa140acaa83533fb00a2bb19bddd0290f25'
+      abi: FacetShareInvites
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - InviteAccepted
+        - InviteDeclined
+        - InviteRevoked
+        - InviteSent
+      abis:
+        - name: FacetShareInvites
+          file: ./src/contracts/abi/FacetShareInvites.json
+      eventHandlers:
+        - event: InviteAccepted(indexed uint64,indexed address)
+          handler: handleInviteAccepted
+        - event: InviteDeclined(indexed uint64,indexed address)
+          handler: handleInviteDeclined
+        - event: InviteRevoked(indexed uint64,indexed address)
+          handler: handleInviteRevoked
+        - event: >-
+            InviteSent(indexed address,indexed uint64,indexed
+            uint64,uint8,uint8)
+          handler: handleInviteSent
+      file: ./src/facet-share-invites.ts
+  - kind: ethereum
+    name: EtchENS
+    network: mainnet
+    source:
+      address: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0'
+      abi: EtchENS
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - EtchENSCreated
+        - EtchENSOwnershipTransferred
+        - EtchENSTransfer
+      abis:
+        - name: EtchENS
+          file: ./src/contracts/abi/EtchENS.json
+      eventHandlers:
+        - event: EtchENSCreated(indexed uint256,indexed address,string)
+          handler: handleEtchENSCreated
+      file: ./src/etch-ens.ts

@@ -1,0 +1,351 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "payable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "inviteId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "acceptor",
+        "type": "address"
+      }
+    ],
+    "name": "InviteAccepted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "inviteId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "decliner",
+        "type": "address"
+      }
+    ],
+    "name": "InviteDeclined",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "inviteId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "revoker",
+        "type": "address"
+      }
+    ],
+    "name": "InviteRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "externalOrgOrTeamId",
+        "type": "uint64"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "sourceEntityId",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "ownerMaxAllowedPerms",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ShareStructs.EShareInviteStatus",
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "name": "InviteSent",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "$DIAMOND_SHARED_CONTEXT_STORAGE_POSITION",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$_isFacetConversation",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "ret0",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$_msgData",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "ret0",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$_msgSender",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "ret0",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$diamondSharedContextStorage",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "_msgSenderOverride",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "_isNodeProtected",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DiamondSharedContext.DiamondSharedContextData",
+        "name": "ds",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$enforceIsNodeProtected",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "__hh_exposed_bytecode_marker",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_inviteId",
+        "type": "uint64"
+      }
+    ],
+    "name": "acceptInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_inviteId",
+        "type": "uint64"
+      }
+    ],
+    "name": "declineInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalInviteSupply",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_inviteId",
+        "type": "uint64"
+      }
+    ],
+    "name": "inviteExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_inviteId",
+        "type": "uint64"
+      }
+    ],
+    "name": "ownerOfInvite",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_inviteId",
+        "type": "uint64"
+      }
+    ],
+    "name": "revokeInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_externalOrgOrTeamId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_sourceEntityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_ownerMaxAllowedPerms",
+        "type": "uint8"
+      }
+    ],
+    "name": "sendInvite",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_sourceEntityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_ownerMaxAllowedPerms",
+        "type": "uint8"
+      }
+    ],
+    "name": "sendInviteToIndividual",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_inviteId",
+        "type": "uint64"
+      }
+    ],
+    "name": "testGrabInvite",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
+]

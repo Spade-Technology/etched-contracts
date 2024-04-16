@@ -1,0 +1,199 @@
+type Wallet @entity {
+  id: Bytes!
+  eoa: String!
+  ownedFSEntities: [FSEntity!] @derivedFrom(field: "owner")
+  memberFSentities: [EntityUserPermission!] @derivedFrom(field: "_user")
+  # ownedEtches: [EtchOwnership!] @derivedFrom(field: "owner")
+  # ownedTeams: [TeamOwnership!] @derivedFrom(field: "owner")
+  # ownedorganisations: [OrganisationOwnership!] @derivedFrom(field: "owner")
+  # teamApprovals: [TeamApproval!] @derivedFrom(field: "wallet")
+  # OrganisationApprovals: [OrganisationApproval!] @derivedFrom(field: "wallet")
+  # etchPermissions: [EtchPermission!] @derivedFrom(field: "wallet")
+  # teamPermissions: [TeamPermission!] @derivedFrom(field: "wallet")
+  # OrganisationPermissions: [OrganisationPermission!] @derivedFrom(field: "wallet")
+
+  etchENS: [EtchENS!]! @derivedFrom(field: "owner")
+}
+
+type FSEntity @entity {
+  id: String! # uint256
+  # _entityId: BigInt! # uint256
+  _to: Bytes! # address
+  _parent: FSEntity
+  _children: [FSEntity!] @derivedFrom(field: "_parent")
+  _name: String! # string
+  _type: Int! # uint8
+  _humanReadableType: String #string
+  _basePermissions: Int! # uint8
+  _shareMeta: ShareMeta @derivedFrom(field: "_fsEntity")
+  _fileMeta: FileMeta @derivedFrom(field: "_fsEntity")
+  userPermissions: [EntityUserPermission!] @derivedFrom(field: "_entity")
+  owner: Wallet!
+}
+
+type EntityUserPermission @entity {
+  id: String!
+  _entity: FSEntity! # uint256
+  _user: Wallet! # address
+  _permissions: Int! # uint8
+}
+
+type CommentOnEntity @entity {
+  id: String!
+  _entityId: BigInt! # uint256
+  _commentIpfsCid: String! # string
+  _timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EntityBasePermissionsChanged @entity {
+  id: Bytes!
+  _entityId: BigInt! # uint256
+  _newPermissions: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EntityIndividualUserPermissionsChanged @entity {
+  id: String!
+  _entityId: BigInt! # uint256
+  _user: Bytes! # address
+  _permissions: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FileMeta @entity {
+  id: String!
+  _fsEntity: FSEntity! # uint256
+  _creator: Bytes! # address
+  _documentName: String! # string
+  _documentDescription: String! # string
+  _ipfsCid: Bytes! # string
+  _timestamp: BigInt! # uint256
+}
+
+type ShareMeta @entity {
+  id: String!
+  _fsEntity: FSEntity! # uint256 //The share with which the metadata is associated
+  _originalEntity: FSEntity! # uint256 //The entity that the share references
+  _maxPermissionsPerOwner: Int! # uint8
+}
+
+type EntityShareMaxPermissionsChanged @entity {
+  id: String!
+  _entityId: BigInt! # uint256
+  _newPermissions: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OrganizationTransferredToIndividual @entity {
+  id: Bytes!
+  _entityId: BigInt! # uint256
+  _userId: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteAccepted @entity {
+  id: Bytes!
+  inviteId: BigInt! # uint256
+  acceptedBy: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteDeclined @entity {
+  id: Bytes!
+  inviteId: BigInt! # uint256
+  declinedBy: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteRevoked @entity {
+  id: Bytes!
+  inviteId: BigInt! # uint256
+  revokedBy: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InviteSent @entity {
+  id: Bytes!
+  from: Bytes! # address
+  externalOrgOrTeamId: BigInt! # uint256
+  sourceEntityId: BigInt! # uint256
+  baseSharePerms: Int! # uint8
+  status: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Approval @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  approved: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ApprovalForAll @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  operator: Bytes! # address
+  approved: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtchENS @entity {
+  id: ID!
+
+  tokenId: BigInt!
+  name: String!
+  owner: Wallet!
+}
+
+type EtchENSCreated @entity(immutable: true) {
+  id: Bytes!
+  tokenId: BigInt! # uint256
+  to: Bytes! # address
+  name: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtchENSOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EtchENSTransfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
