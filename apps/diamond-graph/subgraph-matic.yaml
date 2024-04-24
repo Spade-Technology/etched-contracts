@@ -1,14 +1,16 @@
-specVersion: 0.0.5
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: FacetEntityCore
-    network: mainnet
+    network: matic
     source:
       address: '0xd984e3b74d33ee102907bafe68b2fe2de747ea63'
       abi: FacetEntityCore
-      startBlock: 0
+      startBlock: 56179012
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -39,11 +41,11 @@ dataSources:
       file: ./src/facet-entity-core.ts
   - kind: ethereum
     name: FacetEntityPermissions
-    network: mainnet
+    network: matic
     source:
       address: '0xd984e3b74d33ee102907bafe68b2fe2de747ea63'
       abi: FacetEntityPermissions
-      startBlock: 0
+      startBlock: 56179012
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -61,11 +63,11 @@ dataSources:
       file: ./src/facet-entity-permissions.ts
   - kind: ethereum
     name: FacetShareInvites
-    network: mainnet
+    network: matic
     source:
       address: '0xd984e3b74d33ee102907bafe68b2fe2de747ea63'
       abi: FacetShareInvites
-      startBlock: 0
+      startBlock: 56179012
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -92,11 +94,11 @@ dataSources:
       file: ./src/facet-share-invites.ts
   - kind: ethereum
     name: EtchENS
-    network: mainnet
+    network: matic
     source:
       address: '0x5fbdb2315678afecb367f032d93f642f64180aa3'
       abi: EtchENS
-      startBlock: 0
+      startBlock: 56179012
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

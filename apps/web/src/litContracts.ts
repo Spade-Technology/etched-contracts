@@ -5,14 +5,15 @@ export const walletWithCapacityCredit = new Wallet(
   process.env.LIT_PRIVATE_KEY!,
 
   // chronicle
-  new providers.JsonRpcProvider("https://chain-rpc.litprotocol.com/http")
+  new providers.JsonRpcProvider(process.env.LIT_RPC_PROVIDER)
 );
 
-export async function generateContractsClient() {
+export async function generateContractsClient () {
   let contractClient = new LitContracts({
     signer: walletWithCapacityCredit,
     // network: "habanero",
     network: "cayenne",
+    // network: "localhost",
   });
 
   await contractClient.connect();

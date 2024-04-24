@@ -1,4 +1,5 @@
 import { etchRouter } from "@/server/api/routers/etch";
+import { diamondEtchRouter } from "@/server/api/routers/diamond-etch";
 import { createTRPCRouter } from "@/server/api/trpc";
 import { ensRouter } from "./routers/ens";
 import { orgRouter } from "./routers/org";
@@ -14,6 +15,7 @@ import { stripeRouter } from "./routers/stripe";
  */
 export const appRouter = createTRPCRouter({
   etch: etchRouter,
+  diamondEtch: diamondEtchRouter,
   team: teamRouter,
   org: orgRouter,
   ens: ensRouter,

@@ -20,6 +20,7 @@ export function handleEntityCreated (event: EntityCreatedEvent): void {
 
   let fsEntity = new FSEntity(event.params._entityId.toString());
   // entity._entityId = event.params._entityId
+  fsEntity._sortableId = (event.params._entityId.toI32());
   fsEntity._to = event.params._to;
   fsEntity._parent = event.params._parentId.toString();
   fsEntity._name = event.params._name;

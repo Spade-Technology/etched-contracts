@@ -17,6 +17,7 @@ type Wallet @entity {
 
 type FSEntity @entity {
   id: String! # uint256
+  _sortableId: Int! # probably not terribly relevant going forward as folders can be reordered and contain other folders
   # _entityId: BigInt! # uint256
   _to: Bytes! # address
   _parent: FSEntity
