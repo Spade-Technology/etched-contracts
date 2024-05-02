@@ -27,7 +27,7 @@ export const diamondEtchRouter = createTRPCRouter({
             type: z.string(),
           })
         ),
-        team: z.bigint().optional(),
+        parentId: z.bigint().optional(), //folder, team, org ...
 
         blockchainMessage: z.string(),
         authSig: z.any(),
@@ -36,7 +36,7 @@ export const diamondEtchRouter = createTRPCRouter({
     )
     .mutation(
       async ({
-        input: { files, authSig, team, blockchainMessage, blockchainSignature },
+        input: { files, authSig, parentId, blockchainMessage, blockchainSignature },
         ctx: {
           session: { address },
         },

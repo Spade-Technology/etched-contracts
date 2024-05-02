@@ -43,7 +43,7 @@ export default function AuthenticationPage({ isSignup }: { isSignup: boolean }) 
   }, []);
 
   const factorTwo = (router.asPath.includes("sso-callback") || router.asPath.includes("factor-two")) && isLoaded;
-
+  
   return (
     <main className="lg:flex">
       <aside className="hidden h-screen w-7/12 items-center bg-[url('/images/login/Bg.svg')] bg-cover bg-center bg-no-repeat font-body text-white lg:flex">
