@@ -6,7 +6,7 @@ dataSources:
     name: FacetEntityCore
     network: mainnet
     source:
-      address: '0xd984e3b74d33ee102907bafe68b2fe2de747ea63'
+      address: '0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8'
       abi: FacetEntityCore
       startBlock: 0
     mapping:
@@ -41,7 +41,7 @@ dataSources:
     name: FacetEntityPermissions
     network: mainnet
     source:
-      address: '0xd984e3b74d33ee102907bafe68b2fe2de747ea63'
+      address: '0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8'
       abi: FacetEntityPermissions
       startBlock: 0
     mapping:
@@ -63,7 +63,7 @@ dataSources:
     name: FacetShareInvites
     network: mainnet
     source:
-      address: '0xd984e3b74d33ee102907bafe68b2fe2de747ea63'
+      address: '0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8'
       abi: FacetShareInvites
       startBlock: 0
     mapping:

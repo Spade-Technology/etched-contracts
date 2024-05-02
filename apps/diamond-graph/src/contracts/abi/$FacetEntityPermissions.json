@@ -30,56 +30,23 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "$DIAMOND_SHARED_CONTEXT_STORAGE_POSITION",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$_isFacetConversation",
-    "outputs": [
-      {
-        "internalType": "bool",
+        "indexed": false,
+        "internalType": "uint8",
         "name": "ret0",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "ret1",
         "type": "bool"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$_msgData",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "ret0",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$_msgSender",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "ret0",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "return$processShares",
+    "type": "event"
   },
   {
     "inputs": [
@@ -106,35 +73,47 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "$diamondSharedContextStorage",
-    "outputs": [
+    "inputs": [
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "_msgSenderOverride",
-            "type": "address"
-          },
-          {
-            "internalType": "bool",
-            "name": "_isNodeProtected",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct DiamondSharedContext.DiamondSharedContextData",
-        "name": "ds",
-        "type": "tuple"
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_currentPerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_desiredPerms",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "checked",
+        "type": "bytes32[]"
       }
     ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$enforceIsNodeProtected",
-    "outputs": [],
-    "stateMutability": "view",
+    "name": "$processShares",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "ret0",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "ret1",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -225,50 +204,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint64",
-        "name": "_entityId",
-        "type": "uint64"
-      },
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_currentPerms",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_desiredPerms",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bytes32[]",
-        "name": "checked",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "processShares",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

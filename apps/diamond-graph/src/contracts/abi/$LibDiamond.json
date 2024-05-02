@@ -190,6 +190,90 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_node",
+        "type": "address"
+      }
+    ],
+    "name": "$_addNode",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "node",
+        "type": "address"
+      }
+    ],
+    "name": "$_isNode",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "ret0",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$_msgSender",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "ret0",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_node",
+        "type": "address"
+      }
+    ],
+    "name": "$_removeNode",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newContext",
+        "type": "address"
+      }
+    ],
+    "name": "$_setContext",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "isProtected",
+        "type": "bool"
+      }
+    ],
+    "name": "$_setIsNodeConversation",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_facetAddress",
         "type": "address"
       },
@@ -200,6 +284,19 @@
       }
     ],
     "name": "$addFunctions",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4[]",
+        "name": "_functionSelectors",
+        "type": "bytes4[]"
+      }
+    ],
+    "name": "$addVIPSelectors",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -283,6 +380,20 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "$enforceIsNodeConversation",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "$enforceIsValidNode",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -303,6 +414,25 @@
   {
     "inputs": [
       {
+        "internalType": "bytes4",
+        "name": "_selector",
+        "type": "bytes4"
+      }
+    ],
+    "name": "$isVIPSignature",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "ret0",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_facetAddress",
         "type": "address"
@@ -314,6 +444,19 @@
       }
     ],
     "name": "$removeFunctions",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4[]",
+        "name": "_functionSelectors",
+        "type": "bytes4[]"
+      }
+    ],
+    "name": "$removeVIPSelectors",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -345,6 +488,19 @@
       }
     ],
     "name": "$setContractOwner",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "$transferOwnership",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
