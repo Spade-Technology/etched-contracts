@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/trpc/**": {
+    "app/api/trpc/**": {
       "maxDuration": 40
     }
   }
