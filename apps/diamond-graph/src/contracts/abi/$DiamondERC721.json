@@ -91,19 +91,6 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "$DIAMOND_SHARED_CONTEXT_STORAGE_POSITION",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -265,19 +252,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "$_isFacetConversation",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "ret0",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -293,32 +267,6 @@
     "name": "$_mint",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$_msgData",
-    "outputs": [
-      {
-        "internalType": "bytes",
-        "name": "ret0",
-        "type": "bytes"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$_msgSender",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "ret0",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -508,38 +456,6 @@
     "name": "$_transfer",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$diamondSharedContextStorage",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "_msgSenderOverride",
-            "type": "address"
-          },
-          {
-            "internalType": "bool",
-            "name": "_isNodeProtected",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct DiamondSharedContext.DiamondSharedContextData",
-        "name": "ds",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "$enforceIsNodeProtected",
-    "outputs": [],
-    "stateMutability": "view",
     "type": "function"
   },
   {

@@ -228,6 +228,22 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_contractOwner",
+        "type": "address"
+      }
+    ],
+    "name": "NotContractOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_facetAddress",
         "type": "address"
       }

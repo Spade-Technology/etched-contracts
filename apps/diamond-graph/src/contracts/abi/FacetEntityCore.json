@@ -901,6 +901,37 @@
   {
     "inputs": [
       {
+        "internalType": "uint64",
+        "name": "_entityId",
+        "type": "uint64"
+      }
+    ],
+    "name": "testGrabEntity",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "_startId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_endId",
+        "type": "uint64"
+      }
+    ],
+    "name": "testGrabSequentialEntities",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
