@@ -15,6 +15,10 @@ import { Address, decodeEventLog, encodeFunctionData, encodePacked, keccak256 } 
 import { z } from "zod";
 const random = require("random-bigint");
 
+export const maxDuration = 50; // This function can run for a maximum of 5 seconds
+export const dynamic = 'force-dynamic';
+
+
 export const etchRouter = createTRPCRouter({
   bulkMintEtch: protectedProcedure
     .input(
