@@ -132,7 +132,9 @@ export const OtpInputs = ({
             onChange={(e) => handleChange(e, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             onPaste={handlePaste}
-            ref={(input) => (inputs.current[index] = input)}
+            ref={(input) => {
+              inputs.current[index] = input;
+            }}
             className={`flex h-10 w-8 items-center justify-center ${
               value
                 ? isNaN(value as any) || value.length === 0
