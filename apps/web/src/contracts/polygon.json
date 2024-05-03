@@ -1,6 +1,7 @@
 {
-    "Org": "0x235D3488B11Cff3166C529f8F24146829a6511cD",
-    "Team": "0xBD09e4aE2644025183BcC792167b68F9C520EFb1",
-    "Etch": "0xbfFd8Ce3FF8E2051F02b99A97AE76ee9609ce7F8",
-    "ENS": "0x75513e591b7e64a4680fBb42492952F6f2b8c70A"
+  "EtchedDiamond": "0xe4efa0864a71ed02c7dd018386d21dcaf6653aa4",
+  "FacetEntityCore": "0x7614e72ade233ff87b7c2ee25a18e435ccbcea17",
+  "FacetShareInvites": "0x32c4b76c979fac9606a78668639842a9921d21a3",
+  "FacetEntityPermissions": "0x4b3efedbed53558af07a573ceacd88169ca443e2",
+  "ENS": "0xecf16d3e49fe89935cc99a7f142d1c197236681b"
 }
