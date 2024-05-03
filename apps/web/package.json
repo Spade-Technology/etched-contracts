@@ -5,6 +5,7 @@
   "scripts": {
     "build": "dotenv -e ../../.env -- next build",
     "dev": "dotenv -e ../../.env -- next dev",
+    "dev-fourier-prod": "dotenv -e ../../.env.fourier.live -- next dev",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "lint": "dotenv -e ../../.env -- next lint",

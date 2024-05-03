@@ -42,20 +42,21 @@ export const etchRouter = createTRPCRouter({
         },
       }) => {
         // uint256(keccak256(_msgSender())) + (random uint 48)
-
+        console.log(`bulkMintEtch 1`)
         await lit.connect();
-
+        console.log(`bulkMintEtch 2`)
         let ipfsCids: string[] = [];
         let etchUIDs: string[] = [];
         let callDatas: string[] = [];
-
+        console.log(`bulkMintEtch 3`)
         await Promise.all(
           files.map(async ({ url, name, type }) => {
+            console.log(`bulkMintEtch 4.insidePromise`)
             const etchUID = BigInt(keccak256(encodePacked(["address"], [address as Address]))) + random(48);
             etchUIDs.push(etchUID);
-
+            console.log(`bulkMintEtch 5.insidePromise`)
             const file = await fetch(url).then((res) => res.blob());
-
+            console.log(`bulkMintEtch 6.insidePromise`)
             const ipfsCid = await encryptToIpfs({
               authSig: await generateServerAuthSig(),
               file,
@@ -67,22 +68,22 @@ export const etchRouter = createTRPCRouter({
               console.log(err.stack);
               throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
             });
-
+            console.log(`bulkMintEtch 7.insidePromise`)
             ipfsCids.push(ipfsCid);
 
             const functionName = team ? "safeMintForTeam" : "safeMint";
             const args = team ? [etchUID, team, name, ipfsCid] : [etchUID, address, name, ipfsCid];
-
+            console.log(`bulkMintEtch 8.insidePromise`)
             const calldata = encodeFunctionData({
               abi: EtchABI,
               functionName: functionName,
               args: args,
             });
-
+            console.log(`bulkMintEtch 9.insidePromise`)
             callDatas.push(calldata);
           })
         );
-
+        console.log(`bulkMintEtch 10`)
         const tx1 = await walletClient.writeContract({
           address: contracts.Etch,
           functionName: "delegateCallsToSelf",
@@ -97,12 +98,12 @@ export const etchRouter = createTRPCRouter({
           ],
           abi: EtchABI,
         });
-
+        console.log(`bulkMintEtch 11`)
         try {
           const transactionResult = await publicClient.waitForTransactionReceipt({
             hash: tx1,
           });
-
+          console.log(`bulkMintEtch 12`)
           if (!transactionResult.logs[0]) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Transaction failed" });
 
           const transferEvent = decodeEventLog({
@@ -111,11 +112,13 @@ export const etchRouter = createTRPCRouter({
             data: transactionResult.logs[0].data,
             topics: transactionResult.logs[0].topics,
           });
-
+          console.log(`bulkMintEtch 13`)
           const etchId = (transferEvent.args as any).tokenId;
 
           return { tx: tx1, id: etchId };
         } catch (e) {
+          console.log(`bulkMintEtch 14.error`)
+          console.log(e)
           return { tx: tx1, id: undefined };
         }
       }
