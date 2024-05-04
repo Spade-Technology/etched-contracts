@@ -103,7 +103,7 @@ export const etchRouter = createTRPCRouter({
           abi: EtchABI,
         });
         console.log(`bulkMintEtch 11`)
-        conssole.log(`waiting for tx: ${tx1}`)
+        console.log(`waiting for tx: ${tx1}`)
         try {
           const transactionResult = await publicClient.waitForTransactionReceipt({
             hash: tx1,
