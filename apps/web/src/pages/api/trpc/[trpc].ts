@@ -3,7 +3,7 @@ import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-export const maxDuration = 60;
+export const config = { maxDuration: 100, dynamic: 'force-dynamic' };
 
 // export API handler
 export default createNextApiHandler({
@@ -12,7 +12,7 @@ export default createNextApiHandler({
   onError:
     env.NODE_ENV === "development"
       ? ({ path, error }) => {
-          console.error(`❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`);
-        }
+        console.error(`❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`);
+      }
       : undefined,
 });
