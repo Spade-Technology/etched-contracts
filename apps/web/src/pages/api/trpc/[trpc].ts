@@ -3,7 +3,9 @@ import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-export const maxDuration = 60;
+export const config = { maxDuration: 299, dynamic: 'force-dynamic' };
+export const maxDuration = 299; // This function can run for a maximum of 5 seconds
+export const dynamic = 'force-dynamic';
 
 // export API handler
 export default createNextApiHandler({
