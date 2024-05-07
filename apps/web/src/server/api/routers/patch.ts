@@ -15,25 +15,30 @@ export const patchRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input: { userId, baseProvider, message, erc6492 } }) => {
-      const access_token = await getAccessToken();
+      try {
+        const access_token = await getAccessToken();
 
-      const signature = await signMessageUsingPatchWallet({
-        access_token,
-        baseProvider: baseProvider,
-        userId,
-        erc6492,
-        message,
-      });
+        const signature = await signMessageUsingPatchWallet({
+          access_token,
+          baseProvider: baseProvider,
+          userId,
+          erc6492,
+          message,
+        });
 
-      return {
-        message,
-        hash: signature.hash,
-        signature: signature.signature,
-        user: {
-          id: userId,
-          provider: baseProvider,
-        },
-      };
+        return {
+          message,
+          hash: signature.hash,
+          signature: signature.signature,
+          user: {
+            id: userId,
+            provider: baseProvider,
+          },
+        };
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
     }),
 
   getUser: publicProcedure
