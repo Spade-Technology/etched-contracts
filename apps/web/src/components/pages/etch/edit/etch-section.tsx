@@ -46,9 +46,13 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
       if (!etch?.ipfsCid) return;
       console.log("PRE-AUTHSIG");
       const authSig = await regenerateAuthSig();
+      console.log(authSig);
       console.log("POST-AUTHSIG");
       console.log("PRE-DECIPFS");
-      const decrypted = await lit.decryptFromIpfs({ authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+      const decrypted = await lit.decryptFromIpfs({ authSig, ipfsCid: etch.ipfsCid }).catch((e) => {
+        console.log(e);
+        alert(e.message);
+      });
       console.log("POST-DECIPFS");
       console.log(decrypted);
       if (!decrypted?.data) return;
