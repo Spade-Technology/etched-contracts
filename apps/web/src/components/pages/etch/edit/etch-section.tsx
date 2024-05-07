@@ -40,9 +40,9 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   const decrypt = async () => {
     try {
-      console.log('PRE-CONNECT')
+      console.log("PRE-CONNECT");
       await lit.connect();
-      console.log('POST-CONNECT')
+      console.log("POST-CONNECT");
       if (!etch?.ipfsCid) return;
       console.log("PRE-AUTHSIG");
       const authSig = await regenerateAuthSig();
@@ -50,6 +50,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
       console.log("PRE-DECIPFS");
       const decrypted = await lit.decryptFromIpfs({ authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
       console.log("POST-DECIPFS");
+      console.log(decrypted);
       if (!decrypted?.data) return;
 
       const metadata = decrypted.metadata;
