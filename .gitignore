@@ -24,8 +24,8 @@ yarn-error.log*
 
 # local env files
 .env
-.env.fourier*
 .env.diamond*
+.env.fourier*
 .env.local
 .env.development.local
 .env.test.local
@@ -44,3 +44,7 @@ yarn-error.log*
 .env.kourafLance
 .env.old
 .env.lance
+
+#graph items
+**/graph-docker/data
+**/web-docker/data
