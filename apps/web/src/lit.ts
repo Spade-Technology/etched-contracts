@@ -53,6 +53,7 @@ class Lit {
     const client = await this.connect();
     console.log(`Inside "decryptFromIpfs" 2`)
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
+    console.log(`IPFS: ${ipfsPlublicClientUrl}${props.ipfsCid}`)
     console.log(`Inside "decryptFromIpfs" 3`)
     const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
       authSig: props.authSig,
