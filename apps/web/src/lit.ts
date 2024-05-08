@@ -49,10 +49,11 @@ class Lit {
   }
 
   async decryptFromIpfs (props: decryptToIpfsProps) {
+    console.log(`Inside "decryptFromIpfs" 1`)
     const client = await this.connect();
-
+    console.log(`Inside "decryptFromIpfs" 2`)
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
-
+    console.log(`Inside "decryptFromIpfs" 3`)
     const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
       authSig: props.authSig,
       chain: ipfsData.chain,
@@ -63,12 +64,11 @@ class Lit {
       unifiedAccessControlConditions: ipfsData.unifiedAccessControlConditions,
       accessControlConditions: ipfsData.accessControlConditions,
     };
-
+    console.log(`Inside "decryptFromIpfs" 4`)
     let decrypted;
-
     if (ipfsData.encryptedString) { console.log('ATTEMPT: STRING DECRYPTION'); decrypted = await LitJsSdk.decryptToString(data, client); }
     else if (ipfsData.encryptedFile) { console.log('ATTEMPT: FILE DECRYPTION'); decrypted = await LitJsSdk.decryptToFile(data, client); }
-
+    console.log(`Inside "decryptFromIpfs" 5`)
     return { data: decrypted, metadata: ipfsData.metadata };
   }
 
