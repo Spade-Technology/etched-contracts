@@ -24,7 +24,7 @@ class Lit {
   public client: LitJsSdk.LitNodeClient | undefined;
   private connectingLock: Promise<LitJsSdk.LitNodeClient> | undefined;
 
-  async connect () {
+  async connect() {
     if (this.client) return this.client;
 
     if (!this.connectingLock) {
@@ -48,14 +48,11 @@ class Lit {
     return this.connectingLock;
   }
 
-  async decryptFromIpfs (props: decryptToIpfsProps) {
-    console.log(`Inside "decryptFromIpfs" 1`)
+  async decryptFromIpfs(props: decryptToIpfsProps) {
     const client = await this.connect();
-    console.log(`Inside "decryptFromIpfs" 2`)
+
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
-    console.log(`IPFS: ${ipfsPlublicClientUrl}${props.ipfsCid}`)
-    console.log(ipfsData);
-    console.log(`Inside "decryptFromIpfs" 3`)
+
     const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
       authSig: props.authSig,
       chain: ipfsData.chain,
@@ -66,15 +63,16 @@ class Lit {
       unifiedAccessControlConditions: ipfsData.unifiedAccessControlConditions,
       accessControlConditions: ipfsData.accessControlConditions,
     };
-    console.log(`Inside "decryptFromIpfs" 4`)
+
     let decrypted;
-    if (ipfsData.encryptedString) { console.log('ATTEMPT: STRING DECRYPTION'); decrypted = await LitJsSdk.decryptToString(data, client); }
-    else if (ipfsData.encryptedFile) { console.log('ATTEMPT: FILE DECRYPTION'); decrypted = await LitJsSdk.decryptToFile(data, client); }
-    console.log(`Inside "decryptFromIpfs" 5`)
+
+    if (ipfsData.encryptedString) decrypted = await LitJsSdk.decryptToString(data, client);
+    else if (ipfsData.encryptedFile) decrypted = await LitJsSdk.decryptToFile(data, client);
+
     return { data: decrypted, metadata: ipfsData.metadata };
   }
 
-  async getMetadataFromIpfs (ipfsCid: string) {
+  async getMetadataFromIpfs(ipfsCid: string) {
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${ipfsCid}`)).json();
 
     return ipfsData.metadata;
