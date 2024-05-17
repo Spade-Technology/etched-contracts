@@ -2,11 +2,11 @@ specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: FacetEntityCore
     network: mainnet
     source:
-      address: '0xe4efa0864a71ed02c7dd018386d21dcaf6653aa4'
+      address: '0xff658343244c0475b9305859f1b7cdab9784762f'
       abi: FacetEntityCore
       startBlock: 0
     mapping:
@@ -37,11 +37,11 @@ dataSources:
         - event: EntityTransferredToIndividual(uint64,address)
           handler: handleEntityTransferredToIndividual
       file: ./src/facet-entity-core.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: FacetEntityPermissions
     network: mainnet
     source:
-      address: '0xe4efa0864a71ed02c7dd018386d21dcaf6653aa4'
+      address: '0xff658343244c0475b9305859f1b7cdab9784762f'
       abi: FacetEntityPermissions
       startBlock: 0
     mapping:
@@ -59,11 +59,11 @@ dataSources:
             address,uint8)
           handler: handleEntityIndividualUserPermissionsChanged
       file: ./src/facet-entity-permissions.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: FacetShareInvites
     network: mainnet
     source:
-      address: '0xe4efa0864a71ed02c7dd018386d21dcaf6653aa4'
+      address: '0xff658343244c0475b9305859f1b7cdab9784762f'
       abi: FacetShareInvites
       startBlock: 0
     mapping:
@@ -90,7 +90,7 @@ dataSources:
             uint64,uint8,uint8)
           handler: handleInviteSent
       file: ./src/facet-share-invites.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: EtchENS
     network: mainnet
     source:

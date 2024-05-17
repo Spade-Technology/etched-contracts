@@ -2,7 +2,7 @@ specVersion: 0.0.5
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: FacetEntityCore
     network: mainnet
     source:
@@ -37,7 +37,7 @@ dataSources:
         - event: EntityTransferredToIndividual(uint64,address)
           handler: handleEntityTransferredToIndividual
       file: ./src/facet-entity-core.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: FacetEntityPermissions
     network: mainnet
     source:
@@ -59,7 +59,7 @@ dataSources:
             address,uint8)
           handler: handleEntityIndividualUserPermissionsChanged
       file: ./src/facet-entity-core.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: FacetShareInvites
     network: mainnet
     source:
@@ -90,7 +90,7 @@ dataSources:
             uint64,uint8,uint8)
           handler: handleInviteSent
       file: ./src/facet-share-invites.ts
-  - kind: ethereum
+  - kind: ethereum/contract
     name: EtchENS
     network: mainnet
     source:

@@ -68,7 +68,9 @@ class Lit {
 
     if (ipfsData.encryptedString) decrypted = await LitJsSdk.decryptToString(data, client);
     else if (ipfsData.encryptedFile) decrypted = await LitJsSdk.decryptToFile(data, client);
-
+    console.log('******************************************')
+    console.dir(ipfsData);
+    console.dir(decrypted);
     return { data: decrypted, metadata: ipfsData.metadata };
   }
 

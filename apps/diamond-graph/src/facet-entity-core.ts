@@ -16,6 +16,13 @@ import { FSEntity, CommentOnEntity, OrganizationTransferredToIndividual } from '
 const hrTypes = ['PersonalOrg', 'Organization', 'Team', 'Folder', 'File', 'Share'];
 
 export function handleEntityCreated (event: EntityCreatedEvent): void {
+  // console.log(event.params._basePermissions.toString())
+  // console.log(event.params._entityId.toString())
+  // console.log(event.params._name.toString())
+  // console.log(event.params._parentId.toString())
+  // console.log(event.params._to.toString())
+  // console.log(event.params._type.toString())
+
   let wallet = getOrCreateWallet(event.params._to);
 
   let fsEntity = new FSEntity(event.params._entityId.toString());
