@@ -278,7 +278,7 @@ export const useSignIn = () => {
       // Get the session signatures
       const sessionSigs = await lit!.client!.getSessionSigs({
         chain: currentNetworkId.toString(),
-        nonce: await lit!.client!.getLatestBlockhash(),
+        // nonce: await lit!.client!.getLatestBlockhash(),
         resourceAbilityRequests: [
           {
             resource: litResource,
