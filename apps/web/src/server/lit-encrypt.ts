@@ -2,7 +2,7 @@ import { pinata } from "@/ipfs";
 import { lit } from "@/lit";
 
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
-
+// import * as LitJsSdk from "@lit-protocol/lit-node-client-nodejs";
 type ParameterType = Omit<Parameters<typeof LitJsSdk.encryptFile>[0], "file">;
 
 export const encryptToIpfs = async (props: ParameterType & { string?: string; file?: File | Blob; metadata: any }) => {
@@ -17,7 +17,11 @@ export const encryptToIpfs = async (props: ParameterType & { string?: string; fi
   // file
   if (props?.file !== undefined) {
     const encryptionProps = { ...props, file: props.file }; // Ensure file is not undefined
+    console.log("********** ENCRYPTION PROPS ********** ");
+    console.dir(encryptionProps);
     encryptionResult = await LitJsSdk.encryptFile(encryptionProps, lit.client);
+    console.log("********** ENCRYPTION RESULTS ********** ");
+    console.dir(encryptionResult);
   }
   // string
   else if (props.string) encryptionResult = await LitJsSdk.encryptString({ dataToEncrypt: props.string, ...props }, lit.client);

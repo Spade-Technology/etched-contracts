@@ -27,7 +27,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const [etchFile, setEtchFile] = useState("");
   const [fileType, setFileType] = useState("");
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const { regenerateAuthSig } = useSignIn();
+  const { regenerateAuthSig, generateSessionSig } = useSignIn();
 
   const owner = useLoggedInAddress();
 
@@ -40,21 +40,29 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   const decrypt = async () => {
     try {
+      console.log("ETCHED OWNER (useLoggedInAddress):", owner);
       await lit.connect();
+      console.log("HERE 1");
       if (!etch?.ipfsCid) return;
-
+      console.log("HERE 2");
       const authSig = await regenerateAuthSig();
-      const decrypted = await lit.decryptFromIpfs({ authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
-
+      const sessionSigs = await generateSessionSig();
+      console.log("HERE 3");
+      // const sessionSigs = await regenerateSessionSig();
+      console.log("********************* BEFORE DECRYPT IPFS *********************");
+      const decrypted = await lit.decryptFromIpfs({ sessionSigs, authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+      console.log("********************* AFTER DECRYPT IPFS *********************");
       if (!decrypted?.data) return;
-
+      console.log("HERE 4");
       const metadata = decrypted.metadata;
       const detectedFileType =
         metadata?.type || (typeof decrypted.data === "string" ? "string" : filetype(decrypted.data)[0]?.mime);
       const image = typeof decrypted.data === "string" ? "" : URL.createObjectURL(new Blob([decrypted.data]));
-
+      console.log("HERE 5");
       setEtchFile(image);
+      console.log("HERE 6");
       setFileType(detectedFileType || "");
+      console.log("HERE 7");
     } catch (e: any) {
       console.error(e);
       alert(e.errorKind === "Validation" ? "You are not authorized to view this document" : e.message || "Something went wrong");
@@ -62,7 +70,9 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   };
 
   useEffect(() => {
+    console.log("before");
     if (etch?.ipfsCid) decrypt();
+    console.log("after");
   }, [etch?.ipfsCid]);
 
   useEffect(() => {

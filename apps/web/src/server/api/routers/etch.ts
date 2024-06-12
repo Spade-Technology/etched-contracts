@@ -2,13 +2,14 @@ import { camelCaseNetwork, contracts } from "@/contracts";
 import { lit } from "@/lit";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { encryptToIpfs } from "@/server/lit-encrypt";
-import { generateServerAuthSig, publicClient, walletClient } from "@/server/web3";
+import { generateServerAuthSig, generateServerSessionSig, publicClient, walletClient } from "@/server/web3";
 import { defaultAccessControlConditions, defaultAccessControlConditionsUsingReadableID } from "@/utils/accessControlConditions";
 import { teamPermissions } from "@/utils/common";
 import { getTagsOfEtchAndOwner } from "@/utils/hooks/useGetTagsOfEtchAndOwner";
 import { urqlConfig } from "@/utils/urql";
 import EtchABI from "@abis/Etches.json";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+// import * as LitJsSdk from "@lit-protocol/lit-node-client-nodejs";
 import { TRPCError } from "@trpc/server";
 import { Client, gql } from "urql";
 import { Address, decodeEventLog, encodeFunctionData, encodePacked, keccak256 } from "viem";
@@ -58,6 +59,7 @@ export const etchRouter = createTRPCRouter({
 
             const ipfsCid = await encryptToIpfs({
               authSig: await generateServerAuthSig(),
+              sessionSigs: await generateServerSessionSig(),
               file,
               chain: camelCaseNetwork,
               evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),

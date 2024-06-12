@@ -32,7 +32,8 @@ export const getBaseAccountAddress = async ({
   if (result.status !== 200) throw new Error(`Failed to get base account address for user ${userId}`);
 
   const data = await result.json();
-
+  console.log('**************************************')
+  console.log(data)
   return data.users[0].accountAddress;
 };
 
@@ -77,54 +78,67 @@ export const signMessageUsingPatchWallet = async ({
   message: string;
   erc6492?: boolean;
 }) => {
-  const body = JSON.stringify({
-    userId: baseProvider + ":" + userId,
-    string: message.startsWith("0x") ? undefined : message,
-    hash: message.startsWith("0x") ? message : undefined,
-  });
+  try {
+    const body = JSON.stringify({
+      userId: baseProvider + ":" + userId,
+      string: message.startsWith("0x") ? undefined : message,
+      hash: message.startsWith("0x") ? message : undefined,
+    });
 
-  const address = await getBaseAccountAddress({ baseProvider, userId, access_token });
+    const address = await getBaseAccountAddress({ baseProvider, userId, access_token });
 
-  const result = await fetch(`${env.PATCHWALLET_BASE_URL}/kernel/sign`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-    },
-    body,
-    redirect: "follow",
-  });
+    const result = await fetch(`${env.PATCHWALLET_BASE_URL}/kernel/sign`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      body,
+      redirect: "follow",
+    });
 
-  const _signature = await result.json();
+    const _signature = await result.json();
 
-  const signature = await createERC6492Signature({
-    baseProvider,
-    userId,
-    _signature,
-  });
-
-  const callResponse = await publicClient.call({
-    data: concat([
-      validateSigOffchainBytecode as Address,
-      encodeAbiParameters(parseAbiParameters("address addr, bytes32 dataHash, bytes sig"), [
-        address as Address,
-        signature.hash,
-        signature.signature,
-      ]),
-    ]),
-  });
-
-  const isValidSignature = callResponse.data === "0x01";
-
-  if (result.status !== 200) throw new Error(`Failed to sign message for user ${userId}`);
-
-  if (erc6492)
-    return createERC6492Signature({
+    const signature = await createERC6492Signature({
       baseProvider,
       userId,
       _signature,
     });
-  else return _signature;
+
+    const callResponse = await publicClient.call({
+      data: concat([
+        validateSigOffchainBytecode as Address,
+        encodeAbiParameters(parseAbiParameters("address addr, bytes32 dataHash, bytes sig"), [
+          address as Address,
+          signature.hash,
+          signature.signature,
+        ]),
+      ]),
+    });
+
+    const isValidSignature = callResponse.data === "0x01";
+
+    if (result.status !== 200) throw new Error(`Failed to sign message for user ${userId}`);
+
+    console.log('**************************************')
+    console.log('ABOUT TO RETURN')
+    if (erc6492) {
+      console.log("INSIDE IF", {
+        baseProvider,
+        userId,
+        _signature,
+      })
+      return createERC6492Signature({
+        baseProvider,
+        userId,
+        _signature,
+      });
+    }
+    else return _signature;
+  } catch (error) {
+    console.log('signMessageUsingPatchWallet(error):', error)
+    throw error
+  }
 };
 
 export const createERC6492Signature = async ({

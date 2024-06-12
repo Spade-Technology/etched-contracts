@@ -9,6 +9,7 @@ import { getTagsOfEtchAndOwner } from "@/utils/hooks/useGetTagsOfEtchAndOwner";
 import { urqlConfig } from "@/utils/urql";
 import EtchABI from "@abis/Etches.json";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+// import * as LitJsSdk from "@lit-protocol/lit-node-client-nodejs";
 import { TRPCError } from "@trpc/server";
 import { Client, gql } from "urql";
 import { Address, decodeEventLog, encodeFunctionData, encodePacked, keccak256 } from "viem";

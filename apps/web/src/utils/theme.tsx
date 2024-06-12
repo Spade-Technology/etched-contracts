@@ -10,7 +10,7 @@ export const ThemeContext = React.createContext({
 // Define a ThemeProvider component that wraps its children in ThemeContext.Provider
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Retrieve the current theme from local storage or default to 'light'
-  const [theme, setTheme] = useState<string>("light");
+  const [theme, setTheme] = useState<string>("dark");
 
   // Effect to apply the theme class to the root element
   useEffect(() => {

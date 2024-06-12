@@ -1,8 +1,25 @@
+import { LitAbility, LitAccessControlConditionResource } from "@lit-protocol/auth-helpers";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import { currentNetworkId } from "@/contracts";
+import { type AppRouter } from "@/server/api/root";
+import { inferRouterOutputs } from "@trpc/server";
+import { api } from "./utils/api";
+// import * as LitJsSdk from "@lit-protocol/lit-node-client-nodejs";
 import { keccak256, toBytes, toHex } from "viem";
 import { decryptToIpfsProps } from "./utils/litTypes";
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import SuperJSON from "superjson";
 
-export const litNetwork = process.env.NODE_ENV === "development" ? "cayenne" : "habanero";
+const trpcClient = createTRPCProxyClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: "/api/trpc",
+    }),
+  ],
+  transformer: SuperJSON,
+});
+
+export const litNetwork = process.env.NODE_ENV === "development" ? "manzano" : "habanero";
 
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
@@ -24,7 +41,7 @@ class Lit {
   public client: LitJsSdk.LitNodeClient | undefined;
   private connectingLock: Promise<LitJsSdk.LitNodeClient> | undefined;
 
-  async connect () {
+  async connect() {
     if (this.client) return this.client;
 
     if (!this.connectingLock) {
@@ -48,33 +65,42 @@ class Lit {
     return this.connectingLock;
   }
 
-  async decryptFromIpfs (props: decryptToIpfsProps) {
-    const client = await this.connect();
+  async decryptFromIpfs(props: decryptToIpfsProps) {
+    try {
+      const client = await this.connect();
 
-    const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
+      console.log("************** decryptFromIpfs PROPS **************");
+      console.dir(props);
+      const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
 
-    const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
-      authSig: props.authSig,
-      chain: ipfsData.chain,
-      ciphertext: ipfsData.ciphertext,
-      dataToEncryptHash: ipfsData.encryptedString || ipfsData.encryptedFile,
-      evmContractConditions: ipfsData.evmContractConditions,
-      solRpcConditions: ipfsData.solRpcConditions,
-      unifiedAccessControlConditions: ipfsData.unifiedAccessControlConditions,
-      accessControlConditions: ipfsData.accessControlConditions,
-    };
+      const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
+        // authSig: props.authSig,
+        sessionSigs: props.sessionSigs,
+        chain: ipfsData.chain,
+        ciphertext: ipfsData.ciphertext,
+        dataToEncryptHash: ipfsData.encryptedString || ipfsData.encryptedFile,
+        evmContractConditions: ipfsData.evmContractConditions,
+        solRpcConditions: ipfsData.solRpcConditions,
+        unifiedAccessControlConditions: ipfsData.unifiedAccessControlConditions,
+        accessControlConditions: ipfsData.accessControlConditions,
+      };
 
-    let decrypted;
+      let decrypted;
 
-    if (ipfsData.encryptedString) decrypted = await LitJsSdk.decryptToString(data, client);
-    else if (ipfsData.encryptedFile) decrypted = await LitJsSdk.decryptToFile(data, client);
-    console.log('******************************************')
-    console.dir(ipfsData);
-    console.dir(decrypted);
-    return { data: decrypted, metadata: ipfsData.metadata };
+      if (ipfsData.encryptedString) decrypted = await LitJsSdk.decryptToString(data, client);
+      else if (ipfsData.encryptedFile) decrypted = await LitJsSdk.decryptToFile(data, client);
+      console.log("******************************************");
+      console.dir(ipfsData);
+      console.dir(decrypted);
+      return { data: decrypted, metadata: ipfsData.metadata };
+    } catch (error) {
+      console.log("decryptFromIpfs:");
+      console.dir(error);
+      throw error;
+    }
   }
 
-  async getMetadataFromIpfs (ipfsCid: string) {
+  async getMetadataFromIpfs(ipfsCid: string) {
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${ipfsCid}`)).json();
 
     return ipfsData.metadata;

@@ -211,6 +211,36 @@ export const userRouter = createTRPCRouter({
     return response;
   }),
 
+  requestSingleUseCapacityDelegationAuthSig: protectedProcedure
+    .input(z.object({}))
+    .mutation(async ({ input: {}, ctx: { session } }) => {
+      const user = await prisma.user.findUnique({ where: { address: session.address! } });
+
+      if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      if (user.isApproved !== "Approved") throw new TRPCError({ code: "FORBIDDEN", message: "User is not approved." });
+
+      let capacityCreditId: string;
+      const capacityCredit = await prisma.capacityCredit.findFirst({
+        where: { expiration: { gte: new Date() } },
+      });
+
+      if (!capacityCredit) capacityCreditId = (await regenerateCapacityCredits(user.address)).capacityTokenIdStr;
+      else capacityCreditId = capacityCredit.capacityTokenId;
+
+      await lit.connect();
+
+      const response = await lit.client?.createCapacityDelegationAuthSig({
+        capacityTokenId: capacityCreditId,
+        dAppOwnerWallet: walletWithCapacityCredit,
+        delegateeAddresses: [user.address],
+        uses: "1",
+      });
+
+      console.log("**************** createCapacityDelegationAuthSig (response)**************** ");
+      console.dir(response);
+      return response?.capacityDelegationAuthSig;
+    }),
+
   regenerateCapacityCredits: adminProcedure.mutation(async ({ ctx: { session } }) => {
     return await regenerateCapacityCredits();
   }),
