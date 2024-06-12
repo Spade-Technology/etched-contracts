@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "dotenv -e ../../.env -- next build",
+    "build": "NODE_ENV=production dotenv -e ../../.env -- next build",
     "dev": "dotenv -e ../../.env -- next dev",
     "dev-fourier-prod": "dotenv -e ../../.env.fourier.live -- next dev",
     "postinstall": "prisma generate",
