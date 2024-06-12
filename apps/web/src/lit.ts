@@ -2,7 +2,7 @@ import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { keccak256, toBytes, toHex } from "viem";
 import { decryptToIpfsProps } from "./utils/litTypes";
 
-export const litNetwork = process.env.NODE_ENV === "development" ? "cayenne" : "habanero";
+export const litNetwork = process.env.NODE_ENV === "development" ? "manzano" : "habanero";
 
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
@@ -54,7 +54,8 @@ class Lit {
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
 
     const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
-      authSig: props.authSig,
+      // authSig: props.authSig,
+      sessionSigs: props.sessionSigs,
       chain: ipfsData.chain,
       ciphertext: ipfsData.ciphertext,
       dataToEncryptHash: ipfsData.encryptedString || ipfsData.encryptedFile,

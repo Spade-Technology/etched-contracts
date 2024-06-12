@@ -1,6 +1,8 @@
 import { LitContracts } from "@lit-protocol/contracts-sdk";
 import { Wallet, providers } from "ethers";
 
+export const litNetwork = process.env.NODE_ENV === "development" ? "manzano" : "habanero";
+
 export const walletWithCapacityCredit = new Wallet(
   process.env.LIT_PRIVATE_KEY!,
 
@@ -11,7 +13,7 @@ export const walletWithCapacityCredit = new Wallet(
 export async function generateContractsClient() {
   let contractClient = new LitContracts({
     signer: walletWithCapacityCredit,
-    network: "habanero",
+    network: litNetwork,
   });
 
   await contractClient.connect();

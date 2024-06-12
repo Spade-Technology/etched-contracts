@@ -27,7 +27,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   const [etchFile, setEtchFile] = useState("");
   const [fileType, setFileType] = useState("");
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const { regenerateAuthSig } = useSignIn();
+  const { regenerateAuthSig, generateSessionSig } = useSignIn();
 
   const owner = useLoggedInAddress();
 
@@ -44,7 +44,8 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
       if (!etch?.ipfsCid) return;
 
       const authSig = await regenerateAuthSig();
-      const decrypted = await lit.decryptFromIpfs({ authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+      const sessionSigs = await generateSessionSig();
+      const decrypted = await lit.decryptFromIpfs({ sessionSigs, authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
 
       if (!decrypted?.data) return;
 

@@ -1,4 +1,12 @@
 import { currentNetworkId, currentNode } from "@/contracts";
+import {
+  createSiweMessageWithRecaps,
+  createSiweMessage,
+  LitAbility,
+  LitAccessControlConditionResource,
+} from "@lit-protocol/auth-helpers";
+import { lit } from "@/lit";
+
 import { useAuth } from "@clerk/nextjs";
 import { getWalletClient } from "@wagmi/core";
 import { signOut as _signOut, signIn, useSession } from "next-auth/react";
@@ -47,6 +55,9 @@ export const useSignIn = () => {
   const { data: nextAuthSession } = useSession();
   const { isSignedIn } = useAuth();
   const router = useRouter();
+
+  const { mutateAsync: requestSingleUseCapacityDelegationAuthSig } =
+    api.user.requestSingleUseCapacityDelegationAuthSig.useMutation();
 
   useEffect(() => {
     if (nextAuthSession && nextAuthSession.isApproved === "Pending" && isSignedIn && !router.asPath.includes("auth"))
@@ -168,7 +179,6 @@ export const useSignIn = () => {
       };
 
       const message = new SiweMessage(preparedMessage);
-
       const body = message.prepareMessage();
 
       // -- 2. sign the message
@@ -215,7 +225,82 @@ export const useSignIn = () => {
     }
   };
 
-  return { isLoading, logIn, regenerateAuthSig };
+  //DETAIL (MICHAEL): Generate a Session Signature
+  async function generateSessionSig() {
+    try {
+      const singleUseCapacityAuthSig = await requestSingleUseCapacityDelegationAuthSig({});
+
+      // Define the authNeededCallback function
+      const authNeededCallback = async (params: any) => {
+        const patchUserInfo = await getUserFromId({
+          userId: userId!,
+          baseProvider: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+        });
+
+        if (!params.uri) {
+          throw new Error("uri is required");
+        }
+        if (!params.expiration) {
+          throw new Error("expiration is required");
+        }
+
+        if (!params.resourceAbilityRequests) {
+          throw new Error("resourceAbilityRequests is required");
+        }
+
+        // Create the SIWE message
+        const toSign = await createSiweMessageWithRecaps({
+          uri: params.uri,
+          expiration: params.expiration,
+          resources: params.resourceAbilityRequests,
+          walletAddress: patchUserInfo!.eoa!,
+          nonce: await lit!.client!.getLatestBlockhash(),
+          litNodeClient: lit!.client,
+        });
+
+        const patchSignatureResult = await generatePatchSignature({
+          userId: userId || "",
+          message: hashMessageForLit(toSign),
+          erc6492: false,
+        });
+        // Generate the authSig
+        let authSig = {
+          sig: patchSignatureResult.signature,
+          derivedVia: "EIP1271",
+          signedMessage: toSign,
+          address: patchUserInfo.eoa?.toLowerCase(),
+        };
+
+        return authSig;
+      };
+
+      const litResource = new LitAccessControlConditionResource("*");
+      // Get the session signatures
+      const sessionSigs = await lit!.client!.getSessionSigs({
+        chain: currentNetworkId.toString(),
+        nonce: await lit!.client!.getLatestBlockhash(),
+        resourceAbilityRequests: [
+          {
+            resource: litResource,
+            ability: LitAbility.AccessControlConditionDecryption,
+          },
+          {
+            resource: litResource,
+            ability: LitAbility.AccessControlConditionSigning,
+          },
+        ],
+        authNeededCallback,
+        capacityDelegationAuthSig: singleUseCapacityAuthSig as any,
+      });
+      console.log("************ SESSIONSIG (pre-return) ************");
+      console.dir(sessionSigs);
+      return sessionSigs;
+    } catch (error) {
+      console.error("error regenerateSessionSig: ", error);
+      throw error;
+    }
+  }
+  return { isLoading, logIn, regenerateAuthSig, generateSessionSig };
 };
 
 export const useLoggedInAddress = () => {
