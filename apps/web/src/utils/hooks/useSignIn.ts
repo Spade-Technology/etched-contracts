@@ -230,7 +230,6 @@ export const useSignIn = () => {
     try {
       const singleUseCapacityAuthSig = await requestSingleUseCapacityDelegationAuthSig({});
 
-      // const { mutateAsync: generatePatchSignature } = api.patch.signMessageForPatchWallet.useMutation();
       // Define the authNeededCallback function
       const authNeededCallback = async (params: any) => {
         const patchUserInfo = await getUserFromId({
