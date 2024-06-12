@@ -128,7 +128,7 @@ async function temporaryMintNFTAllocation(address: string) {
   const expiration_time = 60 * 60 * 24 * 7;
   const requests_per_kiloseconds = 1000;
 
-  if (litNetwork === "cayenne") return;
+  // if (litNetwork === "cayenne") return;
 
   await regenerateCapacityCredits(address);
 }
