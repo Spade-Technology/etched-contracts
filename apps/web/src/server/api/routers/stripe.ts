@@ -34,7 +34,7 @@ export const stripeRouter = createTRPCRouter({
             wallet: address!
           }
         }, { idempotencyKey: address! });
-        console.dir(account)
+        
         let user = await prisma.user.update(
           {
             where: {

@@ -25,7 +25,6 @@ const StripeProductsListTable = (props: ProductListProps) => {
     }));
     if (items.length > 0) {
       const resp = await mutationCreateSubscription({ items });
-      console.dir(resp);
     } else {
       toast.toast({
         title: "Error!",

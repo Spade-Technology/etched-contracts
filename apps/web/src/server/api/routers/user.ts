@@ -235,9 +235,6 @@ export const userRouter = createTRPCRouter({
         delegateeAddresses: [user.address],
         uses: "1",
       });
-
-      console.log("**************** createCapacityDelegationAuthSig (response)**************** ");
-      console.dir(response);
       return response?.capacityDelegationAuthSig;
     }),
 

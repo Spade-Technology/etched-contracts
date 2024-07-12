@@ -11,7 +11,7 @@ export const walletWithCapacityCredit = new Wallet(
 export async function generateContractsClient () {
   let contractClient = new LitContracts({
     signer: walletWithCapacityCredit,
-    network: process.env.NODE_ENV === "development" ? "manzano" : "habanero",
+    network: process.env.NODE_ENV === "development" ? "datil-dev" : "habanero",
     // network: "cayenne",
     // network: "localhost",
   });

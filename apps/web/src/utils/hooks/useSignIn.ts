@@ -193,8 +193,6 @@ export const useSignIn = () => {
           erc6492: false,
         });
         signedResult = patchSignatureResult.signature;
-        console.log("Patch signature result:", signedResult);
-        console.log("-----------------------------------");
       } else signedResult = await signMessageAsync({ message: body });
 
       if (!signedResult) throw new Error("Unable to sign message");
@@ -292,11 +290,9 @@ export const useSignIn = () => {
         authNeededCallback,
         capacityDelegationAuthSig: singleUseCapacityAuthSig as any,
       });
-      console.log("************ SESSIONSIG (pre-return) ************");
-      console.dir(sessionSigs);
       return sessionSigs;
     } catch (error) {
-      console.error("error regenerateSessionSig: ", error);
+      console.error("error generateSessionSig: ", error);
       throw error;
     }
   }

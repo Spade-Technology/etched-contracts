@@ -32,8 +32,6 @@ export const getBaseAccountAddress = async ({
   if (result.status !== 200) throw new Error(`Failed to get base account address for user ${userId}`);
 
   const data = await result.json();
-  console.log('**************************************')
-  console.log(data)
   return data.users[0].accountAddress;
 };
 
@@ -120,14 +118,7 @@ export const signMessageUsingPatchWallet = async ({
 
     if (result.status !== 200) throw new Error(`Failed to sign message for user ${userId}`);
 
-    console.log('**************************************')
-    console.log('ABOUT TO RETURN')
     if (erc6492) {
-      console.log("INSIDE IF", {
-        baseProvider,
-        userId,
-        _signature,
-      })
       return createERC6492Signature({
         baseProvider,
         userId,

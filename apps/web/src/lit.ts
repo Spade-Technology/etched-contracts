@@ -19,7 +19,7 @@ const trpcClient = createTRPCProxyClient<AppRouter>({
   transformer: SuperJSON,
 });
 
-export const litNetwork = process.env.NODE_ENV === "development" ? "manzano" : "habanero";
+export const litNetwork = process.env.NODE_ENV === "development" ? "datil-dev" : "habanero";
 
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
@@ -68,9 +68,6 @@ class Lit {
   async decryptFromIpfs(props: decryptToIpfsProps) {
     try {
       const client = await this.connect();
-
-      console.log("************** decryptFromIpfs PROPS **************");
-      console.dir(props);
       const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
 
       const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
@@ -89,12 +86,9 @@ class Lit {
 
       if (ipfsData.encryptedString) decrypted = await LitJsSdk.decryptToString(data, client);
       else if (ipfsData.encryptedFile) decrypted = await LitJsSdk.decryptToFile(data, client);
-      console.log("******************************************");
-      console.dir(ipfsData);
-      console.dir(decrypted);
       return { data: decrypted, metadata: ipfsData.metadata };
     } catch (error) {
-      console.log("decryptFromIpfs:");
+      console.log("decryptFromIpfs (error):");
       console.dir(error);
       throw error;
     }

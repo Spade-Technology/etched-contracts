@@ -18,7 +18,7 @@ const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
   // litNetwork: "jalapeno",
   // litNetwork: "habanero",
-  litNetwork: process.env.NODE_ENV === "development" ? "manzano" : "habanero",
+  litNetwork: process.env.NODE_ENV === "development" ? "datil-dev" : "habanero",
   // litNetwork: "localhost",
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,

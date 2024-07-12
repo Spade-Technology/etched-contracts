@@ -17,11 +17,7 @@ export const encryptToIpfs = async (props: ParameterType & { string?: string; fi
   // file
   if (props?.file !== undefined) {
     const encryptionProps = { ...props, file: props.file }; // Ensure file is not undefined
-    console.log("********** ENCRYPTION PROPS ********** ");
-    console.dir(encryptionProps);
     encryptionResult = await LitJsSdk.encryptFile(encryptionProps, lit.client);
-    console.log("********** ENCRYPTION RESULTS ********** ");
-    console.dir(encryptionResult);
   }
   // string
   else if (props.string) encryptionResult = await LitJsSdk.encryptString({ dataToEncrypt: props.string, ...props }, lit.client);
