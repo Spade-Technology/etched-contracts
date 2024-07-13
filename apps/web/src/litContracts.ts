@@ -1,7 +1,7 @@
 import { LitContracts } from "@lit-protocol/contracts-sdk";
 import { Wallet, providers } from "ethers";
 
-export const litNetwork = process.env.NODE_ENV === "development" ? "manzano" : "habanero";
+export const litNetwork = process.env.NODE_ENV === "development" ? "datil-dev" : "habanero";
 
 export const walletWithCapacityCredit = new Wallet(
   process.env.LIT_PRIVATE_KEY!,
