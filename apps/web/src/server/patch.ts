@@ -52,9 +52,9 @@ export const getAccessToken = async () => {
   });
 
   if (result.status !== 200) throw new Error(`Failed to get an access token`);
-
+  
   const data = await result.json();
-
+  // console.log("result.json", data);
   access_token = {
     token: data.access_token,
     expiry: new Date(new Date().getTime() + 3600000).toISOString(),
@@ -124,11 +124,10 @@ export const signMessageUsingPatchWallet = async ({
         userId,
         _signature,
       });
-    }
-    else return _signature;
+    } else return _signature;
   } catch (error) {
-    console.log('signMessageUsingPatchWallet(error):', error)
-    throw error
+    console.log("signMessageUsingPatchWallet(error):", error);
+    throw error;
   }
 };
 
