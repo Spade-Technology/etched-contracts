@@ -110,6 +110,7 @@ export const useSignIn = () => {
         redirect: false,
       });
 
+      console.dir("signedIn", signedIn);
       if (!signedIn?.ok) {
         toast({
           title: "Error",
@@ -292,8 +293,8 @@ export const useSignIn = () => {
         authNeededCallback,
         capacityDelegationAuthSig: singleUseCapacityAuthSig as any,
       });
-      console.log("************ SESSIONSIG (pre-return) ************");
-      console.dir(sessionSigs);
+      // console.log("************ SESSIONSIG (pre-return) ************");
+      // console.dir(sessionSigs);
       return sessionSigs;
     } catch (error) {
       console.error("error regenerateSessionSig: ", error);

@@ -49,9 +49,13 @@ class Lit {
   }
 
   async decryptFromIpfs(props: decryptToIpfsProps) {
+    // console.log("**************** decryptFromIpfs (props)**************** ");
+    // console.dir(props);
     const client = await this.connect();
 
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
+    // console.log("**************** decryptFromIpfs (ipfsData)**************** ");
+    // console.dir(ipfsData);
 
     const data: Parameters<typeof LitJsSdk.decryptToFile>[0] = {
       // authSig: props.authSig,
