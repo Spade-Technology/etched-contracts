@@ -36,3 +36,9 @@ export const handleCopy = (text: string | any) => {
       })
     );
 };
+
+
+export async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
+  const arrayBuffer = await blob.arrayBuffer();
+  return new Uint8Array(arrayBuffer);
+}
