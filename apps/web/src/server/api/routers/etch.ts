@@ -1,7 +1,7 @@
 import { camelCaseNetwork, contracts } from "@/contracts";
 import { lit } from "@/lit";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { encryptToIpfs } from "@/server/lit-encrypt";
+import { encryptToIpfs, fakeEncryptToIpfs } from "@/server/lit-encrypt";
 import { generateServerAuthSig, generateServerSessionSig, publicClient, walletClient } from "@/server/web3";
 import { defaultAccessControlConditions, defaultAccessControlConditionsUsingReadableID } from "@/utils/accessControlConditions";
 import { teamPermissions } from "@/utils/common";
@@ -57,13 +57,15 @@ export const etchRouter = createTRPCRouter({
 
             const file = await fetch(url).then((res) => res.blob());
 
-            const ipfsCid = await encryptToIpfs({
+            //FIXME: Return to `encryptToIpfs` once LIT gets their act together
+            const ipfsCid = await fakeEncryptToIpfs({
               authSig: await generateServerAuthSig(),
               sessionSigs: await generateServerSessionSig(),
               file,
               chain: camelCaseNetwork,
               evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
-              metadata: { type },
+              //FIXME: Remove `originalFileUrl` once LIT gets their act together
+              metadata: { type, originalFileUrl: url, etchUID: etchUID.toString() },
             }).catch((err) => {
               console.log(err);
               console.log(err.stack);

@@ -22,7 +22,14 @@ import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
 import { contracts } from "@/contracts";
 import dynamic from "next/dynamic";
 
+import { useAuth } from "@clerk/nextjs";
+import { api } from "@/utils/api";
+
 const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) => {
+  const { userId: _userId } = useAuth();
+  const userId = _userId?.toLowerCase();
+  const { mutateAsync: getUserFromId } = api.patch.getUser.useMutation();
+
   const [openAddUser, setOpenAddUser] = useState(false);
   const [etchFile, setEtchFile] = useState("");
   const [fileType, setFileType] = useState("");
@@ -40,12 +47,27 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
 
   const decrypt = async () => {
     try {
-      await lit.connect();
-      if (!etch?.ipfsCid) return;
-      const authSig = await regenerateAuthSig();
-      const sessionSigs = await generateSessionSig();
+      // await lit.connect();
+      // if (!etch?.ipfsCid) return;
+      // const authSig = await regenerateAuthSig();
+      // const sessionSigs = await generateSessionSig();
       // const sessionSigs = await regenerateSessionSig();
-      const decrypted = await lit.decryptFromIpfs({ sessionSigs, authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+      // const decrypted = await lit.decryptFromIpfs({ sessionSigs, authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+      //FIXME: (START) Undo once LIT gets their junk together
+      const patchUserInfo = await getUserFromId({
+        userId: userId!,
+        baseProvider: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+      });
+      console.log("********************* fake decryption (patchUserInfo) *********************");
+      console.log(patchUserInfo);
+      console.log({
+        fromUserId: userId!,
+        baseProvider: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+      });
+      const decrypted = await lit
+        .fakeDecryptFromIpfs({ eoa: patchUserInfo?.eoa, ipfsCid: etch.ipfsCid })
+        .catch((e) => alert(e.message));
+      //FIXME: (END) Undo once LIT gets their junk together
       if (!decrypted?.data) return;
       const metadata = decrypted.metadata;
       const detectedFileType =

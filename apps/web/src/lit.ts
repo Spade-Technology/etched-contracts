@@ -1,3 +1,4 @@
+import { metadata } from "./pages/dashboard/profiledemo";
 import { LitAbility, LitAccessControlConditionResource } from "@lit-protocol/auth-helpers";
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { currentNetworkId } from "@/contracts";
@@ -9,6 +10,9 @@ import { keccak256, toBytes, toHex } from "viem";
 import { decryptToIpfsProps } from "./utils/litTypes";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import SuperJSON from "superjson";
+
+import { blobToUint8Array } from "./lib/utils";
+import { getEtchContract } from "./utils/contracts.etched";
 
 const trpcClient = createTRPCProxyClient<AppRouter>({
   links: [
@@ -63,6 +67,36 @@ class Lit {
     }
 
     return this.connectingLock;
+  }
+
+  async fakeDecryptFromIpfs(props: decryptToIpfsProps & { eoa?: string }) {
+    try {
+      const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
+      let neverEncryptedFile;
+      if (!!ipfsData?.metadata?.originalFileUrl) {
+        console.log("********************* fakeDecryptFromIpfs (props) *********************");
+        console.dir(props);
+        console.log("********************* fakeDecryptFromIpfs (ipfsData) *********************");
+        console.dir(ipfsData);
+        const etchedContract: any = getEtchContract();
+        const hasPermissionToRead = await etchedContract?.read?.hasReadPermissionUID([props?.eoa, ipfsData?.metadata?.etchUID]);
+        console.log("********************* fakeDecryptFromIpfs (hasReadPermissionUID) *********************");
+        console.log("hasPermissionToRead:", hasPermissionToRead);
+        //DETAIL: grab file if ok
+        if (hasPermissionToRead === true) {
+          neverEncryptedFile = await fetch(ipfsData?.metadata?.originalFileUrl).then((res) => res.blob());
+          neverEncryptedFile = neverEncryptedFile ? await blobToUint8Array(neverEncryptedFile) : undefined;
+        } else {
+          throw new Error(`You do not have permission to access this resource!`);
+        }
+      }
+
+      return { data: neverEncryptedFile, metadata: ipfsData.metadata };
+    } catch (error) {
+      console.log("decryptFromIpfs (error):");
+      console.dir(error);
+      throw error;
+    }
   }
 
   async decryptFromIpfs(props: decryptToIpfsProps) {
