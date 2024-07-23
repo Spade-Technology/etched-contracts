@@ -23,7 +23,7 @@ const trpcClient = createTRPCProxyClient<AppRouter>({
   transformer: SuperJSON,
 });
 
-export const litNetwork = process.env.NODE_ENV === "development" ? "datil-dev" : "habanero";
+export const litNetwork = process.env.NODE_ENV === "development" ? "datil-dev" : "datil-dev";
 
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
