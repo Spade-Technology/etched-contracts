@@ -50,42 +50,78 @@ export const etchRouter = createTRPCRouter({
         let etchUIDs: string[] = [];
         let callDatas: string[] = [];
 
+        // await Promise.all(
+        //   files.map(async ({ url, name, type }) => {
+        //     const etchUID = BigInt(keccak256(encodePacked(["address"], [address as Address]))) + random(48);
+        //     etchUIDs.push(etchUID);
+
+        //     const file = await fetch(url).then((res) => res.blob());
+
+        //     //FIXME: Return to `encryptToIpfs` once LIT gets their act together
+        //     const ipfsCid = await fakeEncryptToIpfs({
+        //       authSig: await generateServerAuthSig(),
+        //       sessionSigs: await generateServerSessionSig(),
+        //       file,
+        //       chain: camelCaseNetwork,
+        //       evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
+        //       //FIXME: Remove `originalFileUrl` once LIT gets their act together
+        //       metadata: { type, originalFileUrl: url, etchUID: etchUID.toString() },
+        //     }).catch((err) => {
+        //       console.log(err);
+        //       console.log(err.stack);
+        //       throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+        //     });
+
+        //     ipfsCids.push(ipfsCid);
+
+        //     const functionName = team ? "safeMintForTeam" : "safeMint";
+        //     const args = team ? [etchUID, team, name, ipfsCid] : [etchUID, address, name, ipfsCid];
+
+        //     const calldata = encodeFunctionData({
+        //       abi: EtchABI,
+        //       functionName: functionName,
+        //       args: args,
+        //     });
+
+        //     callDatas.push(calldata);
+        //   })
+        // );
+
         await Promise.all(
           files.map(async ({ url, name, type }) => {
+            console.log(`bulkMintEtch 4.insidePromise`)
             const etchUID = BigInt(keccak256(encodePacked(["address"], [address as Address]))) + random(48);
             etchUIDs.push(etchUID);
-
+            console.log(`bulkMintEtch 5.insidePromise`)
             const file = await fetch(url).then((res) => res.blob());
-
-            //FIXME: Return to `encryptToIpfs` once LIT gets their act together
-            const ipfsCid = await fakeEncryptToIpfs({
+            console.log(`bulkMintEtch 6.insidePromise`)
+            const ipfsCid = await encryptToIpfs({
               authSig: await generateServerAuthSig(),
-              sessionSigs: await generateServerSessionSig(),
               file,
               chain: camelCaseNetwork,
               evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
-              //FIXME: Remove `originalFileUrl` once LIT gets their act together
-              metadata: { type, originalFileUrl: url, etchUID: etchUID.toString() },
+              metadata: { type },
             }).catch((err) => {
               console.log(err);
               console.log(err.stack);
               throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
             });
-
+            console.log(`bulkMintEtch 7.insidePromise`)
             ipfsCids.push(ipfsCid);
 
             const functionName = team ? "safeMintForTeam" : "safeMint";
             const args = team ? [etchUID, team, name, ipfsCid] : [etchUID, address, name, ipfsCid];
-
+            console.log(`bulkMintEtch 8.insidePromise`)
             const calldata = encodeFunctionData({
               abi: EtchABI,
               functionName: functionName,
               args: args,
             });
-
+            console.log(`bulkMintEtch 9.insidePromise`)
             callDatas.push(calldata);
           })
         );
+        console.log(`bulkMintEtch 10`)
 
         const tx1 = await walletClient.writeContract({
           address: contracts.Etch,
