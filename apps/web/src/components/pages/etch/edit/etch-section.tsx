@@ -47,54 +47,29 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
     args: [owner, etch?.tokenId],
   });
 
-  // const decrypt = async () => {
-  //   try {
-  //     // await lit.connect();
-  //     // if (!etch?.ipfsCid) return;
-  //     // const authSig = await regenerateAuthSig();
-  //     // const sessionSigs = await generateSessionSig();
-  //     // const sessionSigs = await regenerateSessionSig();
-  //     // const decrypted = await lit.decryptFromIpfs({ sessionSigs, authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
-  //     //FIXME: (START) Undo once LIT gets their junk together
-  //     const patchUserInfo = await getUserFromId({
-  //       userId: userId!,
-  //       baseProvider: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
-  //     });
-  //     console.log("********************* fake decryption (patchUserInfo) *********************");
-  //     console.log(patchUserInfo);
-  //     console.log({
-  //       fromUserId: userId!,
-  //       baseProvider: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
-  //     });
-  //     const decrypted = await lit
-  //       .fakeDecryptFromIpfs({ eoa: patchUserInfo?.eoa, ipfsCid: etch.ipfsCid })
-  //       .catch((e) => alert(e.message));
-  //     //FIXME: (END) Undo once LIT gets their junk together
-  //     if (!decrypted?.data) return;
-  //     const metadata = decrypted.metadata;
-  //     const detectedFileType =
-  //       metadata?.type || (typeof decrypted.data === "string" ? "string" : filetype(decrypted.data)[0]?.mime);
-  //     const image = typeof decrypted.data === "string" ? "" : URL.createObjectURL(new Blob([decrypted.data]));
-  //     setEtchFile(image);
-  //     setFileType(detectedFileType || "");
-  //   } catch (e: any) {
-  //     console.error(e);
-  //     alert(e.errorKind === "Validation" ? "You are not authorized to view this document" : e.message || "Something went wrong");
-  //   }
-  // };
-
-  async function decrypt() {
+  const decrypt = async () => {
     try {
-      await lit.connect();
-      if (!etch?.ipfsCid) return;
-
-      const ssSigs = await serverSideSigs();
-      console.log("SERVER SIDE SIGS: ", ssSigs);
-      const authSig = ssSigs.authSig;
-      const sessionSigs = ssSigs.sessionSig;
+      // await lit.connect();
+      // if (!etch?.ipfsCid) return;
       // const authSig = await regenerateAuthSig();
       // const sessionSigs = await generateSessionSig();
-      const decrypted = await lit.decryptFromIpfs({ authSig, sessionSigs, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+      // const sessionSigs = await regenerateSessionSig();
+      // const decrypted = await lit.decryptFromIpfs({ sessionSigs, authSig, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+      //FIXME: (START) Undo once LIT gets their junk together
+      const patchUserInfo = await getUserFromId({
+        userId: userId!,
+        baseProvider: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+      });
+      console.log("********************* fake decryption (patchUserInfo) *********************");
+      console.log(patchUserInfo);
+      console.log({
+        fromUserId: userId!,
+        baseProvider: process.env.NEXT_PUBLIC_PATCHWALLET_KERNEL_NAME,
+      });
+      const decrypted = await lit
+        .fakeDecryptFromIpfs({ eoa: patchUserInfo?.eoa, ipfsCid: etch.ipfsCid })
+        .catch((e) => alert(e.message));
+      //FIXME: (END) Undo once LIT gets their junk together
       if (!decrypted?.data) return;
       const metadata = decrypted.metadata;
       const detectedFileType =
@@ -106,7 +81,32 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
       console.error(e);
       alert(e.errorKind === "Validation" ? "You are not authorized to view this document" : e.message || "Something went wrong");
     }
-  }
+  };
+
+  // async function decrypt() {
+  //   try {
+  //     await lit.connect();
+  //     if (!etch?.ipfsCid) return;
+
+  //     const ssSigs = await serverSideSigs();
+  //     console.log("SERVER SIDE SIGS: ", ssSigs);
+  //     const authSig = ssSigs.authSig;
+  //     const sessionSigs = ssSigs.sessionSig;
+  //     // const authSig = await regenerateAuthSig();
+  //     // const sessionSigs = await generateSessionSig();
+  //     const decrypted = await lit.decryptFromIpfs({ authSig, sessionSigs, ipfsCid: etch.ipfsCid }).catch((e) => alert(e.message));
+  //     if (!decrypted?.data) return;
+  //     const metadata = decrypted.metadata;
+  //     const detectedFileType =
+  //       metadata?.type || (typeof decrypted.data === "string" ? "string" : filetype(decrypted.data)[0]?.mime);
+  //     const image = typeof decrypted.data === "string" ? "" : URL.createObjectURL(new Blob([decrypted.data]));
+  //     setEtchFile(image);
+  //     setFileType(detectedFileType || "");
+  //   } catch (e: any) {
+  //     console.error(e);
+  //     alert(e.errorKind === "Validation" ? "You are not authorized to view this document" : e.message || "Something went wrong");
+  //   }
+  // }
 
   useEffect(() => {
     if (etch?.ipfsCid) decrypt();
