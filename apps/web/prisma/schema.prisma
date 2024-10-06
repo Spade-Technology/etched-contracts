@@ -18,25 +18,26 @@ datasource db {
     provider          = "postgresql"
     url               = env("DATABASE_PRISMA_URL") // uses connection pooling
     directUrl         = env("DATABASE_URL_NON_POOLING") // uses a direct connection
-    shadowDatabaseUrl = env("DATABASE_URL_NON_POOLING") // used for migrations
+    shadowDatabaseUrl = env("DATABASE_URL") // used for migrations
 }
 
 model User {
-    address String  @id @unique
-    email   String?
-    isApproved ApprovedStatus @default(Pending)
+    address             String               @id @unique
+    email               String?
+    isApproved          ApprovedStatus       @default(Pending)
     userActivationCodes userActivationCode[]
     isAdministrator     Boolean              @default(false)
-    capacityCredits capacityCredit[]
-    customerId    String? //For payments (stripe, etc).  Not related to newsletters
+    capacityCredits     capacityCredit[]
+    customerId          String? //For payments (stripe, etc).  Not related to newsletters
 }
 
 model PaidSubscriptions {
-    customerId   String
+    customerId     String
     subscriptionId String
     quantity       Int
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
+
     @@id([customerId, subscriptionId])
 }
 

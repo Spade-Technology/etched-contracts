@@ -8,6 +8,7 @@ import withPWA from "next-pwa";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  // typescript: { ignoreBuildErrors: true },
   // pageExtensions:["page.js"],
   images: {
     domains: ["img.clerk.com"],

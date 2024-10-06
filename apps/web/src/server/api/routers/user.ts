@@ -23,7 +23,7 @@ const passwordValidation = z
     }
   );
 
-async function retrieveStoredCode(code: string) {
+async function retrieveStoredCode (code: string) {
   const userCode = await prisma.userActivationCode.findFirstOrThrow({
     where: { code, userAddress: null },
   });
@@ -34,14 +34,14 @@ async function retrieveStoredCode(code: string) {
   };
 }
 
-async function invalidateStoredCode(code: string, userAddress: string) {
+async function invalidateStoredCode (code: string, userAddress: string) {
   await prisma.userActivationCode.updateMany({
     where: { code },
     data: { userAddress },
   });
 }
 
-async function createStoredCode() {
+async function createStoredCode () {
   const generateRandomPart = () =>
     String.fromCharCode(
       ...Array(5)
@@ -185,7 +185,7 @@ export const userRouter = createTRPCRouter({
       return { success: true, message: "Activation code verified successfully." };
     }),
 
-  requestCapacityDelegationAuthSig: protectedProcedure.input(z.object({})).mutation(async ({ input: {}, ctx: { session } }) => {
+  requestCapacityDelegationAuthSig: protectedProcedure.input(z.object({})).mutation(async ({ input: { }, ctx: { session } }) => {
     const user = await prisma.user.findUnique({ where: { address: session.address! } });
 
     if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -213,7 +213,7 @@ export const userRouter = createTRPCRouter({
 
   requestSingleUseCapacityDelegationAuthSig: protectedProcedure
     .input(z.object({}))
-    .mutation(async ({ input: {}, ctx: { session } }) => {
+    .mutation(async ({ input: { }, ctx: { session } }) => {
       const user = await prisma.user.findUnique({ where: { address: session.address! } });
 
       if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -235,6 +235,8 @@ export const userRouter = createTRPCRouter({
         delegateeAddresses: [user.address],
         uses: "1",
       });
+      console.log('********** requestSingleUseCapacityDelegationAuthSig (response) ********** ')
+      console.dir(response)
       return response?.capacityDelegationAuthSig;
     }),
 

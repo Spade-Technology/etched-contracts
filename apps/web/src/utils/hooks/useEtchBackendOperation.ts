@@ -7,6 +7,7 @@ import { useUploadThing } from "../uploadthing";
 import { refetchContext } from "../urql";
 import { useSignIn } from "./useSignIn";
 
+
 const formSchema = z.object({
   name: z.string(),
   description: z.string(),
@@ -15,13 +16,23 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-function enableBeforeUnload() {
+function enableBeforeUnload () {
   window.onbeforeunload = function (e) {
     return "Discard changes?";
   };
 }
-function disableBeforeUnload() {
+function disableBeforeUnload () {
   window.onbeforeunload = null;
+}
+
+export const useGetServerSigs = () => {
+  // const { data: serverSideSigs, isLoading: loadingServerSideSigs, error: errorServerSideSigs, refetch: refetchServerSideSigs } = api.etch.unsecureGetServerAuthAndSessionSig.useQuery({});
+
+  const apiContext = api.useContext();
+  const serverSideSigs = async () => {
+    return await apiContext.etch.unsecureGetServerAuthAndSessionSig.fetch()
+  }
+  return { serverSideSigs };
 }
 
 export const useCreateEtch = () => {

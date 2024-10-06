@@ -12,6 +12,7 @@ import { getWalletClient } from "@wagmi/core";
 import { signOut as _signOut, signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
+import { recoverMessageAddress, verifyMessage } from 'viem';
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 import { Address, encodeAbiParameters, keccak256, parseAbiParameters } from "viem";
@@ -23,7 +24,7 @@ import { hashMessageForLit } from "@/lit";
 import { api } from "../api";
 import { useRouter } from "next/router";
 
-export function useSignOut() {
+export function useSignOut () {
   const { signOut: clerkSignOut, sessionId } = useAuth();
 
   const signOut = async () => {
@@ -224,7 +225,7 @@ export const useSignIn = () => {
   };
 
   //DETAIL (MICHAEL): Generate a Session Signature
-  async function generateSessionSig() {
+  async function generateSessionSig () {
     try {
       const singleUseCapacityAuthSig = await requestSingleUseCapacityDelegationAuthSig({});
 
@@ -255,6 +256,8 @@ export const useSignIn = () => {
           nonce: await lit!.client!.getLatestBlockhash(),
           litNodeClient: lit!.client,
         });
+        console.log('********** (toSign) **********')
+        console.dir(toSign);
 
         const patchSignatureResult = await generatePatchSignature({
           userId: userId || "",
@@ -266,9 +269,20 @@ export const useSignIn = () => {
           sig: patchSignatureResult.signature,
           derivedVia: "EIP1271",
           signedMessage: toSign,
-          address: patchUserInfo.eoa?.toLowerCase(),
+          address: patchUserInfo.eoa,
         };
+        console.log('********** RECOVERING ADDRESS **********')
+        const recAddr = await recoverMessageAddress({
+          message: patchSignatureResult.message,
+          signature: patchSignatureResult.signature
+        })
+        console.log(recAddr)
 
+        // console.log('********** VERIFYING **********')
+        // const ver = await verifySiweSignature(authSig);
+        // console.log(ver)
+        console.log('********** authSig **********')
+        console.dir(authSig)
         return authSig;
       };
 
@@ -298,6 +312,33 @@ export const useSignIn = () => {
   }
   return { isLoading, logIn, regenerateAuthSig, generateSessionSig };
 };
+
+async function verifySiweSignature (authSig: any) {
+  try {
+    // Reconstruct the SIWE message
+    const siweMessage = new SiweMessage(authSig.signedMessage);
+
+    // Verify the signature using Viem
+    const isValid = await verifyMessage({
+      address: authSig.address,
+      message: authSig.signedMessage,
+      signature: authSig.sig,
+    });
+
+    if (!isValid) {
+      throw new Error('Signature verification failed');
+    }
+
+    // Verify the SIWE message
+    await siweMessage.verify({ signature: authSig.sig });
+
+    console.log('SIWE signature verified successfully');
+    return true;
+  } catch (error) {
+    console.error('SIWE signature verification failed:', error.message);
+    return false;
+  }
+}
 
 export const useLoggedInAddress = () => {
   const [loggedInAddress, setLoggedInAddress] = useState<string | null>(null);

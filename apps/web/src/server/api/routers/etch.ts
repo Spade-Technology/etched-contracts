@@ -17,6 +17,14 @@ import { z } from "zod";
 const random = require("random-bigint");
 
 export const etchRouter = createTRPCRouter({
+  unsecureGetServerAuthAndSessionSig: protectedProcedure.query(async ({ }) => {
+    const serverSideSigs = {
+      authSig: await generateServerAuthSig(),
+      sessionSig: await generateServerSessionSig()
+    }
+
+    return serverSideSigs
+  }),
   bulkMintEtch: protectedProcedure
     .input(
       z.object({
@@ -58,13 +66,14 @@ export const etchRouter = createTRPCRouter({
             const file = await fetch(url).then((res) => res.blob());
 
             //FIXME: Return to `encryptToIpfs` once LIT gets their act together
-            const ipfsCid = await fakeEncryptToIpfs({
+            const ipfsCid = await encryptToIpfs({
               authSig: await generateServerAuthSig(),
               sessionSigs: await generateServerSessionSig(),
               file,
               chain: camelCaseNetwork,
               evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
               //FIXME: Remove `originalFileUrl` once LIT gets their act together
+              // metadata: { type },
               metadata: { type, originalFileUrl: url, etchUID: etchUID.toString() },
             }).catch((err) => {
               console.log(err);

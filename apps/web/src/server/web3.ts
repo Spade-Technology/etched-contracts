@@ -17,8 +17,8 @@ export const publicClient = createPublicClient({
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
   // litNetwork: "jalapeno",
-  // litNetwork: "habanero",
-  litNetwork: process.env.NODE_ENV === "development" ? "datil-dev" : "habanero",
+  // litNetwork: "datil",
+  litNetwork: process.env.NODE_ENV === "development" ? "datil-test" : "datil",
   // litNetwork: "localhost",
   // only on client
   alertWhenUnauthorized: typeof window !== "undefined" ? true : false,
@@ -72,7 +72,7 @@ export const generateServerAuthSig = async () => {
       nonce: await client.getLatestBlockhash(),
       litNodeClient: client,
     };
-    const body = await createSiweMessage(preparedMessage);
+    const body = await createSiweMessageWithRecaps(preparedMessage);
 
     const signedResult = await walletClient.signMessage({ message: body });
 
@@ -84,7 +84,8 @@ export const generateServerAuthSig = async () => {
       signedMessage: body,
       address: walletClient.account.address,
     };
-
+    console.log(`********************** authSig ********************** `)
+    console.dir(authSig)
     return authSig;
   } catch (error) {
     console.log(error)
@@ -96,6 +97,7 @@ export const generateServerAuthSig = async () => {
 export const generateServerSessionSig = async () => {
   const authNeededCallback = async (params: any) => {
     //ignoring params because we're simply gonna pass authSig from existing function
+    console.log(`********************** GSS (params) ********************** `)
     console.log(params)
     return await generateServerAuthSig()
   }

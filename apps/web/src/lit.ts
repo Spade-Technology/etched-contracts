@@ -23,7 +23,7 @@ const trpcClient = createTRPCProxyClient<AppRouter>({
   transformer: SuperJSON,
 });
 
-export const litNetwork = process.env.NODE_ENV === "development" ? "datil-dev" : "habanero";
+export const litNetwork = process.env.NODE_ENV === "development" ? "datil-test" : "datil";
 
 const client = new LitJsSdk.LitNodeClient({
   // litNetwork: "serrano",
@@ -45,7 +45,7 @@ class Lit {
   public client: LitJsSdk.LitNodeClient | undefined;
   private connectingLock: Promise<LitJsSdk.LitNodeClient> | undefined;
 
-  async connect() {
+  async connect () {
     if (this.client) return this.client;
 
     if (!this.connectingLock) {
@@ -69,7 +69,7 @@ class Lit {
     return this.connectingLock;
   }
 
-  async fakeDecryptFromIpfs(props: decryptToIpfsProps & { eoa?: string }) {
+  async fakeDecryptFromIpfs (props: decryptToIpfsProps & { eoa?: string }) {
     try {
       const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
       let neverEncryptedFile;
@@ -93,13 +93,13 @@ class Lit {
 
       return { data: neverEncryptedFile, metadata: ipfsData.metadata };
     } catch (error) {
-      console.log("decryptFromIpfs (error):");
+      console.log("fakeDecryptFromIpfs (error):");
       console.dir(error);
       throw error;
     }
   }
 
-  async decryptFromIpfs(props: decryptToIpfsProps) {
+  async decryptFromIpfs (props: decryptToIpfsProps) {
     try {
       const client = await this.connect();
       const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${props.ipfsCid}`)).json();
@@ -128,7 +128,12 @@ class Lit {
     }
   }
 
-  async getMetadataFromIpfs(ipfsCid: string) {
+  async decryptViaLitAction (props: decryptToIpfsProps) {
+    //Acquire PatchWallet signature (from server)
+    //
+  };
+
+  async getMetadataFromIpfs (ipfsCid: string) {
     const ipfsData = await (await fetch(`${ipfsPlublicClientUrl}${ipfsCid}`)).json();
 
     return ipfsData.metadata;

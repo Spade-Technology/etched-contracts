@@ -32,7 +32,17 @@ export const patchRouter = createTRPCRouter({
           erc6492,
           message,
         });
+        console.log(signature)
         console.log('signMessageForPatchWallet:  2')
+        console.log({
+          message,
+          hash: signature.hash,
+          signature: signature.signature,
+          user: {
+            id: userId,
+            provider: baseProvider,
+          },
+        })
         return {
           message,
           hash: signature.hash,

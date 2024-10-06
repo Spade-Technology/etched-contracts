@@ -52,7 +52,7 @@ export const getAccessToken = async () => {
   });
 
   if (result.status !== 200) throw new Error(`Failed to get an access token`);
-  
+
   const data = await result.json();
   // console.log("result.json", data);
   access_token = {
@@ -84,6 +84,8 @@ export const signMessageUsingPatchWallet = async ({
     });
 
     const address = await getBaseAccountAddress({ baseProvider, userId, access_token });
+    console.log('*********************** getBaseAccountAddress *********************** ')
+    console.dir(address)
 
     const result = await fetch(`${env.PATCHWALLET_BASE_URL}/kernel/sign`, {
       method: "POST",
@@ -96,12 +98,17 @@ export const signMessageUsingPatchWallet = async ({
     });
 
     const _signature = await result.json();
+    console.log('*********************** _signature *********************** ')
+    console.dir(_signature)
 
     const signature = await createERC6492Signature({
       baseProvider,
       userId,
       _signature,
     });
+
+    console.log('*********************** signature *********************** ')
+    console.dir(signature)
 
     const callResponse = await publicClient.call({
       data: concat([
@@ -113,6 +120,9 @@ export const signMessageUsingPatchWallet = async ({
         ]),
       ]),
     });
+
+    console.log('*********************** callReponse *********************** ')
+    console.dir(callResponse)
 
     const isValidSignature = callResponse.data === "0x01";
 
