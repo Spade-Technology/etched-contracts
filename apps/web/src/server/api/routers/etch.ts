@@ -59,8 +59,8 @@ export const etchRouter = createTRPCRouter({
 
             //FIXME: Return to `encryptToIpfs` once LIT gets their act together
             const ipfsCid = await fakeEncryptToIpfs({
-              authSig: null,
-              sessionSigs: null,
+              authSig: {} as any,
+              sessionSigs: {} as any,
               file,
               chain: camelCaseNetwork,
               evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
