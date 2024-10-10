@@ -59,8 +59,8 @@ export const etchRouter = createTRPCRouter({
 
             //FIXME: Return to `encryptToIpfs` once LIT gets their act together
             const ipfsCid = await fakeEncryptToIpfs({
-              authSig: await generateServerAuthSig(),
-              sessionSigs: await generateServerSessionSig(),
+              authSig: null,
+              sessionSigs: null,
               file,
               chain: camelCaseNetwork,
               evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
@@ -69,7 +69,7 @@ export const etchRouter = createTRPCRouter({
             }).catch((err) => {
               console.log(err);
               console.log(err.stack);
-              throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS" });
+              throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS (fakeEncryption)" });
             });
 
             ipfsCids.push(ipfsCid);

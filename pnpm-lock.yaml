@@ -201,7 +201,7 @@ importers:
   apps/web:
     dependencies:
       '@clerk/nextjs':
-        specifier: ^4.30
+        specifier: ^4.30.0
         version: 4.31.5(next@13.5.7(@babel/core@7.24.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@emailjs/browser':
         specifier: ^3.11.0
@@ -293,6 +293,12 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.0.7
         version: 1.1.3(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@stripe/react-stripe-js':
+        specifier: ^2.6.2
+        version: 2.8.1(@stripe/stripe-js@3.5.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@stripe/stripe-js':
+        specifier: ^3.0.10
+        version: 3.5.0
       '@t3-oss/env-nextjs':
         specifier: ^0.3.1
         version: 0.3.1(typescript@5.6.2)(zod@3.23.8)
@@ -353,6 +359,9 @@ importers:
       magic-bytes.js:
         specifier: ^1.5.0
         version: 1.10.0
+      nanoid:
+        specifier: ^5.0.6
+        version: 5.0.7
       next:
         specifier: ^13.5.4
         version: 13.5.7(@babel/core@7.24.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -410,6 +419,9 @@ importers:
       siwe:
         specifier: ^2.1.4
         version: 2.3.2(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      stripe:
+        specifier: ^14.21.0
+        version: 14.25.0
       superjson:
         specifier: 1.12.2
         version: 1.12.2
@@ -4481,6 +4493,17 @@ packages:
 
   '@stablelib/x25519@1.0.3':
     resolution: {integrity: sha512-KnTbKmUhPhHavzobclVJQG5kuivH+qDLpe84iRqX3CLrKp881cF160JvXJ+hjn1aMyCwYOKeIZefIH/P5cJoRw==}
+
+  '@stripe/react-stripe-js@2.8.1':
+    resolution: {integrity: sha512-C410jVKOATinXLalWotab6E6jlWAlbqUDWL9q1km0p5UHrvnihjjYzA8imYXc4xc4Euf9GeKDQc4n35HKZvgwg==}
+    peerDependencies:
+      '@stripe/stripe-js': ^1.44.1 || ^2.0.0 || ^3.0.0 || ^4.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  '@stripe/stripe-js@3.5.0':
+    resolution: {integrity: sha512-pKS3wZnJoL1iTyGBXAvCwduNNeghJHY6QSRSNNvpYnrrQrLZ6Owsazjyynu0e0ObRgks0i7Rv+pe2M7/MBTZpQ==}
+    engines: {node: '>=12.16'}
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
@@ -10355,6 +10378,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@5.0.7:
+    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+
   native-abort-controller@1.0.4:
     resolution: {integrity: sha512-zp8yev7nxczDJMoP6pDxyD20IU0T22eX8VwN2ztDccKvSZhRaV33yP1BGwKSZfXuqWUzsXopVFjBdau9OOAwMQ==}
     peerDependencies:
@@ -12539,6 +12567,10 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+
+  stripe@14.25.0:
+    resolution: {integrity: sha512-wQS3GNMofCXwH8TSje8E1SE8zr6ODiGtHQgPtO95p9Mb4FhKC9jvXR2NUTpZ9ZINlckJcFidCmaTFV4P6vsb9g==}
+    engines: {node: '>=12.*'}
 
   strnum@1.0.5:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
@@ -16803,7 +16835,7 @@ snapshots:
     dependencies:
       '@graphql-tools/load': 6.2.8(graphql@16.9.0)
       graphql-config: 3.0.3(@types/node@18.19.54)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.9.0)(utf-8-validate@5.0.10)
-      tslib: 2.6.3
+      tslib: 2.7.0
       yargs: 16.0.3
     transitivePeerDependencies:
       - graphql
@@ -17286,7 +17318,7 @@ snapshots:
       '@graphql-inspector/config': 4.0.2(graphql@16.9.0)
       '@graphql-inspector/loaders': 4.0.5(@graphql-inspector/config@4.0.2(graphql@16.9.0))(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       yargs: 16.0.3
 
   '@graphql-inspector/config@4.0.2(graphql@16.9.0)':
@@ -17298,7 +17330,7 @@ snapshots:
     dependencies:
       dependency-graph: 0.9.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-inspector/coverage-command@2.1.0(@graphql-inspector/config@4.0.2(graphql@16.9.0))(@graphql-inspector/loaders@4.0.5(@graphql-inspector/config@4.0.2(graphql@16.9.0))(graphql@16.9.0))(graphql@16.9.0)(yargs@16.0.3)':
     dependencies:
@@ -17306,7 +17338,7 @@ snapshots:
       '@graphql-inspector/core': 2.1.0(graphql@16.9.0)
       '@graphql-inspector/logger': 2.1.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@graphql-inspector/config'
       - '@graphql-inspector/loaders'
@@ -17316,7 +17348,7 @@ snapshots:
     dependencies:
       '@graphql-cli/loaders': 4.0.0(@types/node@18.19.54)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.9.0)(utf-8-validate@5.0.10)
       graphql-config: 3.0.3(@types/node@18.19.54)(bufferutil@4.0.8)(encoding@0.1.13)(graphql@16.9.0)(utf-8-validate@5.0.10)
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -17342,7 +17374,7 @@ snapshots:
       figures: 3.2.0
       log-symbols: 4.0.0
       std-env: 2.2.1
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-inspector/validate-command@2.1.0(@graphql-inspector/config@4.0.2(graphql@16.9.0))(@graphql-inspector/loaders@4.0.5(@graphql-inspector/config@4.0.2(graphql@16.9.0))(graphql@16.9.0))(graphql@16.9.0)(yargs@16.0.3)':
     dependencies:
@@ -17350,7 +17382,7 @@ snapshots:
       '@graphql-inspector/core': 2.1.0(graphql@16.9.0)
       '@graphql-inspector/logger': 2.1.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@graphql-inspector/config'
       - '@graphql-inspector/loaders'
@@ -17379,7 +17411,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       '@whatwg-node/fetch': 0.9.21
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - encoding
 
@@ -17404,7 +17436,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       dataloader: 2.2.2
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       value-or-promise: 1.0.12
 
   '@graphql-tools/code-file-loader@6.3.1(graphql@16.9.0)':
@@ -17422,7 +17454,7 @@ snapshots:
       '@graphql-tools/utils': 9.2.1(graphql@16.9.0)
       globby: 11.1.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       unixify: 1.0.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -17434,7 +17466,7 @@ snapshots:
       '@graphql-tools/utils': 9.2.1(graphql@16.9.0)
       globby: 11.1.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       unixify: 1.0.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -17446,7 +17478,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       globby: 11.1.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       unixify: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -17459,7 +17491,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       dataloader: 2.2.2
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/delegate@7.1.5(graphql@16.9.0)':
     dependencies:
@@ -17510,7 +17542,7 @@ snapshots:
       graphql: 16.9.0
       graphql-ws: 5.16.0(graphql@16.9.0)
       isomorphic-ws: 5.0.0(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))
-      tslib: 2.6.3
+      tslib: 2.7.0
       ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
@@ -17552,7 +17584,7 @@ snapshots:
       extract-files: 11.0.0
       graphql: 16.9.0
       meros: 1.3.0(@types/node@18.19.54)
-      tslib: 2.6.3
+      tslib: 2.7.0
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
@@ -17575,7 +17607,7 @@ snapshots:
       '@types/ws': 8.5.11
       graphql: 16.9.0
       isomorphic-ws: 5.0.0(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))
-      tslib: 2.6.3
+      tslib: 2.7.0
       ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
@@ -17596,7 +17628,7 @@ snapshots:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
       '@repeaterjs/repeater': 3.0.6
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       value-or-promise: 1.0.12
 
   '@graphql-tools/git-loader@6.2.6(graphql@16.9.0)':
@@ -17628,7 +17660,7 @@ snapshots:
       graphql: 16.9.0
       is-glob: 4.0.3
       micromatch: 4.0.7
-      tslib: 2.6.3
+      tslib: 2.7.0
       unixify: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -17667,7 +17699,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       '@whatwg-node/fetch': 0.9.21
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
@@ -17696,7 +17728,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       globby: 11.1.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       unixify: 1.0.0
 
   '@graphql-tools/graphql-tag-pluck@6.5.1(graphql@16.9.0)':
@@ -17718,7 +17750,7 @@ snapshots:
       '@babel/types': 7.24.8
       '@graphql-tools/utils': 9.2.1(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -17731,7 +17763,7 @@ snapshots:
       '@babel/types': 7.24.8
       '@graphql-tools/utils': 9.2.1(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -17745,7 +17777,7 @@ snapshots:
       '@babel/types': 7.24.8
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - supports-color
 
@@ -17761,7 +17793,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       graphql: 16.9.0
       resolve-from: 5.0.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/json-file-loader@6.2.6(graphql@16.9.0)':
     dependencies:
@@ -17782,7 +17814,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       globby: 11.1.0
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       unixify: 1.0.0
 
   '@graphql-tools/load@6.2.4(graphql@15.3.0)':
@@ -17794,7 +17826,7 @@ snapshots:
       import-from: 3.0.0
       is-glob: 4.0.1
       p-limit: 3.0.2
-      tslib: 2.0.2
+      tslib: 2.0.3
       unixify: 1.0.0
       valid-url: 1.0.9
 
@@ -17807,7 +17839,7 @@ snapshots:
       import-from: 3.0.0
       is-glob: 4.0.1
       p-limit: 3.0.2
-      tslib: 2.0.2
+      tslib: 2.0.3
       unixify: 1.0.0
       valid-url: 1.0.9
 
@@ -17838,7 +17870,7 @@ snapshots:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       graphql: 16.9.0
       p-limit: 3.1.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/merge@6.2.17(graphql@15.3.0)':
     dependencies:
@@ -17870,18 +17902,18 @@ snapshots:
     dependencies:
       '@graphql-tools/utils': 9.2.1(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/merge@9.0.4(graphql@16.9.0)':
     dependencies:
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/optimize@1.4.0(graphql@16.9.0)':
     dependencies:
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/optimize@2.0.0(graphql@16.9.0)':
     dependencies:
@@ -17964,7 +17996,7 @@ snapshots:
       js-yaml: 4.1.0
       lodash: 4.17.21
       scuid: 1.1.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       yaml-ast-parser: 0.0.43
     transitivePeerDependencies:
       - '@types/node'
@@ -17978,7 +18010,7 @@ snapshots:
       '@ardatan/relay-compiler': 12.0.0(encoding@0.1.13)(graphql@16.9.0)
       '@graphql-tools/utils': 9.2.1(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -17998,7 +18030,7 @@ snapshots:
       '@graphql-tools/merge': 9.0.4(graphql@16.9.0)
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       value-or-promise: 1.0.12
 
   '@graphql-tools/schema@7.1.5(graphql@16.9.0)':
@@ -18117,7 +18149,7 @@ snapshots:
       '@whatwg-node/fetch': 0.9.21
       graphql: 16.9.0
       isomorphic-ws: 5.0.0(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))
-      tslib: 2.6.3
+      tslib: 2.7.0
       value-or-promise: 1.0.12
       ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
@@ -18140,7 +18172,7 @@ snapshots:
       cross-inspect: 1.0.0
       dset: 3.1.3
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/utils@10.5.4(graphql@16.9.0)':
     dependencies:
@@ -18184,7 +18216,7 @@ snapshots:
   '@graphql-tools/utils@8.13.1(graphql@16.9.0)':
     dependencies:
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/utils@8.9.0(graphql@15.3.0)':
     dependencies:
@@ -18200,7 +18232,7 @@ snapshots:
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@graphql-tools/wrap@10.0.5(graphql@16.9.0)':
     dependencies:
@@ -18208,7 +18240,7 @@ snapshots:
       '@graphql-tools/schema': 10.0.4(graphql@16.9.0)
       '@graphql-tools/utils': 10.3.2(graphql@16.9.0)
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
       value-or-promise: 1.0.12
 
   '@graphql-tools/wrap@7.0.8(graphql@16.9.0)':
@@ -18301,7 +18333,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       jest-mock: 29.7.0
     optional: true
 
@@ -18309,7 +18341,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -18324,7 +18356,7 @@ snapshots:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       '@types/yargs': 15.0.19
       chalk: 4.1.2
     optional: true
@@ -18334,7 +18366,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       '@types/yargs': 17.0.33
       chalk: 4.1.2
     optional: true
@@ -19627,11 +19659,11 @@ snapshots:
     dependencies:
       asn1js: 3.0.5
       pvtsutils: 1.3.5
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@peculiar/json-schema@1.1.12':
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@peculiar/webcrypto@1.4.1':
     dependencies:
@@ -19646,7 +19678,7 @@ snapshots:
       '@peculiar/asn1-schema': 2.3.13
       '@peculiar/json-schema': 1.1.12
       pvtsutils: 1.3.5
-      tslib: 2.6.3
+      tslib: 2.7.0
       webcrypto-core: 1.8.0
 
   '@pinata/sdk@2.1.0':
@@ -20951,6 +20983,15 @@ snapshots:
       '@stablelib/random': 1.0.2
       '@stablelib/wipe': 1.0.1
 
+  '@stripe/react-stripe-js@2.8.1(@stripe/stripe-js@3.5.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@stripe/stripe-js': 3.5.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
+  '@stripe/stripe-js@3.5.0': {}
+
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     dependencies:
       ejs: 3.1.10
@@ -21264,26 +21305,26 @@ snapshots:
 
   '@types/bn.js@4.11.6':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/bn.js@5.1.5':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/bn.js@5.1.6':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       '@types/responselike': 1.0.3
 
   '@types/chai-as-promised@7.1.8':
@@ -21296,22 +21337,22 @@ snapshots:
 
   '@types/cli-progress@3.11.6':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/concat-stream@1.6.1':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/cookies@0.7.7':
     dependencies:
       '@types/connect': 3.4.38
       '@types/express': 4.17.14
       '@types/keygrip': 1.0.6
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/debug@4.1.12':
     dependencies:
@@ -21335,7 +21376,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       '@types/qs': 6.9.16
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -21349,12 +21390,12 @@ snapshots:
 
   '@types/form-data@0.0.33':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/html-minifier-terser@6.1.0': {}
 
@@ -21364,7 +21405,7 @@ snapshots:
 
   '@types/http-proxy-agent@2.0.2':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/inquirer@6.5.0':
     dependencies:
@@ -21394,13 +21435,13 @@ snapshots:
 
   '@types/jsonwebtoken@8.5.9':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/keygrip@1.0.6': {}
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/long@4.0.2': {}
 
@@ -21435,12 +21476,12 @@ snapshots:
 
   '@types/node-fetch@2.6.2':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       form-data: 3.0.1
 
   '@types/node-forge@1.3.11':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
     optional: true
 
   '@types/node@10.17.60': {}
@@ -21471,7 +21512,7 @@ snapshots:
 
   '@types/pbkdf2@3.1.2':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/prettier@2.7.3': {}
 
@@ -21492,27 +21533,27 @@ snapshots:
 
   '@types/resolve@1.17.1':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/secp256k1@4.0.6':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/semver@7.5.8': {}
 
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       '@types/send': 0.17.4
 
   '@types/sinon-chai@3.2.12':
@@ -21539,19 +21580,19 @@ snapshots:
 
   '@types/websocket@1.0.2':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/ws@7.4.7':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/ws@8.5.11':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/ws@8.5.12':
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
 
   '@types/yargs-parser@21.0.3':
     optional: true
@@ -22658,14 +22699,14 @@ snapshots:
       busboy: 1.6.0
       fast-querystring: 1.1.2
       fast-url-parser: 1.1.3
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@whatwg-node/node-fetch@0.5.26':
     dependencies:
       '@kamilkisiela/fast-url-parser': 1.1.4
       busboy: 1.6.0
       fast-querystring: 1.1.2
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   '@xtuc/ieee754@1.2.0': {}
 
@@ -23000,7 +23041,7 @@ snapshots:
     dependencies:
       pvtsutils: 1.3.5
       pvutils: 1.1.3
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   assemblyscript@0.19.10:
     dependencies:
@@ -23512,7 +23553,7 @@ snapshots:
   camel-case@4.1.2:
     dependencies:
       pascal-case: 3.1.2
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   camelcase-css@2.0.1: {}
 
@@ -23549,7 +23590,7 @@ snapshots:
   capital-case@1.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
       upper-case-first: 2.0.2
 
   cardinal@2.1.1:
@@ -23706,7 +23747,7 @@ snapshots:
       path-case: 3.0.4
       sentence-case: 3.0.4
       snake-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   chardet@0.7.0: {}
 
@@ -23769,7 +23810,7 @@ snapshots:
 
   chrome-launcher@0.15.2:
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -23781,7 +23822,7 @@ snapshots:
 
   chromium-edge-launcher@0.2.0:
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -24082,7 +24123,7 @@ snapshots:
   constant-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
       upper-case: 2.0.2
 
   content-disposition@0.5.4:
@@ -24264,7 +24305,7 @@ snapshots:
 
   cross-inspect@1.0.0:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   cross-inspect@1.0.1:
     dependencies:
@@ -24673,7 +24714,7 @@ snapshots:
   dot-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   dotenv-cli@7.4.2:
     dependencies:
@@ -25032,7 +25073,7 @@ snapshots:
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.57.1))(eslint@8.57.1)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.0(eslint@8.57.1)
       eslint-plugin-react: 7.37.1(eslint@8.57.1)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.1)
@@ -25076,7 +25117,7 @@ snapshots:
       is-bun-module: 1.2.1
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
@@ -25130,7 +25171,7 @@ snapshots:
       eslint: 9.12.0(jiti@2.3.1)
       ignore: 5.3.2
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.6.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -26603,7 +26644,7 @@ snapshots:
       jiti: 1.17.1
       minimatch: 4.2.3
       string-env-interpolation: 1.0.1
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -26623,7 +26664,7 @@ snapshots:
       jiti: 1.17.1
       minimatch: 4.2.3
       string-env-interpolation: 1.0.1
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -26643,7 +26684,7 @@ snapshots:
       jiti: 1.21.6
       minimatch: 4.2.3
       string-env-interpolation: 1.0.1
-      tslib: 2.6.3
+      tslib: 2.7.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -26692,7 +26733,7 @@ snapshots:
   graphql-tag@2.12.6(graphql@16.9.0):
     dependencies:
       graphql: 16.9.0
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   graphql-type-json@0.3.2(graphql@15.3.0):
     dependencies:
@@ -27027,7 +27068,7 @@ snapshots:
   header-case@2.0.4:
     dependencies:
       capital-case: 1.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   heap@0.2.7: {}
 
@@ -27614,7 +27655,7 @@ snapshots:
 
   is-lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   is-map@2.0.3: {}
 
@@ -27702,7 +27743,7 @@ snapshots:
 
   is-upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   is-utf8@0.2.1: {}
 
@@ -27868,7 +27909,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       jest-mock: 29.7.0
       jest-util: 29.7.0
     optional: true
@@ -27892,14 +27933,14 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       jest-util: 29.7.0
     optional: true
 
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -27918,19 +27959,19 @@ snapshots:
 
   jest-worker@26.6.2:
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       merge-stream: 2.0.0
       supports-color: 7.2.0
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -28456,13 +28497,13 @@ snapshots:
 
   lower-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   lower-case@1.1.4: {}
 
   lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   lowercase-keys@1.0.1: {}
 
@@ -29122,6 +29163,8 @@ snapshots:
 
   nanoid@3.3.7: {}
 
+  nanoid@5.0.7: {}
+
   native-abort-controller@1.0.4(abort-controller@3.0.0):
     dependencies:
       abort-controller: 3.0.0
@@ -29227,7 +29270,7 @@ snapshots:
   no-case@3.0.4:
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   nocache@3.0.4:
     optional: true
@@ -29774,7 +29817,7 @@ snapshots:
   param-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   parent-module@1.0.1:
     dependencies:
@@ -29830,7 +29873,7 @@ snapshots:
   pascal-case@3.1.2:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   passwd-user@3.0.0:
     dependencies:
@@ -29848,7 +29891,7 @@ snapshots:
   path-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   path-exists@2.1.0:
     dependencies:
@@ -30188,7 +30231,7 @@ snapshots:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 18.19.54
+      '@types/node': 20.16.10
       long: 4.0.0
 
   proxy-addr@2.0.7:
@@ -30239,7 +30282,7 @@ snapshots:
 
   pvtsutils@1.3.5:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   pvutils@1.1.3: {}
 
@@ -30904,7 +30947,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   safe-array-concat@1.1.2:
     dependencies:
@@ -31033,7 +31076,7 @@ snapshots:
   sentence-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
       upper-case-first: 2.0.2
 
   serialize-error@2.1.0:
@@ -31242,7 +31285,7 @@ snapshots:
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   snakecase-keys@3.2.1:
     dependencies:
@@ -31393,7 +31436,7 @@ snapshots:
 
   sponge-case@1.0.1:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   sprintf-js@1.0.3: {}
 
@@ -31593,6 +31636,11 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
+  stripe@14.25.0:
+    dependencies:
+      '@types/node': 20.16.10
+      qs: 6.13.0
+
   strnum@1.0.5:
     optional: true
 
@@ -31680,7 +31728,7 @@ snapshots:
 
   swap-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   swarm-js@0.1.42(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     dependencies:
@@ -31946,7 +31994,7 @@ snapshots:
 
   title-case@3.0.3:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   tmp-promise@3.0.3:
     dependencies:
@@ -32593,13 +32641,13 @@ snapshots:
 
   upper-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   upper-case@1.1.3: {}
 
   upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   uqr@0.1.2: {}
 
@@ -33393,7 +33441,7 @@ snapshots:
       '@peculiar/json-schema': 1.1.12
       asn1js: 3.0.5
       pvtsutils: 1.3.5
-      tslib: 2.6.3
+      tslib: 2.7.0
 
   webidl-conversions@3.0.1: {}
 
