@@ -50,42 +50,57 @@ export const etchRouter = createTRPCRouter({
         let etchUIDs: string[] = [];
         let callDatas: string[] = [];
 
+        console.log('Starting file processing');
         await Promise.all(
-          files.map(async ({ url, name, type }) => {
-            const etchUID = BigInt(keccak256(encodePacked(["address"], [address as Address]))) + random(48);
-            etchUIDs.push(etchUID);
+          files.map(async ({ url, name, type }, index) => {
+            console.log(`Processing file ${index + 1}/${files.length}: ${name}`);
+            try {
+              const etchUID = BigInt(keccak256(encodePacked(["address"], [address as Address]))) + random(48);
+              etchUIDs.push(etchUID);
+              console.log(`Generated etchUID: ${etchUID}`);
 
-            const file = await fetch(url).then((res) => res.blob());
+              console.log(`Fetching file from URL: ${url}`);
+              const file = await fetch(url).then((res) => res.blob());
+              console.log(`File fetched successfully, size: ${file.size} bytes`);
 
-            //FIXME: Return to `encryptToIpfs` once LIT gets their act together
-            const ipfsCid = await fakeEncryptToIpfs({
-              authSig: {} as any,
-              sessionSigs: {} as any,
-              file,
-              chain: camelCaseNetwork,
-              evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
-              //FIXME: Remove `originalFileUrl` once LIT gets their act together
-              metadata: { type, originalFileUrl: url, etchUID: etchUID.toString() },
-            }).catch((err) => {
-              console.log(err);
-              console.log(err.stack);
-              throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS (fakeEncryption)" });
-            });
+              console.log('Starting fakeEncryptToIpfs');
+              const ipfsCid = await fakeEncryptToIpfs({
+                authSig: {} as any,
+                sessionSigs: {} as any,
+                file,
+                chain: camelCaseNetwork,
+                evmContractConditions: defaultAccessControlConditions({ etchUID: etchUID.toString() }),
+                metadata: { type, originalFileUrl: url, etchUID: etchUID.toString() },
+              }).catch((err) => {
+                console.error('Error in fakeEncryptToIpfs:', err);
+                console.error('Error stack:', err.stack);
+                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to upload to IPFS (fakeEncryption)" });
+              });
 
-            ipfsCids.push(ipfsCid);
+              console.log(`File uploaded to IPFS, CID: ${ipfsCid}`);
+              ipfsCids.push(ipfsCid);
 
-            const functionName = team ? "safeMintForTeam" : "safeMint";
-            const args = team ? [etchUID, team, name, ipfsCid] : [etchUID, address, name, ipfsCid];
+              const functionName = team ? "safeMintForTeam" : "safeMint";
+              const args = team ? [etchUID, team, name, ipfsCid] : [etchUID, address, name, ipfsCid];
+              console.log(`Preparing function call: ${functionName}`);
+              console.log('Function arguments:', args);
 
-            const calldata = encodeFunctionData({
-              abi: EtchABI,
-              functionName: functionName,
-              args: args,
-            });
+              const calldata = encodeFunctionData({
+                abi: EtchABI,
+                functionName: functionName,
+                args: args,
+              });
+              console.log(`Calldata generated, length: ${calldata.length}`);
 
-            callDatas.push(calldata);
+              callDatas.push(calldata);
+              console.log(`File ${index + 1} processed successfully`);
+            } catch (error) {
+              console.error(`Error processing file ${index + 1}:`, error);
+              throw error; // Re-throw the error to maintain the original behavior
+            }
           })
         );
+        console.log('All files processed');
 
         // await Promise.all(
         //   files.map(async ({ url, name, type }) => {
