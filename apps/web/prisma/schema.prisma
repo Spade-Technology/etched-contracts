@@ -24,7 +24,8 @@ model User {
     userActivationCodes userActivationCode[]
     isAdministrator     Boolean              @default(false)
 
-    capacityCredits capacityCredit[]
+    capacityCredits        capacityCredit[]
+    etchedCreditsRemaining Int?             @default(0)
 }
 
 model Subscriber {

@@ -42,3 +42,13 @@ export async function blobToUint8Array(blob: Blob): Promise<Uint8Array> {
   const arrayBuffer = await blob.arrayBuffer();
   return new Uint8Array(arrayBuffer);
 }
+
+
+export const getZodErrorMessages = (zodError: any) => {
+  if (!zodError?.fieldErrors) return [];
+
+  return Object.entries(zodError.fieldErrors).map(([field, errors]) => ({
+    field,
+    message: Array.isArray(errors) ? errors[0] : 'Invalid input'
+  }));
+};

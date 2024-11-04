@@ -3,10 +3,13 @@ import { walletWithCapacityCredit } from "@/litContracts";
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { prisma } from "@/server/db";
 import { regenerateCapacityCredits } from "@/server/user-operations";
+import { getClerkUserListWithCredits, updateUserCredits, UsersListInputSchema, type PaginatedResponseSchemaResult } from "@/server/etched-credit-management";
 
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
+import util from 'util'
 
 const passwordValidation = z
   .string()
@@ -23,7 +26,7 @@ const passwordValidation = z
     }
   );
 
-async function retrieveStoredCode(code: string) {
+async function retrieveStoredCode (code: string) {
   const userCode = await prisma.userActivationCode.findFirstOrThrow({
     where: { code, userAddress: null },
   });
@@ -34,14 +37,14 @@ async function retrieveStoredCode(code: string) {
   };
 }
 
-async function invalidateStoredCode(code: string, userAddress: string) {
+async function invalidateStoredCode (code: string, userAddress: string) {
   await prisma.userActivationCode.updateMany({
     where: { code },
     data: { userAddress },
   });
 }
 
-async function createStoredCode() {
+async function createStoredCode () {
   const generateRandomPart = () =>
     String.fromCharCode(
       ...Array(5)
@@ -74,12 +77,33 @@ export const userRouter = createTRPCRouter({
       return true;
     }),
 
+  updateUserEtchedCredits: protectedProcedure
+    .input(z.object({ email_id: z.string(), credits_value: z.number().min(1).max(1000) }))
+    .mutation(async ({ input: { email_id, credits_value } }) => {
+      try {
+        const res = await updateUserCredits(email_id, credits_value)
+        if (!res?.success) {
+          throw new TRPCError({ code: "NOT_FOUND", message: res?.error || "Invalid attempt!" })
+        }
+        return res
+      } catch (error) {
+        console.log(error)
+      }
+    }),
+
   getClerkUser: publicProcedure
     .input(z.object({ externalId: z.string().array() }))
     .mutation(async ({ input: { externalId } }) => {
       const user = await clerkClient.users.getUserList({ externalId });
 
       return user;
+    }),
+
+  getAllClerkUsersWithCredits: protectedProcedure
+    .input(UsersListInputSchema)
+    .query(async ({ input }) => {
+      //returns paginated list of Clerk users with remaining Etched credits
+      return await getClerkUserListWithCredits(input)
     }),
 
   setClerkProfileImage: protectedProcedure
@@ -185,7 +209,7 @@ export const userRouter = createTRPCRouter({
       return { success: true, message: "Activation code verified successfully." };
     }),
 
-  requestCapacityDelegationAuthSig: protectedProcedure.input(z.object({})).mutation(async ({ input: {}, ctx: { session } }) => {
+  requestCapacityDelegationAuthSig: protectedProcedure.input(z.object({})).mutation(async ({ input: { }, ctx: { session } }) => {
     const user = await prisma.user.findUnique({ where: { address: session.address! } });
 
     if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -213,7 +237,7 @@ export const userRouter = createTRPCRouter({
 
   requestSingleUseCapacityDelegationAuthSig: protectedProcedure
     .input(z.object({}))
-    .mutation(async ({ input: {}, ctx: { session } }) => {
+    .mutation(async ({ input: { }, ctx: { session } }) => {
       const user = await prisma.user.findUnique({ where: { address: session.address! } });
 
       if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
