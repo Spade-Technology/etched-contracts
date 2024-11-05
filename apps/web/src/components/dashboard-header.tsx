@@ -10,6 +10,7 @@ import { TeamSelector } from "./team-selector";
 import { Icons } from "./ui/icons";
 import { useState } from "react";
 import Plan from "./ui/plan";
+import RemainingCreditsDisplay from "./remaining-credits-display";
 
 export const DashboardHeader = () => {
   const [planModal, setPlanModal] = useState(false);
@@ -23,8 +24,9 @@ export const DashboardHeader = () => {
   ];
 
   return (
-    <div className="sticky top-0 z-10 flex h-16 w-full items-center bg-background pl-6 shadow-4xl">
+    <div className="sticky top-0 gap-2 z-10 flex h-16 w-full items-center bg-background pl-6 shadow-4xl">
       <CreateEtchButton />
+      <RemainingCreditsDisplay />
       <CommandMenu />
 
       <div className="mx-6 flex h-full w-fit items-center gap-6 border-l pl-6">

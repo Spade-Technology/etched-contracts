@@ -3,14 +3,16 @@ import { walletWithCapacityCredit } from "@/litContracts";
 import { adminProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { prisma } from "@/server/db";
 import { regenerateCapacityCredits } from "@/server/user-operations";
-import { getClerkUserListWithCredits, updateUserCredits, UsersListInputSchema, type PaginatedResponseSchemaResult } from "@/server/etched-credit-management";
+import { getClerkUserListWithCredits, userCreditsRemaining, updateUserCredits, UsersListInputSchema, type PaginatedResponseSchemaResult } from "@/server/etched-credit-management";
 
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import util from 'util'
+import { EVMAddressType } from "@/utils/common";
 
+const zodEvmAddress = z.string().regex(/^(0x)[A-Fa-f0-9]{38}$/i);
 const passwordValidation = z
   .string()
   .refine(
@@ -91,12 +93,13 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  getClerkUser: publicProcedure
-    .input(z.object({ externalId: z.string().array() }))
-    .mutation(async ({ input: { externalId } }) => {
-      const user = await clerkClient.users.getUserList({ externalId });
+  getUserCreditsRemaining: protectedProcedure
+    .query(async ({ ctx: {
+      session: { address },
+    } }) => {
+      const availableCredits = await userCreditsRemaining(address as EVMAddressType)
 
-      return user;
+      return Number(availableCredits || 0);
     }),
 
   getAllClerkUsersWithCredits: protectedProcedure
