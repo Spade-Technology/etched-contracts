@@ -93,6 +93,15 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
+  getClerkUser: publicProcedure
+    .input(z.object({ externalId: z.string().array() }))
+    .mutation(async ({ input: { externalId } }) => {
+      const user = await clerkClient.users.getUserList({ externalId });
+
+      return user;
+    }),
+
+
   getUserCreditsRemaining: protectedProcedure
     .query(async ({ ctx: {
       session: { address },
