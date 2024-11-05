@@ -6,6 +6,8 @@ import { api } from "../api";
 import { useUploadThing } from "../uploadthing";
 import { refetchContext } from "../urql";
 import { useSignIn } from "./useSignIn";
+import { getZodErrorMessages } from "../common";
+import util from 'util'
 
 const formSchema = z.object({
   name: z.string(),
@@ -15,12 +17,12 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-function enableBeforeUnload() {
+function enableBeforeUnload () {
   window.onbeforeunload = function (e) {
     return "Discard changes?";
   };
 }
-function disableBeforeUnload() {
+function disableBeforeUnload () {
   window.onbeforeunload = null;
 }
 
@@ -111,9 +113,10 @@ export const useCreateEtch = () => {
       refetchEtches();
     } catch (e: any) {
       console.error(e);
+      // console.log(util.inspect(e, { showHidden: false, depth: null, colors: true }))
       toast({
         title: "Something went wrong",
-        description: "Please try again",
+        description: e.message || "Please try again",
         variant: "destructive",
       });
       setOperation(opId, {

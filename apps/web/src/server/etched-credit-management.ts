@@ -4,6 +4,7 @@ import { prisma } from "@/server/db";
 import { clerkClient } from "@clerk/nextjs";
 import { z } from "zod";
 import util from 'util';
+import { EVMAddressType } from "@/utils/common";
 
 export const UsersListInputSchema = z.object({
   limit: z.number().min(1).max(500).default(50),
@@ -136,6 +137,11 @@ export const enrichUsersWithCredits = async (
   return enrichedUsers;
 };
 
+
+/**
+ * Update user credits in Prisma DB
+ * NOTE: Strictly for UI.  Do not call in `bulkMintEtch`
+ */
 export const updateUserCredits = async (
   userId: string,
   creditsUpdate: number
@@ -168,3 +174,51 @@ export const updateUserCredits = async (
     };
   }
 };
+
+
+
+//Primarily for etching (i.e. not interacting with Admin UI)
+export const userCreditsRemaining = async (address: EVMAddressType) => {
+  const user = await prisma.user.findUnique({
+    where: { address: address },
+  });
+
+  return Number(user?.etchedCreditsRemaining || 0)
+}
+
+export const userHasSufficientCredits = async (address: EVMAddressType, requiredCredits: number = 1, adminGetsPass: boolean = true) => {
+
+  if (adminGetsPass) {
+    const user = await prisma.user.findUnique({
+      where: { address: address },
+    });
+    if (user?.isAdministrator == true) {
+      console.log('Roll out the red carpet for the admin!!!')
+      return true
+    }
+  }
+
+  //otherwise keep going
+  const availableCredits = await userCreditsRemaining(address);
+  console.log(`ADDRESS: ${address} < - > CREDITS: ${availableCredits}`)
+  return availableCredits >= requiredCredits;
+}
+
+export const deductCreditsFromUser = async (address: EVMAddressType, creditsToDeduct: number = 1) => {
+  try {
+    const availableCredits = await userCreditsRemaining(address)
+
+    if (availableCredits > 0) {
+      creditsToDeduct = Math.max(0, Math.min(creditsToDeduct, availableCredits))
+      const updatedUser = await prisma.user.update({
+        where: { address },
+        data: { etchedCreditsRemaining: { decrement: creditsToDeduct } }
+      });
+      return updatedUser.etchedCreditsRemaining;
+    }
+    return availableCredits
+  } catch (error) {
+    console.error('Error deducting credits:', error);
+    throw new Error('Failed to deduct credits');
+  }
+}
