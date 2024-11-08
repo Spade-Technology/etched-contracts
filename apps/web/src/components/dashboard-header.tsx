@@ -12,7 +12,10 @@ import { useState } from "react";
 import Plan from "./ui/plan";
 import RemainingCreditsDisplay from "./remaining-credits-display";
 
+import { api } from "@/utils/api";
+
 export const DashboardHeader = () => {
+  const { data: remainingCredits, isLoading } = api.user.getUserCreditsRemaining.useQuery();
   const [planModal, setPlanModal] = useState(false);
   const { isSignedIn } = useUser();
   const router = useRouter();
@@ -24,8 +27,12 @@ export const DashboardHeader = () => {
   ];
 
   return (
-    <div className="sticky top-0 gap-2 z-10 flex h-16 w-full items-center bg-background pl-6 shadow-4xl">
-      <CreateEtchButton />
+    <div className="sticky top-0 z-10 flex h-16 w-full items-center gap-2 bg-background pl-6 shadow-4xl">
+      {!!remainingCredits && remainingCredits > 0 ? (
+        <CreateEtchButton />
+      ) : (
+        <p style={{ color: "red", fontWeight: "bold" }}>Please purchase more credits...</p>
+      )}
       <RemainingCreditsDisplay />
       <CommandMenu />
 

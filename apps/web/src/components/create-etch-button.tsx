@@ -151,7 +151,7 @@ export const CreateEtchButton = () => {
                     </div>
                     <div className="w-1/2">
                       <Label>Create on Behalf of</Label>
-                      <TeamSelector className="w-full " horizontal />
+                      {/* <TeamSelector className="w-full " horizontal /> */}
 
                       <div className="my-3 flex justify-between">
                         <div>

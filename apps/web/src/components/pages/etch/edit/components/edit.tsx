@@ -232,7 +232,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
           )}
         </div>
 
-        <div className={`${edit ? "bg-[#FFF]" : "bg-[#A1FFD3]"} mt-auto rounded-2xl p-4 text-foreground dark:bg-opacity-5`}>
+        {/* <div className={`${edit ? "bg-[#FFF]" : "bg-[#A1FFD3]"} mt-auto rounded-2xl p-4 text-foreground dark:bg-opacity-5`}>
           <div className="font-base font-semibold">Shared with</div>
           {etch?.permissions?.map((perm) => {
             if (perm.wallet)
@@ -268,7 +268,7 @@ const Edit = ({ setOpenAddUser, etch, isLoading, hasWritePermission }: EditProps
             <Icons.plus color={theme === "dark" ? "rgb(var(--primary-foreground))" : "rgb(var(--primary))"} />
             Add more users
           </Button>
-        </div>
+        </div> */}
 
         {edit && (
           <div className="float-right py-5">

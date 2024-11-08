@@ -35,6 +35,17 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  //FIXME:  Redirecting specific pages
+  async redirects() {
+    return [
+      // {
+      //   source: "/billing", // path of the page to block/redirect
+      //   destination: "/dashboard", // path to redirect to
+      //   permanent: false, // set to false for a temporary redirect (HTTP 307)
+      // },
+    ];
+  },
 };
 
 const isProd = process.env.NODE_ENV === "production";

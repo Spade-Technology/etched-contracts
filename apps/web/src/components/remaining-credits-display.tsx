@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { api } from "@/utils/api";
 
 const RemainingCreditsDisplay = () => {
+  //CONSIDER: add "click to purchase" ability?
   const { data: remainingCredits, isLoading } = api.user.getUserCreditsRemaining.useQuery();
 
   if (isLoading) {
@@ -31,13 +32,14 @@ const RemainingCreditsDisplay = () => {
         rounded-md 
         px-4 
         py-2 
-        font-medium 
+        font-extrabold
+        text-sm
         text-white 
         transition-colors 
         ${getColorClasses(Number(remainingCredits))}
       `}
     >
-      {remainingCredits} Credits
+      Credits: {remainingCredits}
     </Badge>
   );
 };

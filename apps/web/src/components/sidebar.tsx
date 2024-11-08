@@ -119,7 +119,7 @@ export function UserSettings({ children }: { children: React.ReactNode }) {
       <DropdownMenuContent className="mr-3 w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        {/* <DropdownMenuGroup>
           <DropdownMenuItem>
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
@@ -159,7 +159,7 @@ export function UserSettings({ children }: { children: React.ReactNode }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem>GitHub</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuItem disabled>API</DropdownMenuItem>
+        <DropdownMenuItem disabled>API</DropdownMenuItem> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={signOut}>
           Log out

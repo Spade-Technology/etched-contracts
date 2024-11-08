@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { contracts } from "@/contracts";
 import { Etch } from "@/gql/graphql";
 import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
+// import { useGetUniqueEtchWithDetails } from "@/utils/hooks/useGetUniqueEtchWithDetails";
 
 import { Metadata } from "next";
 import Image from "next/image";
@@ -24,6 +25,7 @@ export default function EtchPage() {
 
   // using window location because the query cannot be upheld, and the useRouter takes a few renders to initialize
   const { etch, isLoading, error } = useGetUniqueEtch(etchId);
+  // const { etch, isLoading, error } = useGetUniqueEtchWithDetails(etchId);
   const owner = useLoggedInAddress();
 
   if (!(router.query!.etch as string) || typeof (router.query!.etch as string) !== "string")

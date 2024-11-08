@@ -183,7 +183,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
         <AspectRatio ratio={16 / 9}>
           <div className="flex h-full w-full items-center justify-center rounded-2xl bg-background">{renderMedia()}</div>
         </AspectRatio>
-        <Comments etch={etch || {}} hasWritePermission={!!hasWritePermission} />
+        {/* <Comments etch={etch || {}} hasWritePermission={!!hasWritePermission} /> */}
       </div>
       <div className="col-span-1">
         <Edit setOpenAddUser={setOpenAddUser} etch={etch} isLoading={isLoading} hasWritePermission={!!hasWritePermission} />
