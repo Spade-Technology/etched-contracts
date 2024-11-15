@@ -13,6 +13,7 @@ const TAG_OF_ETCH_AND_OWNER = gql`
       tagLinks(where: { owner: $owner }) {
         tag {
           id
+          label
           owner {
             eoa
           }

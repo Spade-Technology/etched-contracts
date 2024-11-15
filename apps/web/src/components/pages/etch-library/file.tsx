@@ -8,7 +8,8 @@ import {
 import { Icons } from "@/components/ui/icons";
 import MoveDialog from "@/components/ui/move-modal";
 import PropertiesDialog from "@/components/ui/properties";
-import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
+// import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
+import { useGetUniqueEtchWithDetails } from "@/utils/hooks/useGetUniqueEtchWithDetails";
 import { FileLockIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FileProps } from "./types";
@@ -17,7 +18,7 @@ const options = ["Move to >", "Rename", "Share", "Delete", "Properties"];
 export const File = ({ documentName, tokenId, activeModals, setActiveModals }: FileProps) => {
   const [openMoveModal, setOpenMoveModal] = useState(false);
   const [openPropertiesModal, setOpenPropertiesModal] = useState(false);
-  const { etch, isLoading } = useGetUniqueEtch(tokenId);
+  const { etch, isLoading } = useGetUniqueEtchWithDetails(tokenId);
 
   const propertyModal = () => {
     if (documentName) {

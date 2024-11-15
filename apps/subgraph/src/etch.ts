@@ -44,7 +44,7 @@ enum EtchPermissionLevel {
   Write = 2,
 }
 
-export function handleCommentAdded(event: CommentAddedEvent): void {
+export function handleCommentAdded (event: CommentAddedEvent): void {
   const entity = new EtchCommentAdded(event.transaction.hash.concatI32(event.logIndex.toI32()));
 
   entity.tokenId = event.params.tokenId;
@@ -62,7 +62,7 @@ export function handleCommentAdded(event: CommentAddedEvent): void {
   entity.save();
 }
 
-export function handleTagAdded(event: TagAdded): void {
+export function handleTagAdded (event: TagAdded): void {
   const id = event.transaction.hash.toHex().concat('-').concat(event.logIndex.toString());
   const entity = new EtchTagAdded(id);
 
@@ -95,7 +95,7 @@ export function handleTagAdded(event: TagAdded): void {
   tagLink.save();
 }
 
-export function handleTagModified(event: TagModified): void {
+export function handleTagModified (event: TagModified): void {
   const id = event.transaction.hash.toHex().concat('-').concat(event.logIndex.toString());
   const entity = new EtchTagModified(id);
 
@@ -119,7 +119,7 @@ export function handleTagModified(event: TagModified): void {
   tag.save();
 }
 
-export function handleTagRemoved(event: TagRemoved): void {
+export function handleTagRemoved (event: TagRemoved): void {
   const id = event.transaction.hash.toHex().concat('-').concat(event.logIndex.toString());
   const entity = new EtchTagRemoved(id);
 
@@ -134,18 +134,19 @@ export function handleTagRemoved(event: TagRemoved): void {
 
   entity.save();
 
-  // let tag = Tag.load(getTagId(event.params.owner, event.params.tag.toString()));
-  // if (!tag) return;
+  // Only remove the specific TagLink
+  const tagLinkId = getTagLinkId(
+    event.params.owner,
+    event.params.tag.toString(),
+    event.params.tokenId.toString()
+  );
 
-  // // Remove all TagLink entities associated with the tag being removed
-  // let tagLink = TagLink.load(getTagLinkId(event.params.owner, event.params.tag.toString(), event.params.tokenId.toString()));
-  // if (tagLink) store.remove('TagLink', tagLink.id);
+  store.remove('TagLink', tagLinkId);
 
-  // // Check if the tag has any links left
-  // if (tag.tagLinks.entries.length == 0) store.remove('Tag', tag.id);
+  //Not going to delete the actual tag.  Getting a quality count isn't viable
 }
 
-export function handleEtchCreated(event: EtchCreatedEvent): void {
+export function handleEtchCreated (event: EtchCreatedEvent): void {
   const eventEntity = new EtchCreated(event.transaction.hash.concatI32(event.logIndex.toI32()));
   eventEntity.tokenId = event.params.tokenId;
   eventEntity.to = event.params.to;
@@ -183,7 +184,7 @@ export function handleEtchCreated(event: EtchCreatedEvent): void {
   etch.save();
 }
 
-export function handleTeamPermissionsUpdated(event: TeamPermissionsUpdated): void {
+export function handleTeamPermissionsUpdated (event: TeamPermissionsUpdated): void {
   const entity = new EtchTeamPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.tokenId = event.params.tokenId;
   entity.teamId = event.params.teamId;
@@ -212,7 +213,7 @@ export function handleTeamPermissionsUpdated(event: TeamPermissionsUpdated): voi
   etchPermission.save();
 }
 
-export function handleEtchTransferedToTeam(event: EtchTransferedToTeamEvent): void {
+export function handleEtchTransferedToTeam (event: EtchTransferedToTeamEvent): void {
   const entity = new EtchTransferedToTeam(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.tokenId = event.params.tokenId;
   entity.from = event.params.from;
@@ -237,7 +238,7 @@ export function handleEtchTransferedToTeam(event: EtchTransferedToTeamEvent): vo
   etchOwnership.save();
 }
 
-export function handleInvididualPermissionsUpdated(event: InvididualPermissionsUpdatedEvent): void {
+export function handleInvididualPermissionsUpdated (event: InvididualPermissionsUpdatedEvent): void {
   const entity = new EtchPermissionsUpdated(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.tokenId = event.params.tokenId;
   entity.account = event.params.account;
@@ -265,7 +266,7 @@ export function handleInvididualPermissionsUpdated(event: InvididualPermissionsU
   etchPermission.save();
 }
 
-export function handleEtchMetadataUpdated(event: EtchMetadataUpdated): void {
+export function handleEtchMetadataUpdated (event: EtchMetadataUpdated): void {
   const etchId = getEtchId(EID.Etch, event.params.tokenId);
 
   // Update the Etch Entity
@@ -279,7 +280,7 @@ export function handleEtchMetadataUpdated(event: EtchMetadataUpdated): void {
   etch.save();
 }
 
-export function handleTransfer(event: TransferEvent): void {
+export function handleTransfer (event: TransferEvent): void {
   const entity = new EtchTransfer(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.from = event.params.from;
   entity.to = event.params.to;
@@ -307,7 +308,7 @@ export function handleTransfer(event: TransferEvent): void {
 
 // No need to handle this events, but parsing them for completeness
 
-export function handleApproval(event: ApprovalEvent): void {
+export function handleApproval (event: ApprovalEvent): void {
   const entity = new EtchApproval(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.owner = event.params.owner;
   entity.approved = event.params.approved;
@@ -321,7 +322,7 @@ export function handleApproval(event: ApprovalEvent): void {
   entity.save();
 }
 
-export function handleApprovalForAll(event: ApprovalForAllEvent): void {
+export function handleApprovalForAll (event: ApprovalForAllEvent): void {
   const entity = new EtchApprovalForAll(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.owner = event.params.owner;
   entity.operator = event.params.operator;
@@ -334,7 +335,7 @@ export function handleApprovalForAll(event: ApprovalForAllEvent): void {
   entity.save();
 }
 
-export function handleOwnershipTransferred(event: OwnershipTransferredEvent): void {
+export function handleOwnershipTransferred (event: OwnershipTransferredEvent): void {
   const entity = new EtchOwnershipTransferred(event.transaction.hash.concatI32(event.logIndex.toI32()));
   entity.previousOwner = event.params.previousOwner;
   entity.newOwner = event.params.newOwner;

@@ -203,7 +203,12 @@ export const etchRouter = createTRPCRouter({
         etchId: z.string(),
         tags: z
           .array(
-            z.object({ label: z.string(), value: z.string(), toCreate: z.boolean().optional(), toDelete: z.boolean().optional() })
+            z.object({
+              label: z.string(),
+              value: z.string(),
+              toCreate: z.boolean().optional(),
+              toDelete: z.boolean().optional()
+            })
           )
           .max(5)
           .optional(),
@@ -219,38 +224,57 @@ export const etchRouter = createTRPCRouter({
         },
       }) => {
         let tagsCalldata: `0x${string}`[] = [];
+
         if (tags) {
           const { data } = await getTagsOfEtchAndOwner(etchId, address!);
 
-          const _tags = data?.etch?.tagLinks.map((tag: any) => tag.tag);
-
           if (data?.etch) {
-            const actionableTags = [
-              // to delete
-              ..._tags
-                .filter((tag: any) => !(tags.find((newTag: any) => newTag.id === tag.id) && tag.owner.eoa === address))
-                .map((tag: any) => ({ label: tag.tag, value: tag.id, toDelete: true, toCreate: false })),
+            // Transform existing tags into the same shape as input tags for comparison
+            const existingTags = data.etch.tagLinks.map((tagLink: any) => ({
+              label: tagLink.tag.label,
+              value: tagLink.tag.id,
+              originalLabel: tagLink.tag.label // Keep original label for deletion
+            }))
 
-              // to create
-              ...tags
-                .filter((newTag: any) => !_tags.find((tag: any) => tag.tag === newTag.label))
-                .map((tag: any) => ({ label: tag.label, toDelete: false, toCreate: true })),
-            ];
+            // Find tags to delete (exist in DB but not in new tags)
+            const tagsToDelete = existingTags
+              .filter((existingTag: any) => !tags.find(newTag => newTag.value === existingTag.value))
+              .map((tag: any) => ({
+                label: tag.originalLabel, // Use the original label for deletion
+                value: tag.value,
+                toDelete: true,
+                toCreate: false
+              }));
 
-            console.debug(
-              actionableTags.map((tag) => ({
-                functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
-                args: [etchId, tag.label],
-              }))
-            );
+            // Find tags to create (exist in new tags but not in DB)
+            const tagsToCreate = tags
+              .filter(newTag => !existingTags.find((existingTag: any) => existingTag.value === newTag.value))
+              .map(tag => ({
+                label: tag.label,
+                value: tag.value,
+                toDelete: false,
+                toCreate: true
+              }));
 
-            tagsCalldata = actionableTags.map((tag) =>
-              encodeFunctionData({
-                abi: EtchABI,
-                functionName: tag.toDelete ? "removeTag" : tag.toCreate ? "addTag" : "addTag",
-                args: [etchId, tag.label],
-              })
-            );
+            console.log('EXISTING TAGS:', existingTags);
+            console.log('NEW TAGS:', tags);
+            console.log('ACTIONABLE:', {
+              toDelete: tagsToDelete,
+              toCreate: tagsToCreate
+            });
+
+            const actionableTags = [...tagsToDelete, ...tagsToCreate];
+
+            // Only create calldata for tags with valid labels
+            tagsCalldata = actionableTags
+              .filter(tag => tag.label && typeof tag.label === 'string')
+              .map((tag) =>
+                encodeFunctionData({
+                  abi: EtchABI,
+                  functionName: tag.toDelete ? "removeTag" : "addTag",
+                  args: [etchId, tag.label],
+                })
+              );
           }
         }
 

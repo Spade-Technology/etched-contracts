@@ -44,7 +44,7 @@ export const SideBar = () => {
   const pages = [
     { url: "/dashboard", title: "Dashboard", Icon: Icons.dashboard },
     { url: "/dashboard/manage", title: "Organisation", Icon: Icons.organisation },
-    { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary },
+    { url: "/dashboard/etch-library", title: "Etch Library", Icon: Icons.etchLibrary, disabled: true },
     { url: "/dashboard/marketplace", title: "Marketplace", Icon: Icons.marketplace, disabled: true },
     { url: "/dashboard/community", title: "Community", Icon: Icons.community, disabled: true },
   ];

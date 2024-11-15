@@ -4,8 +4,8 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/brea
 import { Skeleton } from "@/components/ui/skeleton";
 import { contracts } from "@/contracts";
 import { Etch } from "@/gql/graphql";
-import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
-// import { useGetUniqueEtchWithDetails } from "@/utils/hooks/useGetUniqueEtchWithDetails";
+// import { useGetUniqueEtch } from "@/utils/hooks/useGetUniqueEtch";
+import { useGetUniqueEtchWithDetails } from "@/utils/hooks/useGetUniqueEtchWithDetails";
 
 import { Metadata } from "next";
 import Image from "next/image";
@@ -13,6 +13,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { useLoggedInAddress } from "@/utils/hooks/useSignIn";
+
+import { useEffect } from "react";
 
 export const metadata: Metadata = {
   title: "Etch Viewer",
@@ -24,9 +26,17 @@ export default function EtchPage() {
   const etchId = !!globalThis.window && (window?.location?.pathname?.split("/").pop() as string);
 
   // using window location because the query cannot be upheld, and the useRouter takes a few renders to initialize
-  const { etch, isLoading, error } = useGetUniqueEtch(etchId);
-  // const { etch, isLoading, error } = useGetUniqueEtchWithDetails(etchId);
+  // const { etch, isLoading, error } = useGetUniqueEtch(etchId);
+  const { etch, etchCreated, isLoading, error } = useGetUniqueEtchWithDetails(etchId);
   const owner = useLoggedInAddress();
+
+  useEffect(() => {
+    console.log("********* ETCH CHANGED *********");
+    console.log(etch);
+    console.log(etchCreated);
+
+    return () => {};
+  }, [etch, etchCreated]);
 
   if (!(router.query!.etch as string) || typeof (router.query!.etch as string) !== "string")
     return <div className="flex h-screen w-screen bg-background"> todo: add skeleton </div>;
@@ -69,7 +79,8 @@ export default function EtchPage() {
                   <span>#{etchId}</span>
 
                   <Link
-                    href={`https://polygonscan.com/address/${contracts.Etch}#readContract#F16`}
+                    // href={`https://polygonscan.com/address/${contracts.Etch}#readContract#F16`}
+                    href={`https://polygonscan.com/tx/${etchCreated?.transactionHash}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
