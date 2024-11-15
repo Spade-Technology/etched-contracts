@@ -104,7 +104,7 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
   //     alert(e.errorKind === "Validation" ? "You are not authorized to view this document" : e.message || "Something went wrong");
   //   }
   // };
-  
+
   useEffect(() => {
     if (etch?.ipfsCid) decrypt();
   }, [etch?.ipfsCid]);
@@ -142,7 +142,8 @@ const EtchSection = ({ etch, isLoading }: { etch: Etch; isLoading: boolean }) =>
             <Image
               src={etchFile}
               alt="Etch image"
-              fill
+              layout="fill" // required
+              objectFit="contain" // change to suit your needs
               className="rounded-2xl"
               onError={(event) => (event.currentTarget.style.display = "none")}
             />
