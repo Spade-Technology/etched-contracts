@@ -84,10 +84,11 @@ export const columns: EtchColumnDef[] = [
           {row.getValue("documentName") ?? <Skeleton className="h-3 w-8" />}
         </Link>
         {row.original.tagLinks
-          ?.filter((el) => el.tag.label.length > 0)
+          ?.filter((el) => el?.tag?.label && el.tag.label.length > 0)
           .map((el) => (
             <Badge
-              style={{ backgroundColor: deterministicTextToColor(el.tag.label) }}
+              key={el?.tag?.id || el?.tag?.label}
+              style={{ backgroundColor: deterministicTextToColor(el?.tag?.label ?? "") }}
               className="cursor-pointer font-bold hover:bg-opacity-50 hover:underline "
               onClick={(e) => {
                 table
@@ -97,7 +98,7 @@ export const columns: EtchColumnDef[] = [
               }}
             >
               <TagIcon className="mr-1 h-3 w-3" />
-              {el.tag.label}
+              {el?.tag?.label}
             </Badge>
           )) ?? <Skeleton className="h-3 w-8" />}
       </div>
@@ -109,7 +110,9 @@ export const columns: EtchColumnDef[] = [
     header: ({ column }) => <></>,
 
     filterFn: (row, _, filterValue) => {
-      return ((filterValue as string[]) || []).every((filter) => row.original.tagLinks?.some((tag) => tag.tag.label === filter));
+      return ((filterValue as string[]) || []).every((filter) =>
+        row.original.tagLinks?.some((tag) => tag?.tag?.label === filter)
+      );
     },
     cell: ({ row, column }) => <></>,
   },
@@ -161,33 +164,33 @@ export const columns: EtchColumnDef[] = [
         );
     },
   },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const etch = row.original;
+  // {
+  //   id: "actions",
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     const etch = row.original;
 
-      return (
-        <div className="flex justify-end">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild >
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)} className="cursor-pointer">
-                Copy Etch ID
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => router.push("/editEtch")} className="cursor-pointer">Edit Etch</DropdownMenuItem> */}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div className="flex justify-end">
+  //         <DropdownMenu>
+  //           <DropdownMenuTrigger asChild>
+  //             <Button variant="ghost" className="h-8 w-8 p-0">
+  //               <span className="sr-only">Open menu</span>
+  //               <DotsHorizontalIcon className="h-4 w-4" />
+  //             </Button>
+  //           </DropdownMenuTrigger>
+  //           <DropdownMenuContent align="end">
+  //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(etch.tokenId)} className="cursor-pointer">
+  //               Copy Etch ID
+  //             </DropdownMenuItem>
+  //             {/* <DropdownMenuItem onClick={() => router.push("/editEtch")} className="cursor-pointer">Edit Etch</DropdownMenuItem> */}
+  //           </DropdownMenuContent>
+  //         </DropdownMenu>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];
 
 export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: boolean }) {
@@ -253,8 +256,10 @@ export function DataTable({ data = [], isLoading }: { data: Etch[]; isLoading?: 
             column={table.getColumn("tag")}
             title="Tag"
             options={data
-              .flatMap((el) => el.tagLinks)
-              .map((el) => el!.tag.label)
+              ?.flatMap((el) => el?.tagLinks ?? [])
+              .filter((el): el is NonNullable<typeof el> => el !== null && el !== undefined)
+              .map((el) => el?.tag?.label)
+              .filter((label): label is string => typeof label === "string" && label.length > 0)
               .filter((el, i, arr) => arr.indexOf(el) === i)
               .map((tag) => ({ label: tag, value: tag }))}
           />
