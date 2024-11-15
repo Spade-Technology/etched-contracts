@@ -93,7 +93,7 @@ export const columns: EtchColumnDef[] = [
               onClick={(e) => {
                 table
                   .getColumn("tag")
-                  ?.setFilterValue([...((table.getColumn("tag")?.getFilterValue() as string[]) || []), el.tag]);
+                  ?.setFilterValue([...((table.getColumn("tag")?.getFilterValue() as string[]) || []), el?.tag?.label]);
                 e.stopPropagation();
               }}
             >
