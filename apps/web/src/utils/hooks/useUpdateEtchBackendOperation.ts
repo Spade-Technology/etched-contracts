@@ -5,12 +5,12 @@ import { api } from "../api";
 import { sleep } from "../common";
 import { refetchContext } from "../urql";
 
-function enableBeforeUnload() {
+function enableBeforeUnload () {
   window.onbeforeunload = function (e) {
     return "Discard changes?";
   };
 }
-function disableBeforeUnload() {
+function disableBeforeUnload () {
   window.onbeforeunload = null;
 }
 
@@ -21,8 +21,8 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
   const [description, setDescription] = useState(etch?.description || "");
   const [tags, setTags] = useState(
     etch?.tagLinks?.map((el) => ({
-      label: el.tag.label,
-      value: el.tag.id,
+      label: el?.tag?.label ?? "",
+      value: el?.tag?.id ?? "",
     })) || []
   );
 
@@ -30,7 +30,7 @@ export const useUpdateEtch = (setEdit: (arg: boolean) => void, etch?: Partial<Et
     if (
       documentName === etch?.documentName &&
       description === (etch?.description || "") &&
-      JSON.stringify(tags) === JSON.stringify(etch?.tagLinks?.map((el) => ({ label: el.tag.label, value: el.tag.id })) || [])
+      JSON.stringify(tags) === JSON.stringify(etch?.tagLinks?.map((el) => ({ label: el?.tag?.label ?? "", value: el?.tag?.id ?? "" })) || [])
     ) {
       setEdit(false);
 
